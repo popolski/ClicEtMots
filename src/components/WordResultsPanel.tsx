@@ -8,11 +8,12 @@ interface WordResultsPanelProps {
   level: 1 | 2
 }
 
+// Couleurs alignées sur la vraie page de résultats du Clavier Métalo (tuto officiel, p.6).
 const categoryStyles: Record<WordCategory, string> = {
-  nom: 'bg-blue-50 text-blue-900 border-blue-200',
-  adjectif: 'bg-amber-50 text-amber-900 border-amber-200',
-  verbe: 'bg-rose-50 text-rose-900 border-rose-200',
-  invariable: 'bg-gray-100 text-gray-700 border-gray-300',
+  nom: 'bg-green-50 text-green-900 border-green-200',
+  adjectif: 'bg-yellow-50 text-yellow-900 border-yellow-200',
+  verbe: 'bg-red-50 text-red-900 border-red-200',
+  invariable: 'bg-blue-50 text-blue-900 border-blue-200',
 }
 
 export function WordResultsPanel({ words, hasSequence, level }: WordResultsPanelProps) {
