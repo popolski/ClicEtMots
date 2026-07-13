@@ -1,13 +1,19 @@
+import { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './routes/Home'
+
+const ClavierTool = lazy(() => import('./tools/clavier/ClavierTool').then((m) => ({ default: m.ClavierTool })))
 
 function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50">
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
+        <Suspense fallback={<div className="p-10 text-center text-gray-400">Chargement…</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/clavier" element={<ClavierTool />} />
+          </Routes>
+        </Suspense>
       </div>
     </BrowserRouter>
   )
