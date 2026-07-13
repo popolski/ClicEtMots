@@ -4,14 +4,15 @@ import { PhonemeKeyboard } from '../../components/PhonemeKeyboard'
 import { SequenceBar } from '../../components/SequenceBar'
 import { WordResultsPanel } from '../../components/WordResultsPanel'
 import { buildPhonemeTrie, getMatches, getViableNextPhonemes } from './clavierLogic'
-import { samplePhonemes, sampleWords } from './__fixtures__/sampleWords'
+import { sampleWords } from './__fixtures__/sampleWords'
+import { phonemes } from '../../lib/phonemes'
 import type { PhonemeId } from '../../types/phonetics'
 
 export function ClavierTool() {
   const [sequence, setSequence] = useState<PhonemeId[]>([])
 
   const trie = useMemo(() => buildPhonemeTrie(sampleWords), [])
-  const phonemesById = useMemo(() => new Map(samplePhonemes.map((p) => [p.id, p])), [])
+  const phonemesById = useMemo(() => new Map(phonemes.map((p) => [p.id, p])), [])
 
   const viableNext = useMemo(
     () => (sequence.length === 0 ? null : getViableNextPhonemes(trie, sequence)),
@@ -41,7 +42,7 @@ export function ClavierTool() {
       />
       <div className="mt-6">
         <PhonemeKeyboard
-          phonemes={samplePhonemes}
+          phonemes={phonemes}
           viableNext={viableNext}
           onSelect={(id) => setSequence((s) => [...s, id])}
         />
