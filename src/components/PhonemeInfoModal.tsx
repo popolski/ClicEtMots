@@ -13,17 +13,7 @@ export function PhonemeInfoModal({ phoneme, onClose }: PhonemeInfoModalProps) {
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-4xl font-bold text-gray-900">{phoneme.displaySymbol}</span>
-            {phoneme.gestureImages?.map((src) => (
-              <img
-                key={src}
-                src={src}
-                alt={`Geste Borel-Maisonny — ${phoneme.displaySymbol}`}
-                className="h-14 w-14 object-contain"
-              />
-            ))}
-          </div>
+          <span className="text-4xl font-bold text-gray-900">{phoneme.displaySymbol}</span>
           <button
             type="button"
             onClick={onClose}
@@ -33,6 +23,24 @@ export function PhonemeInfoModal({ phoneme, onClose }: PhonemeInfoModalProps) {
             ✕
           </button>
         </div>
+
+        {phoneme.gestureImages && phoneme.gestureImages.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+              Geste{phoneme.gestureImages.length > 1 ? 's' : ''} Borel-Maisonny
+            </h3>
+            <div className="mt-2 flex gap-4">
+              {phoneme.gestureImages.map((src) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt={`Geste Borel-Maisonny — ${phoneme.displaySymbol}`}
+                  className="h-28 w-28 rounded-xl border border-gray-100 bg-gray-50 object-contain p-1"
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         <h3 className="mt-4 text-sm font-semibold uppercase tracking-wide text-gray-500">Graphies possibles</h3>
         <ul className="mt-2 flex flex-wrap gap-2">
