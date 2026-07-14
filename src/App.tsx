@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './routes/Home'
 
 const ClavierTool = lazy(() => import('./tools/clavier/ClavierTool').then((m) => ({ default: m.ClavierTool })))
+const ConjugueurTool = lazy(() =>
+  import('./tools/conjugueur/ConjugueurTool').then((m) => ({ default: m.ConjugueurTool })),
+)
 
 function App() {
   return (
@@ -12,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/clavier" element={<ClavierTool />} />
+            <Route path="/conjugueur/:verbe" element={<ConjugueurTool />} />
           </Routes>
         </Suspense>
       </div>

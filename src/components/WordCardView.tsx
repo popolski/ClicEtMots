@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type { WordCard, WordCategory } from '../types/phonetics'
 
 interface WordCardViewProps {
@@ -22,8 +23,12 @@ export function WordCardView({ card }: WordCardViewProps) {
     const participe = card.forms.find((f) => f.formRole === 'participe_passé')
     const ilElleOn = card.forms.find((f) => f.formRole === 'il_elle_on')
     const ilsElles = card.forms.find((f) => f.formRole === 'ils_elles')
+    const lemme = card.lemmaId.replace(/^verbe:/, '')
     return (
-      <div className={`rounded-lg border p-3 shadow-sm ${style}`}>
+      <Link
+        to={`/conjugueur/${lemme}`}
+        className={`block rounded-lg border p-3 shadow-sm transition hover:shadow-md ${style}`}
+      >
         <div className="flex flex-wrap justify-between gap-x-4 text-xl font-medium">
           <span>{infinitif?.word}</span>
           {participe && <span>{participe.word}</span>}
@@ -42,10 +47,12 @@ export function WordCardView({ card }: WordCardViewProps) {
             )}
           </div>
         )}
-      </div>
+      </Link>
     )
   }
 
+  // Nom/adjectif : pas encore cliquables — la fiche de destination (famille de
+  // mots, synonymes, antonymes) n'existe pas encore, voir le plan.
   return (
     <div className={`rounded-lg border px-4 py-2 shadow-sm ${style}`}>
       {card.forms.map((form) => (
