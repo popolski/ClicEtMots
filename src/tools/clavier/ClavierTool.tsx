@@ -14,6 +14,12 @@ export function ClavierTool() {
   const [sequence, setSequence] = useState<PhonemeId[]>([])
   const [infoPhonemeId, setInfoPhonemeId] = useState<PhonemeId | null>(null)
   const [trie, setTrie] = useState<PhonemeTrieNode | null>(null)
+  // Les résultats restent cachés tant qu'on ne les demande pas explicitement
+  // (comme le bouton "résultats" du vrai Clavier Métalo) — avec 32 000 mots,
+  // tout afficher dès le premier son cliqué est illisible. Se recache dès
+  // qu'on ajoute/retire un son, pour ne montrer les résultats que quand la
+  // séquence est vraiment celle qu'on veut consulter.
+  const [resultsRevealed, setResultsRevealed] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -38,6 +44,11 @@ export function ClavierTool() {
 
   const infoPhoneme = infoPhonemeId ? phonemesById.get(infoPhonemeId) : undefined
 
+  function updateSequence(updater: (s: PhonemeId[]) => PhonemeId[]) {
+    setSequence(updater)
+    setResultsRevealed(false)
+  }
+
   return (
     <ToolLayout
       title="Clavier phonétique"
@@ -50,20 +61,35 @@ export function ClavierTool() {
           <SequenceBar
             sequence={sequence}
             phonemesById={phonemesById}
-            onBackspace={() => setSequence((s) => s.slice(0, -1))}
-            onClear={() => setSequence([])}
+            onBackspace={() => updateSequence((s) => s.slice(0, -1))}
+            onClear={() => updateSequence(() => [])}
           />
-          <WordResultsPanel
-            key={sequence.join('-')}
-            cards={cards}
-            hasSequence={sequence.length > 0}
-            level={2}
-          />
+
+          {sequence.length > 0 && !resultsRevealed && (
+            <div className="mt-4 text-center">
+              {cards.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setResultsRevealed(true)}
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-6 py-3 text-lg font-medium text-white shadow-sm hover:bg-brand-700 active:scale-95"
+                >
+                  🔍 Voir les mots
+                </button>
+              ) : (
+                <p className="text-gray-400">Aucun mot trouvé.</p>
+              )}
+            </div>
+          )}
+
+          {sequence.length > 0 && resultsRevealed && (
+            <WordResultsPanel key={sequence.join('-')} cards={cards} hasSequence level={2} />
+          )}
+
           <div className="mt-6">
             <PhonemeKeyboard
               phonemes={phonemes}
               viableNext={viableNext}
-              onSelect={(id) => setSequence((s) => [...s, id])}
+              onSelect={(id) => updateSequence((s) => [...s, id])}
               onShowInfo={setInfoPhonemeId}
             />
           </div>
