@@ -3,7 +3,7 @@ import type { WordEntry } from '../../../types/phonetics'
 /**
  * Placeholder word list for the Phase 1 prototype only — NOT the final
  * Lexique383-derived lexicon (see the project plan, Phase 2). Phoneme
- * sequences use the real 33-tile ID space from `src/data/phonemes.json`.
+ * sequences use the real 34-tile ID space from `src/data/phonemes.json`.
  * `lemmaId`/`formRole` group inflected forms into one WordCard, matching
  * how the real Clavier Métalo results page works.
  */
@@ -29,8 +29,8 @@ export const sampleWords: WordEntry[] = [
   { word: 'table', phonemes: ['t', 'a', 'b', 'l'], frequency: 60, level: 1, category: 'nom', lemmaId: 'table', formRole: 'simple' },
   { word: 'robot', phonemes: ['r', 'o', 'b', 'o'], frequency: 45, level: 1, category: 'nom', lemmaId: 'robot', formRole: 'simple' },
   { word: 'fille', phonemes: ['f', 'ill'], frequency: 65, level: 1, category: 'nom', lemmaId: 'fille', formRole: 'simple' },
-  { word: 'maison', phonemes: ['m', 'e', 'z', 'on'], frequency: 75, level: 1, category: 'nom', lemmaId: 'maison', formRole: 'singulier' },
-  { word: 'maisons', phonemes: ['m', 'e', 'z', 'on'], frequency: 25, level: 1, category: 'nom', lemmaId: 'maison', formRole: 'pluriel' },
+  { word: 'maison', phonemes: ['m', 'e2', 'z', 'on'], frequency: 75, level: 1, category: 'nom', lemmaId: 'maison', formRole: 'singulier' },
+  { word: 'maisons', phonemes: ['m', 'e2', 'z', 'on'], frequency: 25, level: 1, category: 'nom', lemmaId: 'maison', formRole: 'pluriel' },
   { word: 'gâteau', phonemes: ['g', 'a', 't', 'o'], frequency: 55, level: 1, category: 'nom', lemmaId: 'gateau', formRole: 'simple' },
   { word: 'soleil', phonemes: ['s', 'o', 'l', 'ill'], frequency: 50, level: 1, category: 'nom', lemmaId: 'soleil', formRole: 'simple' },
   { word: 'lapin', phonemes: ['l', 'a', 'p', 'in'], frequency: 50, level: 1, category: 'nom', lemmaId: 'lapin', formRole: 'simple' },
@@ -51,7 +51,8 @@ export const sampleWords: WordEntry[] = [
   { word: 'sauté', phonemes: ['s', 'o', 't', 'e'], frequency: 30, level: 1, category: 'verbe', lemmaId: 'sauter', formRole: 'participe_passé' },
   { word: 'saute', phonemes: ['s', 'o', 't'], frequency: 32, level: 1, category: 'verbe', lemmaId: 'sauter', formRole: 'il_elle_on' },
   { word: 'sautent', phonemes: ['s', 'o', 't'], frequency: 18, level: 1, category: 'verbe', lemmaId: 'sauter', formRole: 'ils_elles' },
-  { word: 'avec', phonemes: ['a', 'v', 'e', 'c'], frequency: 65, level: 1, category: 'invariable', lemmaId: 'avec', formRole: 'simple' },
+  { word: 'avec', phonemes: ['a', 'v', 'e2', 'c'], frequency: 65, level: 1, category: 'invariable', lemmaId: 'avec', formRole: 'simple' },
+  { word: 'vite', phonemes: ['v', 'i', 't'], frequency: 55, level: 1, category: 'adverbe', lemmaId: 'vite', formRole: 'simple' },
   { word: 'wifi', phonemes: ['w', 'i', 'f', 'i'], frequency: 30, level: 1, category: 'nom', lemmaId: 'wifi', formRole: 'simple' },
   { word: 'taxi', phonemes: ['t', 'a', 'x', 'i'], frequency: 35, level: 1, category: 'nom', lemmaId: 'taxi', formRole: 'simple' },
   { word: 'huit', phonemes: ['ui', 't'], frequency: 40, level: 1, category: 'invariable', lemmaId: 'huit', formRole: 'simple' },

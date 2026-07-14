@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { ToolLayout } from '../../components/ToolLayout'
 import { PhonemeKeyboard } from '../../components/PhonemeKeyboard'
+import { PhonemeInfoModal } from '../../components/PhonemeInfoModal'
 import { SequenceBar } from '../../components/SequenceBar'
 import { WordResultsPanel } from '../../components/WordResultsPanel'
 import { buildPhonemeTrie, getMatches, getViableNextPhonemes, groupIntoCards } from './clavierLogic'
@@ -10,6 +11,7 @@ import type { PhonemeId } from '../../types/phonetics'
 
 export function ClavierTool() {
   const [sequence, setSequence] = useState<PhonemeId[]>([])
+  const [infoPhonemeId, setInfoPhonemeId] = useState<PhonemeId | null>(null)
 
   const trie = useMemo(() => buildPhonemeTrie(sampleWords), [])
   const phonemesById = useMemo(() => new Map(phonemes.map((p) => [p.id, p])), [])
@@ -22,6 +24,8 @@ export function ClavierTool() {
     () => (sequence.length === 0 ? [] : groupIntoCards(getMatches(trie, sequence))),
     [trie, sequence],
   )
+
+  const infoPhoneme = infoPhonemeId ? phonemesById.get(infoPhonemeId) : undefined
 
   return (
     <ToolLayout
@@ -45,8 +49,10 @@ export function ClavierTool() {
           phonemes={phonemes}
           viableNext={viableNext}
           onSelect={(id) => setSequence((s) => [...s, id])}
+          onShowInfo={setInfoPhonemeId}
         />
       </div>
+      {infoPhoneme && <PhonemeInfoModal phoneme={infoPhoneme} onClose={() => setInfoPhonemeId(null)} />}
     </ToolLayout>
   )
 }

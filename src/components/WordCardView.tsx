@@ -4,12 +4,14 @@ interface WordCardViewProps {
   card: WordCard
 }
 
-// Couleurs alignées sur la vraie page de résultats du Clavier Métalo (tuto officiel, p.6).
+// Couleurs choisies par l'enseignante (Feuille de route 2 consignes) : nom=bleu,
+// adjectif=violet, verbe=rouge foncé, invariable=rouge clair, adverbe=orange.
 const categoryStyles: Record<WordCategory, string> = {
-  nom: 'bg-green-50 text-green-900 border-green-200',
-  adjectif: 'bg-yellow-50 text-yellow-900 border-yellow-200',
-  verbe: 'bg-red-50 text-red-900 border-red-200',
-  invariable: 'bg-blue-50 text-blue-900 border-blue-200',
+  nom: 'bg-blue-50 text-blue-900 border-blue-200',
+  adjectif: 'bg-violet-50 text-violet-900 border-violet-200',
+  verbe: 'bg-red-200 text-red-900 border-red-400',
+  invariable: 'bg-red-50 text-red-500 border-red-100',
+  adverbe: 'bg-orange-50 text-orange-900 border-orange-200',
 }
 
 export function WordCardView({ card }: WordCardViewProps) {

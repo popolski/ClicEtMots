@@ -17,12 +17,16 @@ export interface Phoneme {
   /** Position in the keyboard grid. */
   order: number
   level: 1 | 2 | 'both'
+  /** Geste Borel-Maisonny (photo/dessin), un par son — absent pour les 2 sons sans geste dédié (w, ui). */
+  gestureImage?: string
+  /** Piège(s) orthographique(s) ou règle (ex. "Règle du M, B, P") à afficher dans la fiche du son. */
+  note?: string
 }
 
 export type PhonemeTable = Phoneme[]
 
 /** Grammatical category, used to color-code results (matches the original tool's convention). */
-export type WordCategory = 'nom' | 'adjectif' | 'verbe' | 'invariable'
+export type WordCategory = 'nom' | 'adjectif' | 'verbe' | 'invariable' | 'adverbe'
 
 /**
  * Which inflected form a WordEntry represents within its word family. Drives

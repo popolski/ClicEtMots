@@ -6,9 +6,10 @@ interface PhonemeKeyboardProps {
   /** null = no constraint yet (empty sequence, every tile is a valid start). */
   viableNext: Set<PhonemeId> | null
   onSelect: (id: PhonemeId) => void
+  onShowInfo: (id: PhonemeId) => void
 }
 
-export function PhonemeKeyboard({ phonemes, viableNext, onSelect }: PhonemeKeyboardProps) {
+export function PhonemeKeyboard({ phonemes, viableNext, onSelect, onShowInfo }: PhonemeKeyboardProps) {
   return (
     <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-7">
       {phonemes.map((phoneme) => (
@@ -17,6 +18,7 @@ export function PhonemeKeyboard({ phonemes, viableNext, onSelect }: PhonemeKeybo
           phoneme={phoneme}
           disabled={viableNext !== null && !viableNext.has(phoneme.id)}
           onSelect={onSelect}
+          onShowInfo={onShowInfo}
         />
       ))}
     </div>
