@@ -20,11 +20,25 @@ const TENSES: { key: 'passeCompose' | 'imparfait' | 'present' | 'futur'; label: 
 function PersonRow({ personne, form }: { personne: string; form: StyledForm | undefined }) {
   if (!form) return null
   const { texte, elide } = pronomAffiche(personne, form)
+  // Élidé ("J'ai") : pas de colonne pronom séparée, tout démarre à gauche
+  // au même niveau que "Tu"/"Il"/etc. — sinon "J'ai" se retrouve décalé
+  // après une case pronom vide.
+  if (elide) {
+    return (
+      <div className="flex items-baseline text-xl">
+        <span>
+          <span className="text-gray-500">{texte}</span>
+          <span className="text-gray-500">{form.prefix}</span>
+          <span className="font-medium text-gray-900">{form.stem}</span>
+          <span className="font-semibold text-red-700">{form.ending}</span>
+        </span>
+      </div>
+    )
+  }
   return (
     <div className="flex items-baseline gap-2 text-xl">
-      <span className="w-16 shrink-0 text-gray-500">{elide ? '' : texte}</span>
+      <span className="w-16 shrink-0 text-gray-500">{texte}</span>
       <span>
-        {elide && <span className="text-gray-500">{texte}</span>}
         <span className="text-gray-500">{form.prefix}</span>
         <span className="font-medium text-gray-900">{form.stem}</span>
         <span className="font-semibold text-red-700">{form.ending}</span>
