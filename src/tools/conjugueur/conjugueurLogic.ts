@@ -44,7 +44,8 @@ export function styleConjugatedForms(forms: Record<string, string>): Record<stri
   return result
 }
 
-export const PERSONNES_ORDRE = ['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles']
+export const PERSONNES_SINGULIER = ['je', 'tu', 'il', 'elle', 'on']
+export const PERSONNES_PLURIEL = ['nous', 'vous', 'ils', 'elles']
 
 export const PRONOMS: Record<string, string> = {
   je: 'Je',
