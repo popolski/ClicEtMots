@@ -58,3 +58,18 @@ export const PRONOMS: Record<string, string> = {
   ils: 'Ils',
   elles: 'Elles',
 }
+
+const VOYELLE_OU_H = /^[aeiouyàâäéèêëïîôöùûüh]/i
+
+/**
+ * "Je" s'élide en "J'" devant une voyelle ou un h muet (j'ai, j'aime,
+ * j'habite) — seul pronom sujet concerné parmi les 9 (il/elle/on/nous/
+ * vous/ils/elles ne s'élident pas : "il a", "on a").
+ */
+export function pronomAffiche(personne: string, form: StyledForm): { texte: string; elide: boolean } {
+  const premiereLettre = (form.prefix || form.stem || form.ending)[0] ?? ''
+  if (personne === 'je' && VOYELLE_OU_H.test(premiereLettre)) {
+    return { texte: "J'", elide: true }
+  }
+  return { texte: PRONOMS[personne], elide: false }
+}
