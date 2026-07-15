@@ -130,11 +130,24 @@ function buildIndex(dirName) {
       }
       const existing = targets.get(entry2.lemmaId)
       if (!existing || weight > existing.weight) {
-        targets.set(entry2.lemmaId, { weight, member: { word: entry2.word, category: entry2.category, lemmaId: entry2.lemmaId } })
+        targets.set(entry2.lemmaId, {
+          weight,
+          frequency: entry2.frequency,
+          member: { word: entry2.word, category: entry2.category, lemmaId: entry2.lemmaId },
+        })
       }
     }
   }
 
+  // Essayé et abandonné : trier par fréquence Manulex du mot cible plutôt
+  // que par poids JeuxDeMots, dans l'idée de privilégier le sens premier.
+  // Résultat pire en pratique — pour "manger", ça faisait remonter "prendre"/
+  // "cuisine" (mots très fréquents mais synonymes faibles/hors-sujet) devant
+  // "dévorer"/"avaler"/"engloutir" (poids 504/479/459, bien plus pertinents
+  // mais un peu moins fréquents en tant que mots). Le poids JeuxDeMots reste
+  // le meilleur signal de qualité disponible ; les cas résiduels
+  // (littéraire/hors-sujet malgré un poids élevé, ex. "araignée"/"sexe")
+  // se traitent au cas par cas via excluded-relations.mjs.
   const index = {}
   for (const [lemmaId, targets] of byLemma) {
     index[lemmaId] = [...targets.values()]
