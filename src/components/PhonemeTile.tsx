@@ -7,9 +7,16 @@ interface PhonemeTileProps {
   onShowInfo: (id: PhonemeId) => void
 }
 
+// Comme sur le vrai Clavier Métalo : les différentes graphies d'un son sont
+// affichées à la même taille (pas une grosse + des petites en dessous), sur
+// deux colonnes. On en montre au plus 4 : au-delà (ex. "ill", 17 graphies
+// possibles), ce sont de toute façon des variantes rares peu utiles à
+// afficher sur la touche elle-même — les autres restent dans la fiche du son.
+const MAX_DISPLAYED_GRAPHEMES = 4
+
 export function PhonemeTile({ phoneme, disabled, onSelect, onShowInfo }: PhonemeTileProps) {
-  const [primary, ...rest] = phoneme.graphemes
-  const secondaryGraphemes = rest.slice(0, 2).map((g) => g.grapheme)
+  const primary = phoneme.graphemes[0]
+  const displayedGraphemes = phoneme.graphemes.slice(0, MAX_DISPLAYED_GRAPHEMES).map((g) => g.grapheme)
 
   return (
     <div className="relative">
@@ -17,21 +24,24 @@ export function PhonemeTile({ phoneme, disabled, onSelect, onShowInfo }: Phoneme
         type="button"
         disabled={disabled}
         onClick={() => onSelect(phoneme.id)}
-        className={`flex w-full flex-col items-center justify-center rounded-xl border-2 p-2 pt-3 text-center transition ${
+        className={`flex w-full flex-col items-center justify-center gap-1 rounded-xl border-2 p-2 pt-3 text-center transition ${
           disabled
             ? 'cursor-not-allowed border-gray-100 bg-gray-50 text-gray-300'
             : 'border-brand-200 bg-white text-gray-900 hover:border-brand-500 hover:bg-brand-50 active:scale-95'
         }`}
       >
-        <span className="text-2xl font-bold">{phoneme.displaySymbol}</span>
-        {secondaryGraphemes.length > 0 && (
-          <span className="text-[10px] text-gray-400">{secondaryGraphemes.join(' · ')}</span>
-        )}
+        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
+          {displayedGraphemes.map((g) => (
+            <span key={g} className="text-lg font-bold">
+              {g}
+            </span>
+          ))}
+        </div>
         {primary?.exampleImage && (
           <img
             src={primary.exampleImage}
             alt={primary.exampleWord}
-            className={`mt-1 h-8 w-8 object-contain ${disabled ? 'opacity-30 grayscale' : ''}`}
+            className={`h-8 w-8 object-contain ${disabled ? 'opacity-30 grayscale' : ''}`}
           />
         )}
       </button>

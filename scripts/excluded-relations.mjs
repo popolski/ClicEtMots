@@ -36,6 +36,10 @@ export function isExcludedRelation(wordA, wordB) {
 // supprime la source entière.
 export const EXCLUDED_RELATION_SOURCES = new Set([
   'sexe', // quasi tous les "synonymes" sont des vulgarismes (chatte, queue, bite...)
+  // "dent" : ses meilleurs résultats par poids viennent tous d'expressions
+  // figurées ("avoir une dent contre" -> rancune/haine, "dent de scie" ->
+  // aiguille/sommet/crête/pic), pas du sens premier (une dent de la bouche).
+  'dent',
 ])
 
 export function hasSuppressedRelations(word) {
