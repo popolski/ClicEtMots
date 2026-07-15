@@ -19,28 +19,6 @@ const RAW_PAIRS = [
   ['araignée', 'coussinet'],
   ['araignée', 'filet'],
   ['araignée', 'carrelet'],
-  // dent : de vrais synonymes existent (croc, quenotte, chicot — confirmé
-  // par le Larousse), mais noyés parmi des sens figurés au poids tout aussi
-  // élevé : "avoir une dent contre" (rancune, ressentiment, haine, rancœur,
-  // animosité) et "dent de scie/montagne" (aiguille, sommet, crête, pic,
-  // éperon, saillie), plus quelques termes techniques d'engrenage (alluchon,
-  // came) ou géologiques (chaille) sans rapport avec une dent de la bouche.
-  ['dent', 'aiguille'],
-  ['dent', 'sommet'],
-  ['dent', 'rancune'],
-  ['dent', 'ressentiment'],
-  ['dent', 'haine'],
-  ['dent', 'crête'],
-  ['dent', 'pic'],
-  ['dent', 'éperon'],
-  ['dent', 'alluchon'],
-  ['dent', 'came'],
-  ['dent', 'chaille'],
-  ['dent', 'indentation'],
-  ['dent', 'animosité'],
-  ['dent', 'saillie'],
-  ['dent', 'tabouret'],
-  ['dent', 'rancoeur'],
 ]
 
 export const EXCLUDED_RELATION_PAIRS = new Set(RAW_PAIRS.map(([a, b]) => [a, b].sort().join('::')))
@@ -62,4 +40,20 @@ export const EXCLUDED_RELATION_SOURCES = new Set([
 
 export function hasSuppressedRelations(word) {
   return EXCLUDED_RELATION_SOURCES.has(word)
+}
+
+// Pour certains mots, la quasi-totalité des relations JeuxDeMots (même à
+// poids élevé) viennent de sens figurés (idiomes, expressions), et exclure
+// les mauvaises paires une à une ne finit jamais : dès qu'on en retire une,
+// la suivante dans le classement est tout aussi fausse (ex. "dent" : aiguille,
+// sommet, rancune, domino, pince, arrêt, cran, broche... rejetés tour à
+// tour, alors que seuls "croc" et "défense" sont de vrais synonymes reconnus,
+// confirmés par le Larousse). Pour ces mots, on fige la liste à la main une
+// bonne fois pour toutes plutôt que de continuer à découvrir des exceptions.
+const MANUAL_SYNONYMS = {
+  dent: ['croc', 'défense'],
+}
+
+export function manualSynonymsFor(word) {
+  return MANUAL_SYNONYMS[word] ?? null
 }

@@ -24,7 +24,7 @@ export function PhonemeTile({ phoneme, disabled, onSelect, onShowInfo }: Phoneme
         type="button"
         disabled={disabled}
         onClick={() => onSelect(phoneme.id)}
-        className={`flex w-full flex-col items-center justify-center gap-1 rounded-xl border-2 p-2 pt-3 text-center transition ${
+        className={`flex w-full items-center justify-between gap-1 rounded-xl border-2 p-2 pt-3 text-left transition ${
           disabled
             ? 'cursor-not-allowed border-gray-100 bg-gray-50 text-gray-300'
             : 'border-brand-200 bg-white text-gray-900 hover:border-brand-500 hover:bg-brand-50 active:scale-95'
@@ -41,7 +41,7 @@ export function PhonemeTile({ phoneme, disabled, onSelect, onShowInfo }: Phoneme
           <img
             src={primary.exampleImage}
             alt={primary.exampleWord}
-            className={`h-8 w-8 object-contain ${disabled ? 'opacity-30 grayscale' : ''}`}
+            className={`h-9 w-9 shrink-0 object-contain ${disabled ? 'opacity-30 grayscale' : ''}`}
           />
         )}
       </button>

@@ -28,7 +28,7 @@
 //
 // Lancé à la main, après build-word-index.mjs : node scripts/build-word-synonyms.mjs
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
-import { isExcludedRelation, hasSuppressedRelations } from './excluded-relations.mjs'
+import { isExcludedRelation, hasSuppressedRelations, manualSynonymsFor } from './excluded-relations.mjs'
 
 const wordIndexPath = new URL('../src/data/words-clavier2.json', import.meta.url)
 const wordIndex = JSON.parse(readFileSync(wordIndexPath, 'utf8'))
@@ -155,6 +155,23 @@ function buildIndex(dirName) {
       .slice(0, MAX_PAR_MOT)
       .map((t) => t.member)
   }
+
+  // Remplace entièrement le calcul JeuxDeMots pour les quelques mots figés à
+  // la main (voir MANUAL_SYNONYMS dans excluded-relations.mjs) — seulement
+  // pertinent pour les synonymes, jamais pour les antonymes.
+  if (dirName === 'r_syn') {
+    for (const [word, entries] of baseEntriesByWord) {
+      const manualWords = manualSynonymsFor(word)
+      if (!manualWords) continue
+      for (const entry of entries) {
+        index[entry.lemmaId] = manualWords
+          .map((w) => baseEntriesByWord.get(w)?.[0])
+          .filter((e) => e !== undefined)
+          .map((e) => ({ word: e.word, category: e.category, lemmaId: e.lemmaId }))
+      }
+    }
+  }
+
   return index
 }
 
