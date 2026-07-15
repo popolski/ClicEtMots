@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import type { WordCard, WordCategory, WordFormRole } from '../types/phonetics'
+import type { WordCard, WordCategory } from '../types/phonetics'
+import { pickPrimaryForm } from '../tools/clavier/clavierLogic'
 
 interface WordCardViewProps {
   card: WordCard
@@ -15,20 +16,12 @@ const categoryStyles: Record<WordCategory, string> = {
   adverbe: 'bg-orange-50 text-orange-900 border-orange-200',
 }
 
-// Forme "de base" affichée dans les résultats — les autres formes (pluriel,
-// féminin, participe passé) n'apparaissent que dans la fiche mot (tuile
-// cliquable), pour ne pas surcharger la liste de résultats.
-const BASE_ROLE: Record<WordCategory, WordFormRole> = {
-  nom: 'singulier',
-  adjectif: 'masculin',
-  verbe: 'infinitif',
-  adverbe: 'simple',
-  invariable: 'simple',
-}
-
 export function WordCardView({ card }: WordCardViewProps) {
   const style = categoryStyles[card.category]
-  const primary = card.forms.find((f) => f.formRole === BASE_ROLE[card.category]) ?? card.forms[0]
+  // Forme "de base" affichée dans les résultats — les autres formes (pluriel,
+  // féminin, participe passé) n'apparaissent que dans la fiche mot (tuile
+  // cliquable), pour ne pas surcharger la liste de résultats.
+  const primary = pickPrimaryForm(card.forms)
 
   return (
     <Link

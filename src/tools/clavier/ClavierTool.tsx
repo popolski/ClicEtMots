@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { ToolLayout } from '../../components/ToolLayout'
 import { PhonemeKeyboard } from '../../components/PhonemeKeyboard'
 import { PhonemeInfoModal } from '../../components/PhonemeInfoModal'
@@ -11,7 +12,15 @@ import { phonemes } from '../../lib/phonemes'
 import type { PhonemeId } from '../../types/phonetics'
 
 export function ClavierTool() {
-  const [sequence, setSequence] = useState<PhonemeId[]>([])
+  // La séquence vit dans l'URL (?seq=ch,ou,e,t), pas dans un simple useState :
+  // en cliquant un résultat on quitte cette page (fiche mot), ce qui démonte
+  // le composant. Sans ça, le bouton "Retour" (navigate(-1)) revenait sur un
+  // clavier vidé au lieu de retrouver la recherche en cours.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const sequence = useMemo(() => {
+    const raw = searchParams.get('seq')
+    return raw ? (raw.split(',') as PhonemeId[]) : []
+  }, [searchParams])
   const [infoPhonemeId, setInfoPhonemeId] = useState<PhonemeId | null>(null)
   const [trie, setTrie] = useState<PhonemeTrieNode | null>(null)
   // Les résultats restent cachés tant qu'on ne les demande pas explicitement
@@ -45,7 +54,11 @@ export function ClavierTool() {
   const infoPhoneme = infoPhonemeId ? phonemesById.get(infoPhonemeId) : undefined
 
   function updateSequence(updater: (s: PhonemeId[]) => PhonemeId[]) {
-    setSequence(updater)
+    const next = updater(sequence)
+    // replace (pas push) : chaque son cliqué ne doit pas créer une entrée
+    // d'historique séparée, sinon "Précédent" du navigateur n'irait retirer
+    // qu'un seul phonème à la fois au lieu de sortir du clavier.
+    setSearchParams(next.length > 0 ? { seq: next.join(',') } : {}, { replace: true })
     setResultsRevealed(false)
   }
 

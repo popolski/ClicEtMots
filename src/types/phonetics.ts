@@ -61,6 +61,14 @@ export interface WordEntry {
   /** Groups forms of the same word family into one WordCard. */
   lemmaId: string
   formRole: WordFormRole
+  /**
+   * Uniquement pour les noms dont le lemme a un féminin distinct (ex. chat/
+   * chatte, renard/renarde) : genre de CETTE forme précise. formRole ne
+   * porte que le nombre (singulier/pluriel) pour les noms, donc sans ce
+   * champ deux formes de genre différent au même nombre (ex. "chat" et
+   * "chatte", toutes deux "singulier") seraient indiscernables.
+   */
+  genre?: 'm' | 'f'
 }
 
 export type WordIndex = WordEntry[]
@@ -79,6 +87,13 @@ export interface WordFamilyMember {
   word: string
   category: WordCategory
   lemmaId: string
+  /**
+   * false pour un mot qui est dans Manulex (donc scolaire) mais pas dans
+   * EQOL, et de ce fait absent de notre lexique principal (words-clavier2.json)
+   * — il n'a pas sa propre fiche mot, donc pas cliquable, juste affiché à
+   * titre indicatif (ex. "maisonnette", famille de "maison").
+   */
+  inLexicon: boolean
 }
 
 /** src/data/word-families.json : lemmaId -> ses mots de la même famille présents dans notre lexique. */

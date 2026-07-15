@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { ToolLayout } from '../../components/ToolLayout'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { loadWordFamilies } from '../../lib/wordFamilies'
+import { pickPrimaryForm } from '../clavier/clavierLogic'
 import type { WordCategory, WordEntry, WordFamilyMember, WordFormRole } from '../../types/phonetics'
 
 const CATEGORY_LABEL: Record<WordCategory, string> = {
@@ -33,12 +34,17 @@ const FORM_ROLE_LABEL: Partial<Record<WordFormRole, string>> = {
 // le conjugueur (les 9 personnes) — pas la peine de les redupliquer ici.
 const ROLES_HIDDEN_FROM_FICHE: WordFormRole[] = ['il_elle_on', 'ils_elles']
 
-const BASE_ROLE: Record<WordCategory, WordFormRole> = {
-  nom: 'singulier',
-  adjectif: 'masculin',
-  verbe: 'infinitif',
-  adverbe: 'simple',
-  invariable: 'simple',
+// Pour un nom, formRole ne porte que le nombre (singulier/pluriel) — le genre
+// (chat/chatte, renard/renarde) est un champ séparé (WordEntry.genre). Cette
+// fonction combine les deux, mais seulement quand le lemme a VRAIMENT les
+// deux genres (chat/chatte) : un nom comme "maison" (féminin seul, pas de
+// variante masculine) ne doit pas afficher "Féminin pluriel" pour "maisons",
+// juste "Pluriel" — le genre n'est pertinent que par contraste.
+function formLabel(f: WordEntry, hasBothGenders: boolean): string {
+  if (f.category === 'nom' && f.genre === 'f' && hasBothGenders) {
+    return f.formRole === 'pluriel' ? 'Féminin pluriel' : 'Féminin'
+  }
+  return FORM_ROLE_LABEL[f.formRole] ?? f.formRole
 }
 
 export function MotTool() {
@@ -66,7 +72,7 @@ export function MotTool() {
     )
   }
 
-  const primary = forms.find((f) => f.formRole === BASE_ROLE[f.category])
+  const primary = forms.length > 0 ? pickPrimaryForm(forms) : undefined
   if (!primary) {
     return (
       <ToolLayout title="Fiche mot" description="Mot introuvable">
@@ -76,6 +82,7 @@ export function MotTool() {
   }
 
   const otherForms = forms.filter((f) => f !== primary && !ROLES_HIDDEN_FROM_FICHE.includes(f.formRole))
+  const hasBothGenders = forms.some((f) => f.genre === 'm') && forms.some((f) => f.genre === 'f')
   const style = categoryStyles[primary.category]
 
   return (
@@ -86,7 +93,7 @@ export function MotTool() {
           <div className="flex flex-wrap gap-3">
             {otherForms.map((f) => (
               <div key={f.word} className={`rounded-lg border px-4 py-2 ${style}`}>
-                <div className="text-xs opacity-70">{FORM_ROLE_LABEL[f.formRole] ?? f.formRole}</div>
+                <div className="text-xs opacity-70">{formLabel(f, hasBothGenders)}</div>
                 <div className="text-xl font-medium">{f.word}</div>
               </div>
             ))}
@@ -113,16 +120,25 @@ export function MotTool() {
           <p className="text-gray-400">Aucun mot de la même famille trouvé dans notre lexique.</p>
         ) : (
           <div className="flex flex-wrap gap-3">
-            {family.map((member) => (
-              <Link
-                key={member.lemmaId}
-                to={`/mot/${encodeURIComponent(member.lemmaId)}`}
-                className={`rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${categoryStyles[member.category]}`}
-              >
-                <div className="text-xs opacity-70">{CATEGORY_LABEL[member.category]}</div>
-                <div className="text-xl font-medium">{member.word}</div>
-              </Link>
-            ))}
+            {family.map((member) =>
+              member.inLexicon ? (
+                <Link
+                  key={member.lemmaId}
+                  to={`/mot/${encodeURIComponent(member.lemmaId)}`}
+                  className={`rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${categoryStyles[member.category]}`}
+                >
+                  <div className="text-xs opacity-70">{CATEGORY_LABEL[member.category]}</div>
+                  <div className="text-xl font-medium">{member.word}</div>
+                </Link>
+              ) : (
+                // Mot scolaire (Manulex) mais absent d'EQOL : pas de fiche à
+                // ouvrir, affiché quand même à titre indicatif (ex. "maisonnette").
+                <div key={member.lemmaId} className={`rounded-lg border px-4 py-2 opacity-70 ${categoryStyles[member.category]}`}>
+                  <div className="text-xs opacity-70">{CATEGORY_LABEL[member.category]}</div>
+                  <div className="text-xl font-medium">{member.word}</div>
+                </div>
+              ),
+            )}
           </div>
         )}
       </div>

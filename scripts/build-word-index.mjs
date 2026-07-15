@@ -11,15 +11,17 @@
 // CP-CE1-CE2, 2 = cycle 3 CM1-CM2 ou plus tardif), via le taux de réussite
 // par classe.
 //
-// Cas particulier des verbes : les filtres Manulex ET EQOL se décident au
-// niveau du VERBE, pas forme par forme. Sinon un verbe dont seule une forme
-// conjuguée (ex. "huile") apparaît dans Manulex, mais pas l'infinitif
-// ("huiler") lui-même, perdrait son infinitif alors que le verbe est
-// manifestement connu des élèves. Si au moins une forme du verbe est dans
-// Manulex ET au moins une forme (pas forcément la même) est dans EQOL, on
-// construit la carte complète (infinitif/participe passé/il-elle-on/ils-
-// elles) à partir de Lexique383, même pour les formes qui n'ont pas elles-
-// mêmes de correspondance directe dans l'une ou l'autre base.
+// Cas particulier des noms, adjectifs et verbes : les filtres Manulex ET
+// EQOL se décident au niveau du LEMME, pas forme par forme. Sinon un verbe
+// dont seule une forme conjuguée (ex. "huile") apparaît dans Manulex, mais
+// pas l'infinitif ("huiler") lui-même, perdrait son infinitif ; un nom comme
+// "renard" perdrait son féminin/pluriel ("renarde", "renards") simplement
+// parce qu'EQOL n'a pas testé individuellement ces formes-là, alors que le
+// mot est manifestement connu des élèves. Si au moins une forme du lemme est
+// dans Manulex ET au moins une forme (pas forcément la même) est dans EQOL,
+// on construit la carte complète à partir de Lexique383, même pour les
+// formes qui n'ont pas elles-mêmes de correspondance directe dans l'une ou
+// l'autre base.
 //
 // Prérequis :
 //   third_party/manulex/manulex-forms.csv (export de Manulex.xls,
@@ -99,9 +101,10 @@ function categoryFor(cgram) {
 }
 
 // --- Lecture + décodage phonétique -------------------------------------------
-// Pour les non-verbes, le filtre Manulex s'applique tout de suite (chaque
-// forme doit justifier sa propre présence). Pour les verbes, on garde toutes
-// les lignes ici et on décide au niveau du lemme plus bas.
+// Seuls adverbe/invariable (une forme unique, pas de variantes de genre/nombre)
+// sont filtrés tout de suite : chaque forme doit justifier sa propre présence.
+// Nom/adjectif/verbe gardent toutes leurs lignes ici et se décident au niveau
+// du lemme plus bas (voir plus haut).
 const rows = []
 let droppedNotInManulex = 0
 let droppedNotInEqol = 0
@@ -115,11 +118,12 @@ for (let i = 1; i < lines.length; i++) {
   if (!category) continue
 
   const manulexSfi = manulexByWord.get(ortho)
-  if (category !== 'verbe' && manulexSfi === undefined) {
+  const filteredPerRow = category === 'adverbe' || category === 'invariable'
+  if (filteredPerRow && manulexSfi === undefined) {
     droppedNotInManulex++
     continue // le mot n'apparaît dans aucun des 54 manuels scolaires étudiés
   }
-  if (category !== 'verbe' && !eqolByWord.has(ortho)) {
+  if (filteredPerRow && !eqolByWord.has(ortho)) {
     droppedNotInEqol++
     continue // le mot n'apparaît pas dans la base de test EQOL (CP -> 6e)
   }
@@ -150,7 +154,7 @@ for (let i = 1; i < lines.length; i++) {
 // verbe qui partagent la même orthographe de lemme (ex. "être" nom vs verbe).
 const entriesByLemma = new Map()
 
-function addEntry(lemmaId, category, word, phonemes, formRole, frequency) {
+function addEntry(lemmaId, category, word, phonemes, formRole, frequency, genre) {
   const key = `${lemmaId}::${formRole}::${word}`
   const list = entriesByLemma.get(lemmaId) ?? []
   const existingIdx = list.findIndex((e) => e.key === key)
@@ -159,12 +163,26 @@ function addEntry(lemmaId, category, word, phonemes, formRole, frequency) {
     // ART:def ET en PRE) — on garde la fréquence la plus élevée plutôt que
     // la première ligne rencontrée dans le fichier.
     if (frequency > list[existingIdx].frequency) {
-      list[existingIdx] = { key, word, phonemes, frequency, category, lemmaId, formRole }
+      list[existingIdx] = { key, word, phonemes, frequency, category, lemmaId, formRole, genre }
     }
     return
   }
-  list.push({ key, word, phonemes, frequency, category, lemmaId, formRole })
+  list.push({ key, word, phonemes, frequency, category, lemmaId, formRole, genre })
   entriesByLemma.set(lemmaId, list)
+}
+
+// Qualification par lemme, commune à nom/adjectif/verbe : le lemme est
+// retenu si AU MOINS une de ses formes candidates est dans Manulex ET AU
+// MOINS une (pas forcément la même) est dans EQOL.
+function qualifies(candidateRows) {
+  const hasManulexForm = candidateRows.some((r) => r.manulexSfi !== undefined)
+  const hasEqolForm = candidateRows.some((r) => eqolByWord.has(r.ortho))
+  return hasManulexForm && hasEqolForm
+}
+
+function representativeFrequency(candidateRows) {
+  const sfis = candidateRows.map((r) => r.manulexSfi).filter((sfi) => sfi !== undefined)
+  return Math.max(...sfis)
 }
 
 // Pour verbe : on garde la ligne la plus pertinente par (lemme, rôle) — en
@@ -181,16 +199,21 @@ function isBetterVerbCandidate(candidate, current) {
   return candidate.freqlivres > current.freqlivres
 }
 
+const nomRowsByLemma = new Map()
+const adjectifRowsByLemma = new Map()
+
 for (const row of rows) {
   if (row.category === 'nom') {
-    const lemmaId = `nom:${row.lemme}`
     const formRole = row.nombre === 'p' ? 'pluriel' : 'singulier'
-    addEntry(lemmaId, 'nom', row.ortho, row.phonemes, formRole, row.manulexSfi)
+    const list = nomRowsByLemma.get(row.lemme) ?? []
+    list.push({ ...row, role: formRole })
+    nomRowsByLemma.set(row.lemme, list)
   } else if (row.category === 'adjectif') {
     if (row.nombre === 'p') continue // seules les formes au singulier (règle Clavier 1)
-    const lemmaId = `adjectif:${row.lemme}`
     const formRole = row.genre === 'f' ? 'féminin' : 'masculin'
-    addEntry(lemmaId, 'adjectif', row.ortho, row.phonemes, formRole, row.manulexSfi)
+    const list = adjectifRowsByLemma.get(row.lemme) ?? []
+    list.push({ ...row, role: formRole })
+    adjectifRowsByLemma.set(row.lemme, list)
   } else if (row.category === 'adverbe') {
     addEntry(`adverbe:${row.ortho}`, 'adverbe', row.ortho, row.phonemes, 'simple', row.manulexSfi)
   } else if (row.category === 'invariable') {
@@ -224,15 +247,57 @@ for (const [slotKey, row] of verbSlotBest) {
 
 let verbLemmesRejected = 0
 for (const [lemme, verbRows] of verbRowsByLemma) {
-  const qualifyingSfis = verbRows.map((r) => r.manulexSfi).filter((sfi) => sfi !== undefined)
-  const hasEqolForm = verbRows.some((r) => eqolByWord.has(r.ortho))
-  if (qualifyingSfis.length === 0 || !hasEqolForm) {
+  if (!qualifies(verbRows)) {
     verbLemmesRejected++
     continue // aucune forme de ce verbe n'apparaît dans Manulex, ou aucune dans EQOL
   }
-  const representativeSfi = Math.max(...qualifyingSfis)
+  const representativeSfi = representativeFrequency(verbRows)
   for (const row of verbRows) {
     addEntry(`verbe:${lemme}`, 'verbe', row.ortho, row.phonemes, row.role, row.manulexSfi ?? representativeSfi)
+  }
+}
+
+// Même qualification par lemme pour les noms (garde masculin ET féminin,
+// singulier ET pluriel, dès qu'un des deux est reconnu par Manulex+EQOL —
+// résout le cas "renard" qui perdait "renarde"/"renards").
+let nomLemmesRejected = 0
+for (const [lemme, nomRows] of nomRowsByLemma) {
+  if (!qualifies(nomRows)) {
+    nomLemmesRejected++
+    continue
+  }
+  const representativeSfi = representativeFrequency(nomRows)
+  // Lexique383 laisse parfois le genre vide sur une ligne (souvent le
+  // singulier) même quand une autre ligne du même lemme le précise (ex.
+  // "maison" genre="" mais "maisons" genre="f") — sans ça, un nom à genre
+  // unique se ferait à tort passer pour ayant féminin ET masculin. On ne
+  // garde une distinction de genre que si les DEUX genres sont explicitement
+  // attestés quelque part dans le lemme ; sinon, le genre unique attesté
+  // (ou "m" par défaut) s'applique à toutes les formes.
+  const explicitGenres = new Set(nomRows.map((r) => r.genre).filter(Boolean))
+  const singleGenre = explicitGenres.size <= 1 ? [...explicitGenres][0] || 'm' : null
+  for (const row of nomRows) {
+    addEntry(
+      `nom:${lemme}`,
+      'nom',
+      row.ortho,
+      row.phonemes,
+      row.role,
+      row.manulexSfi ?? representativeSfi,
+      singleGenre ?? (row.genre || 'm'),
+    )
+  }
+}
+
+let adjectifLemmesRejected = 0
+for (const [lemme, adjectifRows] of adjectifRowsByLemma) {
+  if (!qualifies(adjectifRows)) {
+    adjectifLemmesRejected++
+    continue
+  }
+  const representativeSfi = representativeFrequency(adjectifRows)
+  for (const row of adjectifRows) {
+    addEntry(`adjectif:${lemme}`, 'adjectif', row.ortho, row.phonemes, row.role, row.manulexSfi ?? representativeSfi)
   }
 }
 
@@ -253,6 +318,7 @@ const wordIndex = finalEntries
     category: e.category,
     lemmaId: e.lemmaId,
     formRole: e.formRole,
+    ...(e.genre ? { genre: e.genre } : {}),
   }))
   .sort((a, b) => b.frequency - a.frequency)
 
@@ -269,8 +335,10 @@ writeFileSync(new URL('words-review.csv', reviewDir), '﻿' + csvHeader + csvRow
 console.log(
   `${wordIndex.length} mots générés (croisement Manulex + EQOL, ou verbe dont au moins une forme est dans chacune des deux).`,
 )
-console.log(`${droppedNotInManulex} lignes non-verbe écartées car absentes de Manulex.`)
-console.log(`${droppedNotInEqol} lignes non-verbe écartées car absentes de EQOL.`)
+console.log(`${droppedNotInManulex} lignes adverbe/invariable écartées car absentes de Manulex.`)
+console.log(`${droppedNotInEqol} lignes adverbe/invariable écartées car absentes de EQOL.`)
+console.log(`${nomLemmesRejected} noms écartés car aucune forme dans Manulex, ou aucune dans EQOL.`)
+console.log(`${adjectifLemmesRejected} adjectifs écartés car aucune forme dans Manulex, ou aucune dans EQOL.`)
 console.log(`${verbLemmesRejected} verbes écartés car aucune forme dans Manulex, ou aucune dans EQOL.`)
 console.log(`Familles de mots (cartes) : ${lemmaGroups.length}`)
 const byCategory = {}

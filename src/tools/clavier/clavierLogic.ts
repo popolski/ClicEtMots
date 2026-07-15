@@ -61,6 +61,29 @@ export function getViableNextPhonemes(trie: PhonemeTrieNode, sequence: PhonemeId
   return new Set(node.children.keys())
 }
 
+// Forme "de base" par catégorie, affichée dans les résultats et utilisée
+// comme clé de recherche des mots de la même famille (Démonette) — les
+// autres formes (pluriel, féminin, participe passé) restent dans la fiche
+// mot. Pour les noms, on préfère le masculin quand les deux genres existent
+// (chat/chatte, renard/renarde) : c'est la forme "neutre" par défaut.
+const BASE_ROLE: Record<string, WordFormRole> = {
+  nom: 'singulier',
+  adjectif: 'masculin',
+  verbe: 'infinitif',
+  adverbe: 'simple',
+  invariable: 'simple',
+}
+
+export function pickPrimaryForm(forms: WordEntry[]): WordEntry {
+  const category = forms[0]?.category
+  const baseRole = category ? BASE_ROLE[category] : undefined
+  return (
+    forms.find((f) => f.formRole === baseRole && f.genre !== 'f') ??
+    forms.find((f) => f.formRole === baseRole) ??
+    forms[0]
+  )
+}
+
 const FORM_ROLE_ORDER: WordFormRole[] = [
   'simple',
   'singulier',
