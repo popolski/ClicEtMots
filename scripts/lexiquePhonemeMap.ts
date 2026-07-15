@@ -23,16 +23,16 @@ export const multiCharPatterns: PhonemePattern[] = [
   { match: 'wa', id: 'oi' }, // oiseau, moi, roi -> wazo, mwa, Rwa
   { match: '8i', id: 'ui' }, // huit, lui, pluie, fruit -> 8it, l8i, pl8i, fR8i
   { match: 'ks', id: 'x' }, // taxi -> taksi
-  // Notre touche "ill" (yod) absorbe la voyelle "i" qui la précède quand elle
-  // fait partie de la graphie (fille = f+i+j -> f + ill, pas f+i+ill) ainsi
-  // que la nasale qui la suit pour les graphies "ien"/"ion" (chien = ch+j+5
-  // -> ch + ill, avion = a+v+j+§ -> a+v+ill).
-  { match: 'ij', id: 'ill' }, // fille -> fij
-  { match: 'j5', id: 'ill' }, // chien -> Sj5 (graphie "ien")
-  { match: 'j§', id: 'ill' }, // avion -> avj§ (graphie "ion")
-  { match: 'j1', id: 'ill' }, // graphie "ien" variante un-nasal (rare)
-  { match: 'j@', id: 'ill' }, // graphie "ian" (rare)
+  // Quand un [i] voyelle précède immédiatement le yod, ils forment la graphie
+  // "ill" (fille = f+ij -> f+ill, brillant = bR+ij+@ -> b+r+ill+an). C'est le
+  // seul cas où le yod se code sur la touche "ill".
+  { match: 'ij', id: 'ill' }, // fille -> fij, brillant -> bRij@
 ]
+
+// Symboles voyelles/nasales de Lexique383 : servent à savoir si un yod [j] est
+// suivi d'une voyelle (auquel cas il se code touche "i", ex. avion = a-v-i-on)
+// ou non (yod final/pré-consonne -> touche "ill", ex. paille, réveil).
+const VOWEL_SYMBOLS = new Set(['a', 'i', 'y', 'u', 'o', 'O', 'e', 'E', '°', '2', '9', '5', '1', '@', '§'])
 
 // Symboles Lexique -> notre PhonemeId, un pour un.
 export const singleCharMap: Record<string, string> = {
@@ -53,8 +53,8 @@ export const singleCharMap: Record<string, string> = {
   '1': 'in', // un nasal (parfum)
   '@': 'an',
   '§': 'on',
-  // Semi-voyelles (hors motifs multi-caractères ci-dessus)
-  j: 'ill', // yeux, paille -> même touche que "fille"
+  // Semi-voyelles (le yod 'j' est traité au cas par cas dans decodePhon selon
+  // ce qui le suit — voir plus bas ; il n'a pas d'entrée fixe ici).
   '8': 'u', // /ɥ/ isolé (nuage = n+8+a+Z), sauf si suivi de "i" (voir motifs)
   w: 'w', // isolé (wifi, week-end), sauf si suivi de "a"/"5" (voir motifs)
   // Consonnes
@@ -91,6 +91,16 @@ export function decodePhon(phon: string): string[] {
       continue
     }
     const ch = phon[i]
+    // Yod [j] : touche "i" s'il est suivi d'une voyelle (avion = a-v-i-on,
+    // illusion = i-l-u-z-i-on, chien = ch-i-in), touche "ill" sinon, c.-à-d.
+    // yod final ou devant une consonne (paille = p-a-ill, réveil = r-é-v-è-ill).
+    // Le cas [i]+yod (fille, brillant) est déjà capté par le motif 'ij' -> ill.
+    if (ch === 'j') {
+      const next = phon[i + 1]
+      result.push(next !== undefined && VOWEL_SYMBOLS.has(next) ? 'i' : 'ill')
+      i += 1
+      continue
+    }
     const id = singleCharMap[ch]
     if (id) {
       result.push(id)
