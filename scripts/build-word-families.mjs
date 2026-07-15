@@ -5,13 +5,16 @@
 // fid = identifiant de famille).
 //
 // Deux niveaux d'inclusion pour un membre de la famille :
-//  - il est dans notre lexique principal (Manulex + EQOL) -> cliquable, a sa
-//    propre fiche mot.
-//  - il est SEULEMENT dans Manulex (scolaire) mais pas dans EQOL, donc absent
-//    du lexique principal (ex. "maisonnette") -> affiché quand même, à titre
-//    indicatif, mais pas cliquable (inLexicon: false, pas de fiche à ouvrir).
-// On exige au moins Manulex pour éviter le bruit de Démonette brut (argot,
-// variantes rares, noms propres) sans relecture manuelle séparée.
+//  - il est dans notre lexique principal (Manulex, seuil de fréquence
+//    FREQ_SEUIL de build-word-index.mjs) -> cliquable, a sa propre fiche mot.
+//  - il est dans Manulex mais SOUS ce seuil (ex. "maisonnette", trop rare
+//    pour le lexique principal mais pas absent de Manulex) -> affiché quand
+//    même, à titre indicatif, mais pas cliquable (inLexicon: false, pas de
+//    fiche à ouvrir). Volontairement plus permissif ici : une suggestion de
+//    famille n'a pas besoin du même seuil de fréquence qu'un mot cherchable.
+// On exige au moins une présence dans Manulex pour éviter le bruit de
+// Démonette brut (argot, variantes rares, noms propres) sans relecture
+// manuelle séparée.
 //
 // Désambiguïsation des homographes (ex. "beau" existe chez nous en nom,
 // adjectif ET adverbe) : on croise TOUJOURS graphie + catégorie grammaticale,
@@ -141,5 +144,5 @@ writeFileSync(outPath, JSON.stringify(families))
 const lemmaCount = Object.keys(families).length
 console.log(`${lemmaCount} mots de notre lexique ont au moins un "mot de la même famille" trouvé.`)
 console.log(`(sur ${baseEntriesByKey.size} mots de base au total)`)
-console.log(`Dont ${manulexOnlyMembers} occurrences de mots "Manulex seul" (pas dans EQOL, non cliquables).`)
+console.log(`Dont ${manulexOnlyMembers} occurrences de mots sous le seuil de fréquence (non cliquables).`)
 console.log('Écrit: src/data/word-families.json')

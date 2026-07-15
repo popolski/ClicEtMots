@@ -88,10 +88,10 @@ export interface WordFamilyMember {
   category: WordCategory
   lemmaId: string
   /**
-   * false pour un mot qui est dans Manulex (donc scolaire) mais pas dans
-   * EQOL, et de ce fait absent de notre lexique principal (words-clavier2.json)
-   * — il n'a pas sa propre fiche mot, donc pas cliquable, juste affiché à
-   * titre indicatif (ex. "maisonnette", famille de "maison").
+   * false pour un mot qui est dans Manulex (donc scolaire) mais sous le
+   * seuil de fréquence du lexique principal (words-clavier2.json) — il n'a
+   * pas sa propre fiche mot, donc pas cliquable, juste affiché à titre
+   * indicatif (ex. "maisonnette", famille de "maison").
    */
   inLexicon: boolean
 }
