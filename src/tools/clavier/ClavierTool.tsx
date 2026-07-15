@@ -66,6 +66,7 @@ export function ClavierTool() {
     <ToolLayout
       title="Clavier phonétique"
       description="Clique les sons que tu entends dans le mot, et regarde l'orthographe apparaître."
+      hideBackButton
     >
       {!trie ? (
         <p className="py-10 text-center text-gray-400">Chargement du lexique…</p>
