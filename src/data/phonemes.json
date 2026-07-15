@@ -1,216 +1,827 @@
 [
-  { "id": "a", "displaySymbol": "a", "order": 1, "level": "both", "gestureImages": ["/gestures/a.png"],
+  {
+    "id": "a",
+    "displaySymbol": "a",
+    "order": 1,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/a.png"
+    ],
     "note": "Piège : le son [a] peut aussi s'écrire « e » (femme).",
     "graphemes": [
-      { "grapheme": "a", "exampleWord": "araignée", "exampleImage": "🕷️" },
-      { "grapheme": "â", "exampleWord": "âne" },
-      { "grapheme": "à", "exampleWord": "là" }
-    ] },
-  { "id": "e", "displaySymbol": "é è", "order": 2, "level": "both", "gestureImages": ["/gestures/e.png", "/gestures/e2.png"],
+      {
+        "grapheme": "a",
+        "exampleWord": "araignée",
+        "exampleImage": "/pictos/a.png"
+      },
+      {
+        "grapheme": "â",
+        "exampleWord": "âne"
+      },
+      {
+        "grapheme": "à",
+        "exampleWord": "là"
+      }
+    ]
+  },
+  {
+    "id": "e",
+    "displaySymbol": "é è",
+    "order": 2,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/e.png",
+      "/gestures/e2.png"
+    ],
     "note": "Deux gestes Borel-Maisonny pour cette touche : é (fermé) et è (ouvert). « et », « es » et « est » se prononcent tous [é].",
     "graphemes": [
-      { "grapheme": "é", "exampleWord": "étoile", "exampleImage": "⭐" },
-      { "grapheme": "er", "exampleWord": "manger" },
-      { "grapheme": "ez", "exampleWord": "nez" },
-      { "grapheme": "è", "exampleWord": "règle" },
-      { "grapheme": "ê", "exampleWord": "tête" },
-      { "grapheme": "ë", "exampleWord": "Noël" },
-      { "grapheme": "e+consonne double", "exampleWord": "elle" },
-      { "grapheme": "ai", "exampleWord": "maison" },
-      { "grapheme": "aî", "exampleWord": "maître" },
-      { "grapheme": "et", "exampleWord": "jouet" },
-      { "grapheme": "ei", "exampleWord": "neige" },
-      { "grapheme": "ey", "exampleWord": "poney" }
-    ] },
-  { "id": "i", "displaySymbol": "i", "order": 3, "level": "both", "gestureImages": ["/gestures/i.png"],
+      {
+        "grapheme": "é",
+        "exampleWord": "étoile",
+        "exampleImage": "/pictos/e.png"
+      },
+      {
+        "grapheme": "er",
+        "exampleWord": "manger"
+      },
+      {
+        "grapheme": "ez",
+        "exampleWord": "nez"
+      },
+      {
+        "grapheme": "è",
+        "exampleWord": "règle"
+      },
+      {
+        "grapheme": "ê",
+        "exampleWord": "tête"
+      },
+      {
+        "grapheme": "ë",
+        "exampleWord": "Noël"
+      },
+      {
+        "grapheme": "e+consonne double",
+        "exampleWord": "elle"
+      },
+      {
+        "grapheme": "ai",
+        "exampleWord": "maison"
+      },
+      {
+        "grapheme": "aî",
+        "exampleWord": "maître"
+      },
+      {
+        "grapheme": "et",
+        "exampleWord": "jouet"
+      },
+      {
+        "grapheme": "ei",
+        "exampleWord": "neige"
+      },
+      {
+        "grapheme": "ey",
+        "exampleWord": "poney"
+      }
+    ]
+  },
+  {
+    "id": "i",
+    "displaySymbol": "i",
+    "order": 3,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/i.png"
+    ],
     "graphemes": [
-      { "grapheme": "i", "exampleWord": "igloo", "exampleImage": "❄️" },
-      { "grapheme": "y", "exampleWord": "pyjama" },
-      { "grapheme": "ï", "exampleWord": "maïs" },
-      { "grapheme": "î", "exampleWord": "île" }
-    ] },
-  { "id": "o", "displaySymbol": "o", "order": 4, "level": "both", "gestureImages": ["/gestures/o.png"],
+      {
+        "grapheme": "i",
+        "exampleWord": "igloo",
+        "exampleImage": "/pictos/i.png"
+      },
+      {
+        "grapheme": "y",
+        "exampleWord": "pyjama"
+      },
+      {
+        "grapheme": "ï",
+        "exampleWord": "maïs"
+      },
+      {
+        "grapheme": "î",
+        "exampleWord": "île"
+      }
+    ]
+  },
+  {
+    "id": "o",
+    "displaySymbol": "o",
+    "order": 4,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/o.png"
+    ],
     "graphemes": [
-      { "grapheme": "o", "exampleWord": "orange", "exampleImage": "🍊" },
-      { "grapheme": "au", "exampleWord": "autruche" },
-      { "grapheme": "eau", "exampleWord": "beau" },
-      { "grapheme": "ô", "exampleWord": "hôtel" }
-    ] },
-  { "id": "u", "displaySymbol": "u", "order": 5, "level": "both", "gestureImages": ["/gestures/u.png"],
+      {
+        "grapheme": "o",
+        "exampleWord": "orange",
+        "exampleImage": "/pictos/o.png"
+      },
+      {
+        "grapheme": "au",
+        "exampleWord": "autruche"
+      },
+      {
+        "grapheme": "eau",
+        "exampleWord": "beau"
+      },
+      {
+        "grapheme": "ô",
+        "exampleWord": "hôtel"
+      }
+    ]
+  },
+  {
+    "id": "u",
+    "displaySymbol": "u",
+    "order": 5,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/u.png"
+    ],
     "note": "Piège : « eu » se prononce parfois [u] (il a eu, tu as eu).",
     "graphemes": [
-      { "grapheme": "u", "exampleWord": "usine", "exampleImage": "🏭" },
-      { "grapheme": "û", "exampleWord": "flûte" }
-    ] },
-  { "id": "ou", "displaySymbol": "ou", "order": 6, "level": "both", "gestureImages": ["/gestures/ou.png"],
+      {
+        "grapheme": "u",
+        "exampleWord": "usine",
+        "exampleImage": "/pictos/u.png"
+      },
+      {
+        "grapheme": "û",
+        "exampleWord": "flûte"
+      }
+    ]
+  },
+  {
+    "id": "ou",
+    "displaySymbol": "ou",
+    "order": 6,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/ou.png"
+    ],
     "graphemes": [
-      { "grapheme": "ou", "exampleWord": "ours", "exampleImage": "🐻" },
-      { "grapheme": "oû", "exampleWord": "goût" },
-      { "grapheme": "oo", "exampleWord": "alcool" }
-    ] },
-  { "id": "on", "displaySymbol": "on", "order": 7, "level": "both", "gestureImages": ["/gestures/on.png"],
+      {
+        "grapheme": "ou",
+        "exampleWord": "ours",
+        "exampleImage": "/pictos/ou.png"
+      },
+      {
+        "grapheme": "oû",
+        "exampleWord": "goût"
+      },
+      {
+        "grapheme": "oo",
+        "exampleWord": "alcool"
+      }
+    ]
+  },
+  {
+    "id": "on",
+    "displaySymbol": "on",
+    "order": 7,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/on.png"
+    ],
     "note": "Règle du M, B, P : devant m/b/p, « on » s'écrit « om » (trombone).",
     "graphemes": [
-      { "grapheme": "on", "exampleWord": "pont", "exampleImage": "🌉" },
-      { "grapheme": "om", "exampleWord": "trombone" }
-    ] },
-  { "id": "an", "displaySymbol": "an", "order": 8, "level": "both", "gestureImages": ["/gestures/an.png"],
+      {
+        "grapheme": "on",
+        "exampleWord": "pont",
+        "exampleImage": "/pictos/on.png"
+      },
+      {
+        "grapheme": "om",
+        "exampleWord": "trombone"
+      }
+    ]
+  },
+  {
+    "id": "an",
+    "displaySymbol": "an",
+    "order": 8,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/an.png"
+    ],
     "note": "Règle du M, B, P : devant m/b/p, « an/en » s'écrit « am/em » (jambe, décembre).",
     "graphemes": [
-      { "grapheme": "en", "exampleWord": "enfant", "exampleImage": "🧒" },
-      { "grapheme": "an", "exampleWord": "maman" },
-      { "grapheme": "aon", "exampleWord": "paon" },
-      { "grapheme": "em", "exampleWord": "décembre" },
-      { "grapheme": "am", "exampleWord": "jambe" }
-    ] },
-  { "id": "in", "displaySymbol": "in", "order": 9, "level": "both", "gestureImages": ["/gestures/in.png"],
+      {
+        "grapheme": "en",
+        "exampleWord": "enfant",
+        "exampleImage": "/pictos/an.png"
+      },
+      {
+        "grapheme": "an",
+        "exampleWord": "maman"
+      },
+      {
+        "grapheme": "aon",
+        "exampleWord": "paon"
+      },
+      {
+        "grapheme": "em",
+        "exampleWord": "décembre"
+      },
+      {
+        "grapheme": "am",
+        "exampleWord": "jambe"
+      }
+    ]
+  },
+  {
+    "id": "in",
+    "displaySymbol": "in",
+    "order": 9,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/in.png"
+    ],
     "note": "Règle du M, B, P : devant m/b/p, « in/un » s'écrit « im/um » (timbre, parfum). Piège : « en » se prononce parfois [in] (examen).",
     "graphemes": [
-      { "grapheme": "in", "exampleWord": "indien", "exampleImage": "🏹" },
-      { "grapheme": "im", "exampleWord": "timbre" },
-      { "grapheme": "ain", "exampleWord": "pain" },
-      { "grapheme": "aim", "exampleWord": "faim" },
-      { "grapheme": "ein", "exampleWord": "plein" },
-      { "grapheme": "en", "exampleWord": "examen" },
-      { "grapheme": "un", "exampleWord": "un", "exampleImage": "1️⃣" },
-      { "grapheme": "um", "exampleWord": "parfum" }
-    ] },
-  { "id": "oi", "displaySymbol": "oi", "order": 10, "level": "both", "gestureImages": ["/gestures/oi.png"],
+      {
+        "grapheme": "in",
+        "exampleWord": "indien",
+        "exampleImage": "/pictos/in.png"
+      },
+      {
+        "grapheme": "im",
+        "exampleWord": "timbre"
+      },
+      {
+        "grapheme": "ain",
+        "exampleWord": "pain"
+      },
+      {
+        "grapheme": "aim",
+        "exampleWord": "faim"
+      },
+      {
+        "grapheme": "ein",
+        "exampleWord": "plein"
+      },
+      {
+        "grapheme": "en",
+        "exampleWord": "examen"
+      },
+      {
+        "grapheme": "un",
+        "exampleWord": "un"
+      },
+      {
+        "grapheme": "um",
+        "exampleWord": "parfum"
+      }
+    ]
+  },
+  {
+    "id": "oi",
+    "displaySymbol": "oi",
+    "order": 10,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/oi.png"
+    ],
     "graphemes": [
-      { "grapheme": "oi", "exampleWord": "oiseau", "exampleImage": "🐦" },
-      { "grapheme": "oî", "exampleWord": "boîte" },
-      { "grapheme": "oy", "exampleWord": "voyage" },
-      { "grapheme": "wa", "exampleWord": "wapiti" },
-      { "grapheme": "ua", "exampleWord": "jaguar" },
-      { "grapheme": "oua", "exampleWord": "douane" }
-    ] },
-  { "id": "eu", "displaySymbol": "e", "order": 11, "level": "both", "gestureImages": ["/gestures/eu.png", "/gestures/eu2.png"],
+      {
+        "grapheme": "oi",
+        "exampleWord": "oiseau",
+        "exampleImage": "/pictos/oi.png"
+      },
+      {
+        "grapheme": "oî",
+        "exampleWord": "boîte"
+      },
+      {
+        "grapheme": "oy",
+        "exampleWord": "voyage"
+      },
+      {
+        "grapheme": "wa",
+        "exampleWord": "wapiti"
+      },
+      {
+        "grapheme": "ua",
+        "exampleWord": "jaguar"
+      },
+      {
+        "grapheme": "oua",
+        "exampleWord": "douane"
+      }
+    ]
+  },
+  {
+    "id": "eu",
+    "displaySymbol": "e",
+    "order": 11,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/eu.png",
+      "/gestures/eu2.png"
+    ],
     "note": "Pièges : « on » (monsieur) et « ai » (faisons) peuvent aussi faire ce son.",
     "graphemes": [
-      { "grapheme": "e", "exampleWord": "cheval", "exampleImage": "🐴" },
-      { "grapheme": "eu", "exampleWord": "deux" },
-      { "grapheme": "œu", "exampleWord": "œuf" }
-    ] },
-  { "id": "b", "displaySymbol": "b", "order": 12, "level": "both", "gestureImages": ["/gestures/b.png"],
+      {
+        "grapheme": "e",
+        "exampleWord": "cheval",
+        "exampleImage": "/pictos/eu.png"
+      },
+      {
+        "grapheme": "eu",
+        "exampleWord": "deux"
+      },
+      {
+        "grapheme": "œu",
+        "exampleWord": "œuf"
+      }
+    ]
+  },
+  {
+    "id": "b",
+    "displaySymbol": "b",
+    "order": 12,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/b.png"
+    ],
     "graphemes": [
-      { "grapheme": "b", "exampleWord": "bonbon", "exampleImage": "🍬" }
-    ] },
-  { "id": "ch", "displaySymbol": "ch", "order": 13, "level": "both", "gestureImages": ["/gestures/ch.png"],
+      {
+        "grapheme": "b",
+        "exampleWord": "bonbon",
+        "exampleImage": "/pictos/b.png"
+      }
+    ]
+  },
+  {
+    "id": "ch",
+    "displaySymbol": "ch",
+    "order": 13,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/ch.png"
+    ],
     "graphemes": [
-      { "grapheme": "ch", "exampleWord": "chat", "exampleImage": "🐱" },
-      { "grapheme": "sh", "exampleWord": "short" }
-    ] },
-  { "id": "d", "displaySymbol": "d", "order": 14, "level": "both", "gestureImages": ["/gestures/d.png"],
+      {
+        "grapheme": "ch",
+        "exampleWord": "chat",
+        "exampleImage": "/pictos/ch.png"
+      },
+      {
+        "grapheme": "sh",
+        "exampleWord": "short"
+      }
+    ]
+  },
+  {
+    "id": "d",
+    "displaySymbol": "d",
+    "order": 14,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/d.png"
+    ],
     "graphemes": [
-      { "grapheme": "d", "exampleWord": "dauphin", "exampleImage": "🐬" }
-    ] },
-  { "id": "f", "displaySymbol": "f", "order": 15, "level": "both", "gestureImages": ["/gestures/f.png"],
+      {
+        "grapheme": "d",
+        "exampleWord": "dauphin",
+        "exampleImage": "/pictos/d.png"
+      }
+    ]
+  },
+  {
+    "id": "f",
+    "displaySymbol": "f",
+    "order": 15,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/f.png"
+    ],
     "graphemes": [
-      { "grapheme": "f", "exampleWord": "fourmi", "exampleImage": "🐜" },
-      { "grapheme": "ph", "exampleWord": "phare" }
-    ] },
-  { "id": "g", "displaySymbol": "g", "order": 16, "level": "both", "gestureImages": ["/gestures/g.png"],
+      {
+        "grapheme": "f",
+        "exampleWord": "fourmi",
+        "exampleImage": "/pictos/f.png"
+      },
+      {
+        "grapheme": "ph",
+        "exampleWord": "phare"
+      }
+    ]
+  },
+  {
+    "id": "g",
+    "displaySymbol": "g",
+    "order": 16,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/g.png"
+    ],
     "graphemes": [
-      { "grapheme": "g", "exampleWord": "gâteau", "exampleImage": "🎂" },
-      { "grapheme": "gu", "exampleWord": "guitare" }
-    ] },
-  { "id": "j", "displaySymbol": "j", "order": 17, "level": "both", "gestureImages": ["/gestures/j.png"],
+      {
+        "grapheme": "g",
+        "exampleWord": "gâteau",
+        "exampleImage": "/pictos/g.png"
+      },
+      {
+        "grapheme": "gu",
+        "exampleWord": "guitare"
+      }
+    ]
+  },
+  {
+    "id": "j",
+    "displaySymbol": "j",
+    "order": 17,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/j.png"
+    ],
     "graphemes": [
-      { "grapheme": "j", "exampleWord": "jaune", "exampleImage": "🟡" },
-      { "grapheme": "g", "exampleWord": "girafe" }
-    ] },
-  { "id": "c", "displaySymbol": "c", "order": 18, "level": "both", "gestureImages": ["/gestures/c.png"],
+      {
+        "grapheme": "j",
+        "exampleWord": "jaune",
+        "exampleImage": "/pictos/j.png"
+      },
+      {
+        "grapheme": "g",
+        "exampleWord": "girafe"
+      }
+    ]
+  },
+  {
+    "id": "c",
+    "displaySymbol": "c",
+    "order": 18,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/c.png"
+    ],
     "graphemes": [
-      { "grapheme": "c", "exampleWord": "carotte", "exampleImage": "🥕" },
-      { "grapheme": "cc", "exampleWord": "accord" },
-      { "grapheme": "qu", "exampleWord": "quai" },
-      { "grapheme": "q", "exampleWord": "coq" },
-      { "grapheme": "k", "exampleWord": "koala" },
-      { "grapheme": "ck", "exampleWord": "ticket" },
-      { "grapheme": "ch", "exampleWord": "chorale" }
-    ] },
-  { "id": "l", "displaySymbol": "l", "order": 19, "level": "both", "gestureImages": ["/gestures/l.png"],
+      {
+        "grapheme": "c",
+        "exampleWord": "carotte",
+        "exampleImage": "/pictos/c.png"
+      },
+      {
+        "grapheme": "cc",
+        "exampleWord": "accord"
+      },
+      {
+        "grapheme": "qu",
+        "exampleWord": "quai"
+      },
+      {
+        "grapheme": "q",
+        "exampleWord": "coq"
+      },
+      {
+        "grapheme": "k",
+        "exampleWord": "koala"
+      },
+      {
+        "grapheme": "ck",
+        "exampleWord": "ticket"
+      },
+      {
+        "grapheme": "ch",
+        "exampleWord": "chorale"
+      }
+    ]
+  },
+  {
+    "id": "l",
+    "displaySymbol": "l",
+    "order": 19,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/l.png"
+    ],
     "graphemes": [
-      { "grapheme": "l", "exampleWord": "lapin", "exampleImage": "🐰" }
-    ] },
-  { "id": "m", "displaySymbol": "m", "order": 20, "level": "both", "gestureImages": ["/gestures/m.png"],
+      {
+        "grapheme": "l",
+        "exampleWord": "lapin",
+        "exampleImage": "/pictos/l.png"
+      }
+    ]
+  },
+  {
+    "id": "m",
+    "displaySymbol": "m",
+    "order": 20,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/m.png"
+    ],
     "graphemes": [
-      { "grapheme": "m", "exampleWord": "maison", "exampleImage": "🏠" }
-    ] },
-  { "id": "n", "displaySymbol": "n", "order": 21, "level": "both", "gestureImages": ["/gestures/n.png"],
+      {
+        "grapheme": "m",
+        "exampleWord": "maison",
+        "exampleImage": "/pictos/m.png"
+      }
+    ]
+  },
+  {
+    "id": "n",
+    "displaySymbol": "n",
+    "order": 21,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/n.png"
+    ],
     "graphemes": [
-      { "grapheme": "n", "exampleWord": "nuage", "exampleImage": "☁️" }
-    ] },
-  { "id": "p", "displaySymbol": "p", "order": 22, "level": "both", "gestureImages": ["/gestures/p.png"],
+      {
+        "grapheme": "n",
+        "exampleWord": "nuage",
+        "exampleImage": "/pictos/n.png"
+      }
+    ]
+  },
+  {
+    "id": "p",
+    "displaySymbol": "p",
+    "order": 22,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/p.png"
+    ],
     "graphemes": [
-      { "grapheme": "p", "exampleWord": "papa" },
-      { "grapheme": "pp", "exampleWord": "nappe" }
-    ] },
-  { "id": "r", "displaySymbol": "r", "order": 23, "level": "both", "gestureImages": ["/gestures/r.png"],
+      {
+        "grapheme": "p",
+        "exampleWord": "papa",
+        "exampleImage": "/pictos/p.png"
+      },
+      {
+        "grapheme": "pp",
+        "exampleWord": "nappe"
+      }
+    ]
+  },
+  {
+    "id": "r",
+    "displaySymbol": "r",
+    "order": 23,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/r.png"
+    ],
     "graphemes": [
-      { "grapheme": "r", "exampleWord": "renard", "exampleImage": "🦊" }
-    ] },
-  { "id": "s", "displaySymbol": "s", "order": 24, "level": "both", "gestureImages": ["/gestures/s.png"],
+      {
+        "grapheme": "r",
+        "exampleWord": "renard",
+        "exampleImage": "/pictos/r.png"
+      }
+    ]
+  },
+  {
+    "id": "s",
+    "displaySymbol": "s",
+    "order": 24,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/s.png"
+    ],
     "graphemes": [
-      { "grapheme": "s", "exampleWord": "souris", "exampleImage": "🐭" },
-      { "grapheme": "ss", "exampleWord": "poisson" },
-      { "grapheme": "ç", "exampleWord": "maçon" },
-      { "grapheme": "c", "exampleWord": "cerise" },
-      { "grapheme": "t+i", "exampleWord": "attention" }
-    ] },
-  { "id": "t", "displaySymbol": "t", "order": 25, "level": "both", "gestureImages": ["/gestures/t.png"],
+      {
+        "grapheme": "s",
+        "exampleWord": "souris",
+        "exampleImage": "/pictos/s.png"
+      },
+      {
+        "grapheme": "ss",
+        "exampleWord": "poisson"
+      },
+      {
+        "grapheme": "ç",
+        "exampleWord": "maçon"
+      },
+      {
+        "grapheme": "c",
+        "exampleWord": "cerise"
+      },
+      {
+        "grapheme": "t+i",
+        "exampleWord": "attention"
+      }
+    ]
+  },
+  {
+    "id": "t",
+    "displaySymbol": "t",
+    "order": 25,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/t.png"
+    ],
     "graphemes": [
-      { "grapheme": "t", "exampleWord": "tortue", "exampleImage": "🐢" }
-    ] },
-  { "id": "v", "displaySymbol": "v", "order": 26, "level": "both", "gestureImages": ["/gestures/v.png"],
+      {
+        "grapheme": "t",
+        "exampleWord": "tortue",
+        "exampleImage": "/pictos/t.png"
+      }
+    ]
+  },
+  {
+    "id": "v",
+    "displaySymbol": "v",
+    "order": 26,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/v.png"
+    ],
     "graphemes": [
-      { "grapheme": "v", "exampleWord": "vache", "exampleImage": "🐄" }
-    ] },
-  { "id": "z", "displaySymbol": "z", "order": 27, "level": "both", "gestureImages": ["/gestures/z.png"],
+      {
+        "grapheme": "v",
+        "exampleWord": "vache",
+        "exampleImage": "/pictos/v.png"
+      }
+    ]
+  },
+  {
+    "id": "z",
+    "displaySymbol": "z",
+    "order": 27,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/z.png"
+    ],
     "graphemes": [
-      { "grapheme": "z", "exampleWord": "zèbre", "exampleImage": "🦓" },
-      { "grapheme": "s", "exampleWord": "rose" }
-    ] },
-  { "id": "gn", "displaySymbol": "gn", "order": 28, "level": "both", "gestureImages": ["/gestures/gn.png"],
+      {
+        "grapheme": "z",
+        "exampleWord": "zèbre",
+        "exampleImage": "/pictos/z.png"
+      },
+      {
+        "grapheme": "s",
+        "exampleWord": "rose"
+      }
+    ]
+  },
+  {
+    "id": "gn",
+    "displaySymbol": "gn",
+    "order": 28,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/gn.png"
+    ],
     "graphemes": [
-      { "grapheme": "gn", "exampleWord": "montagne", "exampleImage": "⛰️" }
-    ] },
-  { "id": "ill", "displaySymbol": "ill", "order": 29, "level": "both", "gestureImages": ["/gestures/ill.png"],
+      {
+        "grapheme": "gn",
+        "exampleWord": "montagne",
+        "exampleImage": "/pictos/gn.png"
+      }
+    ]
+  },
+  {
+    "id": "ill",
+    "displaySymbol": "ill",
+    "order": 29,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/ill.png"
+    ],
     "graphemes": [
-      { "grapheme": "ill", "exampleWord": "fille", "exampleImage": "👧" },
-      { "grapheme": "eill", "exampleWord": "abeille" },
-      { "grapheme": "euill", "exampleWord": "feuille" },
-      { "grapheme": "aill", "exampleWord": "paille" },
-      { "grapheme": "ouill", "exampleWord": "grenouille" },
-      { "grapheme": "il", "exampleWord": "rail" },
-      { "grapheme": "eil", "exampleWord": "réveil" },
-      { "grapheme": "euil", "exampleWord": "fauteuil" },
-      { "grapheme": "ail", "exampleWord": "travail" },
-      { "grapheme": "ouil", "exampleWord": "fenouil" },
-      { "grapheme": "ien", "exampleWord": "chien" },
-      { "grapheme": "ion", "exampleWord": "avion" },
-      { "grapheme": "ier", "exampleWord": "papier" },
-      { "grapheme": "ieu", "exampleWord": "milieu" },
-      { "grapheme": "ay", "exampleWord": "crayon" },
-      { "grapheme": "uy", "exampleWord": "tuyau" },
-      { "grapheme": "oy", "exampleWord": "noyau" }
-    ] },
-  { "id": "oin", "displaySymbol": "oin", "order": 30, "level": "both", "gestureImages": ["/gestures/oin.png"],
+      {
+        "grapheme": "ill",
+        "exampleWord": "fille",
+        "exampleImage": "/pictos/ill.png"
+      },
+      {
+        "grapheme": "eill",
+        "exampleWord": "abeille"
+      },
+      {
+        "grapheme": "euill",
+        "exampleWord": "feuille"
+      },
+      {
+        "grapheme": "aill",
+        "exampleWord": "paille"
+      },
+      {
+        "grapheme": "ouill",
+        "exampleWord": "grenouille"
+      },
+      {
+        "grapheme": "il",
+        "exampleWord": "rail"
+      },
+      {
+        "grapheme": "eil",
+        "exampleWord": "réveil"
+      },
+      {
+        "grapheme": "euil",
+        "exampleWord": "fauteuil"
+      },
+      {
+        "grapheme": "ail",
+        "exampleWord": "travail"
+      },
+      {
+        "grapheme": "ouil",
+        "exampleWord": "fenouil"
+      },
+      {
+        "grapheme": "ien",
+        "exampleWord": "chien"
+      },
+      {
+        "grapheme": "ion",
+        "exampleWord": "avion"
+      },
+      {
+        "grapheme": "ier",
+        "exampleWord": "papier"
+      },
+      {
+        "grapheme": "ieu",
+        "exampleWord": "milieu"
+      },
+      {
+        "grapheme": "ay",
+        "exampleWord": "crayon"
+      },
+      {
+        "grapheme": "uy",
+        "exampleWord": "tuyau"
+      },
+      {
+        "grapheme": "oy",
+        "exampleWord": "noyau"
+      }
+    ]
+  },
+  {
+    "id": "oin",
+    "displaySymbol": "oin",
+    "order": 30,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/oin.png"
+    ],
     "graphemes": [
-      { "grapheme": "oin", "exampleWord": "poing", "exampleImage": "👊" }
-    ] },
-  { "id": "x", "displaySymbol": "x", "order": 31, "level": "both", "gestureImages": ["/gestures/x.png"],
+      {
+        "grapheme": "oin",
+        "exampleWord": "poing",
+        "exampleImage": "/pictos/oin.png"
+      }
+    ]
+  },
+  {
+    "id": "x",
+    "displaySymbol": "x",
+    "order": 31,
+    "level": "both",
+    "gestureImages": [
+      "/gestures/x.png"
+    ],
     "graphemes": [
-      { "grapheme": "x", "exampleWord": "taxi", "exampleImage": "🚕" }
-    ] },
-  { "id": "w", "displaySymbol": "w", "order": 32, "level": "both",
+      {
+        "grapheme": "x",
+        "exampleWord": "taxi",
+        "exampleImage": "/pictos/x.png"
+      }
+    ]
+  },
+  {
+    "id": "w",
+    "displaySymbol": "w",
+    "order": 32,
+    "level": "both",
     "note": "Pas de geste Borel-Maisonny dédié pour ce son.",
     "graphemes": [
-      { "grapheme": "w", "exampleWord": "wifi", "exampleImage": "📶" }
-    ] },
-  { "id": "ui", "displaySymbol": "ui", "order": 33, "level": "both",
+      {
+        "grapheme": "w",
+        "exampleWord": "wifi",
+        "exampleImage": "/pictos/w.png"
+      }
+    ]
+  },
+  {
+    "id": "ui",
+    "displaySymbol": "ui",
+    "order": 33,
+    "level": "both",
     "note": "Pas de geste Borel-Maisonny dédié pour ce son.",
     "graphemes": [
-      { "grapheme": "ui", "exampleWord": "huit", "exampleImage": "8️⃣" }
-    ] }
+      {
+        "grapheme": "ui",
+        "exampleWord": "huit",
+        "exampleImage": "/pictos/ui.png"
+      }
+    ]
+  }
 ]

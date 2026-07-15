@@ -28,9 +28,11 @@ export function PhonemeTile({ phoneme, disabled, onSelect, onShowInfo }: Phoneme
           <span className="text-[10px] text-gray-400">{secondaryGraphemes.join(' · ')}</span>
         )}
         {primary?.exampleImage && (
-          <span className={`mt-1 text-xl leading-none ${disabled ? 'opacity-30 grayscale' : ''}`}>
-            {primary.exampleImage}
-          </span>
+          <img
+            src={primary.exampleImage}
+            alt={primary.exampleWord}
+            className={`mt-1 h-8 w-8 object-contain ${disabled ? 'opacity-30 grayscale' : ''}`}
+          />
         )}
       </button>
       <button
