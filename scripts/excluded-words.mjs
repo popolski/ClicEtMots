@@ -44,4 +44,5 @@ export const EXCLUDED_WORDS = new Set([
   'simplette',
   'bête::adjectif', // garde "bête" nom (l'animal), retire l'adjectif "stupide"
   'ballot::adjectif', // garde "ballot" nom (le paquet), retire l'adjectif "sot"
+  'violer', // vérifié aussi via le lemme, retire toutes les formes conjuguées
 ])

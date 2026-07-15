@@ -28,7 +28,7 @@
 //
 // Lancé à la main, après build-word-index.mjs : node scripts/build-word-synonyms.mjs
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
-import { isExcludedRelation } from './excluded-relations.mjs'
+import { isExcludedRelation, hasSuppressedRelations } from './excluded-relations.mjs'
 
 const wordIndexPath = new URL('../src/data/words-clavier2.json', import.meta.url)
 const wordIndex = JSON.parse(readFileSync(wordIndexPath, 'utf8'))
@@ -111,6 +111,7 @@ function buildIndex(dirName) {
   for (const { t1, t2, weight } of relations) {
     if (t1 === t2) continue
     if (isExcludedRelation(t1, t2)) continue
+    if (hasSuppressedRelations(t1) || hasSuppressedRelations(t2)) continue
     const entries1 = baseEntriesByWord.get(t1)
     const entries2 = baseEntriesByWord.get(t2)
     if (!entries1 || !entries2) continue // l'un des deux mots n'est pas dans notre lexique

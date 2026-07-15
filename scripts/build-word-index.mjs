@@ -46,14 +46,26 @@ import { EXCLUDED_WORDS } from './excluded-words.mjs'
 // cp_sfi/ce1_sfi/ce2cm2_sfi/cpcm2_sfi (combiné) sont les 4 colonnes de
 // fréquence exportées de Manulex.xls ("FORMES ORTHO"). En cas de doublon
 // (même mot, plusieurs lignes), on garde la ligne avec le plus haut cpcm2_sfi.
+//
+// Manulex écrit certains mots avec des ligatures (œ, æ : "œuf", "cœur",
+// "sœur", "bœuf"...) alors que Lexique383 les écrit toujours "oe"/"ae" en
+// deux lettres — sans normalisation, la comparaison stricte échoue et ces
+// mots (parmi les plus fréquents du français : cœur, sœur...) disparaissent
+// silencieusement, faute de correspondance Manulex trouvée.
+function normalizeLigatures(word) {
+  return word.replace(/œ/g, 'oe').replace(/æ/g, 'ae')
+}
+
 const manulexPath = new URL('../third_party/manulex/manulex-forms.csv', import.meta.url)
 const manulexLines = readFileSync(manulexPath, 'utf8').split(/\r\n|\n/).filter(Boolean)
 const manulexByWord = new Map()
 for (let i = 1; i < manulexLines.length; i++) {
   const [word, cp, ce1, ce2cm2, cpcm2] = manulexLines[i].split(',')
+  if (!word) continue
+  const key = normalizeLigatures(word)
   const record = { cp: parseFloat(cp) || 0, ce1: parseFloat(ce1) || 0, ce2cm2: parseFloat(ce2cm2) || 0, cpcm2: parseFloat(cpcm2) || 0 }
-  const existing = manulexByWord.get(word)
-  if (!existing || record.cpcm2 > existing.cpcm2) manulexByWord.set(word, record)
+  const existing = manulexByWord.get(key)
+  if (!existing || record.cpcm2 > existing.cpcm2) manulexByWord.set(key, record)
 }
 
 // Seuil de fréquence SFI combinée CP-CM2 en dessous duquel un mot est écarté
@@ -111,7 +123,18 @@ for (let i = 1; i < lines.length; i++) {
   const category = categoryFor(cgram)
   if (!category) continue
   const orthoLower = ortho.toLowerCase()
-  if (EXCLUDED_WORDS.has(orthoLower) || EXCLUDED_WORDS.has(`${orthoLower}::${category}`)) continue
+  const lemmeLower = (get(cols, 'lemme') || '').toLowerCase()
+  // Le lemme est aussi vérifié (pas seulement l'orthographe de cette ligne) :
+  // sinon exclure "violer" laisserait passer ses formes conjuguées (violé,
+  // viole, violent...) qui feraient quand même qualifier tout le lemme.
+  if (
+    EXCLUDED_WORDS.has(orthoLower) ||
+    EXCLUDED_WORDS.has(`${orthoLower}::${category}`) ||
+    EXCLUDED_WORDS.has(lemmeLower) ||
+    EXCLUDED_WORDS.has(`${lemmeLower}::${category}`)
+  ) {
+    continue
+  }
 
   const manulexRecord = manulexByWord.get(ortho)
   const manulexSfi = manulexRecord?.cpcm2

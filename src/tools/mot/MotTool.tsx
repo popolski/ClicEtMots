@@ -91,7 +91,7 @@ export function MotTool() {
 
   if (!forms || !family || !synonyms || !antonyms) {
     return (
-      <ToolLayout title="Fiche mot" description="Chargement…">
+      <ToolLayout title="Fiche mot" description="Chargement…" showBackToKeyboard>
         <p className="py-10 text-center text-gray-400">Chargement…</p>
       </ToolLayout>
     )
@@ -100,7 +100,7 @@ export function MotTool() {
   const primary = forms.length > 0 ? pickPrimaryForm(forms) : undefined
   if (!primary) {
     return (
-      <ToolLayout title="Fiche mot" description="Mot introuvable">
+      <ToolLayout title="Fiche mot" description="Mot introuvable" showBackToKeyboard>
         <p className="py-10 text-center text-gray-400">Aucune fiche pour « {lemmaId} ».</p>
       </ToolLayout>
     )
@@ -111,7 +111,7 @@ export function MotTool() {
   const style = categoryStyles[primary.category]
 
   return (
-    <ToolLayout title={primary.word} description={CATEGORY_LABEL[primary.category]}>
+    <ToolLayout title={primary.word} description={CATEGORY_LABEL[primary.category]} showBackToKeyboard>
       {otherForms.length > 0 && (
         <div className="mb-8">
           <h2 className="mb-2 text-sm font-semibold tracking-wide text-gray-500 uppercase">Autres formes</h2>

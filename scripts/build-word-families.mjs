@@ -106,28 +106,41 @@ for (let i = 1; i < lines.length; i++) {
 }
 
 // Vrai si `a` et `b` partagent une racine orthographique : le plus court des
-// deux (éventuellement amputé de 1-2 lettres finales, pour absorber une
+// deux (éventuellement amputé de lettres finales, pour absorber une
 // terminaison simple) apparaît quelque part dans le plus long. Pas une vraie
 // lemmatisation, mais suffisant pour distinguer "chatière" (contient "chat")
 // de "félin" (ne contient rien de "chat") sans dépendre de la classification
 // interne de Démonette (voir plus haut).
+//
+// La troncature autorisée dépend de la longueur du mot le plus court : sur un
+// mot court (chat, 4 lettres), amputer ne serait-ce qu'une lettre donnerait
+// un fragment de 3 lettres présent un peu partout par hasard. Trouvé en
+// testant l'appli : "voyage" (6 lettres) amputé de 2 lettres donne "voya",
+// que "prévoyant" contient par pure coïncidence alors qu'ils n'ont aucun
+// lien réel — d'où une troncature qui grandit seulement sur des mots plus
+// longs, où un fragment de 5-6 lettres reste suffisamment spécifique.
 function shareRadical(a, b) {
   const shorter = a.length <= b.length ? a : b
   const longer = a.length <= b.length ? b : a
   if (shorter.length < 3) return false
-  for (let cut = 0; cut <= Math.min(2, shorter.length - 3); cut++) {
+  const maxCut = shorter.length >= 8 ? 2 : shorter.length >= 6 ? 1 : 0
+  for (let cut = 0; cut <= maxCut; cut++) {
     if (longer.includes(shorter.slice(0, shorter.length - cut))) return true
   }
   return false
 }
 
 // Résout un membre de famille Démonette (mot + catégorie) vers un
-// WordFamilyMember : priorité à notre lexique principal (cliquable), sinon
-// repli sur Manulex seul (affiché mais pas cliquable), sinon ignoré.
+// WordFamilyMember + sa fréquence (pour trier les plus courants d'abord) :
+// priorité à notre lexique principal (cliquable), sinon repli sur Manulex
+// seul (affiché mais pas cliquable), sinon ignoré.
 function resolveMember(memberKey, originalWord) {
   const inLexiconEntry = baseEntriesByKey.get(memberKey)
   if (inLexiconEntry) {
-    return { word: inLexiconEntry.word, category: inLexiconEntry.category, lemmaId: inLexiconEntry.lemmaId, inLexicon: true }
+    return {
+      member: { word: inLexiconEntry.word, category: inLexiconEntry.category, lemmaId: inLexiconEntry.lemmaId, inLexicon: true },
+      frequency: inLexiconEntry.frequency,
+    }
   }
   const word = originalWord.toLowerCase()
   if (!manulexWords.has(word)) return null
@@ -136,11 +149,15 @@ function resolveMember(memberKey, originalWord) {
   // vérification, un mot de la liste noire (ex. "bête" adjectif) pourrait
   // réapparaître ici alors qu'il a été délibérément retiré du lexique.
   if (EXCLUDED_WORDS.has(word) || EXCLUDED_WORDS.has(`${word}::${category}`)) return null
-  return { word, category, lemmaId: memberKey, inLexicon: false }
+  // Pas dans notre lexique principal : fréquence 0 pour le tri, ces mots
+  // passent de toute façon après tous les membres du lexique principal.
+  return { member: { word, category, lemmaId: memberKey, inLexicon: false }, frequency: 0 }
 }
 
 // --- Croisement : pour chaque mot de base de notre lexique, sa famille ----
-const MAX_FAMILY_SIZE = 12
+// Limité à 3, les plus fréquents/parlants d'abord (même principe que les
+// synonymes) plutôt que l'ordre alphabétique.
+const MAX_FAMILY_SIZE = 3
 const families = {}
 let manulexOnlyMembers = 0
 let droppedNoSharedRadical = 0
@@ -157,19 +174,20 @@ for (const [key, entry] of baseEntriesByKey) {
         droppedNoSharedRadical++
         continue
       }
-      const member = resolveMember(memberKey, originalWord)
-      if (!member || member.lemmaId === entry.lemmaId) continue
-      if (!membersByLemma.has(member.lemmaId)) {
-        membersByLemma.set(member.lemmaId, member)
-        if (!member.inLexicon) manulexOnlyMembers++
+      const resolved = resolveMember(memberKey, originalWord)
+      if (!resolved || resolved.member.lemmaId === entry.lemmaId) continue
+      if (!membersByLemma.has(resolved.member.lemmaId)) {
+        membersByLemma.set(resolved.member.lemmaId, resolved)
+        if (!resolved.member.inLexicon) manulexOnlyMembers++
       }
     }
   }
   if (membersByLemma.size === 0) continue
 
   families[entry.lemmaId] = [...membersByLemma.values()]
-    .sort((a, b) => a.word.localeCompare(b.word, 'fr'))
+    .sort((a, b) => b.frequency - a.frequency)
     .slice(0, MAX_FAMILY_SIZE)
+    .map((r) => r.member)
 }
 
 const outPath = new URL('../src/data/word-families.json', import.meta.url)

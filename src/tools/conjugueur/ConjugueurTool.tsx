@@ -53,7 +53,7 @@ export function ConjugueurTool() {
 
   if (!index) {
     return (
-      <ToolLayout title="Conjugueur" description="Chargement…">
+      <ToolLayout title="Conjugueur" description="Chargement…" showBackToKeyboard>
         <p className="py-10 text-center text-gray-400">Chargement des conjugaisons…</p>
       </ToolLayout>
     )
@@ -62,7 +62,7 @@ export function ConjugueurTool() {
   const verb = verbe ? index[verbe] : undefined
   if (!verb) {
     return (
-      <ToolLayout title="Conjugueur" description="Verbe introuvable">
+      <ToolLayout title="Conjugueur" description="Verbe introuvable" showBackToKeyboard>
         <p className="py-10 text-center text-gray-400">
           Aucun tableau de conjugaison pour « {verbe} ».
         </p>
@@ -76,6 +76,7 @@ export function ConjugueurTool() {
     <ToolLayout
       title={verb.infinitif}
       description={`Verbe conjugué avec l'auxiliaire « ${verb.auxiliaire} »`}
+      showBackToKeyboard
     >
       <div className="flex flex-wrap gap-2">
         {TENSES.map((t) => (

@@ -26,3 +26,18 @@ export const EXCLUDED_RELATION_PAIRS = new Set(RAW_PAIRS.map(([a, b]) => [a, b].
 export function isExcludedRelation(wordA, wordB) {
   return EXCLUDED_RELATION_PAIRS.has([wordA, wordB].sort().join('::'))
 }
+
+// Mots pour lesquels ON NE MONTRE AUCUN synonyme/antonyme, quel que soit le
+// poids : contrairement à "araignée" (quelques paires fausses au milieu de
+// résultats sinon exploitables), certains mots ont la quasi-totalité de
+// leurs "synonymes" JeuxDeMots qui sont des vulgarismes (ex. "sexe" — même
+// ses meilleurs résultats par poids sont inutilisables pour une classe
+// primaire). Exclure les paires une par une n'aurait pas de sens ici : on
+// supprime la source entière.
+export const EXCLUDED_RELATION_SOURCES = new Set([
+  'sexe', // quasi tous les "synonymes" sont des vulgarismes (chatte, queue, bite...)
+])
+
+export function hasSuppressedRelations(word) {
+  return EXCLUDED_RELATION_SOURCES.has(word)
+}
