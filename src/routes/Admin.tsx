@@ -388,7 +388,7 @@ function SectionMots() {
 
 export function Admin() {
   return (
-    <ToolLayout title="Espace enseignante" description="Gérer les comptes élèves et enrichir le lexique.">
+    <ToolLayout title="Espace enseignant" description="Gérer les comptes élèves et enrichir le lexique.">
       <SectionEleves />
       <SectionMots />
     </ToolLayout>
