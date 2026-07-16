@@ -134,6 +134,21 @@ if ($method === 'DELETE') {
     if ($id <= 0) {
         jsonResponse(400, ['error' => 'id manquant']);
     }
+
+    // ON DELETE CASCADE (voir schema-v2.sql) supprime les relations DE ce mot
+    // (word_id), mais target_lemma_id n'est qu'un texte, pas une clé
+    // étrangère : les relations DES AUTRES mots QUI POINTENT VERS celui-ci
+    // survivraient sinon, orphelines — un élève cliquant sur ce lien mort
+    // tomberait sur "mot introuvable". On les retire explicitement d'abord.
+    $stmt = $db->prepare('SELECT mot, categorie FROM lexicon_additions WHERE id = ?');
+    $stmt->execute([$id]);
+    $mot = $stmt->fetch();
+    if ($mot) {
+        $lemmaId = "ajout:{$mot['categorie']}:{$mot['mot']}";
+        $stmt = $db->prepare('DELETE FROM lexicon_relations WHERE target_lemma_id = ?');
+        $stmt->execute([$lemmaId]);
+    }
+
     $stmt = $db->prepare('DELETE FROM lexicon_additions WHERE id = ?');
     $stmt->execute([$id]);
     jsonResponse(200, ['ok' => true]);
