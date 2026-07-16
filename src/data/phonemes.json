@@ -219,13 +219,13 @@
     "note": "Règle du M, B, P : devant m/b/p, « an/en » s'écrit « am/em » (jambe, décembre).",
     "graphemes": [
       {
-        "grapheme": "en",
-        "exampleWord": "enfant",
+        "grapheme": "an",
+        "exampleWord": "maman",
         "exampleImage": "/pictos/an.png"
       },
       {
-        "grapheme": "an",
-        "exampleWord": "maman"
+        "grapheme": "en",
+        "exampleWord": "enfant"
       },
       {
         "grapheme": "aon",

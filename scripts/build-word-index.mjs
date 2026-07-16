@@ -56,6 +56,22 @@ function normalizeLigatures(word) {
   return word.replace(/œ/g, 'oe').replace(/æ/g, 'ae')
 }
 
+// Lexique383 traite le pluriel en -x de ces quelques noms en -ou comme un
+// lemme séparé du singulier (ex. "bijou" a lemme=bijou, mais "bijoux" a
+// lemme=bijoux — pas "bijou") au lieu de les regrouper sous une seule entrée
+// "lemme" comme pour caillou/genou/hibou/pou, où singulier et pluriel
+// partagent bien le même lemme. Conséquence sans ce correctif : bijou et
+// bijoux se retrouvent avec des lemmaId différents, donc chacun affiche une
+// fiche mot sans "autres formes" (pas de lien singulier <-> pluriel).
+const IRREGULAR_PLURAL_LEMMA_FIXES = {
+  bijoux: 'bijou',
+  joujoux: 'joujou',
+  ripoux: 'ripou',
+}
+function normalizeLemma(lemme) {
+  return IRREGULAR_PLURAL_LEMMA_FIXES[lemme] ?? lemme
+}
+
 const manulexPath = new URL('../third_party/manulex/manulex-forms.csv', import.meta.url)
 const manulexLines = readFileSync(manulexPath, 'utf8').split(/\r\n|\n/).filter(Boolean)
 const manulexByWord = new Map()
@@ -123,7 +139,7 @@ for (let i = 1; i < lines.length; i++) {
   const category = categoryFor(cgram)
   if (!category) continue
   const orthoLower = ortho.toLowerCase()
-  const lemmeLower = (get(cols, 'lemme') || '').toLowerCase()
+  const lemmeLower = normalizeLemma((get(cols, 'lemme') || '').toLowerCase())
   // Le lemme est aussi vérifié (pas seulement l'orthographe de cette ligne) :
   // sinon exclure "violer" laisserait passer ses formes conjuguées (violé,
   // viole, violent...) qui feraient quand même qualifier tout le lemme.
@@ -159,7 +175,7 @@ for (let i = 1; i < lines.length; i++) {
     ortho,
     phonemes,
     cgram,
-    lemme: get(cols, 'lemme'),
+    lemme: normalizeLemma(get(cols, 'lemme')),
     genre: get(cols, 'genre'),
     nombre: get(cols, 'nombre'),
     infover: get(cols, 'infover'),
