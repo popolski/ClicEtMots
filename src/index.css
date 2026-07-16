@@ -1,16 +1,20 @@
 @import "tailwindcss";
 
+/* Palette reprise de Fast éval (autre outil de l'enseignante) pour une
+   identité visuelle cohérente entre ses deux applications. */
 @theme {
-  --color-brand-50: #f0fdfa;
-  --color-brand-100: #ccfbf1;
-  --color-brand-200: #99f6e4;
-  --color-brand-500: #14b8a6;
-  --color-brand-600: #0d9488;
-  --color-brand-700: #0f766e;
+  --color-brand-50: #eaf8f5;
+  --color-brand-100: #cdf1ec;
+  --color-brand-200: #98e0d4;
+  --color-brand-500: #12baa6;
+  --color-brand-600: #0e9789;
+  --color-brand-700: #0b756a;
+  --color-accent-500: #efae1c;
+  --color-accent-600: #d4970f;
 }
 
 body {
   margin: 0;
-  background: #f9fafb;
+  background: #f2ecc4;
   color: #111827;
 }
