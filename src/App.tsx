@@ -11,7 +11,7 @@ const MotTool = lazy(() => import('./tools/mot/MotTool').then((m) => ({ default:
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         <Suspense fallback={<div className="p-10 text-center text-gray-400">Chargement…</div>}>
           <Routes>
             <Route path="/" element={<Home />} />
