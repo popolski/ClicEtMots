@@ -45,4 +45,81 @@ export const EXCLUDED_WORDS = new Set([
   'bête::adjectif', // garde "bête" nom (l'animal), retire l'adjectif "stupide"
   'ballot::adjectif', // garde "ballot" nom (le paquet), retire l'adjectif "sot"
   'violer', // vérifié aussi via le lemme, retire toutes les formes conjuguées
+
+  // Prénoms sans second sens commun utile en CE1-CM2, repérés en croisant
+  // notre lexique (catégorie nom) avec le fichier national des prénoms de
+  // l'INSEE (prenoms-2024-nat.csv, data.gouv.fr, seuil >= 1000 naissances).
+  // Scopé ::nom : un homonyme dans une autre catégorie (ex. adjectif) reste.
+  // Volontairement PAS exclus malgré la coïncidence avec un prénom : les
+  // vrais mots du quotidien qui se trouvent aussi être des prénoms (rose,
+  // fleur, perle, olive, cerise, vanille, cannelle, myrtille, prune, dahlia,
+  // lilas, loup, marin, marine, colin, colombe, hermine, ange, iris,
+  // violette, noël, toussaint, saint, sainte, reine, victoire, manuel,
+  // roman, don, franc, fortune, harmonie, mélodie, conception, prudence,
+  // junior, marguerite, madeleine, charlotte, benjamin, aurore, ambre, jade,
+  // clémentine, romaine, blanche, marianne, pierrot, julienne, anis, lino,
+  // rosette, marjolaine).
+  'alain::nom',
+  'auguste::nom',
+  'axel::nom',
+  'baptiste::nom',
+  'barbara::nom',
+  'ben::nom',
+  'berthe::nom',
+  'carole::nom',
+  'césar::nom',
+  'claude::nom',
+  'dan::nom',
+  'désiré::nom',
+  'florence::nom',
+  'gaspard::nom',
+  'guillaume::nom',
+  'henry::nom',
+  'isabelle::nom',
+  'jack::nom',
+  'jacob::nom',
+  'jacques::nom',
+  'jacqueline::nom',
+  'joseph::nom',
+  'jules::nom',
+  'lise::nom',
+  'luce::nom',
+  'mary::nom',
+  'max::nom',
+  'nil::nom',
+  'olympe::nom',
+  'oscar::nom',
+  'pascal::nom',
+  'pauline::nom',
+  'renaud::nom',
+  'richard::nom',
+  'robert::nom',
+  'romain::nom',
+  'serge::nom',
+  'sophie::nom',
+  'sylvain::nom',
+  'sylvie::nom',
+  'théo::nom',
+  'thomas::nom',
+  'tom::nom',
+  'valentin::nom',
+  'valentine::nom',
+  'véronique::nom',
+  'virginie::nom',
+  'walter::nom',
+  'william::nom',
+  'williams::nom',
+  'xavier::nom',
+  // Cas limites, exclus aussi sur confirmation : mot réel mais trop rare/
+  // technique pour du CE1-CM2 (amadou = matériau d'allume-feu, merlin =
+  // outil de bûcheron), ou trop dominé par un autre sens propre (lorraine =
+  // la région/quiche, agathe trop proche de "agate" sans en être
+  // l'orthographe), ou oiseau trop peu usité seul sans le déterminant
+  // habituel (martin, robin).
+  'martin::nom',
+  'robin::nom',
+  'agathe::nom',
+  'amadou::nom',
+  'merlin::nom',
+  'lorraine::nom',
 ])
