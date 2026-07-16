@@ -29,24 +29,29 @@ export function ToolLayout({
   const navigate = useNavigate()
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      {(!hideBackButton || showBackToKeyboard) && (
-        <div className="mb-6 flex items-center gap-4">
-          {!hideBackButton && (
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
-            >
-              ← Retour
-            </button>
-          )}
-          {showBackToKeyboard && (
-            <Link to="/clavier" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
-              ⌨️ Retour au clavier
-            </Link>
-          )}
-        </div>
-      )}
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Link to="/" className="shrink-0">
+          <img src="/logo.png" alt="Clic &amp; Mots" className="h-8 w-auto" />
+        </Link>
+        {(!hideBackButton || showBackToKeyboard) && (
+          <div className="flex items-center gap-4">
+            {!hideBackButton && (
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
+              >
+                ← Retour
+              </button>
+            )}
+            {showBackToKeyboard && (
+              <Link to="/clavier" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
+                ⌨️ Retour au clavier
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
       <div className="flex items-center gap-3">
         {titleIcon}
         <h1 className="text-3xl font-semibold text-gray-900">{title}</h1>

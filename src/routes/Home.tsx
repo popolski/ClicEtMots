@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 export function Home() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-      <h1 className="text-4xl font-bold text-gray-900">Clic &amp; Mots</h1>
+      <img src="/logo.png" alt="Clic &amp; Mots — le clavier phono-ludique du CP au CM2" className="mx-auto h-auto w-full max-w-md" />
       <p className="mt-3 text-gray-500">
         Un clavier phonétique pour aider les élèves à trouver l'orthographe des mots qu'ils veulent écrire.
       </p>
