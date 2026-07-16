@@ -76,15 +76,19 @@ function ChampRelation({
     return candidats
       .filter(
         (c) =>
-          // Même catégorie uniquement : c'est la règle appliquée au lexique
-          // généré, et le serveur la refait respecter de son côté.
-          c.category === word.categorie &&
+          // Même catégorie uniquement pour synonymes/contraires (c'est la
+          // règle appliquée au lexique généré, et le serveur la refait
+          // respecter). "Famille" n'a pas cette contrainte : dans le lexique
+          // généré, 75% des liens de famille changent de catégorie
+          // (trouille/nom -> trouillard/adjectif) — c'est le principe même
+          // d'une famille de mots.
+          (type === 'famille' || c.category === word.categorie) &&
           c.lemmaId !== lemmaSource &&
           !dejaLies.has(c.lemmaId) &&
           c.word.toLowerCase().startsWith(q),
       )
       .slice(0, MAX_SUGGESTIONS)
-  }, [saisie, candidats, cibles, word.categorie, lemmaSource])
+  }, [saisie, candidats, cibles, word.categorie, lemmaSource, type])
 
   async function lier(c: Candidat) {
     setErreur(null)
@@ -160,8 +164,9 @@ export function RelationsEditor({ word, onChange }: { word: LexiconWord; onChang
   return (
     <div className="mt-2 rounded-lg bg-gray-50 p-3">
       <p className="text-xs text-gray-500">
-        Ces liens ne peuvent pas être devinés : les bases lexicales ne connaissent pas ce mot. Seuls des mots de
-        la même catégorie ({word.categorie}) sont proposés.
+        Ces liens ne peuvent pas être devinés : les bases lexicales ne connaissent pas ce mot. Pour les synonymes
+        et les contraires, seuls des mots de la même catégorie ({word.categorie}) sont proposés — la famille,
+        elle, peut mélanger les catégories (ex. « trouille » nom et « trouillard » adjectif).
       </p>
       {TYPES.map(({ type }) => (
         <ChampRelation

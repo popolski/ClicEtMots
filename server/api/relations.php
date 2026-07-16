@@ -45,11 +45,16 @@ if ($method === 'POST') {
         jsonResponse(404, ['error' => 'Mot introuvable']);
     }
 
-    // Même règle que le lexique généré (build-word-synonyms.mjs) : une
-    // relation ne relie que des mots de même catégorie grammaticale — un nom
-    // n'a pour synonymes que des noms. Évite les rapprochements bizarres que
-    // l'enseignante avait justement signalés.
-    if ($source['categorie'] !== $targetCategory) {
+    // Même règle que le lexique généré (build-word-synonyms.mjs) : un
+    // synonyme/contraire ne relie que des mots de même catégorie grammaticale
+    // — un nom n'a pour synonymes que des noms. Évite les rapprochements
+    // bizarres que l'enseignante avait justement signalés.
+    //
+    // "famille" n'a PAS cette contrainte : dans le lexique généré, 75% des
+    // liens de famille changent de catégorie (trouille/nom, trouillard/
+    // adjectif) — c'est le principe même d'une famille de mots, pas une
+    // exception.
+    if ($type !== 'famille' && $source['categorie'] !== $targetCategory) {
         jsonResponse(400, [
             'error' => "Le mot lié doit être de la même catégorie ({$source['categorie']}).",
         ]);
