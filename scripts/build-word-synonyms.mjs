@@ -117,10 +117,23 @@ function buildIndex(dirName) {
     if (!entries1 || !entries2) continue // l'un des deux mots n'est pas dans notre lexique
 
     for (const entry1 of entries1) {
-      // Pour la cible, on préfère la même catégorie grammaticale que la
-      // source ("grand" adjectif -> "petit" adjectif plutôt que "petit"
-      // adverbe) quand elle existe, sinon la forme la plus fréquente.
-      const entry2 = entries2.find((e) => e.category === entry1.category) ?? entries2[0]
+      // La cible DOIT être de la même catégorie grammaticale que la source
+      // ("grand" adjectif -> "petit" adjectif, jamais "petit" adverbe) ; si
+      // elle n'existe pas dans cette catégorie, on abandonne la paire.
+      //
+      // Une version précédente retombait ici sur entries2[0] (n'importe
+      // quelle catégorie) faute de mieux. C'était une fausse bonne idée :
+      // JeuxDeMots ne distingue pas les homographes, donc la paire récupérée
+      // appartenait souvent à UN AUTRE sens du mot source, et le fallback la
+      // recollait sur celui-ci. D'où "l'aller" (le nom, aller-retour) qui
+      // héritait de marcher/courir/avancer (synonymes du VERBE aller), ou
+      // l'adverbe "chaud" des contraires de l'adjectif. Exiger la même
+      // catégorie supprime ces fuites de sens à la racine — au prix de 3,9%
+      // des mots qui perdent leurs synonymes (5,4% leurs contraires), très
+      // majoritairement ces entrées douteuses dont les relations étaient
+      // fausses de toute façon. Remarque de l'enseignante à l'usage.
+      const entry2 = entries2.find((e) => e.category === entry1.category)
+      if (!entry2) continue
       if (entry1.lemmaId === entry2.lemmaId) continue
 
       let targets = byLemma.get(entry1.lemmaId)
