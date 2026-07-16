@@ -123,12 +123,64 @@ function SectionEleves() {
   )
 }
 
+/** Mini-clavier phonétique réutilisé pour saisir la séquence d'un mot (ou de sa forme féminine). */
+function SequencePicker({
+  label,
+  sequence,
+  onChange,
+}: {
+  label: string
+  sequence: string[]
+  onChange: (updater: (s: string[]) => string[]) => void
+}) {
+  return (
+    <div>
+      <span className="text-sm font-semibold text-gray-700">{label}</span>
+      <div className="mt-1 flex min-h-12 flex-wrap items-center gap-2 rounded-lg border-2 border-gray-200 bg-white p-2">
+        {sequence.length === 0 ? (
+          <span className="px-2 text-gray-400">Clique les sons ci-dessous…</span>
+        ) : (
+          sequence.map((id, i) => (
+            <span key={`${id}-${i}`} className="rounded-lg bg-brand-100 px-3 py-1 font-semibold text-brand-700">
+              {phonemes.find((p) => p.id === id)?.displaySymbol ?? id}
+            </span>
+          ))
+        )}
+        {sequence.length > 0 && (
+          <button
+            type="button"
+            onClick={() => onChange((s) => s.slice(0, -1))}
+            className="ml-auto rounded-lg px-3 py-1 text-sm text-gray-500 hover:bg-gray-100"
+          >
+            ⌫ Effacer
+          </button>
+        )}
+      </div>
+
+      <div className="mt-2 flex flex-wrap gap-1">
+        {phonemes.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => onChange((s) => [...s, p.id])}
+            className="rounded-lg border-2 border-brand-200 bg-white px-3 py-1 font-semibold text-gray-900 hover:border-brand-500 hover:bg-brand-50"
+          >
+            {p.displaySymbol}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function SectionMots() {
   const [words, setWords] = useState<LexiconWord[] | null>(null)
   const [mot, setMot] = useState('')
   const [categorie, setCategorie] = useState<Categorie>('nom')
   const [genre, setGenre] = useState<'m' | 'f' | ''>('')
   const [sequence, setSequence] = useState<string[]>([])
+  const [femininMot, setFemininMot] = useState('')
+  const [femininSequence, setFemininSequence] = useState<string[]>([])
   const [erreur, setErreur] = useState<string | null>(null)
   const [enCours, setEnCours] = useState(false)
   /** Id du mot dont le panneau de relations est déplié (un seul à la fois). */
@@ -152,6 +204,10 @@ function SectionMots() {
       setErreur('Clique les sons du mot sur le clavier ci-dessous.')
       return
     }
+    if (categorie === 'adjectif' && femininMot.trim() !== '' && femininSequence.length === 0) {
+      setErreur('Clique les sons de la forme féminine, ou laisse son nom vide pour ne pas la renseigner.')
+      return
+    }
     setEnCours(true)
     try {
       await api.addWord({
@@ -159,11 +215,16 @@ function SectionMots() {
         categorie,
         genre: categorie === 'nom' && genre !== '' ? genre : null,
         phonemes: sequence,
+        ...(categorie === 'adjectif' && femininMot.trim() !== ''
+          ? { femininMot: femininMot.trim(), femininPhonemes: femininSequence }
+          : {}),
       })
       await rafraichir()
       setMot('')
       setSequence([])
       setGenre('')
+      setFemininMot('')
+      setFemininSequence([])
     } catch (e) {
       setErreur(e instanceof Error ? e.message : 'Une erreur est survenue')
     } finally {
@@ -228,41 +289,34 @@ function SectionMots() {
         </div>
 
         <div className="mt-4">
-          <span className="text-sm font-semibold text-gray-700">Les sons du mot</span>
-          <div className="mt-1 flex min-h-12 flex-wrap items-center gap-2 rounded-lg border-2 border-gray-200 bg-white p-2">
-            {sequence.length === 0 ? (
-              <span className="px-2 text-gray-400">Clique les sons ci-dessous…</span>
-            ) : (
-              sequence.map((id, i) => (
-                <span key={`${id}-${i}`} className="rounded-lg bg-brand-100 px-3 py-1 font-semibold text-brand-700">
-                  {phonemes.find((p) => p.id === id)?.displaySymbol ?? id}
-                </span>
-              ))
-            )}
-            {sequence.length > 0 && (
-              <button
-                type="button"
-                onClick={() => setSequence((s) => s.slice(0, -1))}
-                className="ml-auto rounded-lg px-3 py-1 text-sm text-gray-500 hover:bg-gray-100"
-              >
-                ⌫ Effacer
-              </button>
-            )}
-          </div>
-
-          <div className="mt-2 flex flex-wrap gap-1">
-            {phonemes.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setSequence((s) => [...s, p.id])}
-                className="rounded-lg border-2 border-brand-200 bg-white px-3 py-1 font-semibold text-gray-900 hover:border-brand-500 hover:bg-brand-50"
-              >
-                {p.displaySymbol}
-              </button>
-            ))}
-          </div>
+          <SequencePicker label="Les sons du mot" sequence={sequence} onChange={setSequence} />
         </div>
+
+        {categorie === 'adjectif' && (
+          <div className="mt-4 rounded-lg border border-amber-300 bg-white/60 p-3">
+            <label>
+              <span className="text-sm font-semibold text-gray-700">
+                Forme féminine (facultatif — laisser vide si vous préférez ne pas la renseigner)
+              </span>
+              <input
+                type="text"
+                value={femininMot}
+                onChange={(e) => setFemininMot(e.target.value)}
+                placeholder="ex. « grande » pour « grand »"
+                className="mt-1 w-full rounded-lg border-2 border-gray-200 bg-white px-3 py-2 focus:border-brand-500 focus:outline-none"
+              />
+            </label>
+            {femininMot.trim() !== '' && (
+              <div className="mt-3">
+                <SequencePicker
+                  label="Les sons de la forme féminine"
+                  sequence={femininSequence}
+                  onChange={setFemininSequence}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         {erreur && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{erreur}</p>}
 
@@ -294,6 +348,9 @@ function SectionMots() {
                   <span className="text-xs text-gray-500">
                     {CATEGORIES.find((c) => c.value === w.categorie)?.label}
                   </span>
+                  {w.categorie === 'adjectif' && w.feminin_mot && (
+                    <span className="text-xs text-gray-500">/ {w.feminin_mot}</span>
+                  )}
                   {w.categorie === 'verbe' && (
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs ${

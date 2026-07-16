@@ -8,7 +8,10 @@ $db = getDb();
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    $stmt = $db->query('SELECT id, mot, categorie, phonemes, genre, conjugaison FROM lexicon_additions ORDER BY mot');
+    $stmt = $db->query(
+        'SELECT id, mot, categorie, phonemes, genre, conjugaison, feminin_mot, feminin_phonemes
+         FROM lexicon_additions ORDER BY mot',
+    );
     $rows = $stmt->fetchAll();
 
     // Relations de tous les mots en une requête (plutôt qu'une par mot).
@@ -27,6 +30,7 @@ if ($method === 'GET') {
     foreach ($rows as &$row) {
         $row['phonemes'] = json_decode($row['phonemes'], true);
         $row['conjugaison'] = $row['conjugaison'] !== null ? json_decode($row['conjugaison'], true) : null;
+        $row['feminin_phonemes'] = $row['feminin_phonemes'] !== null ? json_decode($row['feminin_phonemes'], true) : null;
         $row['relations'] = [
             'synonyme' => $relationsParMot[$row['id']]['synonyme'] ?? [],
             'antonyme' => $relationsParMot[$row['id']]['antonyme'] ?? [],
@@ -50,11 +54,23 @@ if ($method === 'POST') {
     ];
     $validCategories = ['nom', 'adjectif', 'verbe', 'adverbe', 'invariable'];
 
+    function validerSequence(array $validIds, mixed $phonemes, string $label): array
+    {
+        if (!is_array($phonemes) || count($phonemes) === 0) {
+            jsonResponse(400, ['error' => "Séquence phonétique manquante ($label)"]);
+        }
+        foreach ($phonemes as $p) {
+            if (!in_array($p, $validIds, true)) {
+                jsonResponse(400, ['error' => "Touche inconnue ($label) : $p"]);
+            }
+        }
+        return $phonemes;
+    }
+
     $body = jsonBody();
     $mot = trim((string) ($body['mot'] ?? ''));
     $categorie = (string) ($body['categorie'] ?? '');
     $genre = $body['genre'] ?? null;
-    $phonemes = $body['phonemes'] ?? null;
 
     if ($mot === '' || mb_strlen($mot) > 100) {
         jsonResponse(400, ['error' => 'Mot invalide']);
@@ -65,13 +81,21 @@ if ($method === 'POST') {
     if ($genre !== null && $genre !== 'm' && $genre !== 'f') {
         jsonResponse(400, ['error' => 'Genre invalide']);
     }
-    if (!is_array($phonemes) || count($phonemes) === 0) {
-        jsonResponse(400, ['error' => 'Séquence phonétique manquante']);
-    }
-    foreach ($phonemes as $p) {
-        if (!in_array($p, $validPhonemeIds, true)) {
-            jsonResponse(400, ['error' => "Touche inconnue : $p"]);
+
+    $phonemes = validerSequence($validPhonemeIds, $body['phonemes'] ?? null, 'mot');
+
+    // Forme féminine : optionnelle, uniquement pour un adjectif. Saisie à la
+    // main plutôt que générée — contrairement aux verbes en -er, les
+    // exceptions de formation du féminin sont trop nombreuses et variées
+    // (-eux/-euse, -er/-ère, -f/-ve, consonne doublée...) pour distinguer
+    // fiablement un cas "sûr" d'un cas risqué.
+    $femininMot = trim((string) ($body['femininMot'] ?? ''));
+    $femininPhonemes = null;
+    if ($categorie === 'adjectif' && $femininMot !== '') {
+        if (mb_strlen($femininMot) > 100) {
+            jsonResponse(400, ['error' => 'Forme féminine invalide']);
         }
+        $femininPhonemes = validerSequence($validPhonemeIds, $body['femininPhonemes'] ?? null, 'féminin');
     }
 
     // Conjugaison calculée à l'ajout, une fois pour toutes. null si le verbe
@@ -80,8 +104,9 @@ if ($method === 'POST') {
     $conjugaison = $categorie === 'verbe' ? genererConjugaison($mot) : null;
 
     $stmt = $db->prepare(
-        'INSERT INTO lexicon_additions (mot, categorie, phonemes, genre, conjugaison, created_by)
-         VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO lexicon_additions
+           (mot, categorie, phonemes, genre, conjugaison, feminin_mot, feminin_phonemes, created_by)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
     );
     $stmt->execute([
         $mot,
@@ -89,6 +114,8 @@ if ($method === 'POST') {
         json_encode($phonemes),
         $genre,
         $conjugaison !== null ? json_encode($conjugaison, JSON_UNESCAPED_UNICODE) : null,
+        $femininMot !== '' ? $femininMot : null,
+        $femininPhonemes !== null ? json_encode($femininPhonemes) : null,
         $user['id'],
     ]);
 

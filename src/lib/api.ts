@@ -57,6 +57,9 @@ export interface LexiconWord {
   /** null si le verbe n'est pas régulier (non générable), ou si ce n'est pas un verbe. */
   conjugaison?: AddedConjugation | null
   relations?: Record<RelationType, RelationTarget[]>
+  /** Forme féminine d'un adjectif, saisie à la main — null si non renseignée. */
+  feminin_mot?: string | null
+  feminin_phonemes?: string[] | null
 }
 
 export const api = {
@@ -82,7 +85,12 @@ export const api = {
 
   listLexicon: () => request<{ words: LexiconWord[] }>('lexicon.php'),
 
-  addWord: (word: Pick<LexiconWord, 'mot' | 'categorie' | 'phonemes' | 'genre'>) =>
+  addWord: (
+    word: Pick<LexiconWord, 'mot' | 'categorie' | 'phonemes' | 'genre'> & {
+      femininMot?: string
+      femininPhonemes?: string[]
+    },
+  ) =>
     request<{ id: number; conjugaisonGeneree: boolean }>('lexicon.php', {
       method: 'POST',
       body: JSON.stringify(word),

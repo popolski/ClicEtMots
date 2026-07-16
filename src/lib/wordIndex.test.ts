@@ -62,4 +62,39 @@ describe('loadWordIndex : fusion des mots ajoutés par l’enseignante', () => {
     expect(verbe.formRole).toBe('infinitif')
     expect(verbe.genre).toBeUndefined()
   })
+
+  it('un adjectif sans forme féminine saisie ne donne qu’une seule entrée', async () => {
+    listLexicon.mockResolvedValue({
+      words: [{ id: 3, mot: 'zarbi', categorie: 'adjectif', phonemes: ['z', 'a', 'r', 'b', 'i'], genre: null }],
+    })
+    const { loadWordIndex } = await import('./wordIndex')
+    const words = await loadWordIndex()
+
+    expect(words.filter((w) => w.lemmaId === 'ajout:adjectif:zarbi')).toHaveLength(1)
+  })
+
+  it('un adjectif avec forme féminine saisie donne 2 entrées partageant le même lemmaId', async () => {
+    listLexicon.mockResolvedValue({
+      words: [
+        {
+          id: 4,
+          mot: 'zarbi',
+          categorie: 'adjectif',
+          phonemes: ['z', 'a', 'r', 'b', 'i'],
+          genre: null,
+          feminin_mot: 'zarbie',
+          feminin_phonemes: ['z', 'a', 'r', 'b', 'i'],
+        },
+      ],
+    })
+    const { loadWordIndex } = await import('./wordIndex')
+    const words = await loadWordIndex()
+
+    const formes = words.filter((w) => w.lemmaId === 'ajout:adjectif:zarbi')
+    expect(formes).toHaveLength(2)
+    expect(formes.map((f) => [f.word, f.formRole])).toEqual([
+      ['zarbi', 'masculin'],
+      ['zarbie', 'féminin'],
+    ])
+  })
 })

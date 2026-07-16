@@ -42,18 +42,37 @@ export function loadWordIndex(): Promise<WordEntry[]> {
       loadAddedWords(),
     ]).then(([statiques, ajoutes]) => [
       ...statiques,
-      ...ajoutes.map<WordEntry>((w) => ({
-        word: w.mot,
-        phonemes: w.phonemes,
-        frequency: FREQUENCE_MOT_AJOUTE,
-        level: 1,
-        category: w.categorie,
-        // Préfixe "ajout:" : évite toute collision de lemmaId avec le
-        // lexique généré, et permet de reconnaître ces mots plus tard.
-        lemmaId: lemmaIdAjout(w.mot, w.categorie),
-        formRole: ROLE_DE_BASE[w.categorie],
-        ...(w.genre ? { genre: w.genre } : {}),
-      })),
+      ...ajoutes.flatMap<WordEntry>((w) => {
+        const lemmaId = lemmaIdAjout(w.mot, w.categorie)
+        const masculin: WordEntry = {
+          word: w.mot,
+          phonemes: w.phonemes,
+          frequency: FREQUENCE_MOT_AJOUTE,
+          level: 1,
+          category: w.categorie,
+          // Préfixe "ajout:" : évite toute collision de lemmaId avec le
+          // lexique généré, et permet de reconnaître ces mots plus tard.
+          lemmaId,
+          formRole: ROLE_DE_BASE[w.categorie],
+          ...(w.genre ? { genre: w.genre } : {}),
+        }
+        // Forme féminine d'un adjectif, saisie à la main (aucune génération :
+        // trop d'exceptions pour la deviner sûrement) — partage le lemmaId du
+        // masculin pour apparaître dans ses "Autres formes".
+        if (w.categorie === 'adjectif' && w.feminin_mot && w.feminin_phonemes) {
+          const feminin: WordEntry = {
+            word: w.feminin_mot,
+            phonemes: w.feminin_phonemes,
+            frequency: FREQUENCE_MOT_AJOUTE,
+            level: 1,
+            category: 'adjectif',
+            lemmaId,
+            formRole: 'féminin',
+          }
+          return [masculin, feminin]
+        }
+        return [masculin]
+      }),
     ])
   }
   return cached
