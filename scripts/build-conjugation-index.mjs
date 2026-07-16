@@ -248,11 +248,24 @@ function fillMissingRegularForms(v) {
 // génération automatique reste hors de portée pour toute cette famille (voir
 // isRiskyErStem), mais on peut combler les trous mot par mot quand un
 // enseignant en signale un. Ne comble que les cases vides, ne remplace
-// jamais une forme attestée par Lexique383.
+// jamais une forme attestée par Lexique383 — SAUF `futurOverride`, qui
+// remplace aussi les formes attestées : Lexique383 code le futur de cette
+// famille en orthographe traditionnelle (é), mais les rectifications de
+// l'orthographe de 1990 remplacent l'accent aigu par un accent grave au
+// futur/conditionnel pour tout le modèle "céder" (je cèderai, j'allègerai —
+// https://dictionnaire.lerobert.com/guide/rectifications-de-l-orthographe-de-1990-regles),
+// et c'est cette graphie qu'on choisit d'enseigner ici.
 const MANUAL_VERB_FORMS = {
   rouspéter: {
     present: { '1p': 'rouspétons' },
-    futur: { '1s': 'rouspéterai', '2s': 'rouspéteras', '1p': 'rouspéterons', '2p': 'rouspéterez', '3p': 'rouspéteront' },
+    futurOverride: {
+      '1s': 'rouspèterai',
+      '2s': 'rouspèteras',
+      '3s': 'rouspètera',
+      '1p': 'rouspèterons',
+      '2p': 'rouspèterez',
+      '3p': 'rouspèteront',
+    },
     imparfait: { '2s': 'rouspétais', '1p': 'rouspétions', '2p': 'rouspétiez' },
     participe: { ms: 'rouspété', fs: 'rouspétée', mp: 'rouspétés', fp: 'rouspétées' },
   },
@@ -263,7 +276,7 @@ function applyManualForms(v, lemme) {
   if (!manual) return
   for (const p of PERSONS) {
     if (manual.present?.[p] && !v.present[p]) v.present[p] = manual.present[p]
-    if (manual.futur?.[p] && !v.futur[p]) v.futur[p] = manual.futur[p]
+    if (manual.futurOverride?.[p]) v.futur[p] = manual.futurOverride[p]
     if (manual.imparfait?.[p] && !v.imparfait[p]) v.imparfait[p] = manual.imparfait[p]
   }
   for (const slot of ['ms', 'fs', 'mp', 'fp']) {
