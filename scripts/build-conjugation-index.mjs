@@ -9,6 +9,54 @@
 // Sortie : src/data/conjugations.json, keyé par infinitif.
 // Lancé à la main : node scripts/build-conjugation-index.mjs
 import { readFileSync, writeFileSync } from 'node:fs'
+import { conjugate } from 'conjugation-fr'
+
+// Repli pour un verbe dont les formes attestées dans Lexique383 (complétées
+// par génération déterministe, voir plus bas) ne couvrent pas les 9
+// personnes des 3 temps simples — ex. "haleter" (famille -eter à alternance
+// accent/consonne doublée, volontairement exclue de la génération car pas
+// fiable à 100% par simple règle). conjugation-fr (base Verbiste, ~7000
+// verbes, tous modes/temps) sert alors d'autorité complète : même
+// bibliothèque déjà utilisée côté client pour les verbes ajoutés à la main
+// (src/lib/externalConjugation.ts — logique dupliquée intentionnellement,
+// l'une tourne ici en Node au build, l'autre dans le navigateur à l'ajout).
+const PRONOM_PAR_INDEX = ['je', 'tu', 'il', 'nous', 'vous', 'ils']
+
+function sixVersRecord(rows) {
+  const out = {}
+  for (const r of rows) {
+    const pronom = PRONOM_PAR_INDEX[r.pronounIndex]
+    if (pronom) out[pronom] = r.verb
+  }
+  return out
+}
+
+function neufPersonnes(masc, fem) {
+  return {
+    je: masc.je, tu: masc.tu, il: masc.il, elle: fem.il, on: masc.il,
+    nous: masc.nous, vous: masc.vous, ils: masc.ils, elles: fem.ils,
+  }
+}
+
+function depuisConjugationFr(infinitif) {
+  try {
+    const presentMasc = sixVersRecord(conjugate(infinitif, 'indicative', 'present'))
+    const futurMasc = sixVersRecord(conjugate(infinitif, 'indicative', 'future'))
+    const imparfaitMasc = sixVersRecord(conjugate(infinitif, 'indicative', 'imperfect'))
+    const passeComposeMasc = sixVersRecord(conjugate(infinitif, 'indicative', 'perfect-tense', false))
+    const passeComposeFem = sixVersRecord(conjugate(infinitif, 'indicative', 'perfect-tense', true))
+    return {
+      infinitif,
+      auxiliaire: passeComposeMasc.je?.trim().startsWith('suis') ? 'être' : 'avoir',
+      present: neufPersonnes(presentMasc, presentMasc),
+      futur: neufPersonnes(futurMasc, futurMasc),
+      imparfait: neufPersonnes(imparfaitMasc, imparfaitMasc),
+      passeCompose: neufPersonnes(passeComposeMasc, passeComposeFem),
+    }
+  } catch {
+    return null
+  }
+}
 
 // Verbes se conjuguant avec "être" au passé composé (liste standard, non
 // exhaustive pour les pronominaux : se laver, se souvenir, etc. ne sont pas
@@ -363,15 +411,20 @@ for (const lemme of reachableVerbs) {
   const imparfait = expandToNeuf(v.imparfait)
 
   // Un verbe à radical variable non déterministe (ex. "haleter", famille
-  // -eter/-eler à alternance accent/consonne doublée non génbérable sans
+  // -eter/-eler à alternance accent/consonne doublée non générable sans
   // risque, voir isRiskyErStem) ne reçoit que les formes RÉELLEMENT
   // attestées dans Lexique383 — souvent une poignée de personnes seulement,
   // aucune au futur. Un tableau troué (des cases vides en plein milieu du
-  // conjugueur) est pire qu'utile pour un enfant : soit le tableau est
-  // complet (9 personnes, les 3 temps simples), soit ce verbe n'a pas de
-  // conjugueur du tout, exactement comme un verbe irrégulier sans aucune
-  // forme générée.
-  if (NEUF_PERSONNES.some(([p]) => !present[p] || !futur[p] || !imparfait[p])) continue
+  // conjugueur) est pire qu'utile pour un enfant : avant de renoncer
+  // complètement, on tente conjugation-fr (voir plus haut) qui connaît la
+  // plupart de ces verbes avec un tableau complet et fiable.
+  if (NEUF_PERSONNES.some(([p]) => !present[p] || !futur[p] || !imparfait[p])) {
+    const externe = depuisConjugationFr(lemme)
+    if (externe) {
+      output[lemme] = externe
+    }
+    continue
+  }
 
   output[lemme] = {
     infinitif: v.infinitif,
