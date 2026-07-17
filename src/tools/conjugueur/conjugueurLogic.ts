@@ -1,3 +1,25 @@
+/**
+ * Groupe grammatical d'un verbe (1er/2e/3e), affiché entre parenthèses dans
+ * les résultats du clavier. Règle scolaire classique :
+ *   - infinitif en -er (sauf aller) -> 1er groupe. Vrai même pour les
+ *     verbes qu'on ne sait pas conjuguer automatiquement (appeler, payer…
+ *     "risqués" pour la génération, mais 1er groupe quand même : c'est une
+ *     question d'orthographe de l'infinitif, pas de régularité de
+ *     conjugaison).
+ *   - infinitif en -ir ET "nous" au présent en -issons -> 2e groupe
+ *     (finir/finissons). Sans cette forme "nous" attestée ou générée, pas
+ *     moyen de trancher fiablement — nombre 3e groupe (dormir, partir,
+ *     venir…) l'emportent largement parmi les -ir sans -issons, donc "3e"
+ *     est le repli le plus sûr.
+ *   - tout le reste (aller, -re, -oir, -ir non-issant) -> 3e groupe.
+ */
+export function verbGroup(infinitif: string, presentNous?: string): '1er' | '2e' | '3e' {
+  if (infinitif === 'aller') return '3e'
+  if (infinitif.endsWith('er')) return '1er'
+  if (infinitif.endsWith('ir') && presentNous?.endsWith('issons')) return '2e'
+  return '3e'
+}
+
 export interface StyledForm {
   /** Partie affichée en ROUGE avant le radical (l'auxiliaire du passé composé, ex. "ai "). */
   redPrefix: string

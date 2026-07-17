@@ -24,7 +24,10 @@ const TENSES: { key: 'passeCompose' | 'imparfait' | 'present' | 'futur'; label: 
 const TENSE_MASCOT: Record<(typeof TENSES)[number]['key'], string> = {
   passeCompose: '/mascottes/verbe-passe.png',
   imparfait: '/mascottes/verbe-passe.png',
-  present: '/mascottes/verbe.png',
+  // Mascotte "Présent" dédiée depuis la 2e livraison de pictos — avant ça,
+  // aucune version distincte n'existait et l'onglet réutilisait le mascotte
+  // "Verbe" générique (celui des cartouches de résultats).
+  present: '/mascottes/verbe-present.png',
   futur: '/mascottes/verbe-futur.png',
 }
 

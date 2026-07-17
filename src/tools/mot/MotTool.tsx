@@ -7,6 +7,7 @@ import { loadWordFamilies } from '../../lib/wordFamilies'
 import { loadWordSynonyms, loadWordAntonyms } from '../../lib/wordSynonyms'
 import { pickPrimaryForm } from '../clavier/clavierLogic'
 import { assetUrl } from '../../lib/assetUrl'
+import { speak, speechSupported } from '../../lib/speech'
 import type {
   WordCategory,
   WordEntry,
@@ -153,6 +154,18 @@ export function MotTool() {
             {CATEGORY_LABEL[primary.category]}
           </span>
         </div>
+      }
+      titleAfter={
+        speechSupported() && (
+          <button
+            type="button"
+            onClick={() => speak(primary.word)}
+            aria-label={`Écouter « ${primary.word} »`}
+            className="rounded-full p-2 text-2xl leading-none text-gray-500 hover:bg-black/10 active:scale-95"
+          >
+            🔊
+          </button>
+        )
       }
     >
       {otherForms.length > 0 && (
