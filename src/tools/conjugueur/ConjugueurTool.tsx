@@ -115,7 +115,7 @@ export function ConjugueurTool() {
         {/* Comble le grand espace vide qui reste entre les deux colonnes
             (chacune n'occupe qu'une fraction de sa largeur de grille) — masqué
             sur mobile, où la place manque et les colonnes s'empilent. */}
-        <div className="hidden justify-center px-6 sm:flex">
+        <div className="hidden items-center justify-center px-6 sm:flex">
           <img src={assetUrl(TENSE_MASCOT[tense])} alt="" className="h-40 w-40 object-contain" />
         </div>
         <div className="flex flex-col gap-3">

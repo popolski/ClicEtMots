@@ -23,7 +23,10 @@ const categoryStyles: Record<WordCategory, string> = {
 const CATEGORY_MASCOT: Record<WordCategory, string> = {
   nom: '/mascottes/nom.png',
   adjectif: '/mascottes/adjectif.png',
-  verbe: '/mascottes/verbe-infinitif.png',
+  // Mascotte "Verbe" générique ici (pas "infinitif", réservée à la fiche mot
+  // et au conjugueur) — la carte résultat n'affiche que le mot, pas son rôle
+  // grammatical précis, donc pas de raison de préciser "à l'infinitif".
+  verbe: '/mascottes/verbe.png',
   invariable: '/mascottes/invariable.png',
   adverbe: '/mascottes/adverbe.png',
 }
