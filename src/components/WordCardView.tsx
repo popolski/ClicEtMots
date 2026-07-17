@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import type { WordCard, WordCategory } from '../types/phonetics'
 import { pickPrimaryForm } from '../tools/clavier/clavierLogic'
+import { assetUrl } from '../lib/assetUrl'
 
 interface WordCardViewProps {
   card: WordCard
@@ -16,6 +17,17 @@ const categoryStyles: Record<WordCategory, string> = {
   adverbe: 'bg-orange-50 text-orange-900 border-orange-200',
 }
 
+// Mêmes mascottes que sur la fiche mot (MotTool.CATEGORY_MASCOT) — reprises
+// ici pour repérer la catégorie d'un coup d'œil directement dans la liste de
+// résultats, sans attendre d'ouvrir la fiche.
+const CATEGORY_MASCOT: Record<WordCategory, string> = {
+  nom: '/mascottes/nom.png',
+  adjectif: '/mascottes/adjectif.png',
+  verbe: '/mascottes/verbe-infinitif.png',
+  invariable: '/mascottes/invariable.png',
+  adverbe: '/mascottes/adverbe.png',
+}
+
 export function WordCardView({ card }: WordCardViewProps) {
   const style = categoryStyles[card.category]
   // Forme "de base" affichée dans les résultats — les autres formes (pluriel,
@@ -26,9 +38,10 @@ export function WordCardView({ card }: WordCardViewProps) {
   return (
     <Link
       to={`/mot/${encodeURIComponent(card.lemmaId)}`}
-      className={`block rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${style}`}
+      className={`flex items-center justify-between gap-2 rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${style}`}
     >
       <div className="text-2xl font-medium">{primary.word}</div>
+      <img src={assetUrl(CATEGORY_MASCOT[card.category])} alt="" className="h-10 w-10 shrink-0 object-contain" />
     </Link>
   )
 }

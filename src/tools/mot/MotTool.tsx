@@ -36,7 +36,10 @@ const categoryStyles: Record<WordCategory, string> = {
 const CATEGORY_MASCOT: Record<WordCategory, string> = {
   nom: '/mascottes/nom.png',
   adjectif: '/mascottes/adjectif.png',
-  verbe: '/mascottes/verbe.png',
+  // Le titre de la fiche affiche toujours le verbe à l'infinitif : mascotte
+  // dédiée plutôt que le "Verbe" générique (réservé au conjugueur, onglet
+  // Présent — voir ConjugueurTool.TENSE_MASCOT).
+  verbe: '/mascottes/verbe-infinitif.png',
   invariable: '/mascottes/invariable.png',
   adverbe: '/mascottes/adverbe.png',
 }

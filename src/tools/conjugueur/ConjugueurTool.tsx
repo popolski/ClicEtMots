@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ToolLayout } from '../../components/ToolLayout'
 import { loadConjugations, type ConjugationIndex } from '../../lib/conjugations'
+import { assetUrl } from '../../lib/assetUrl'
 import {
   styleConjugatedForms,
   pronomAffiche,
@@ -16,6 +17,16 @@ const TENSES: { key: 'passeCompose' | 'imparfait' | 'present' | 'futur'; label: 
   { key: 'present', label: 'Présent' },
   { key: 'futur', label: 'Futur' },
 ]
+
+// Mascotte affichée dans l'espace vide entre les colonnes singulier/pluriel,
+// changeant avec l'onglet actif. Passé composé et imparfait partagent la
+// même mascotte "passé" (une seule fournie pour les deux temps).
+const TENSE_MASCOT: Record<(typeof TENSES)[number]['key'], string> = {
+  passeCompose: '/mascottes/verbe-passe.png',
+  imparfait: '/mascottes/verbe-passe.png',
+  present: '/mascottes/verbe.png',
+  futur: '/mascottes/verbe-futur.png',
+}
 
 function PersonRow({ personne, form }: { personne: string; form: StyledForm | undefined }) {
   if (!form) return null
@@ -95,11 +106,17 @@ export function ConjugueurTool() {
         ))}
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
         <div className="flex flex-col gap-3">
           {PERSONNES_SINGULIER.map((personne) => (
             <PersonRow key={personne} personne={personne} form={styled[personne]} />
           ))}
+        </div>
+        {/* Comble le grand espace vide qui reste entre les deux colonnes
+            (chacune n'occupe qu'une fraction de sa largeur de grille) — masqué
+            sur mobile, où la place manque et les colonnes s'empilent. */}
+        <div className="hidden justify-center px-6 sm:flex">
+          <img src={assetUrl(TENSE_MASCOT[tense])} alt="" className="h-40 w-40 object-contain" />
         </div>
         <div className="flex flex-col gap-3">
           {PERSONNES_PLURIEL.map((personne) => (
