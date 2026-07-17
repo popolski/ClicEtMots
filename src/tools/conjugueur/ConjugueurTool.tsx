@@ -106,25 +106,25 @@ export function ConjugueurTool() {
         ))}
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-        {/* ml-auto + w-fit : la colonne se rétrécit à la largeur de son
-            contenu puis se colle au bord droit de sa cellule de grille (donc
-            de la mascotte), sans quoi elle reste plaquée à gauche de la page
-            et laisse un vide asymétrique avant la mascotte (bug signalé —
-            l'espace ne se voyait quasi pas côté pluriel, énorme côté
-            singulier). PersonRow garde son alignement interne pronom/verbe
-            intact, seul le bloc entier se déplace. */}
-        <div className="ml-auto flex w-fit flex-col gap-3">
+      {/* Grid pur (1fr/auto/1fr) laissait le trio entier plaqué à gauche de
+          la page, avec un grand vide à droite — l'ensemble n'était jamais
+          centré comme un bloc, seulement les colonnes entre elles (bug
+          signalé, capture "trop tassé"). Flex + justify-center à la place :
+          le trio singulier/mascotte/pluriel se comporte comme un seul bloc,
+          centré dans la page ; gap-12 aère largement de chaque côté de la
+          mascotte, comme demandé. */}
+      <div className="mt-6 grid grid-cols-1 gap-y-6 sm:flex sm:flex-row sm:items-center sm:justify-center sm:gap-12">
+        <div className="flex flex-col gap-3">
           {PERSONNES_SINGULIER.map((personne) => (
             <PersonRow key={personne} personne={personne} form={styled[personne]} />
           ))}
         </div>
-        {/* Comble le grand espace vide qui reste entre les deux colonnes
-            (chacune n'occupe qu'une fraction de sa largeur de grille) — masqué
-            sur mobile, où la place manque et les colonnes s'empilent. */}
-        <div className="hidden items-center justify-center px-6 sm:flex">
-          <img src={assetUrl(TENSE_MASCOT[tense])} alt="" className="h-40 w-40 object-contain" />
-        </div>
+        {/* Masquée sur mobile : la place manque une fois les colonnes empilées. */}
+        <img
+          src={assetUrl(TENSE_MASCOT[tense])}
+          alt=""
+          className="hidden h-40 w-40 shrink-0 object-contain sm:block"
+        />
         <div className="flex flex-col gap-3">
           {PERSONNES_PLURIEL.map((personne) => (
             <PersonRow key={personne} personne={personne} form={styled[personne]} />
