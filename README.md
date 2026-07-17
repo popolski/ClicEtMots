@@ -1,8 +1,10 @@
 # Clic & Mots
 
-Clavier phonétique gratuit pour aider les élèves du CP au CM2 à trouver
-l'orthographe des mots qu'ils veulent écrire — un équivalent libre du
-"Clavier Métalo" payant, conçu pour une classe primaire.
+Clic & Mots est un assistant d'écriture phonologique pour l'école primaire
+qui permet aux élèves de retrouver l'orthographe d'un mot à partir de ses
+sons, puis d'en explorer la prononciation, les formes grammaticales, la
+conjugaison et les relations lexicales. Gratuit, conçu pour une classe du CP
+au CM2 — un équivalent libre du "Clavier Métalo" payant.
 
 **En ligne : [www.cours-vandewalle.fr/clicmots](https://www.cours-vandewalle.fr/clicmots/)**
 
@@ -10,10 +12,26 @@ l'orthographe des mots qu'ils veulent écrire — un équivalent libre du
 
 L'élève clique les sons qu'il entend dans un mot, un son après l'autre, sur
 un clavier de 33 touches (une par son du français). Au fur et à mesure,
-l'orthographe correspondante apparaît. Chaque mot trouvé ouvre une fiche
-détaillée : autres formes (pluriel, féminin, participe passé), mots de la
-même famille, synonymes et contraires. Les verbes ont en plus un conjugueur
-(présent, imparfait, futur, passé composé).
+l'orthographe correspondante apparaît.
+
+## Fonctionnalités
+
+- **Clavier phonétique** : 33 touches, une par son du français, avec un
+  clavier filtré dynamiquement pour ne proposer que les sons qui prolongent
+  un mot existant.
+- **Fiche mot** : autres formes (pluriel, féminin, participe passé), mots de
+  la même famille, synonymes et contraires — chacun cliquable pour naviguer
+  de fiche en fiche.
+- **Conjugueur** : présent, imparfait, futur et passé composé pour les
+  verbes, avec le groupe grammatical (1er/2e/3e) affiché automatiquement.
+- **Prononciation audio** : chaque mot peut être écouté à voix haute (voix
+  Google Cloud Neural2 pré-générée, choisie pour sa fidélité aux syllabes
+  muettes du français — contrairement à la synthèse vocale des navigateurs).
+- **Mascottes par catégorie grammaticale** (nom, adjectif, verbe, adverbe) et
+  par temps de conjugaison, pour un repérage visuel immédiat.
+- **Espace enseignant** : gestion des comptes élèves, ajout de mots absents
+  du lexique (avec conjugaison et prononciation générées automatiquement) et
+  saisie des relations lexicales (synonymes/contraires/famille).
 
 ## Stack technique
 
@@ -25,9 +43,16 @@ fichier `.htaccess` inclus gère le routage côté client).
 **Backend** : PHP 8 + MySQL (voir [`server/README.md`](./server/README.md)),
 pour l'authentification (élèves + enseignant) et l'espace enseignant —
 gestion des comptes élèves, ajout de mots absents du lexique avec conjugaison
-générée automatiquement pour les verbes réguliers, et relations
-(synonymes/contraires/famille) saisies à la main. Hébergé à côté du site sur
-le même mutualisé OVH.
+et prononciation (Google Cloud Text-to-Speech) générées automatiquement pour
+les verbes réguliers, et relations (synonymes/contraires/famille) saisies à
+la main. Hébergé à côté du site sur le même mutualisé OVH.
+
+**Audio** : les ~27 000 mots du lexique statique ont leur prononciation
+pré-générée une fois pour toutes (`scripts/generate-word-audio.mjs`, voix
+Google Cloud `fr-FR-Neural2-A`) et servie en fichiers mp3 statiques — aucun
+appel API au moment de l'écoute. Les mots ajoutés par l'enseignant génèrent
+leur mp3 à la volée côté serveur ; en son absence (échec réseau, quota), le
+site retombe sur la synthèse vocale du navigateur.
 
 ```bash
 npm install
