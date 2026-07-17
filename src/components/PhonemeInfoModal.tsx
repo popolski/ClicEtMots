@@ -22,7 +22,7 @@ const SONS_TOUCHES_DOUBLES: Record<string, { soundId: string; label: string }[]>
   ],
   eu: [
     { soundId: 'e', label: 'e (cheval)' },
-    { soundId: 'eu', label: 'eu (deux)' },
+    { soundId: 'eu', label: 'eu (beurre)' },
   ],
 }
 
