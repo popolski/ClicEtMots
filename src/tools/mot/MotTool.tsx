@@ -83,7 +83,7 @@ function useGroupeVerbe(word: string, category?: WordCategory): string | null {
     let annule = false
     loadConjugations().then((index) => {
       if (annule) return
-      const g = verbGroup(word, index[word]?.present.nous)
+      const g = verbGroup(word, index[word]?.present)
       setGroupe(g === '1er' ? '1er groupe' : g === '2e' ? '2e groupe' : '3e groupe')
     })
     return () => {
