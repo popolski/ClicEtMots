@@ -20,6 +20,11 @@ interface ToolLayoutProps {
   titleIcon?: ReactNode
   /** Contenu affiché juste après le titre, sur la même ligne (ex. bouton haut-parleur). */
   titleAfter?: ReactNode
+  /**
+   * Contenu affiché juste sous le titre, aligné avec lui (pas avec titleIcon,
+   * qui peut être plus large — ex. groupe verbal sous le mot de la fiche).
+   */
+  titleBelow?: ReactNode
 }
 
 export function ToolLayout({
@@ -30,6 +35,7 @@ export function ToolLayout({
   hideBackButton,
   titleIcon,
   titleAfter,
+  titleBelow,
 }: ToolLayoutProps) {
   const navigate = useNavigate()
   const { session, logout } = useAuth()
@@ -75,8 +81,13 @@ export function ToolLayout({
       </div>
       <div className="flex items-center gap-3">
         {titleIcon}
-        <h1 className="text-3xl font-semibold text-gray-900">{title}</h1>
-        {titleAfter}
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-semibold text-gray-900">{title}</h1>
+            {titleAfter}
+          </div>
+          {titleBelow}
+        </div>
       </div>
       <p className="mt-1 mb-8 text-gray-500">{description}</p>
       {children}

@@ -174,8 +174,9 @@ export function MotTool() {
   return (
     <ToolLayout
       title={primary.word}
-      description={groupe ? `(${groupe})` : ''}
+      description=""
       showBackToKeyboard
+      titleBelow={groupe && <p className="text-gray-500">({groupe})</p>}
       titleIcon={
         <div className="flex flex-col items-center gap-1">
           <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-20 w-20 object-contain" />
