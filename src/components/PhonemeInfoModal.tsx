@@ -10,18 +10,24 @@ function playSound(soundId: string) {
   new Audio(assetUrl(`/audio/phonemes/${encodeURIComponent(soundId)}.mp3`)).play()
 }
 
-// La touche "e" est la seule "touche double" : elle fusionne 2 sons distincts
-// (é fermé, è ouvert), chacun avec son propre geste Borel-Maisonny et son
-// propre enregistrement — un unique bouton "écouter" n'aurait pas de sens ici,
-// il en faut un par geste. Toutes les autres touches n'ont qu'un seul son,
-// dont le fichier audio est nommé d'après phoneme.id.
-const SONS_TOUCHE_E = [
-  { soundId: 'é', label: 'é (fermé)' },
-  { soundId: 'è', label: 'è (ouvert)' },
-]
+// Deux touches "doubles" fusionnent en fait 2 sons distincts, chacun avec son
+// propre geste Borel-Maisonny et son propre enregistrement — un bouton
+// "écouter" unique n'aurait pas de sens pour elles, il en faut un par geste
+// (dans le même ordre que gestureImages). Toutes les autres touches n'ont
+// qu'un seul son, dont le fichier audio est nommé d'après phoneme.id.
+const SONS_TOUCHES_DOUBLES: Record<string, { soundId: string; label: string }[]> = {
+  e: [
+    { soundId: 'é', label: 'é (fermé)' },
+    { soundId: 'è', label: 'è (ouvert)' },
+  ],
+  eu: [
+    { soundId: 'e', label: 'e (cheval)' },
+    { soundId: 'eu', label: 'eu (deux)' },
+  ],
+}
 
 export function PhonemeInfoModal({ phoneme, onClose }: PhonemeInfoModalProps) {
-  const sonsMultiples = phoneme.id === 'e' ? SONS_TOUCHE_E : null
+  const sonsMultiples = SONS_TOUCHES_DOUBLES[phoneme.id] ?? null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
