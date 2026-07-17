@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ToolLayout } from '../../components/ToolLayout'
 import { loadWordIndex } from '../../lib/wordIndex'
-import { estMotAjoute, loadAddedWords } from '../../lib/addedLexicon'
 import { loadWordFamilies } from '../../lib/wordFamilies'
 import { loadWordSynonyms, loadWordAntonyms } from '../../lib/wordSynonyms'
 import { pickPrimaryForm } from '../clavier/clavierLogic'
@@ -72,25 +71,36 @@ function formLabel(f: WordEntry, hasBothGenders: boolean): string {
   return FORM_ROLE_LABEL[f.formRole] ?? f.formRole
 }
 
-/** « (1er groupe) » sous le mot de la fiche — null tant que non déterminé/non applicable. */
-function useGroupeVerbe(word: string, category?: WordCategory): string | null {
+/**
+ * Groupe affiché sous le mot de la fiche, et présence d'un tableau de
+ * conjugaison complet (lexique statique ET mots ajoutés partagent le même
+ * index fusionné, voir loadConjugations) — un verbe à radical variable non
+ * déterministe (ex. "haleter") n'a pas de tableau complet même s'il est dans
+ * le lexique statique, donc pas de lien "Voir la conjugaison" pour lui non
+ * plus (avant ce contrôle unifié, seuls les mots ajoutés étaient vérifiés).
+ */
+function useInfosVerbe(word: string, category?: WordCategory): { groupe: string | null; peutConjuguer: boolean } {
   const [groupe, setGroupe] = useState<string | null>(null)
+  const [peutConjuguer, setPeutConjuguer] = useState(false)
   useEffect(() => {
     if (category !== 'verbe' || !word) {
       setGroupe(null)
+      setPeutConjuguer(false)
       return
     }
     let annule = false
     loadConjugations().then((index) => {
       if (annule) return
-      const g = verbGroup(word, index[word]?.present)
+      const table = index[word]
+      setPeutConjuguer(table !== undefined)
+      const g = verbGroup(word, table?.present)
       setGroupe(g === '1er' ? '1er groupe' : g === '2e' ? '2e groupe' : '3e groupe')
     })
     return () => {
       annule = true
     }
   }, [word, category])
-  return groupe
+  return { groupe, peutConjuguer }
 }
 
 function WordChip({ member }: { member: WordRelationMember }) {
@@ -111,9 +121,6 @@ export function MotTool() {
   const [family, setFamily] = useState<WordFamilyMember[] | null>(null)
   const [synonyms, setSynonyms] = useState<WordRelationMember[] | null>(null)
   const [antonyms, setAntonyms] = useState<WordRelationMember[] | null>(null)
-  // Verbes ajoutés à la main ayant reçu une conjugaison générée : eux seuls
-  // méritent un lien vers le conjugueur (les irréguliers n'en ont pas).
-  const [verbesAjoutesConjugables, setVerbesAjoutesConjugables] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     let cancelled = false
@@ -122,16 +129,12 @@ export function MotTool() {
       loadWordFamilies(),
       loadWordSynonyms(),
       loadWordAntonyms(),
-      loadAddedWords(),
-    ]).then(([index, families, syn, anto, ajoutes]) => {
+    ]).then(([index, families, syn, anto]) => {
       if (cancelled) return
       setForms(index.filter((e) => e.lemmaId === lemmaId))
       setFamily(families[lemmaId ?? ''] ?? [])
       setSynonyms(syn[lemmaId ?? ''] ?? [])
       setAntonyms(anto[lemmaId ?? ''] ?? [])
-      setVerbesAjoutesConjugables(
-        new Set(ajoutes.filter((w) => w.categorie === 'verbe' && w.conjugaison).map((w) => w.mot)),
-      )
     })
     return () => {
       cancelled = true
@@ -142,7 +145,7 @@ export function MotTool() {
     () => (forms && forms.length > 0 ? pickPrimaryForm(forms) : undefined),
     [forms],
   )
-  const groupe = useGroupeVerbe(primaryMemo?.word ?? '', primaryMemo?.category)
+  const { groupe, peutConjuguer } = useInfosVerbe(primaryMemo?.word ?? '', primaryMemo?.category)
 
   if (!forms || !family || !synonyms || !antonyms) {
     return (
@@ -164,12 +167,6 @@ export function MotTool() {
   const otherForms = forms.filter((f) => f !== primary && !ROLES_HIDDEN_FROM_FICHE.includes(f.formRole))
   const hasBothGenders = forms.some((f) => f.genre === 'm') && forms.some((f) => f.genre === 'f')
   const style = categoryStyles[primary.category]
-  // Un mot du lexique généré a toujours son tableau (les verbes sans
-  // infinitif attesté sont filtrés par la condition formRole plus bas) ; un
-  // mot ajouté n'en a un que si sa conjugaison a pu être générée.
-  const peutConjuguer = estMotAjoute(primary.lemmaId)
-    ? verbesAjoutesConjugables.has(primary.word)
-    : true
 
   return (
     <ToolLayout

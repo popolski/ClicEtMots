@@ -358,12 +358,27 @@ for (const lemme of reachableVerbs) {
   }
   appliquerFormesRegulieres(v)
   const isEtre = ETRE_VERBS.has(lemme)
+  const present = expandToNeuf(v.present)
+  const futur = expandToNeuf(v.futur)
+  const imparfait = expandToNeuf(v.imparfait)
+
+  // Un verbe à radical variable non déterministe (ex. "haleter", famille
+  // -eter/-eler à alternance accent/consonne doublée non génbérable sans
+  // risque, voir isRiskyErStem) ne reçoit que les formes RÉELLEMENT
+  // attestées dans Lexique383 — souvent une poignée de personnes seulement,
+  // aucune au futur. Un tableau troué (des cases vides en plein milieu du
+  // conjugueur) est pire qu'utile pour un enfant : soit le tableau est
+  // complet (9 personnes, les 3 temps simples), soit ce verbe n'a pas de
+  // conjugueur du tout, exactement comme un verbe irrégulier sans aucune
+  // forme générée.
+  if (NEUF_PERSONNES.some(([p]) => !present[p] || !futur[p] || !imparfait[p])) continue
+
   output[lemme] = {
     infinitif: v.infinitif,
     auxiliaire: isEtre ? 'être' : 'avoir',
-    present: expandToNeuf(v.present),
-    futur: expandToNeuf(v.futur),
-    imparfait: expandToNeuf(v.imparfait),
+    present,
+    futur,
+    imparfait,
     passeCompose: buildPasseCompose(v, isEtre),
   }
 }
