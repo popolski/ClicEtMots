@@ -17,11 +17,17 @@ même famille, synonymes et contraires. Les verbes ont en plus un conjugueur
 
 ## Stack technique
 
-React 19 + TypeScript + Vite + Tailwind CSS 4 + react-router-dom, 100% côté
-client (aucun serveur, aucune base de données). Déployé sur un hébergement
-mutualisé OVH, dans le sous-dossier `/clicmots/` — `npm run build` produit
-le dossier `dist/` à uploader tel quel en FTP (le fichier `.htaccess` inclus
-gère le routage côté client).
+**Site** : React 19 + TypeScript + Vite + Tailwind CSS 4 + react-router-dom.
+Déployé sur un hébergement mutualisé OVH, dans le sous-dossier `/clicmots/` —
+`npm run build` produit le dossier `dist/` à uploader tel quel en FTP (le
+fichier `.htaccess` inclus gère le routage côté client).
+
+**Backend** : PHP 8 + MySQL (voir [`server/README.md`](./server/README.md)),
+pour l'authentification (élèves + enseignant) et l'espace enseignant —
+gestion des comptes élèves, ajout de mots absents du lexique avec conjugaison
+générée automatiquement pour les verbes réguliers, et relations
+(synonymes/contraires/famille) saisies à la main. Hébergé à côté du site sur
+le même mutualisé OVH.
 
 ```bash
 npm install

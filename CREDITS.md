@@ -1,6 +1,6 @@
 # Crédits
 
-ClavierPhono s'appuie sur les jeux de données ouvertes suivants pour
+Clic & Mots s'appuie sur les jeux de données ouvertes suivants pour
 construire son lexique.
 
 ## Lexique383
@@ -29,7 +29,7 @@ réellement rencontrés dans 54 manuels scolaires français de primaire
   Lété, B., Sprenger-Charolles, L., & Colé, P. (2004). Manulex: A grade-level
   lexical database from French elementary-school readers. *Behavior Research
   Methods, Instruments, & Computers*, 36, 156-166.
-- Usage non commercial : ClavierPhono est un outil gratuit à usage
+- Usage non commercial : Clic & Mots est un outil gratuit à usage
   pédagogique, cohérent avec cette licence.
 
 ## Démonette 2.0
@@ -63,7 +63,7 @@ Améliorée (CAA).
 - Auteur : Sergio Palao
 - Propriétaire : Gouvernement d'Aragon (Espagne)
 - Licence : [Creative Commons Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)](https://arasaac.org/terms-of-use)
-- Usage non commercial : ClavierPhono est un outil gratuit à usage
+- Usage non commercial : Clic & Mots est un outil gratuit à usage
   pédagogique, cohérent avec cette licence.
 
 ## Gestes Borel-Maisonny
@@ -74,7 +74,7 @@ l'origine du projet, pour un usage en classe.
 
 ## Réutilisation
 
-Le lexique généré par ClavierPhono (`src/data/words-clavier2.json`) est
+Le lexique généré par Clic & Mots (`src/data/words-clavier2.json`) est
 dérivé de Lexique383 et de Manulex : toute réutilisation doit respecter les
 termes cumulés des deux licences ci-dessus (attribution, partage à
 l'identique, pas d'usage commercial).
