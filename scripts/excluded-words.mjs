@@ -122,4 +122,12 @@ export const EXCLUDED_WORDS = new Set([
   'amadou::nom',
   'merlin::nom',
   'lorraine::nom',
+  // Verbes archaïques/très rares, repérés car sans conjugaison complète
+  // possible (ni attestée dans Lexique383, ni connue de conjugation-fr) —
+  // "avenir" n'est exclu qu'en verbe (archaïque, "advenir") : le nom
+  // "avenir" (le futur) est courant et reste dans le lexique.
+  'portraire',
+  'avenir::verbe',
+  'éperdre',
+  'cramoisir',
 ])

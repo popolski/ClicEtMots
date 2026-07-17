@@ -20048,6 +20048,54 @@
       "elles": "ont tassé"
     }
   },
+  "poêler": {
+    "infinitif": "poêler",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "poêle",
+      "tu": "poêles",
+      "il": "poêle",
+      "elle": "poêle",
+      "on": "poêle",
+      "nous": "poêlons",
+      "vous": "poêlez",
+      "ils": "poêlent",
+      "elles": "poêlent"
+    },
+    "futur": {
+      "je": "poêlerai",
+      "tu": "poêleras",
+      "il": "poêlera",
+      "elle": "poêlera",
+      "on": "poêlera",
+      "nous": "poêlerons",
+      "vous": "poêlerez",
+      "ils": "poêleront",
+      "elles": "poêleront"
+    },
+    "imparfait": {
+      "je": "poêlais",
+      "tu": "poêlais",
+      "il": "poêlait",
+      "elle": "poêlait",
+      "on": "poêlait",
+      "nous": "poêlions",
+      "vous": "poêliez",
+      "ils": "poêlaient",
+      "elles": "poêlaient"
+    },
+    "passeCompose": {
+      "je": "ai poêlé",
+      "tu": "as poêlé",
+      "il": "a poêlé",
+      "elle": "a poêlé",
+      "on": "a poêlé",
+      "nous": "avons poêlé",
+      "vous": "avez poêlé",
+      "ils": "ont poêlé",
+      "elles": "ont poêlé"
+    }
+  },
   "grandir": {
     "infinitif": "grandir",
     "auxiliaire": "avoir",
@@ -41941,6 +41989,54 @@
       "elles": "ont rapproché"
     }
   },
+  "rentraire": {
+    "infinitif": "rentraire",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "rentrais",
+      "tu": "rentrais",
+      "il": "rentrait",
+      "elle": "rentrait",
+      "on": "rentrait",
+      "nous": "rentrayons",
+      "vous": "rentrayez",
+      "ils": "rentraient",
+      "elles": "rentraient"
+    },
+    "futur": {
+      "je": "rentrairai",
+      "tu": "rentrairas",
+      "il": "rentraira",
+      "elle": "rentraira",
+      "on": "rentraira",
+      "nous": "rentrairons",
+      "vous": "rentrairez",
+      "ils": "rentrairont",
+      "elles": "rentrairont"
+    },
+    "imparfait": {
+      "je": "rentrayais",
+      "tu": "rentrayais",
+      "il": "rentrayait",
+      "elle": "rentrayait",
+      "on": "rentrayait",
+      "nous": "rentrayions",
+      "vous": "rentrayiez",
+      "ils": "rentrayaient",
+      "elles": "rentrayaient"
+    },
+    "passeCompose": {
+      "je": "ai rentrait",
+      "tu": "as rentrait",
+      "il": "a rentrait",
+      "elle": "a rentrait",
+      "on": "a rentrait",
+      "nous": "avons rentrait",
+      "vous": "avez rentrait",
+      "ils": "ont rentrait",
+      "elles": "ont rentrait"
+    }
+  },
   "affronter": {
     "infinitif": "affronter",
     "auxiliaire": "avoir",
@@ -45519,15 +45615,15 @@
       "elles": "fleuriront"
     },
     "imparfait": {
-      "je": "fleurissais/florissais",
-      "tu": "fleurissais/florissais",
-      "il": "fleurissait/florissait",
-      "elle": "fleurissait/florissait",
-      "on": "fleurissait/florissait",
-      "nous": "fleurissions/florissions",
-      "vous": "fleurissiez/florissiez",
-      "ils": "fleurissaient/florissaient",
-      "elles": "fleurissaient/florissaient"
+      "je": "fleurissais",
+      "tu": "fleurissais",
+      "il": "fleurissait",
+      "elle": "fleurissait",
+      "on": "fleurissait",
+      "nous": "fleurissions",
+      "vous": "fleurissiez",
+      "ils": "fleurissaient",
+      "elles": "fleurissaient"
     },
     "passeCompose": {
       "je": "ai fleuri",
@@ -51207,7 +51303,7 @@
   },
   "évanouir": {
     "infinitif": "évanouir",
-    "auxiliaire": "être",
+    "auxiliaire": "avoir",
     "present": {
       "je": "évanouis",
       "tu": "évanouis",
@@ -51242,15 +51338,15 @@
       "elles": "évanouissaient"
     },
     "passeCompose": {
-      "je": "suis évanoui",
-      "tu": "es évanoui",
-      "il": "est évanoui",
-      "elle": "est évanouie",
-      "on": "est évanoui",
-      "nous": "sommes évanouis",
-      "vous": "êtes évanouis",
-      "ils": "sont évanouis",
-      "elles": "sont évanouies"
+      "je": "ai évanoui",
+      "tu": "as évanoui",
+      "il": "a évanoui",
+      "elle": "a évanoui",
+      "on": "a évanoui",
+      "nous": "avons évanoui",
+      "vous": "avez évanoui",
+      "ils": "ont évanoui",
+      "elles": "ont évanoui"
     }
   },
   "aborder": {
@@ -52263,7 +52359,7 @@
   },
   "accroupir": {
     "infinitif": "accroupir",
-    "auxiliaire": "être",
+    "auxiliaire": "avoir",
     "present": {
       "je": "accroupis",
       "tu": "accroupis",
@@ -52298,15 +52394,15 @@
       "elles": "accroupissaient"
     },
     "passeCompose": {
-      "je": "suis accroupi",
-      "tu": "es accroupi",
-      "il": "est accroupi",
-      "elle": "est accroupie",
-      "on": "est accroupi",
-      "nous": "sommes accroupis",
-      "vous": "êtes accroupis",
-      "ils": "sont accroupis",
-      "elles": "sont accroupies"
+      "je": "ai accroupi",
+      "tu": "as accroupi",
+      "il": "a accroupi",
+      "elle": "a accroupi",
+      "on": "a accroupi",
+      "nous": "avons accroupi",
+      "vous": "avez accroupi",
+      "ils": "ont accroupi",
+      "elles": "ont accroupi"
     }
   },
   "intituler": {
@@ -56482,6 +56578,54 @@
       "elles": "ont faufilé"
     }
   },
+  "barrir": {
+    "infinitif": "barrir",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "barris",
+      "tu": "barris",
+      "il": "barrit",
+      "elle": "barrit",
+      "on": "barrit",
+      "nous": "barrissons",
+      "vous": "barrissez",
+      "ils": "barrissent",
+      "elles": "barrissent"
+    },
+    "futur": {
+      "je": "barrirai",
+      "tu": "barriras",
+      "il": "barrira",
+      "elle": "barrira",
+      "on": "barrira",
+      "nous": "barrirons",
+      "vous": "barrirez",
+      "ils": "barriront",
+      "elles": "barriront"
+    },
+    "imparfait": {
+      "je": "barrissais",
+      "tu": "barrissais",
+      "il": "barrissait",
+      "elle": "barrissait",
+      "on": "barrissait",
+      "nous": "barrissions",
+      "vous": "barrissiez",
+      "ils": "barrissaient",
+      "elles": "barrissaient"
+    },
+    "passeCompose": {
+      "je": "ai barri",
+      "tu": "as barri",
+      "il": "a barri",
+      "elle": "a barri",
+      "on": "a barri",
+      "nous": "avons barri",
+      "vous": "avez barri",
+      "ils": "ont barri",
+      "elles": "ont barri"
+    }
+  },
   "ressentir": {
     "infinitif": "ressentir",
     "auxiliaire": "avoir",
@@ -58593,7 +58737,7 @@
   },
   "blottir": {
     "infinitif": "blottir",
-    "auxiliaire": "être",
+    "auxiliaire": "avoir",
     "present": {
       "je": "blottis",
       "tu": "blottis",
@@ -58628,15 +58772,15 @@
       "elles": "blottissaient"
     },
     "passeCompose": {
-      "je": "suis blotti",
-      "tu": "es blotti",
-      "il": "est blotti",
-      "elle": "est blottie",
-      "on": "est blotti",
-      "nous": "sommes blottis",
-      "vous": "êtes blottis",
-      "ils": "sont blottis",
-      "elles": "sont blotties"
+      "je": "ai blotti",
+      "tu": "as blotti",
+      "il": "a blotti",
+      "elle": "a blotti",
+      "on": "a blotti",
+      "nous": "avons blotti",
+      "vous": "avez blotti",
+      "ils": "ont blotti",
+      "elles": "ont blotti"
     }
   },
   "chantonner": {
@@ -68957,6 +69101,54 @@
       "elles": "ont devisé"
     }
   },
+  "amaigrir": {
+    "infinitif": "amaigrir",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "amaigris",
+      "tu": "amaigris",
+      "il": "amaigrit",
+      "elle": "amaigrit",
+      "on": "amaigrit",
+      "nous": "amaigrissons",
+      "vous": "amaigrissez",
+      "ils": "amaigrissent",
+      "elles": "amaigrissent"
+    },
+    "futur": {
+      "je": "amaigrirai",
+      "tu": "amaigriras",
+      "il": "amaigrira",
+      "elle": "amaigrira",
+      "on": "amaigrira",
+      "nous": "amaigrirons",
+      "vous": "amaigrirez",
+      "ils": "amaigriront",
+      "elles": "amaigriront"
+    },
+    "imparfait": {
+      "je": "amaigrissais",
+      "tu": "amaigrissais",
+      "il": "amaigrissait",
+      "elle": "amaigrissait",
+      "on": "amaigrissait",
+      "nous": "amaigrissions",
+      "vous": "amaigrissiez",
+      "ils": "amaigrissaient",
+      "elles": "amaigrissaient"
+    },
+    "passeCompose": {
+      "je": "ai amaigri",
+      "tu": "as amaigri",
+      "il": "a amaigri",
+      "elle": "a amaigri",
+      "on": "a amaigri",
+      "nous": "avons amaigri",
+      "vous": "avez amaigri",
+      "ils": "ont amaigri",
+      "elles": "ont amaigri"
+    }
+  },
   "déléguer": {
     "infinitif": "déléguer",
     "auxiliaire": "avoir",
@@ -69583,7 +69775,7 @@
   },
   "pourrir": {
     "infinitif": "pourrir",
-    "auxiliaire": "être",
+    "auxiliaire": "avoir",
     "present": {
       "je": "pourris",
       "tu": "pourris",
@@ -69618,15 +69810,15 @@
       "elles": "pourrissaient"
     },
     "passeCompose": {
-      "je": "suis pourri",
-      "tu": "es pourri",
-      "il": "est pourri",
-      "elle": "est pourrie",
-      "on": "est pourri",
-      "nous": "sommes pourris",
-      "vous": "êtes pourris",
-      "ils": "sont pourris",
-      "elles": "sont pourries"
+      "je": "ai pourri",
+      "tu": "as pourri",
+      "il": "a pourri",
+      "elle": "a pourri",
+      "on": "a pourri",
+      "nous": "avons pourri",
+      "vous": "avez pourri",
+      "ils": "ont pourri",
+      "elles": "ont pourri"
     }
   },
   "consacrer": {
@@ -71691,6 +71883,54 @@
       "vous": "avez inséré",
       "ils": "ont inséré",
       "elles": "ont inséré"
+    }
+  },
+  "moucheter": {
+    "infinitif": "moucheter",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "mouchette",
+      "tu": "mouchettes",
+      "il": "mouchette",
+      "elle": "mouchette",
+      "on": "mouchette",
+      "nous": "mouchetons",
+      "vous": "mouchetez",
+      "ils": "mouchettent",
+      "elles": "mouchettent"
+    },
+    "futur": {
+      "je": "mouchetterai",
+      "tu": "mouchetteras",
+      "il": "mouchettera",
+      "elle": "mouchettera",
+      "on": "mouchettera",
+      "nous": "mouchetterons",
+      "vous": "mouchetterez",
+      "ils": "mouchetteront",
+      "elles": "mouchetteront"
+    },
+    "imparfait": {
+      "je": "mouchetais",
+      "tu": "mouchetais",
+      "il": "mouchetait",
+      "elle": "mouchetait",
+      "on": "mouchetait",
+      "nous": "mouchetions",
+      "vous": "mouchetiez",
+      "ils": "mouchetaient",
+      "elles": "mouchetaient"
+    },
+    "passeCompose": {
+      "je": "ai moucheté",
+      "tu": "as moucheté",
+      "il": "a moucheté",
+      "elle": "a moucheté",
+      "on": "a moucheté",
+      "nous": "avons moucheté",
+      "vous": "avez moucheté",
+      "ils": "ont moucheté",
+      "elles": "ont moucheté"
     }
   },
   "stopper": {
@@ -81098,6 +81338,54 @@
       "elles": "ont flamboyé"
     }
   },
+  "raidir": {
+    "infinitif": "raidir",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "raidis",
+      "tu": "raidis",
+      "il": "raidit",
+      "elle": "raidit",
+      "on": "raidit",
+      "nous": "raidissons",
+      "vous": "raidissez",
+      "ils": "raidissent",
+      "elles": "raidissent"
+    },
+    "futur": {
+      "je": "raidirai",
+      "tu": "raidiras",
+      "il": "raidira",
+      "elle": "raidira",
+      "on": "raidira",
+      "nous": "raidirons",
+      "vous": "raidirez",
+      "ils": "raidiront",
+      "elles": "raidiront"
+    },
+    "imparfait": {
+      "je": "raidissais",
+      "tu": "raidissais",
+      "il": "raidissait",
+      "elle": "raidissait",
+      "on": "raidissait",
+      "nous": "raidissions",
+      "vous": "raidissiez",
+      "ils": "raidissaient",
+      "elles": "raidissaient"
+    },
+    "passeCompose": {
+      "je": "ai raidi",
+      "tu": "as raidi",
+      "il": "a raidi",
+      "elle": "a raidi",
+      "on": "a raidi",
+      "nous": "avons raidi",
+      "vous": "avez raidi",
+      "ils": "ont raidi",
+      "elles": "ont raidi"
+    }
+  },
   "civiliser": {
     "infinitif": "civiliser",
     "auxiliaire": "avoir",
@@ -83352,6 +83640,54 @@
       "vous": "avez réputé",
       "ils": "ont réputé",
       "elles": "ont réputé"
+    }
+  },
+  "attraire": {
+    "infinitif": "attraire",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "attrais",
+      "tu": "attrais",
+      "il": "attrait",
+      "elle": "attrait",
+      "on": "attrait",
+      "nous": "attrayons",
+      "vous": "attrayez",
+      "ils": "attraient",
+      "elles": "attraient"
+    },
+    "futur": {
+      "je": "attrairai",
+      "tu": "attrairas",
+      "il": "attraira",
+      "elle": "attraira",
+      "on": "attraira",
+      "nous": "attrairons",
+      "vous": "attrairez",
+      "ils": "attrairont",
+      "elles": "attrairont"
+    },
+    "imparfait": {
+      "je": "attrayais",
+      "tu": "attrayais",
+      "il": "attrayait",
+      "elle": "attrayait",
+      "on": "attrayait",
+      "nous": "attrayions",
+      "vous": "attrayiez",
+      "ils": "attrayaient",
+      "elles": "attrayaient"
+    },
+    "passeCompose": {
+      "je": "ai attrait",
+      "tu": "as attrait",
+      "il": "a attrait",
+      "elle": "a attrait",
+      "on": "a attrait",
+      "nous": "avons attrait",
+      "vous": "avez attrait",
+      "ils": "ont attrait",
+      "elles": "ont attrait"
     }
   },
   "bleuir": {
@@ -98010,6 +98346,102 @@
       "vous": "avez délavé",
       "ils": "ont délavé",
       "elles": "ont délavé"
+    }
+  },
+  "refaire": {
+    "infinitif": "refaire",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "refais",
+      "tu": "refais",
+      "il": "refait",
+      "elle": "refait",
+      "on": "refait",
+      "nous": "refaisons",
+      "vous": "refaites",
+      "ils": "refont",
+      "elles": "refont"
+    },
+    "futur": {
+      "je": "referai",
+      "tu": "referas",
+      "il": "refera",
+      "elle": "refera",
+      "on": "refera",
+      "nous": "referons",
+      "vous": "referez",
+      "ils": "referont",
+      "elles": "referont"
+    },
+    "imparfait": {
+      "je": "refaisais",
+      "tu": "refaisais",
+      "il": "refaisait",
+      "elle": "refaisait",
+      "on": "refaisait",
+      "nous": "refaisions",
+      "vous": "refaisiez",
+      "ils": "refaisaient",
+      "elles": "refaisaient"
+    },
+    "passeCompose": {
+      "je": "ai refait",
+      "tu": "as refait",
+      "il": "a refait",
+      "elle": "a refait",
+      "on": "a refait",
+      "nous": "avons refait",
+      "vous": "avez refait",
+      "ils": "ont refait",
+      "elles": "ont refait"
+    }
+  },
+  "réécrire": {
+    "infinitif": "réécrire",
+    "auxiliaire": "avoir",
+    "present": {
+      "je": "réécris",
+      "tu": "réécris",
+      "il": "réécrit",
+      "elle": "réécrit",
+      "on": "réécrit",
+      "nous": "réécrivons",
+      "vous": "réécrivez",
+      "ils": "réécrivent",
+      "elles": "réécrivent"
+    },
+    "futur": {
+      "je": "réécrirai",
+      "tu": "réécriras",
+      "il": "réécrira",
+      "elle": "réécrira",
+      "on": "réécrira",
+      "nous": "réécrirons",
+      "vous": "réécrirez",
+      "ils": "réécriront",
+      "elles": "réécriront"
+    },
+    "imparfait": {
+      "je": "réécrivais",
+      "tu": "réécrivais",
+      "il": "réécrivait",
+      "elle": "réécrivait",
+      "on": "réécrivait",
+      "nous": "réécrivions",
+      "vous": "réécriviez",
+      "ils": "réécrivaient",
+      "elles": "réécrivaient"
+    },
+    "passeCompose": {
+      "je": "ai réécrit",
+      "tu": "as réécrit",
+      "il": "a réécrit",
+      "elle": "a réécrit",
+      "on": "a réécrit",
+      "nous": "avons réécrit",
+      "vous": "avez réécrit",
+      "ils": "ont réécrit",
+      "elles": "ont réécrit"
     }
   }
 }

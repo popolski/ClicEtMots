@@ -358,6 +358,37 @@ function regularErForms(infinitif) {
   return { present, imparfait, futur, participe }
 }
 
+// Contrairement au 1er groupe (-er), le 2e groupe (-ir/-issons, ex. finir,
+// raidir) n'a AUCUNE famille à radical variable — la règle est 100%
+// régulière, sans l'équivalent des pièges -eler/-eter/-yer du 1er groupe.
+// Seule question : confirmer qu'un verbe en -ir donné appartient bien au 2e
+// groupe (vs 3e groupe, dormir/partir/venir...) — tranché par la présence
+// de l'infixe -iss- dans au moins une forme attestée (voir isConfirmed2eGroupe).
+const PRESENT_2E_GROUPE = { '1s': 'is', '2s': 'is', '3s': 'it', '1p': 'issons', '2p': 'issez', '3p': 'issent' }
+const IMPARFAIT_2E_GROUPE = { '1s': 'issais', '2s': 'issais', '3s': 'issait', '1p': 'issions', '2p': 'issiez', '3p': 'issaient' }
+
+function isConfirmed2eGroupe(v) {
+  return (
+    Object.values(v.present).some((f) => f?.includes('iss')) ||
+    Object.values(v.imparfait).some((f) => f?.includes('iss'))
+  )
+}
+
+function regular2eGroupeForms(infinitif, v) {
+  if (!/ir$/.test(infinitif) || !isConfirmed2eGroupe(v)) return null
+  const stem = infinitif.slice(0, -2)
+  const present = {}
+  const imparfait = {}
+  const futur = {}
+  for (const p of PERSONS) {
+    present[p] = stem + PRESENT_2E_GROUPE[p]
+    imparfait[p] = stem + IMPARFAIT_2E_GROUPE[p]
+    futur[p] = infinitif + FUTUR_ENDINGS[p]
+  }
+  const participe = { ms: stem + 'i', fs: stem + 'ie', mp: stem + 'is', fp: stem + 'ies' }
+  return { present, imparfait, futur, participe }
+}
+
 // Pour un verbe dont la conjugaison est DÉTERMINISTE (régulier en -er, ou
 // famille de céder), la génération fait autorité : elle remplace les formes
 // attestées au lieu de se contenter de combler les trous.
@@ -374,7 +405,7 @@ function regularErForms(infinitif) {
 // du groupe.
 function appliquerFormesRegulieres(v) {
   const cederGen = cederStyleForms(v.infinitif)
-  const gen = regularErForms(v.infinitif) ?? cederGen
+  const gen = regularErForms(v.infinitif) ?? cederGen ?? regular2eGroupeForms(v.infinitif, v)
   if (!gen) return
   for (const p of PERSONS) {
     v.present[p] = gen.present[p]
@@ -396,13 +427,22 @@ for (const lemme of reachableVerbs) {
   if (!v) continue
   if (!v.infinitif) {
     // Verbe rare sans aucune ligne "inf" attestée dans Lexique383 (ex.
-    // "pointiller" : seules des formes conjuguées y figurent). Si le lemme
-    // est un -er régulier déterministe (regularErForms le confirme), son
-    // orthographe fait foi pour l'infinitif — c'est la définition même du
-    // lemme chez Lexique383 — et le tableau entier peut être généré sans
-    // attestation, comme pour n'importe quel autre -er régulier.
-    if (regularErForms(lemme)) v.infinitif = lemme
-    else continue
+    // "pointiller", "moucheter", "poêler" : seules des formes conjuguées y
+    // figurent). Si le lemme est un -er régulier déterministe
+    // (regularErForms le confirme), son orthographe fait foi pour
+    // l'infinitif — c'est la définition même du lemme chez Lexique383 — et
+    // le tableau entier peut être généré sans attestation. Sinon (radical à
+    // risque, ex. -eter/-eler), on tente directement conjugation-fr AVANT
+    // de renoncer : sans cette tentative précoce, ces verbes étaient
+    // écartés ici sans jamais atteindre le repli plus bas (réservé aux
+    // verbes ayant DÉJÀ un infinitif mais un tableau incomplet).
+    if (regularErForms(lemme)) {
+      v.infinitif = lemme
+    } else {
+      const externe = depuisConjugationFr(lemme)
+      if (externe) output[lemme] = externe
+      continue
+    }
   }
   appliquerFormesRegulieres(v)
   const isEtre = ETRE_VERBS.has(lemme)
@@ -434,6 +474,45 @@ for (const lemme of reachableVerbs) {
     imparfait,
     passeCompose: buildPasseCompose(v, isEtre),
   }
+}
+
+// --- Verbes composés (préfixe + verbe de base déjà résolu) -------------------
+// "refaire" (re+faire), "réécrire" (ré+écrire)... : ni attestés en entier
+// dans Lexique383, ni connus de conjugation-fr, mais un vrai composé
+// préfixé se conjugue TOUJOURS exactement comme son verbe de base, avec le
+// même préfixe collé devant chaque forme (je refais = re+fais, comme je
+// fais) — règle fiable, sans exception notable pour re-/ré-. Passe séparée,
+// après la boucle principale : le verbe de base doit déjà être résolu dans
+// `output` pour qu'on puisse le préfixer.
+const PREFIXES_COMPOSES = ['ré', 're']
+function depuisVerbeCompose(lemme) {
+  for (const prefixe of PREFIXES_COMPOSES) {
+    if (!lemme.startsWith(prefixe) || lemme.length <= prefixe.length) continue
+    const base = output[lemme.slice(prefixe.length)]
+    if (!base) continue
+    const prefixerFormes = (formes) => Object.fromEntries(Object.entries(formes).map(([p, f]) => [p, prefixe + f]))
+    const prefixerParticipe = (formes) =>
+      Object.fromEntries(
+        Object.entries(formes).map(([p, f]) => {
+          const espace = f.lastIndexOf(' ')
+          return [p, `${f.slice(0, espace + 1)}${prefixe}${f.slice(espace + 1)}`]
+        }),
+      )
+    return {
+      infinitif: lemme,
+      auxiliaire: base.auxiliaire,
+      present: prefixerFormes(base.present),
+      futur: prefixerFormes(base.futur),
+      imparfait: prefixerFormes(base.imparfait),
+      passeCompose: prefixerParticipe(base.passeCompose),
+    }
+  }
+  return null
+}
+for (const lemme of reachableVerbs) {
+  if (output[lemme]) continue
+  const compose = depuisVerbeCompose(lemme)
+  if (compose) output[lemme] = compose
 }
 
 writeFileSync(new URL('../src/data/conjugations.json', import.meta.url), JSON.stringify(output, null, 2))
