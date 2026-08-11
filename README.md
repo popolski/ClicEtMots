@@ -18,10 +18,19 @@ l'orthographe correspondante apparaît.
 
 - **Clavier phonétique** : 33 touches, une par son du français, avec un
   clavier filtré dynamiquement pour ne proposer que les sons qui prolongent
-  un mot existant.
+  un mot existant. Résultats regroupés par catégorie grammaticale (noms,
+  adjectifs, verbes...) et débarrassés des déterminants (articles,
+  possessifs, démonstratifs), sans intérêt pour l'exercice.
 - **Fiche mot** : autres formes (pluriel, féminin, participe passé), mots de
   la même famille, synonymes et contraires — chacun cliquable pour naviguer
-  de fiche en fiche.
+  de fiche en fiche. Pictogramme illustratif (ARASAAC) pour les noms les
+  plus fréquents, à côté de la mascotte de catégorie.
+- **Définitions** : recherche automatique chez Vikidia (encyclopédie pour
+  les 8-13 ans) puis, si elle n'a rien, chez Wiktionnaire (nettoyé de sa
+  syntaxe wiki) — pour couvrir aussi bien les noms concrets que les verbes
+  et adjectifs. Les mots de la définition qui existent dans le lexique (ou
+  qui en sont absents, souvent signe d'un mot technique/rare) sont à leur
+  tour cliquables, pour naviguer de définition en définition.
 - **Conjugueur** : présent, imparfait, futur et passé composé pour les
   verbes, avec le groupe grammatical (1er/2e/3e) affiché automatiquement.
 - **Prononciation audio** : chaque mot peut être écouté à voix haute (voix
@@ -55,6 +64,19 @@ du site sur le même mutualisé OVH.
 Verbiste, ~7000 verbes, tous groupes) dans le formulaire d'ajout, affichée en
 aperçu avant validation. Repli sur un générateur PHP maison (déterministe,
 limité aux -er réguliers "sûrs") si le verbe est absent de cette base.
+
+**Définitions** : appelées à la demande (clic), jamais pré-générées —
+contrairement à l'audio. Vikidia en premier (contenu déjà calibré pour des
+enfants), repli sur une extraction ciblée et nettoyée de la première ligne
+de définition Wiktionnaire si Vikidia n'a rien (fréquent pour les verbes/
+adjectifs, Vikidia étant une encyclopédie et non un dictionnaire). Contenu
+entre parenthèses (noms scientifiques latins, renvois techniques) retiré à
+l'affichage.
+
+**Pictogrammes de mots** : ARASAAC (mêmes licence et principe que les
+pictogrammes du clavier, voir plus bas), pour les ~2400 noms les plus
+fréquents du lexique — couverture partielle assumée, ARASAAC ciblant le
+vocabulaire concret du quotidien plutôt que tout le vocabulaire scolaire.
 
 **Audio** : les ~27 000 mots du lexique statique ont leur prononciation
 pré-générée une fois pour toutes (`scripts/generate-word-audio.mjs`, voix
