@@ -9,6 +9,7 @@ import { verbGroup } from '../conjugueur/conjugueurLogic'
 import { loadConjugations } from '../../lib/conjugations'
 import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
+import wordPictos from '../../data/word-pictos.json'
 import type {
   WordCategory,
   WordEntry,
@@ -176,7 +177,11 @@ export function MotTool() {
       titleBelow={groupe && <p className="font-semibold text-gray-900">({groupe})</p>}
       titleIcon={
         <div className="flex flex-col items-center gap-1">
-          <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-20 w-20 object-contain" />
+          <img
+            src={assetUrl((primary.category === 'nom' && (wordPictos as Record<string, string>)[primary.word]) || CATEGORY_MASCOT[primary.category])}
+            alt=""
+            className="h-20 w-20 object-contain"
+          />
           <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
             {CATEGORY_LABEL[primary.category]}
           </span>
