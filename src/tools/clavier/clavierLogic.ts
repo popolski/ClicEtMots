@@ -1,4 +1,4 @@
-import type { PhonemeId, WordCard, WordEntry, WordFormRole } from '../../types/phonetics'
+import type { PhonemeId, WordCard, WordCategory, WordEntry, WordFormRole } from '../../types/phonetics'
 
 export interface PhonemeTrieNode {
   children: Map<PhonemeId, PhonemeTrieNode>
@@ -96,6 +96,11 @@ const FORM_ROLE_ORDER: WordFormRole[] = [
   'ils_elles',
 ]
 
+// Regroupe les résultats par catégorie grammaticale avant de trier par
+// fréquence à l'intérieur de chaque groupe - plus lisible qu'un simple tri
+// par fréquence qui mélangeait noms/verbes/adjectifs sans logique apparente.
+const CATEGORY_ORDER: WordCategory[] = ['nom', 'adjectif', 'verbe', 'adverbe', 'invariable']
+
 /**
  * Groups matched entries by word family (lemmaId) into cards, matching the
  * original tool's results page — one card per word, its inflected forms
@@ -143,5 +148,8 @@ export function groupIntoCards(entries: WordEntry[], fullIndex?: WordEntry[]): W
     }
   })
 
-  return cards.sort((a, b) => b.frequency - a.frequency)
+  return cards.sort((a, b) => {
+    const parCategorie = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category)
+    return parCategorie !== 0 ? parCategorie : b.frequency - a.frequency
+  })
 }
