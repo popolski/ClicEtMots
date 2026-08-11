@@ -9,6 +9,9 @@ const ConjugueurTool = lazy(() =>
   import('./tools/conjugueur/ConjugueurTool').then((m) => ({ default: m.ConjugueurTool })),
 )
 const MotTool = lazy(() => import('./tools/mot/MotTool').then((m) => ({ default: m.MotTool })))
+const DefinitionTool = lazy(() =>
+  import('./tools/definition/DefinitionTool').then((m) => ({ default: m.DefinitionTool })),
+)
 const Admin = lazy(() => import('./routes/Admin').then((m) => ({ default: m.Admin })))
 
 function App() {
@@ -40,6 +43,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <MotTool />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/definition/:categorie/:mot"
+                element={
+                  <RequireAuth>
+                    <DefinitionTool />
                   </RequireAuth>
                 }
               />

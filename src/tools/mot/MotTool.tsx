@@ -205,6 +205,15 @@ export function MotTool() {
         )
       }
     >
+      <div className="mb-8">
+        <Link
+          to={`/definition/${primary.category}/${encodeURIComponent(primary.word)}`}
+          className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          📖 Voir la définition
+        </Link>
+      </div>
+
       {otherForms.length > 0 && (
         <div className="mb-8">
           <h2 className="mb-2 text-sm font-semibold tracking-wide text-gray-500 uppercase">Autres formes</h2>
