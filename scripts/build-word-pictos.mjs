@@ -42,11 +42,23 @@ const existing = existsSync(outputPath) ? JSON.parse(readFileSync(outputPath, 'u
 const pictosDir = new URL('../public/pictos-mots/', import.meta.url)
 mkdirSync(pictosDir, { recursive: true })
 
+// Noms de fichiers réservés par Windows (périphériques système) : un mot
+// comme "nul" donnerait "nul.png", impossible à créer normalement sur ce
+// système de fichiers - découvert en pratique (git refusait d'indexer le
+// fichier, silencieusement "présent" pour `ls` mais illisible pour tout le
+// reste). Simplement écarté plutôt que renommé, pour rester cohérent avec
+// le principe "le nom de fichier = le mot" utilisé partout ailleurs.
+const NOMS_RESERVES_WINDOWS = new Set([
+  'con', 'prn', 'aux', 'nul',
+  'com1', 'com2', 'com3', 'com4', 'com5', 'com6', 'com7', 'com8', 'com9',
+  'lpt1', 'lpt2', 'lpt3', 'lpt4', 'lpt5', 'lpt6', 'lpt7', 'lpt8', 'lpt9',
+])
+
 const noms = lexique
   .filter((e) => e.category === 'nom' && e.formRole === 'singulier')
   .sort((a, b) => b.frequency - a.frequency)
   .slice(0, LIMIT)
-  .filter((e) => !(e.word in existing))
+  .filter((e) => !(e.word in existing) && !NOMS_RESERVES_WINDOWS.has(e.word.toLowerCase()))
 
 async function searchPictogramId(word) {
   const url = `https://api.arasaac.org/api/pictograms/fr/search/${encodeURIComponent(word)}`
