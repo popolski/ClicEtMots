@@ -16,6 +16,13 @@
 //
 // Lancé à la main (fait des appels réseau vers arasaac.org) :
 //   node scripts/build-word-pictos.mjs [--limit=1000]
+//
+// Les images téléchargées ont un fond blanc plein cadre : passer ensuite un
+// détourage (même principe que pour les mascottes - flood-fill depuis les
+// bords, tolérance ~30, sans toucher aux zones blanches internes du dessin)
+// pour qu'elles s'intègrent proprement au thème du site. Script Python one-off,
+// pas encore intégré à ce pipeline Node - voir l'historique du projet pour
+// l'implémentation de référence.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 
 const args = Object.fromEntries(
