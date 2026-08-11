@@ -176,15 +176,20 @@ export function MotTool() {
       showBackToKeyboard
       titleBelow={groupe && <p className="font-semibold text-gray-900">({groupe})</p>}
       titleIcon={
-        <div className="flex flex-col items-center gap-1">
-          <img
-            src={assetUrl((primary.category === 'nom' && (wordPictos as Record<string, string>)[primary.word]) || CATEGORY_MASCOT[primary.category])}
-            alt=""
-            className="h-20 w-20 object-contain"
-          />
-          <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-            {CATEGORY_LABEL[primary.category]}
-          </span>
+        <div className="flex items-end gap-2">
+          <div className="flex flex-col items-center gap-1">
+            <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-20 w-20 object-contain" />
+            <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+              {CATEGORY_LABEL[primary.category]}
+            </span>
+          </div>
+          {primary.category === 'nom' && (wordPictos as Record<string, string>)[primary.word] && (
+            <img
+              src={assetUrl((wordPictos as Record<string, string>)[primary.word])}
+              alt=""
+              className="h-20 w-20 rounded-xl border border-gray-100 bg-gray-50 object-contain p-1"
+            />
+          )}
         </div>
       }
       titleAfter={
