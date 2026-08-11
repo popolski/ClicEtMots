@@ -2,39 +2,54 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ToolLayout } from '../../components/ToolLayout'
 import { chercherDefinition, type Definition } from '../../lib/definition'
-import { loadWordLookup } from '../../lib/wordLookup'
+import { loadWordLookup, type WordLookup } from '../../lib/wordLookup'
 import type { WordCategory } from '../../types/phonetics'
 
 const CATEGORIES_VALIDES: WordCategory[] = ['nom', 'adjectif', 'verbe', 'adverbe', 'invariable']
 
 // Découpe le texte en mots/séparateurs (groupe capturant = les mots
-// composés compris, ex. "oiseau-mouche" reste un seul token) : ceux qui
-// existent dans notre lexique deviennent cliquables vers leur propre
-// définition ("arbre de définitions"), pour qu'un enfant qui tombe sur un
-// mot inconnu dans une définition (ex. "colibri" dans celle d'"oiseau-mouche")
-// puisse cliquer dessus directement au lieu de rester bloqué.
+// composés compris, ex. "oiseau-mouche" reste un seul token). Deux cas
+// rendent un mot cliquable vers sa propre définition ("arbre de
+// définitions") :
+//  - il est dans notre lexique, en dehors des mots-outils très courants
+//    (voir wordLookup.ts) ;
+//  - OU il est absent de notre lexique — souvent le signe d'un mot technique/
+//    rare (ex. "endémique"), justement celui qu'un enfant ne connaît pas et
+//    qui mérite le plus d'être expliqué. Categorie "nom" utilisée par
+//    défaut pour l'URL dans ce cas : sans conséquence, chercherDefinition
+//    retombe sur la recherche pleine page si la section ne correspond pas.
+// Seuls les mots courts (< 4 lettres) sont exclus de ce second cas, pour
+// éviter de relier des bouts de mots ou des mots-outils qu'on n'aurait pas
+// reconnus.
 const MOT_RE = /([a-zàâäéèêëïîôöùûüçœ]+(?:-[a-zàâäéèêëïîôöùûüçœ]+)*)/gi
 
-function DefinitionTexteLie({ texte, motActuel, lookup }: { texte: string; motActuel: string; lookup: Map<string, WordCategory> }) {
+function DefinitionTexteLie({ texte, motActuel, lookup }: { texte: string; motActuel: string; lookup: WordLookup }) {
   const morceaux = texte.split(MOT_RE)
   return (
     <>
       {morceaux.map((morceau, i) => {
-        const cle = morceau.toLowerCase()
-        const categorie = lookup.get(cle)
         // Impair = capturé par MOT_RE (un mot) ; pair = séparateur (ponctuation, espace).
-        if (i % 2 === 1 && categorie && cle !== motActuel.toLowerCase()) {
-          return (
-            <Link
-              key={i}
-              to={`/definition/${categorie}/${encodeURIComponent(morceau)}`}
-              className="text-brand-700 underline decoration-brand-300 underline-offset-2 hover:text-brand-800"
-            >
-              {morceau}
-            </Link>
-          )
-        }
-        return <span key={i}>{morceau}</span>
+        if (i % 2 !== 1) return <span key={i}>{morceau}</span>
+        const cle = morceau.toLowerCase()
+        if (cle === motActuel.toLowerCase()) return <span key={i}>{morceau}</span>
+
+        const categorieConnue = lookup.linkable.get(cle)
+        const categorie = categorieConnue ?? (morceau.length >= 4 && !lookup.connu.has(cle) ? 'nom' : null)
+        if (!categorie) return <span key={i}>{morceau}</span>
+
+        return (
+          <Link
+            key={i}
+            to={`/definition/${categorie}/${encodeURIComponent(morceau)}`}
+            className={
+              categorieConnue
+                ? 'text-brand-700 underline decoration-brand-300 underline-offset-2 hover:text-brand-800'
+                : 'text-brand-700 underline decoration-dotted decoration-brand-300 underline-offset-2 hover:text-brand-800'
+            }
+          >
+            {morceau}
+          </Link>
+        )
       })}
     </>
   )
@@ -44,7 +59,7 @@ export function DefinitionTool() {
   const { categorie, mot } = useParams<{ categorie: string; mot: string }>()
   // undefined = recherche en cours, null = aucune définition trouvée.
   const [definition, setDefinition] = useState<Definition | null | undefined>(undefined)
-  const [lookup, setLookup] = useState<Map<string, WordCategory> | null>(null)
+  const [lookup, setLookup] = useState<WordLookup | null>(null)
 
   const categorieValide = CATEGORIES_VALIDES.includes(categorie as WordCategory)
     ? (categorie as WordCategory)

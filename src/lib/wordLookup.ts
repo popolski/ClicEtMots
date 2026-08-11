@@ -1,22 +1,29 @@
 import { loadWordIndex } from './wordIndex'
 import type { WordCategory } from '../types/phonetics'
 
-let cached: Promise<Map<string, WordCategory>> | null = null
+export interface WordLookup {
+  /** Mots à lier directement (dans le lexique, catégorie de sens, pas trop courants) -> leur catégorie. */
+  linkable: Map<string, WordCategory>
+  /** TOUS les mots du lexique, quels que soient catégorie/fréquence — sert à ne PAS relier "le"/"plus"
+   *  via le repli "mot absent du lexique" (voir plus bas), eux sont bien présents mais volontairement exclus. */
+  connu: Set<string>
+}
+
+let cached: Promise<WordLookup> | null = null
 
 /**
- * Table mot (minuscule) -> catégorie, pour repérer quels mots d'un texte
- * libre (ex. une définition) existent dans notre lexique et peuvent devenir
- * cliquables. Un même mot peut apparaître dans plusieurs catégories
- * (homographes) : la première rencontrée est gardée — sans grande
- * importance ici, chercherDefinition retombe de toute façon sur la
- * recherche pleine page côté Wiktionnaire si la section de la catégorie
- * indiquée ne correspond pas (voir wiktionnaire.ts).
+ * Un même mot peut apparaître dans plusieurs catégories (homographes) : la
+ * première rencontrée est gardée pour `linkable` — sans grande importance
+ * ici, chercherDefinition retombe de toute façon sur la recherche pleine
+ * page côté Wiktionnaire si la section de la catégorie indiquée ne
+ * correspond pas (voir wiktionnaire.ts).
  *
- * Catégorie "invariable" volontairement exclue : articles, pronoms,
- * conjonctions, prépositions ("le", "et", "dans"...) n'ont aucun intérêt à
- * être cliquables — ce sont les mots de liaison les plus fréquents de
- * n'importe quelle phrase, les inclure noierait les vrais mots de sens
- * (noms, adjectifs, verbes, adverbes) sous une quantité de liens inutiles.
+ * Catégorie "invariable" volontairement exclue de `linkable` : articles,
+ * pronoms, conjonctions, prépositions ("le", "et", "dans"...) n'ont aucun
+ * intérêt à être cliquables — ce sont les mots de liaison les plus
+ * fréquents de n'importe quelle phrase, les inclure noierait les vrais mots
+ * de sens (noms, adjectifs, verbes, adverbes) sous une quantité de liens
+ * inutiles.
  *
  * Un seuil de fréquence complète ce premier filtre : certains mots-outils
  * héritent à tort d'une fréquence très haute et d'une catégorie nom/adverbe/
@@ -29,16 +36,18 @@ let cached: Promise<Map<string, WordCategory>> | null = null
  */
 const SEUIL_FREQUENCE_LIEN = 60
 
-export function loadWordLookup(): Promise<Map<string, WordCategory>> {
+export function loadWordLookup(): Promise<WordLookup> {
   if (!cached) {
     cached = loadWordIndex().then((entries) => {
-      const map = new Map<string, WordCategory>()
+      const linkable = new Map<string, WordCategory>()
+      const connu = new Set<string>()
       for (const e of entries) {
-        if (e.category === 'invariable' || e.frequency > SEUIL_FREQUENCE_LIEN) continue
         const cle = e.word.toLowerCase()
-        if (!map.has(cle)) map.set(cle, e.category)
+        connu.add(cle)
+        if (e.category === 'invariable' || e.frequency > SEUIL_FREQUENCE_LIEN) continue
+        if (!linkable.has(cle)) linkable.set(cle, e.category)
       }
-      return map
+      return { linkable, connu }
     })
   }
   return cached
