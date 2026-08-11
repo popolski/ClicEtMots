@@ -101,6 +101,26 @@ const FORM_ROLE_ORDER: WordFormRole[] = [
 // par fréquence qui mélangeait noms/verbes/adjectifs sans logique apparente.
 const CATEGORY_ORDER: WordCategory[] = ['nom', 'adjectif', 'verbe', 'adverbe', 'invariable']
 
+// Déterminants (articles, possessifs, démonstratifs) : masqués des résultats
+// du clavier à la demande de l'enseignante ("inutile dans sa pédagogie"),
+// mais gardés dans le lexique lui-même (familles de mots, etc.) - seul
+// l'affichage des résultats est filtré. Liste de lemmaId précise plutôt
+// qu'une liste de mots : plusieurs de ces mots sont des homographes de noms
+// bien réels à garder ("son" = le bruit, "la" = la note de musique, "une" =
+// la une d'un journal), catégorisés séparément dans le lexique et donc non
+// affectés par ce filtre.
+const LEMMA_IDS_DETERMINANTS = new Set([
+  'invariable:le', 'invariable:la', 'invariable:les',
+  'invariable:un', 'invariable:une', 'invariable:des',
+  'invariable:du', 'invariable:au', 'invariable:aux',
+  'adjectif:mon', 'adjectif:ma', 'adjectif:mes',
+  'adjectif:ton', 'adjectif:ta', 'adjectif:tes',
+  'adjectif:son', 'adjectif:sa', 'adjectif:ses',
+  'adjectif:notre', 'adjectif:nos', 'adjectif:votre', 'adjectif:vos',
+  'adjectif:leur', 'adjectif:leurs',
+  'adjectif:ce', 'adjectif:cet', 'adjectif:cette', 'adjectif:ces',
+])
+
 /**
  * Groups matched entries by word family (lemmaId) into cards, matching the
  * original tool's results page — one card per word, its inflected forms
@@ -148,8 +168,10 @@ export function groupIntoCards(entries: WordEntry[], fullIndex?: WordEntry[]): W
     }
   })
 
-  return cards.sort((a, b) => {
-    const parCategorie = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category)
-    return parCategorie !== 0 ? parCategorie : b.frequency - a.frequency
-  })
+  return cards
+    .filter((c) => !LEMMA_IDS_DETERMINANTS.has(c.lemmaId))
+    .sort((a, b) => {
+      const parCategorie = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category)
+      return parCategorie !== 0 ? parCategorie : b.frequency - a.frequency
+    })
 }
