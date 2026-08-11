@@ -187,7 +187,7 @@ export function MotTool() {
             <img
               src={assetUrl((wordPictos as Record<string, string>)[primary.word])}
               alt=""
-              className="h-20 w-20 rounded-xl border border-gray-100 bg-gray-50 object-contain p-1"
+              className="h-20 w-20 object-contain"
             />
           )}
         </div>
