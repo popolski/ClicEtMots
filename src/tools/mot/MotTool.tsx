@@ -174,14 +174,19 @@ export function MotTool() {
       title={primary.word}
       description=""
       showBackToKeyboard
-      titleBelow={groupe && <p className="font-semibold text-gray-900">({groupe})</p>}
+      titleBelow={
+        groupe ? (
+          <p className="font-semibold text-gray-900">({groupe})</p>
+        ) : primary.category === 'nom' && primary.genre ? (
+          <p className="font-semibold text-gray-900">({primary.genre === 'm' ? 'masculin' : 'féminin'})</p>
+        ) : null
+      }
       titleIcon={
         <div className="flex items-end gap-2">
           <div className="flex flex-col items-center gap-1">
             <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-20 w-20 object-contain" />
             <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
               {CATEGORY_LABEL[primary.category]}
-              {primary.category === 'nom' && primary.genre && ` · ${primary.genre === 'm' ? 'masculin' : 'féminin'}`}
             </span>
           </div>
           {primary.category === 'nom' && (wordPictos as Record<string, string>)[primary.word] && (
