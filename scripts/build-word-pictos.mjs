@@ -1,6 +1,7 @@
-// Télécharge un pictogramme ARASAAC pour les noms communs les plus
-// fréquents du lexique (test initial : 1000 mots), pour illustrer la fiche
-// mot (voir MotTool.tsx) en complément de la mascotte générique "nom".
+// Télécharge un pictogramme ARASAAC pour les mots les plus fréquents du
+// lexique (noms, verbes à l'infinitif, adjectifs au masculin), pour illustrer
+// la fiche mot (voir MotTool.tsx) en complément de la mascotte générique de
+// catégorie.
 //
 // ARASAAC (arasaac.org) : voir scripts/build-pictos.mjs pour la licence et
 // le principe (recherche + téléchargement UNE FOIS au build, jamais d'appel
@@ -54,28 +55,48 @@ const NOMS_RESERVES_WINDOWS = new Set([
   'lpt1', 'lpt2', 'lpt3', 'lpt4', 'lpt5', 'lpt6', 'lpt7', 'lpt8', 'lpt9',
 ])
 
-// Homographes "nom" fantômes : ces mots sont bien étiquetés "nom" quelque
-// part dans Lexique383 (sens rare — "son" = le bruit, "est" = le point
-// cardinal...), mais leur fréquence très élevée dans le lexique vient en
-// réalité de leur usage dominant comme mot-outil (déterminant possessif,
-// verbe être, adverbe...), qui n'a rien à voir avec le sens nominal. ARASAAC,
-// interrogé sur le mot seul, renvoie alors le pictogramme du sens dominant
-// (pour "son" : la possession, pas le bruit) — trompeur pour un enfant.
-// Liste manuelle, découverte au cas par cas (comme EXCLUDED_WORDS,
+// Homographes fantômes : ces mots sont bien étiquetés nom/adjectif quelque
+// part dans Lexique383 (sens rare, voire carrément une erreur du corpus -
+// "tu"/"il"/"animaux"/"ici" y sont littéralement tagués ADJ), mais leur
+// fréquence très élevée dans le lexique vient en réalité de leur usage
+// dominant comme mot-outil (déterminant possessif, pronom, verbe être,
+// adverbe...), qui n'a rien à voir avec le sens nom/adjectif retenu.
+// ARASAAC, interrogé sur le mot seul, renvoie alors le pictogramme du sens
+// dominant (pour "son" : la possession, pas le bruit) - trompeur pour un
+// enfant. Liste manuelle, découverte au cas par cas (comme EXCLUDED_WORDS,
 // scripts/excluded-words.mjs) : une détection automatique par fréquence
 // partagée entre catégories s'est avérée bien trop large (elle exclurait
 // aussi "grand"/"petit", légitimement nom ET adjectif tous les deux
 // fréquents).
 const HOMOGRAPHES_FANTOMES = new Set([
+  // Détectés côté noms.
   'est', 'une', 'pas', 'pour', 'sur', 'son', 'plus', 'par',
   'dit', 'bien', 'ses', 'fait', 'moi', 'tout',
+  // Détectés côté adjectifs : déterminants (possessifs/démonstratifs, même
+  // liste que LEMMA_IDS_DETERMINANTS dans clavierLogic.ts) et mots-outils
+  // divers mal étiquetés adjectif dans Lexique383.
+  'mon', 'ma', 'mes', 'ton', 'ta', 'tes', 'sa', 'notre', 'nos', 'votre', 'vos',
+  'leur', 'leurs', 'ce', 'cet', 'cette', 'ces',
+  'il', 'tu', 'quel', 'non', 'quoi', 'pendant', 'avant', 'vite', 'ici',
+  'vu', 'feu', 'animaux', 'un', 'fin', 'souris', 'mis', 'personne', 'quelque',
 ])
 
-const noms = lexique
-  .filter((e) => e.category === 'nom' && e.formRole === 'singulier' && !HOMOGRAPHES_FANTOMES.has(e.word))
-  .sort((a, b) => b.frequency - a.frequency)
-  .slice(0, LIMIT)
-  .filter((e) => !(e.word in existing) && !NOMS_RESERVES_WINDOWS.has(e.word.toLowerCase()))
+// Une catégorie = une forme "de base" ciblée (celle affichée sur la fiche
+// mot, voir BASE_ROLE dans src/lib/wordIndex.ts) : singulier pour un nom,
+// infinitif pour un verbe, masculin pour un adjectif.
+const CATEGORIES_CIBLEES = [
+  { categorie: 'nom', formRole: 'singulier' },
+  { categorie: 'verbe', formRole: 'infinitif' },
+  { categorie: 'adjectif', formRole: 'masculin' },
+]
+
+const noms = CATEGORIES_CIBLEES.flatMap(({ categorie, formRole }) =>
+  lexique
+    .filter((e) => e.category === categorie && e.formRole === formRole && !HOMOGRAPHES_FANTOMES.has(e.word))
+    .sort((a, b) => b.frequency - a.frequency)
+    .slice(0, LIMIT)
+    .filter((e) => !(e.word in existing) && !NOMS_RESERVES_WINDOWS.has(e.word.toLowerCase())),
+)
 
 async function searchPictogramId(word) {
   const url = `https://api.arasaac.org/api/pictograms/fr/search/${encodeURIComponent(word)}`
@@ -98,7 +119,7 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-console.log(`${noms.length} nom(s) à rechercher (déjà résolus ignorés).`)
+console.log(`${noms.length} mot(s) à rechercher (déjà résolus ignorés).`)
 
 let resolved = 0
 let notFound = 0

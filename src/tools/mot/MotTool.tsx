@@ -189,7 +189,7 @@ export function MotTool() {
               {CATEGORY_LABEL[primary.category]}
             </span>
           </div>
-          {primary.category === 'nom' && (wordPictos as Record<string, string>)[primary.word] && (
+          {(wordPictos as Record<string, string>)[primary.word] && (
             <img
               src={assetUrl((wordPictos as Record<string, string>)[primary.word])}
               alt=""
