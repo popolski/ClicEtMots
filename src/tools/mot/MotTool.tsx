@@ -174,7 +174,13 @@ export function MotTool() {
       title={primary.word}
       description=""
       showBackToKeyboard
-      titleBelow={groupe && <p className="font-semibold text-gray-900">({groupe})</p>}
+      titleBelow={
+        groupe ? (
+          <p className="font-semibold text-gray-900">({groupe})</p>
+        ) : primary.category === 'nom' && primary.genre ? (
+          <p className="font-semibold text-gray-900">({primary.genre === 'm' ? 'masculin' : 'féminin'})</p>
+        ) : null
+      }
       titleIcon={
         <div className="flex items-end gap-2">
           <div className="flex flex-col items-center gap-1">

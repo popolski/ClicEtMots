@@ -54,8 +54,25 @@ const NOMS_RESERVES_WINDOWS = new Set([
   'lpt1', 'lpt2', 'lpt3', 'lpt4', 'lpt5', 'lpt6', 'lpt7', 'lpt8', 'lpt9',
 ])
 
+// Homographes "nom" fantômes : ces mots sont bien étiquetés "nom" quelque
+// part dans Lexique383 (sens rare — "son" = le bruit, "est" = le point
+// cardinal...), mais leur fréquence très élevée dans le lexique vient en
+// réalité de leur usage dominant comme mot-outil (déterminant possessif,
+// verbe être, adverbe...), qui n'a rien à voir avec le sens nominal. ARASAAC,
+// interrogé sur le mot seul, renvoie alors le pictogramme du sens dominant
+// (pour "son" : la possession, pas le bruit) — trompeur pour un enfant.
+// Liste manuelle, découverte au cas par cas (comme EXCLUDED_WORDS,
+// scripts/excluded-words.mjs) : une détection automatique par fréquence
+// partagée entre catégories s'est avérée bien trop large (elle exclurait
+// aussi "grand"/"petit", légitimement nom ET adjectif tous les deux
+// fréquents).
+const HOMOGRAPHES_FANTOMES = new Set([
+  'est', 'une', 'pas', 'pour', 'sur', 'son', 'plus', 'par',
+  'dit', 'bien', 'ses', 'fait', 'moi', 'tout',
+])
+
 const noms = lexique
-  .filter((e) => e.category === 'nom' && e.formRole === 'singulier')
+  .filter((e) => e.category === 'nom' && e.formRole === 'singulier' && !HOMOGRAPHES_FANTOMES.has(e.word))
   .sort((a, b) => b.frequency - a.frequency)
   .slice(0, LIMIT)
   .filter((e) => !(e.word in existing) && !NOMS_RESERVES_WINDOWS.has(e.word.toLowerCase()))
