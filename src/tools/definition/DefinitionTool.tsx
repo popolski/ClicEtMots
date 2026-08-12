@@ -40,7 +40,13 @@ function DefinitionTexteLie({ texte, motActuel, lookup }: { texte: string; motAc
         return (
           <Link
             key={i}
-            to={`/definition/${categorie}/${encodeURIComponent(morceau)}`}
+            // "cle" (minuscule), pas "morceau" (casse d'origine) : un mot en
+            // début de phrase est capitalisé ("Auge où mangent..."), et
+            // Vikidia/Wiktionnaire distinguent la casse dans leurs titres -
+            // chercher "Auge" tombait sur la ville (Pays d'Auge) plutôt que
+            // sur "auge" le récipient. Le texte affiché garde sa casse
+            // d'origine, seul le lien est normalisé.
+            to={`/definition/${categorie}/${encodeURIComponent(cle)}`}
             className={
               categorieConnue
                 ? 'text-brand-700 underline decoration-brand-300 underline-offset-2 hover:text-brand-800'
