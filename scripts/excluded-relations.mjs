@@ -42,6 +42,10 @@ export function isExcludedRelation(wordA, wordB) {
 // supprime la source entière.
 export const EXCLUDED_RELATION_SOURCES = new Set([
   'sexe', // quasi tous les "synonymes" sont des vulgarismes (chatte, queue, bite...)
+  // "caille" (l'oiseau) : les 3 "synonymes" les mieux confirmés sont tous à
+  // côté du sens recherché - "poulette"/"biquette" sont des petits noms
+  // affectueux (pas l'oiseau), "gibier" un terme bien trop large.
+  'caille',
 ])
 
 export function hasSuppressedRelations(word) {
