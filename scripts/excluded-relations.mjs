@@ -19,6 +19,12 @@ const RAW_PAIRS = [
   ['araignée', 'coussinet'],
   ['araignée', 'filet'],
   ['araignée', 'carrelet'],
+  // "cageot" (registre familier, "elle est cageot" = moche) : trop familier
+  // pour une classe primaire, même bien confirmé par la communauté JeuxDeMots.
+  ['beauté', 'cageot'],
+  // "ombre" : association figurée/littéraire (splendeur vs. ombre), pas un
+  // vrai antonyme lexical de "splendeur" pour un enfant.
+  ['splendeur', 'ombre'],
 ]
 
 export const EXCLUDED_RELATION_PAIRS = new Set(RAW_PAIRS.map(([a, b]) => [a, b].sort().join('::')))
