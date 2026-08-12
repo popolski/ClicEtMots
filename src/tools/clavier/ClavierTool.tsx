@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { ToolLayout } from '../../components/ToolLayout'
 import { PhonemeKeyboard } from '../../components/PhonemeKeyboard'
 import { PhonemeInfoModal } from '../../components/PhonemeInfoModal'
@@ -86,6 +86,12 @@ export function ClavierTool() {
         <p className="py-10 text-center text-gray-400">Chargement du lexique…</p>
       ) : (
         <>
+          <div className="mb-4 text-right">
+            <Link to="/historique" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
+              🕓 Mots récents
+            </Link>
+          </div>
+
           <SequenceBar
             sequence={sequence}
             phonemesById={phonemesById}

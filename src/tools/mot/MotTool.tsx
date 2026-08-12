@@ -9,6 +9,7 @@ import { verbGroup } from '../conjugueur/conjugueurLogic'
 import { loadConjugations } from '../../lib/conjugations'
 import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
+import { ajouterAuHistorique } from '../../lib/historique'
 import wordPictos from '../../data/word-pictos.json'
 import type {
   WordCategory,
@@ -147,6 +148,11 @@ export function MotTool() {
     [forms],
   )
   const { groupe, peutConjuguer } = useInfosVerbe(primaryMemo?.word ?? '', primaryMemo?.category)
+
+  useEffect(() => {
+    if (!primaryMemo) return
+    ajouterAuHistorique({ lemmaId: primaryMemo.lemmaId, word: primaryMemo.word, category: primaryMemo.category })
+  }, [primaryMemo])
 
   if (!forms || !family || !synonyms || !antonyms) {
     return (

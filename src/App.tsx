@@ -13,6 +13,7 @@ const DefinitionTool = lazy(() =>
   import('./tools/definition/DefinitionTool').then((m) => ({ default: m.DefinitionTool })),
 )
 const Admin = lazy(() => import('./routes/Admin').then((m) => ({ default: m.Admin })))
+const Historique = lazy(() => import('./routes/Historique').then((m) => ({ default: m.Historique })))
 
 function App() {
   return (
@@ -51,6 +52,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <DefinitionTool />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/historique"
+                element={
+                  <RequireAuth>
+                    <Historique />
                   </RequireAuth>
                 }
               />
