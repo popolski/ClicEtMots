@@ -121,6 +121,20 @@ const LEMMA_IDS_DETERMINANTS = new Set([
   'adjectif:ce', 'adjectif:cet', 'adjectif:cette', 'adjectif:ces',
 ])
 
+// Homographes fantômes : mots-outils (pronoms, adverbes, mots interrogatifs...)
+// littéralement mal étiquetés "adjectif" dans Lexique383 (voir la même liste,
+// découverte pour les pictogrammes ARASAAC, dans scripts/build-word-pictos.mjs
+// - HOMOGRAPHES_FANTOMES). Sans ce filtre, une recherche phonétique menant à
+// "il", "quoi" ou "ici" affiche une tuile étiquetée ADJECTIF pour un mot qui
+// n'en est manifestement pas un - trompeur pour un enfant qui apprend les
+// catégories grammaticales.
+const LEMMA_IDS_HOMOGRAPHES_FANTOMES = new Set([
+  'adjectif:il', 'adjectif:tu', 'adjectif:quel', 'adjectif:non', 'adjectif:quoi',
+  'adjectif:pendant', 'adjectif:avant', 'adjectif:vite', 'adjectif:ici',
+  'adjectif:vu', 'adjectif:feu', 'adjectif:animaux', 'adjectif:un', 'adjectif:fin',
+  'adjectif:souris', 'adjectif:mis', 'adjectif:personne', 'adjectif:quelque',
+])
+
 /**
  * Groups matched entries by word family (lemmaId) into cards, matching the
  * original tool's results page — one card per word, its inflected forms
@@ -169,7 +183,7 @@ export function groupIntoCards(entries: WordEntry[], fullIndex?: WordEntry[]): W
   })
 
   return cards
-    .filter((c) => !LEMMA_IDS_DETERMINANTS.has(c.lemmaId))
+    .filter((c) => !LEMMA_IDS_DETERMINANTS.has(c.lemmaId) && !LEMMA_IDS_HOMOGRAPHES_FANTOMES.has(c.lemmaId))
     .sort((a, b) => {
       const parCategorie = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category)
       return parCategorie !== 0 ? parCategorie : b.frequency - a.frequency
