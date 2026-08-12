@@ -24,6 +24,35 @@ export interface Definition {
 // c'est la version qu'on veut montrer quand elle existe.
 const DEFINITIONS_SIMPLIFIEES = definitionsSimplifiees as Record<string, Omit<Definition, 'simplifiee'>>
 
+// Le lexique stocke certains mots sans la ligature "œ" (ex. "oeil", "coeur")
+// - héritage du clavier AZERTY, qui n'a pas cette touche (voir la note du
+// Wiktionnaire lui-même sur ce sujet). Sans ce correctif, la recherche sur
+// Vikidia/Wiktionnaire tombe sur la page "variante typographique" de "oeil"
+// (quasi vide) au lieu de la vraie page "œil", ou pire, sur une page
+// d'ancien français homographe ("oeil" existe aussi comme mot du XIIe siècle).
+// Liste manuelle (pas de règle générale "oe" → "œ" : "moelle"/"moelleux"
+// s'écrivent réellement avec un "oe" non ligaturé en français).
+const NORMALISATION_LIGATURE_OE: Record<string, string> = {
+  oeil: 'œil', oeils: 'œils', oeillet: 'œillet', oeillets: 'œillets',
+  boeuf: 'bœuf', boeufs: 'bœufs',
+  choeur: 'chœur', choeurs: 'chœurs',
+  coeur: 'cœur', coeurs: 'cœurs',
+  manoeuvre: 'manœuvre', manoeuvres: 'manœuvres', manoeuvrent: 'manœuvrent',
+  manoeuvrer: 'manœuvrer', manoeuvré: 'manœuvré',
+  noeud: 'nœud', noeuds: 'nœuds',
+  oeuf: 'œuf', oeufs: 'œufs',
+  oeuvre: 'œuvre', oeuvres: 'œuvres', oeuvrent: 'œuvrent', oeuvrer: 'œuvrer', oeuvré: 'œuvré',
+  soeur: 'sœur', soeurs: 'sœurs',
+  voeu: 'vœu', voeux: 'vœux',
+  écoeure: 'écœure', écoeurent: 'écœurent', écoeurer: 'écœurer',
+  écoeuré: 'écœuré', écoeurée: 'écœurée',
+  "chef-d'oeuvre": "chef-d'œuvre", "chefs-d'oeuvre": "chefs-d'œuvre", "hors-d'oeuvre": "hors-d'œuvre",
+}
+
+function motPourRecherche(mot: string): string {
+  return NORMALISATION_LIGATURE_OE[mot.toLowerCase()] ?? mot
+}
+
 // Les deux sources ajoutent parfois des précisions entre parenthèses (noms
 // scientifiques latins, renvois type "(wp)") jamais utiles ni compréhensibles
 // pour un enfant de primaire - retirées de l'affichage plutôt que laissées
@@ -77,14 +106,16 @@ export async function chercherDefinition(mot: string, categorie: WordCategory): 
   const enCache = lireCache(mot, categorie)
   if (enCache.trouve) return enCache.valeur
 
-  const vikidia = await fetchDefinitionVikidia(mot)
+  const motRecherche = motPourRecherche(mot)
+
+  const vikidia = await fetchDefinitionVikidia(motRecherche)
   if (vikidia) {
     const resultat: Definition = { texte: retirerParentheses(vikidia), source: 'Vikidia' }
     ecrireCache(mot, categorie, resultat)
     return resultat
   }
 
-  const wiktionnaire = await fetchDefinitionWiktionnaire(mot, categorie)
+  const wiktionnaire = await fetchDefinitionWiktionnaire(motRecherche, categorie)
   if (wiktionnaire) {
     const resultat: Definition = { texte: retirerParentheses(wiktionnaire), source: 'Wiktionnaire' }
     ecrireCache(mot, categorie, resultat)

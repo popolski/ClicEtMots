@@ -56,7 +56,7 @@ function extraireLigneDefinition(wikitext: string, categorie: WordCategory, mot:
   const etiquette = SECTION_PAR_CATEGORIE[categorie]
   let zone = wikitext
   if (etiquette) {
-    const sectionRe = new RegExp(`\\{\\{S\\|${etiquette}\\|fr[^}]*\\}\\}([\\s\\S]*?)(?=\\n===|$)`, 'i')
+    const sectionRe = new RegExp(`\\{\\{S\\|${etiquette}\\|fr(?:\\|[^}]*)?\\}\\}([\\s\\S]*?)(?=\\n===|$)`, 'i')
     const trouvee = wikitext.match(sectionRe)
     if (trouvee) zone = trouvee[1]
   }
