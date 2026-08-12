@@ -11,10 +11,36 @@
 // src/lib/wiktionnaire.ts et src/lib/definition.ts, qui combine les deux).
 const API_BASE = 'https://fr.vikidia.org/w/api.php'
 
-/** Coupe l'extrait aux ~2 premières phrases : Vikidia renvoie souvent un article entier. */
+/**
+ * Coupe l'extrait aux ~2 premières phrases : Vikidia renvoie souvent un
+ * article entier. Un retour à la ligne compte comme une limite de phrase au
+ * même titre qu'un point : certains articles structurent leur intro en
+ * liste à puces (une puce par ligne, séparées par \n plutôt que par une
+ * ponctuation de fin de phrase) - sans ce découpage sur \n, "coupe aux 2
+ * premières phrases" continuait de gober une bonne partie de la liste avant
+ * de trouver un vrai point final, produisant un texte à rallonge sans
+ * ponctuation claire (vu sur "ordinateur", "bibliothèque").
+ */
 function premieresPhrases(texte: string, max = 2): string {
-  const phrases = texte.split(/(?<=[.!?])\s+/).filter(Boolean)
-  return phrases.slice(0, max).join(' ')
+  const phrases = texte.split(/\n+|(?<=[.!?])\s+/).filter(Boolean)
+  const retenues = phrases.slice(0, max)
+  // Une phrase retenue qui se termine par ":" annonçait une liste coupée
+  // net par la limite ci-dessus (ex. "...deux grandes parties :") - mieux
+  // vaut la retirer que de laisser une promesse sans suite.
+  while (retenues.length > 0 && /:\s*$/.test(retenues[retenues.length - 1])) {
+    retenues.pop()
+  }
+  return retenues.join(' ')
+}
+
+// Certains articles ont un widget de prononciation audio juste après le mot
+// en gras ("La fenêtre 🔉 Écouter est..."), qui survit même en texte brut
+// (explaintext) - résidu d'interface sans rapport avec la définition,
+// retiré avant de couper aux premières phrases. Ne nettoie QUE les espaces
+// simples autour, sans toucher aux retours à la ligne (\s+ les aurait aussi
+// écrasés, empêchant premieresPhrases() de s'en servir comme limites).
+function retirerWidgetsAudio(texte: string): string {
+  return texte.replace(/[ \t]*🔉[ \t]*Écouter[ \t]*/g, ' ').trim()
 }
 
 /** null si aucune définition utilisable (mot absent, page vide, erreur réseau). */
@@ -29,7 +55,7 @@ export async function fetchDefinitionVikidia(mot: string): Promise<string | null
     const page = Object.values(pages)[0] as { extract?: string } | undefined
     const extract = page?.extract?.trim()
     if (!extract) return null
-    return premieresPhrases(extract)
+    return premieresPhrases(retirerWidgetsAudio(extract))
   } catch {
     return null
   }

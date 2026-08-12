@@ -27,6 +27,19 @@ const SECTION_PAR_CATEGORIE: Partial<Record<WordCategory, string>> = {
   adverbe: 'adverbe',
 }
 
+// Wiktionnaire numérote ses définitions par ordre étymologique/grammatical,
+// pas par fréquence d'usage courant — la première n'est donc pas toujours
+// celle qu'un enfant attend. Ex. "propre" : sens 1 = "particulier à
+// quelqu'un" (comme dans "son propre chat"), sens 7 = "nettoyé, lavé" (le
+// sens courant, celui qu'un enfant cherche). Aucun moyen fiable de deviner
+// automatiquement le bon sens parmi plusieurs - liste de corrections
+// manuelles, découverte au cas par cas (même principe que EXCLUDED_WORDS,
+// scripts/excluded-words.mjs), plutôt qu'une heuristique fragile.
+// Index de la ligne "#" à choisir (0 = la première, comportement par défaut).
+const INDEX_SENS_PREFERE: Record<string, number> = {
+  propre: 6,
+}
+
 async function fetchWikitext(mot: string): Promise<string | null> {
   const url = `${API_BASE}?action=parse&page=${encodeURIComponent(mot)}&prop=wikitext&format=json&origin=*`
   try {
@@ -39,7 +52,7 @@ async function fetchWikitext(mot: string): Promise<string | null> {
   }
 }
 
-function extraireLigneDefinition(wikitext: string, categorie: WordCategory): string | null {
+function extraireLigneDefinition(wikitext: string, categorie: WordCategory, mot: string): string | null {
   const etiquette = SECTION_PAR_CATEGORIE[categorie]
   let zone = wikitext
   if (etiquette) {
@@ -47,9 +60,13 @@ function extraireLigneDefinition(wikitext: string, categorie: WordCategory): str
     const trouvee = wikitext.match(sectionRe)
     if (trouvee) zone = trouvee[1]
   }
-  // "#" = ligne de définition ; "#*" = citation d'exemple, à ignorer.
-  const ligne = zone.match(/^#(?!\*)\s*.+$/m)
-  return ligne ? ligne[0] : null
+  // "#" = ligne de définition de premier niveau ; "#*" = citation d'exemple
+  // et "##"/"##*" = sous-définition/sous-exemple (nuance d'un sens déjà
+  // numéroté) - seules les vraies lignes "#" de premier niveau sont gardées.
+  const lignes = zone.match(/^#(?![#*])\s*.+$/gm)
+  if (!lignes) return null
+  const index = INDEX_SENS_PREFERE[mot.toLowerCase()] ?? 0
+  return lignes[index] ?? lignes[0]
 }
 
 /** Retire la syntaxe wiki d'une ligne de définition brute pour n'en garder que le texte lisible. */
@@ -68,7 +85,7 @@ function nettoyerLigne(ligne: string): string {
 export async function fetchDefinitionWiktionnaire(mot: string, categorie: WordCategory): Promise<string | null> {
   const wikitext = await fetchWikitext(mot)
   if (!wikitext) return null
-  const ligne = extraireLigneDefinition(wikitext, categorie)
+  const ligne = extraireLigneDefinition(wikitext, categorie, mot)
   if (!ligne) return null
   const nettoyee = nettoyerLigne(ligne)
   return nettoyee || null
