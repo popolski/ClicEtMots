@@ -25,13 +25,57 @@ function retirerParentheses(texte: string): string {
     .trim()
 }
 
+// Mise en cache dans localStorage : Vikidia/Wiktionnaire sont interrogés à
+// la demande (jamais pré-générés, voir plus haut), donc chaque clic sur un
+// mot déjà consulté refaisait les deux appels réseau pour rien - une
+// définition ne change pour ainsi dire jamais, autant la garder. Le résultat
+// "aucune définition trouvée" est mis en cache aussi (valeur null) : sinon
+// un mot sans définition (ex. un nom propre) redéclenchait les deux appels
+// à chaque clic, sans jamais aboutir à autre chose que le même échec.
+const PREFIXE_CACHE = 'clicmots:definition:'
+
+function cleCache(mot: string, categorie: WordCategory): string {
+  return `${PREFIXE_CACHE}${categorie}:${mot.toLowerCase()}`
+}
+
+function lireCache(mot: string, categorie: WordCategory): { trouve: true; valeur: Definition | null } | { trouve: false } {
+  try {
+    const brut = localStorage.getItem(cleCache(mot, categorie))
+    if (brut === null) return { trouve: false }
+    return { trouve: true, valeur: JSON.parse(brut) as Definition | null }
+  } catch {
+    // localStorage indisponible (navigation privée stricte, quota...) : pas grave, on retombe sur le réseau.
+    return { trouve: false }
+  }
+}
+
+function ecrireCache(mot: string, categorie: WordCategory, valeur: Definition | null): void {
+  try {
+    localStorage.setItem(cleCache(mot, categorie), JSON.stringify(valeur))
+  } catch {
+    // idem : échec silencieux, la mise en cache est un confort, pas une nécessité.
+  }
+}
+
 /** null si aucune des deux sources n'a de définition utilisable pour ce mot. */
 export async function chercherDefinition(mot: string, categorie: WordCategory): Promise<Definition | null> {
+  const enCache = lireCache(mot, categorie)
+  if (enCache.trouve) return enCache.valeur
+
   const vikidia = await fetchDefinitionVikidia(mot)
-  if (vikidia) return { texte: retirerParentheses(vikidia), source: 'Vikidia' }
+  if (vikidia) {
+    const resultat: Definition = { texte: retirerParentheses(vikidia), source: 'Vikidia' }
+    ecrireCache(mot, categorie, resultat)
+    return resultat
+  }
 
   const wiktionnaire = await fetchDefinitionWiktionnaire(mot, categorie)
-  if (wiktionnaire) return { texte: retirerParentheses(wiktionnaire), source: 'Wiktionnaire' }
+  if (wiktionnaire) {
+    const resultat: Definition = { texte: retirerParentheses(wiktionnaire), source: 'Wiktionnaire' }
+    ecrireCache(mot, categorie, resultat)
+    return resultat
+  }
 
+  ecrireCache(mot, categorie, null)
   return null
 }
