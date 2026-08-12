@@ -79,6 +79,12 @@ const HOMOGRAPHES_FANTOMES = new Set([
   'leur', 'leurs', 'ce', 'cet', 'cette', 'ces',
   'il', 'tu', 'quel', 'non', 'quoi', 'pendant', 'avant', 'vite', 'ici',
   'vu', 'feu', 'animaux', 'un', 'fin', 'souris', 'mis', 'personne', 'quelque',
+  // Prénoms tagués adjectif par erreur (sans lien avec le nom de famille
+  // Lexique383, juste une erreur d'annotation du corpus) - découverts au fil
+  // de l'usage, pas via le tri par fréquence (ceux-ci sont rares). Ne pas en
+  // déduire une règle générale "prénom = à exclure" : "pascal" est un vrai
+  // adjectif ("l'agneau pascal", relatif à Pâques), gardé volontairement.
+  'walter', 'julien',
 ])
 
 // Une catégorie = une forme "de base" ciblée (celle affichée sur la fiche

@@ -133,6 +133,7 @@ const LEMMA_IDS_HOMOGRAPHES_FANTOMES = new Set([
   'adjectif:pendant', 'adjectif:avant', 'adjectif:vite', 'adjectif:ici',
   'adjectif:vu', 'adjectif:feu', 'adjectif:animaux', 'adjectif:un', 'adjectif:fin',
   'adjectif:souris', 'adjectif:mis', 'adjectif:personne', 'adjectif:quelque',
+  'adjectif:walter', 'adjectif:julien',
 ])
 
 /**
