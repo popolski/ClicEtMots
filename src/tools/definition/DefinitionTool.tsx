@@ -120,6 +120,7 @@ export function DefinitionTool() {
           </p>
           <p className="mt-4 text-xs text-gray-400">
             Source : {definition.source === 'Vikidia' ? "Vikidia, l'encyclopédie des 8-13 ans" : 'Wiktionnaire'}
+            {definition.simplifiee && ' - version simplifiée et relue'}
           </p>
         </div>
       )}

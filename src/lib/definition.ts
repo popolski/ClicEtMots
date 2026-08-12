@@ -6,11 +6,23 @@
 import type { WordCategory } from '../types/phonetics'
 import { fetchDefinitionVikidia } from './vikidia'
 import { fetchDefinitionWiktionnaire } from './wiktionnaire'
+import definitionsSimplifiees from '../data/definitions-simplifiees.json'
 
 export interface Definition {
   texte: string
   source: 'Vikidia' | 'Wiktionnaire'
+  /** Version reformulée en langage simple, relue avant publication (voir plus bas) - pas le texte brut de la source. */
+  simplifiee?: boolean
 }
+
+// Reformulations en langage simple, en lot, RELUES avant publication -
+// jamais une réécriture automatique en direct (voir la discussion produit :
+// un LLM qui reformule sans relecture peut glisser sur le sens sans qu'on
+// s'en aperçoive, contrairement au nettoyage mécanique de retirerParentheses
+// ci-dessous, qui ne peut que retirer du texte existant, jamais en inventer).
+// Clé = mot en minuscule. Prioritaire sur tout le reste (cache, réseau) :
+// c'est la version qu'on veut montrer quand elle existe.
+const DEFINITIONS_SIMPLIFIEES = definitionsSimplifiees as Record<string, Omit<Definition, 'simplifiee'>>
 
 // Les deux sources ajoutent parfois des précisions entre parenthèses (noms
 // scientifiques latins, renvois type "(wp)") jamais utiles ni compréhensibles
@@ -59,6 +71,9 @@ function ecrireCache(mot: string, categorie: WordCategory, valeur: Definition | 
 
 /** null si aucune des deux sources n'a de définition utilisable pour ce mot. */
 export async function chercherDefinition(mot: string, categorie: WordCategory): Promise<Definition | null> {
+  const simplifiee = DEFINITIONS_SIMPLIFIEES[mot.toLowerCase()]
+  if (simplifiee) return { ...simplifiee, simplifiee: true }
+
   const enCache = lireCache(mot, categorie)
   if (enCache.trouve) return enCache.valeur
 
