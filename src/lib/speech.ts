@@ -64,9 +64,18 @@ function tryPlayAudioFile(word: string, category: WordCategory, lemmaId: string)
   })
 }
 
-async function speakWithBrowserVoice(text: string): Promise<void> {
+// Même correction que TEXTE_PRONONCIATION dans generate-word-audio.mjs (voir
+// ce fichier pour le pourquoi) - dupliquée ici car ce fichier tourne dans le
+// navigateur (pas d'accès direct au script Node). Ne s'applique qu'au repli
+// synthèse vocale : le fichier pré-généré, prioritaire, porte déjà la bonne
+// prononciation une fois régénéré.
+const TEXTE_PRONONCIATION: Record<string, string> = {
+  'nom:jean': 'djinne',
+}
+
+async function speakWithBrowserVoice(text: string, lemmaId?: string): Promise<void> {
   if (!(typeof window !== 'undefined' && 'speechSynthesis' in window)) return
-  const utterance = new SpeechSynthesisUtterance(text)
+  const utterance = new SpeechSynthesisUtterance((lemmaId && TEXTE_PRONONCIATION[lemmaId]) ?? text)
   utterance.lang = 'fr-FR'
   const voice = await loadFrenchVoice()
   if (voice) utterance.voice = voice
@@ -94,5 +103,5 @@ export async function speak(word: string, info?: { category: WordCategory; lemma
     if (played) return
   }
 
-  await speakWithBrowserVoice(word)
+  await speakWithBrowserVoice(word, info?.lemmaId)
 }

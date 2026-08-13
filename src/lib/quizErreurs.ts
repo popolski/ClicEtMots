@@ -1,6 +1,8 @@
 // Génère des "fausses" orthographes plausibles pour le quiz de révision (QCM)
-// - à partir des confusions les plus courantes chez un enfant du primaire
-// (sons qui s'écrivent pareil : an/en, in/ain, o/au/eau, x/ks, c/k...).
+// - à partir des confusions les plus courantes chez un enfant du primaire :
+// des graphies différentes pour le MÊME son (an/en, ch/sh, g/j, o/au/eau,
+// er/é...), reprises du catalogue de graphies du clavier phonétique
+// (src/data/phonemes.json - même vérité pédagogique que le reste du site).
 // Volontairement simple (règles fixes, pas de modèle linguistique) : on
 // préfère un premier jet imparfait, ajustable au cas par cas si un mot donne
 // un résultat bizarre - même logique que les listes noires de synonymes/
@@ -10,13 +12,27 @@ const REGLES: [RegExp, string][] = [
   [/in/, 'ain'], [/ain/, 'in'],
   [/eau/, 'o'], [/au/, 'o'], [/o/, 'au'],
   [/ai/, 'è'], [/è/, 'ai'],
+  [/ch/, 'sh'], [/sh/, 'ch'],
+  // g/j : seulement devant e/i/y, là où les deux graphies se prononcent
+  // pareil ([ʒ]) - devant a/o/u, "g" se prononce [g] (dur), une confusion
+  // n'aurait aucun sens ("jardin" -> "gardin" changerait le son).
+  [/g(?=[eiy])/, 'j'], [/j(?=[eiy])/, 'g'],
+  // gu/g : le "u" de "gu" est muet devant e/i (sert juste à garder le son
+  // dur) - "guerre"/"gerre" se prononcent pareil, contrairement à "gu/g"
+  // devant a/o/u.
+  [/gu(?=[ei])/, 'g'], [/g(?=[ei])/, 'gu'],
   [/ss/, 's'], [/s/, 'ss'],
   [/ph/, 'f'], [/f/, 'ph'],
   [/gn/, 'ni'],
   [/qu/, 'k'],
+  [/cc/, 'c'],
+  [/ç/, 's'],
   [/x/, 'ks'], [/ks/, 'x'],
   [/c(?=[^eiy]|$)/, 'k'], [/k/, 'c'],
   [/y/, 'i'],
+  // Infinitif "-er" / participe-adjectif "-é" : même son [e], confusion
+  // classique CE1-CM2 ("manger"/"mangé").
+  [/er$/, 'é'], [/é$/, 'er'],
   [/[td]$/, ''],
   [/s$/, ''],
 ]

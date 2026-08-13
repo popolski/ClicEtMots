@@ -42,6 +42,21 @@ const args = Object.fromEntries(
   }),
 )
 
+// Certains mots empruntés à l'anglais se prononcent différemment de ce que
+// leur orthographe suggère en français, et le moteur TTS choisit alors la
+// lecture "à la française" par défaut - ambiguïté qu'il ne peut pas lever
+// tout seul. Ex. "jean" (le pantalon, /dʒin/) lu comme le prénom "Jean"
+// (/ʒɑ̃/). Corrigé en donnant au moteur un texte respectant la prononciation
+// voulue plutôt que l'orthographe réelle (jamais affiché, uniquement envoyé
+// à l'API de synthèse) - découvert au cas par cas à l'usage.
+const TEXTE_PRONONCIATION = {
+  'nom:jean': 'djinne',
+}
+
+function texteAPrononcer(entry) {
+  return TEXTE_PRONONCIATION[entry.lemmaId] ?? entry.word
+}
+
 function audioFileName(entry) {
   const lemme = entry.lemmaId.split(':')[1] ?? entry.lemmaId
   return `${entry.word}_${entry.category}_${lemme}.mp3`
@@ -77,7 +92,7 @@ async function synthesize(client, entry, attempt = 1) {
   const fileName = audioFileName(entry)
   try {
     const [response] = await client.synthesizeSpeech({
-      input: { text: entry.word },
+      input: { text: texteAPrononcer(entry) },
       voice: { languageCode: 'fr-FR', name: 'fr-FR-Neural2-A' },
       audioConfig: { audioEncoding: 'MP3' },
     })

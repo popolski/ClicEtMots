@@ -33,6 +33,12 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
 
 const NB_MOTS_SESSION = 10
 
+const MODE_LABEL: Record<ModeQuiz, string> = {
+  qcm: 'Choix multiple',
+  reconstitution: 'Recomposer le mot',
+  grammaire: 'Catégorie grammaticale',
+}
+
 // Rôle "de base" par catégorie (même logique que ROLE_DE_BASE dans
 // wordIndex.ts) : pour piocher dans les mots les plus fréquents du lexique,
 // on ne veut que la forme de base de chaque mot (pas "chevaux" séparément de
@@ -151,6 +157,75 @@ function QuestionQCM({
               className={`rounded-lg border-2 px-4 py-3 text-xl font-medium ${style}`}
             >
               {option}
+            </button>
+          )
+        })}
+      </div>
+    </>
+  )
+}
+
+// Les 5 catégories sont toujours proposées comme réponses possibles, même si
+// motsFrequentsPourQuiz ne pioche que des noms/verbes/adjectifs (voir plus
+// haut - les adverbes/invariables les plus fréquents sont presque tous des
+// mots-outils) : adverbe et invariable ne seront donc jamais la bonne
+// réponse pour l'instant, mais restent visibles comme vrais choix parmi les
+// "5 personnages".
+const CATEGORIES: WordCategory[] = ['nom', 'adjectif', 'verbe', 'adverbe', 'invariable']
+
+// Contrairement à QuestionCarte, n'affiche NI la mascotte/l'étiquette de
+// catégorie NI le picto du mot : c'est justement la catégorie qu'on demande
+// de deviner ici, la révéler à l'avance viderait l'exercice de son sens.
+function QuestionGrammaire({
+  question,
+  onReponse,
+}: {
+  question: Question
+  onReponse: (correct: boolean) => void
+}) {
+  const [choisi, setChoisi] = useState<WordCategory | null>(null)
+
+  useEffect(() => setChoisi(null), [question])
+
+  return (
+    <>
+      <div className="mb-6 flex flex-col items-center gap-3">
+        <p className="text-3xl font-semibold text-gray-900">{question.entree.word}</p>
+        {speechSupported() && (
+          <button
+            type="button"
+            onClick={() => speak(question.entree.word, { category: question.entree.category, lemmaId: question.entree.lemmaId })}
+            className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2 text-white shadow-sm hover:bg-brand-700 active:scale-95"
+          >
+            🔊 Écouter le mot
+          </button>
+        )}
+      </div>
+      <p className="mb-3 text-center text-gray-500">Quelle est sa catégorie grammaticale ?</p>
+      <div className="mx-auto grid max-w-md grid-cols-5 gap-2">
+        {CATEGORIES.map((categorie) => {
+          const estCorrect = categorie === question.entree.category
+          const style =
+            choisi === null
+              ? 'border-gray-200 hover:bg-gray-50'
+              : estCorrect
+                ? 'border-green-400 bg-green-50'
+                : choisi === categorie
+                  ? 'border-red-400 bg-red-50'
+                  : 'border-gray-200 opacity-60'
+          return (
+            <button
+              key={categorie}
+              type="button"
+              disabled={choisi !== null}
+              onClick={() => {
+                setChoisi(categorie)
+                onReponse(estCorrect)
+              }}
+              className={`flex flex-col items-center gap-1 rounded-lg border-2 p-2 ${style}`}
+            >
+              <img src={assetUrl(CATEGORY_MASCOT[categorie])} alt="" className="h-14 w-14 object-contain" />
+              <span className="text-xs font-medium text-gray-600">{CATEGORY_LABEL[categorie]}</span>
             </button>
           )
         })}
@@ -281,20 +356,16 @@ export function QuizTool() {
       <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
         <p className="mb-4 text-center text-gray-500">Choisis comment tu veux jouer :</p>
         <div className="mx-auto flex max-w-sm flex-col gap-3">
-          <button
-            type="button"
-            onClick={() => setMode('qcm')}
-            className="rounded-lg border-2 border-gray-200 px-4 py-3 text-lg font-medium hover:bg-gray-50"
-          >
-            Choix multiple
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode('reconstitution')}
-            className="rounded-lg border-2 border-gray-200 px-4 py-3 text-lg font-medium hover:bg-gray-50"
-          >
-            Recomposer le mot
-          </button>
+          {(Object.keys(MODE_LABEL) as ModeQuiz[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className="rounded-lg border-2 border-gray-200 px-4 py-3 text-lg font-medium hover:bg-gray-50"
+            >
+              {MODE_LABEL[m]}
+            </button>
+          ))}
         </div>
       </ToolLayout>
     )
@@ -336,8 +407,7 @@ export function QuizTool() {
               {resultats.slice(1).map((r) => (
                 <li key={r.termineLe} className="flex items-center justify-between px-4 py-2 text-sm">
                   <span className="text-gray-500">
-                    {new Date(r.termineLe).toLocaleDateString('fr-FR')} ·{' '}
-                    {r.mode === 'qcm' ? 'Choix multiple' : 'Recomposer le mot'}
+                    {new Date(r.termineLe).toLocaleDateString('fr-FR')} · {MODE_LABEL[r.mode]}
                   </span>
                   <span className="font-medium text-gray-800">
                     {r.score} / {r.total}
@@ -362,8 +432,10 @@ export function QuizTool() {
 
       {mode === 'qcm' ? (
         <QuestionQCM key={index} question={question} onReponse={handleReponse} />
-      ) : (
+      ) : mode === 'reconstitution' ? (
         <QuestionReconstitution key={index} question={question} entreeCible={entreeCible} onReponse={handleReponse} />
+      ) : (
+        <QuestionGrammaire key={index} question={question} onReponse={handleReponse} />
       )}
 
       {aRepondu && (

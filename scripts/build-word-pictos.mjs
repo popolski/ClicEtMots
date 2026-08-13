@@ -85,6 +85,10 @@ const HOMOGRAPHES_FANTOMES = new Set([
   // déduire une règle générale "prénom = à exclure" : "pascal" est un vrai
   // adjectif ("l'agneau pascal", relatif à Pâques), gardé volontairement.
   'walter', 'julien',
+  // "jean" (le pantalon) : ARASAAC renvoie le picto de la Saint-Jean (feu de
+  // joie, saint auréolé) au lieu du vêtement - sens religieux/culturel très
+  // dominant sur ARASAAC, sans lien avec le mot recherché par un enfant.
+  'jean',
 ])
 
 // Une catégorie = une forme "de base" ciblée (celle affichée sur la fiche

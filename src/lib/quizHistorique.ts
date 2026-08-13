@@ -2,7 +2,7 @@
 // (localStorage) - même principe que l'historique des mots consultés (voir
 // historique.ts) : rien envoyé au serveur, cohérent avec le choix RGPD de
 // server/schema.sql ("pas de suivi d'activité").
-export type ModeQuiz = 'qcm' | 'reconstitution'
+export type ModeQuiz = 'qcm' | 'reconstitution' | 'grammaire'
 
 export interface ResultatQuiz {
   mode: ModeQuiz
