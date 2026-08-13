@@ -332,11 +332,12 @@ export function QuizTool() {
         choisis.push({ entree })
         continue
       }
-      // Un mot sans aucune confusion de son plausible donnerait un QCM à une
-      // seule option (donc pas un vrai choix) - on pioche un autre mot du
-      // vivier plutôt que d'inventer une fausse orthographe.
+      // Toujours 3 options (le mot + 2 vraies confusions), jamais moins et
+      // jamais une orthographe inventée pour compléter - un mot qui n'a pas
+      // 2 confusions de son plausibles est simplement écarté du tirage, on
+      // en pioche un autre dans le vivier.
       const distracteurs = genererDistracteurs(entree.word, 2)
-      if (distracteurs.length === 0) continue
+      if (distracteurs.length < 2) continue
       choisis.push({ entree, options: melanger([entree.word, ...distracteurs]) })
     }
     setQuestions(choisis)
