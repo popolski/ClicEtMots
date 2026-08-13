@@ -33,3 +33,11 @@ export function ajouterResultatQuiz(resultat: Omit<ResultatQuiz, 'termineLe'>): 
     // localStorage indisponible : l'historique de scores est un confort, pas une nécessité.
   }
 }
+
+export function viderResultatsQuiz(): void {
+  try {
+    localStorage.removeItem(CLE)
+  } catch {
+    // idem
+  }
+}

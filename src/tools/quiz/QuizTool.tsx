@@ -7,7 +7,13 @@ import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
 import type { EntreeHistorique } from '../../lib/historique'
 import { genererDistracteurs } from '../../lib/quizErreurs'
-import { ajouterResultatQuiz, lireResultatsQuiz, type ModeQuiz } from '../../lib/quizHistorique'
+import {
+  ajouterResultatQuiz,
+  lireResultatsQuiz,
+  viderResultatsQuiz,
+  type ModeQuiz,
+  type ResultatQuiz,
+} from '../../lib/quizHistorique'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { LEMMA_IDS_DETERMINANTS, LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
 import { phonemes } from '../../lib/phonemes'
@@ -76,6 +82,31 @@ function motsFrequentsPourQuiz(wordIndex: WordEntry[]): EntreeHistorique[] {
     .sort((a, b) => b.frequency - a.frequency)
     .slice(0, TAILLE_VIVIER)
     .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
+}
+
+// Pour le quiz "catégorie grammaticale" uniquement : un mot qui existe
+// réellement dans plusieurs catégories ("grand" nom ET adjectif, "pouvoir"
+// verbe ET nom...) n'a pas de bonne réponse unique tant qu'il est montré
+// seul, sans phrase - contrairement aux erreurs de corpus déjà nettoyées
+// (LEMMA_IDS_HOMOGRAPHES_FANTOMES), ici les deux catégories sont vraies. On
+// écarte ces mots plutôt que de pénaliser un élève qui répond juste mais
+// "pas la bonne case attendue". Vérifié sur le lexique complet (pas
+// seulement le vivier de 1000), une même orthographe pouvant partager sa
+// fréquence avec une catégorie hors du top 1000.
+function motsAmbigusPourGrammaire(wordIndex: WordEntry[]): Set<string> {
+  const categoriesParMot = new Map<string, Set<WordCategory>>()
+  for (const e of wordIndex) {
+    if (e.formRole !== ROLE_DE_BASE[e.category]) continue
+    const cle = e.word.toLowerCase()
+    const categories = categoriesParMot.get(cle) ?? new Set()
+    categories.add(e.category)
+    categoriesParMot.set(cle, categories)
+  }
+  const ambigus = new Set<string>()
+  for (const [mot, categories] of categoriesParMot) {
+    if (categories.size > 1) ambigus.add(mot)
+  }
+  return ambigus
 }
 
 function melanger<T>(items: T[]): T[] {
@@ -318,6 +349,7 @@ export function QuizTool() {
   const [score, setScore] = useState(0)
   const [aRepondu, setARepondu] = useState(false)
   const [termine, setTermine] = useState(false)
+  const [resultats, setResultats] = useState<ResultatQuiz[]>([])
 
   useEffect(() => {
     loadWordIndex().then(setWordIndex)
@@ -325,9 +357,11 @@ export function QuizTool() {
 
   useEffect(() => {
     if (questions || !wordIndex || !mode) return
+    const ambigus = mode === 'grammaire' ? motsAmbigusPourGrammaire(wordIndex) : null
     const choisis: Question[] = []
     for (const entree of melanger(motsFrequentsPourQuiz(wordIndex))) {
       if (choisis.length >= NB_MOTS_SESSION) break
+      if (ambigus?.has(entree.word.toLowerCase())) continue
       if (mode !== 'qcm') {
         choisis.push({ entree })
         continue
@@ -353,6 +387,7 @@ export function QuizTool() {
     if (!questions || !mode) return
     if (index + 1 >= questions.length) {
       ajouterResultatQuiz({ mode, score, total: questions.length })
+      setResultats(lireResultatsQuiz())
       setTermine(true)
       return
     }
@@ -394,7 +429,6 @@ export function QuizTool() {
   )
 
   if (termine) {
-    const resultats = lireResultatsQuiz()
     return (
       <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
         <div className="py-6 text-center">
@@ -424,6 +458,16 @@ export function QuizTool() {
                 </li>
               ))}
             </ul>
+            <button
+              type="button"
+              onClick={() => {
+                viderResultatsQuiz()
+                setResultats([])
+              }}
+              className="mt-3 text-sm text-gray-500 hover:text-brand-600"
+            >
+              Effacer l'historique des scores
+            </button>
           </div>
         )}
       </ToolLayout>

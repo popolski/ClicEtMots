@@ -89,6 +89,10 @@ const HOMOGRAPHES_FANTOMES = new Set([
   // joie, saint auréolé) au lieu du vêtement - sens religieux/culturel très
   // dominant sur ARASAAC, sans lien avec le mot recherché par un enfant.
   'jean',
+  // "tas" (le tas de sable, etc.) : ARASAAC renvoie une tasse à boire -
+  // confusion avec "tasse" côté recherche ARASAAC elle-même, pas un problème
+  // d'étiquette Lexique383 cette fois, mais même symptôme (image trompeuse).
+  'tas',
 ])
 
 // Une catégorie = une forme "de base" ciblée (celle affichée sur la fiche
