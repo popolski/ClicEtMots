@@ -86,7 +86,10 @@ export function ClavierTool() {
         <p className="py-10 text-center text-gray-400">Chargement du lexique…</p>
       ) : (
         <>
-          <div className="mb-4 text-right">
+          <div className="mb-4 flex justify-end gap-4">
+            <Link to="/quiz" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
+              🎯 Petit quiz
+            </Link>
             <Link to="/historique" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
               🕓 Mots récents
             </Link>

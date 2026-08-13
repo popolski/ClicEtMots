@@ -109,7 +109,7 @@ const CATEGORY_ORDER: WordCategory[] = ['nom', 'adjectif', 'verbe', 'adverbe', '
 // bien réels à garder ("son" = le bruit, "la" = la note de musique, "une" =
 // la une d'un journal), catégorisés séparément dans le lexique et donc non
 // affectés par ce filtre.
-const LEMMA_IDS_DETERMINANTS = new Set([
+export const LEMMA_IDS_DETERMINANTS = new Set([
   'invariable:le', 'invariable:la', 'invariable:les',
   'invariable:un', 'invariable:une', 'invariable:des',
   'invariable:du', 'invariable:au', 'invariable:aux',
@@ -128,7 +128,7 @@ const LEMMA_IDS_DETERMINANTS = new Set([
 // "il", "quoi" ou "ici" affiche une tuile étiquetée ADJECTIF pour un mot qui
 // n'en est manifestement pas un - trompeur pour un enfant qui apprend les
 // catégories grammaticales.
-const LEMMA_IDS_HOMOGRAPHES_FANTOMES = new Set([
+export const LEMMA_IDS_HOMOGRAPHES_FANTOMES = new Set([
   'adjectif:il', 'adjectif:tu', 'adjectif:quel', 'adjectif:non', 'adjectif:quoi',
   'adjectif:pendant', 'adjectif:avant', 'adjectif:vite', 'adjectif:ici',
   'adjectif:vu', 'adjectif:feu', 'adjectif:animaux', 'adjectif:un', 'adjectif:fin',
