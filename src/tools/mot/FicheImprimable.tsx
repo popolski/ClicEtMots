@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { loadWordIndex } from '../../lib/wordIndex'
+import { loadWordSynonyms, loadWordAntonyms } from '../../lib/wordSynonyms'
 import { pickPrimaryForm } from '../clavier/clavierLogic'
 import { verbGroup } from '../conjugueur/conjugueurLogic'
 import { loadConjugations } from '../../lib/conjugations'
@@ -27,11 +28,12 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
 }
 
 /**
- * Fiche compacte pensée pour être découpée et collée dans le cahier d'un
- * élève (pas une page A4 pleine) : mot, catégorie, groupe/genre, pictos et
- * définition - l'essentiel d'une fiche mot, en un format papier réduit.
- * Route séparée de MotTool (pas de ToolLayout : le bandeau du site n'a pas
- * sa place sur une fiche destinée à être imprimée puis découpée).
+ * Fiche compacte en forme de bandeau, pensée pour être découpée et collée
+ * dans le cahier d'un élève (pas une page A4 pleine) : mot, catégorie,
+ * groupe/genre, pictos, définition et un synonyme/contraire - l'essentiel
+ * d'une fiche mot, en un format papier réduit. Route séparée de MotTool (pas
+ * de ToolLayout : le bandeau du site n'a pas sa place sur une fiche destinée
+ * à être imprimée puis découpée).
  */
 export function FicheImprimable() {
   const { lemmaId } = useParams<{ lemmaId: string }>()
@@ -39,6 +41,8 @@ export function FicheImprimable() {
   const [groupe, setGroupe] = useState<string | null>(null)
   // undefined = recherche en cours, null = aucune définition trouvée.
   const [definition, setDefinition] = useState<Definition | null | undefined>(undefined)
+  const [synonyme, setSynonyme] = useState<string | null>(null)
+  const [contraire, setContraire] = useState<string | null>(null)
 
   useEffect(() => {
     let annule = false
@@ -81,6 +85,19 @@ export function FicheImprimable() {
     }
   }, [primary])
 
+  useEffect(() => {
+    if (!lemmaId) return
+    let annule = false
+    Promise.all([loadWordSynonyms(), loadWordAntonyms()]).then(([syn, anto]) => {
+      if (annule) return
+      setSynonyme(syn[lemmaId]?.[0]?.word ?? null)
+      setContraire(anto[lemmaId]?.[0]?.word ?? null)
+    })
+    return () => {
+      annule = true
+    }
+  }, [lemmaId])
+
   if (!forms || !primary) {
     return (
       <div className="mx-auto max-w-md px-4 py-8">
@@ -90,13 +107,20 @@ export function FicheImprimable() {
   }
 
   const picto = (wordPictos as Record<string, string>)[primary.word]
+  const sousLigne = [
+    CATEGORY_LABEL[primary.category],
+    groupe,
+    primary.category === 'nom' && primary.genre ? (primary.genre === 'm' ? 'masculin' : 'féminin') : null,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-4 py-8">
       {/* @media print masque tout ce qui n'a pas la classe no-print, et
-          détache la fiche de la mise en page écran (centrée, bordure nette)
-          pour qu'elle imprime comme un petit rectangle à découper, pas comme
-          une page A4 pleine. */}
+          détache la fiche de la mise en page écran (bordure nette, pas
+          d'ombre) pour qu'elle imprime comme un bandeau à découper, pas
+          comme une page A4 pleine. */}
       <style>{`
         @media print {
           .no-print { display: none !important; }
@@ -118,24 +142,39 @@ export function FicheImprimable() {
         </button>
       </div>
 
-      <div className="fiche-carte mx-auto w-[9cm] rounded-xl border-2 border-gray-800 p-4 text-center">
-        <div className="mb-2 flex items-center justify-center gap-2">
-          <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-14 w-14 object-contain" />
-          {picto && <img src={assetUrl(picto)} alt="" className="h-14 w-14 object-contain" />}
+      <div className="fiche-carte mx-auto flex w-full max-w-[18cm] items-center gap-4 rounded-xl border-2 border-gray-800 p-4">
+        <div className="flex shrink-0 items-center gap-1">
+          <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-16 w-16 object-contain" />
+          {picto && <img src={assetUrl(picto)} alt="" className="h-16 w-16 object-contain" />}
         </div>
-        <p className="mb-1 text-xs font-semibold tracking-wide text-gray-600 uppercase">
-          {CATEGORY_LABEL[primary.category]}
-          {groupe && ` · ${groupe}`}
-          {primary.category === 'nom' && primary.genre && ` · ${primary.genre === 'm' ? 'masculin' : 'féminin'}`}
-        </p>
-        <p className="mb-3 text-3xl font-bold text-gray-900">{primary.word}</p>
-        <div className="border-t border-gray-300 pt-3">
+
+        <div className="shrink-0 border-r border-gray-300 pr-4">
+          <p className="text-xs font-semibold tracking-wide text-gray-600 uppercase">{sousLigne}</p>
+          <p className="text-3xl font-bold whitespace-nowrap text-gray-900">{primary.word}</p>
+        </div>
+
+        <div className="min-w-0 flex-1">
           {definition === undefined ? (
             <p className="text-xs text-gray-400">Recherche de la définition…</p>
           ) : definition ? (
             <p className="text-sm text-gray-800">{definition.texte}</p>
           ) : (
             <p className="text-xs text-gray-400">Pas de définition disponible pour ce mot.</p>
+          )}
+          {(synonyme || contraire) && (
+            <p className="mt-1 text-xs text-gray-500">
+              {synonyme && (
+                <>
+                  Synonyme : <span className="font-medium text-gray-700">{synonyme}</span>
+                </>
+              )}
+              {synonyme && contraire && '  ·  '}
+              {contraire && (
+                <>
+                  Contraire : <span className="font-medium text-gray-700">{contraire}</span>
+                </>
+              )}
+            </p>
           )}
         </div>
       </div>
