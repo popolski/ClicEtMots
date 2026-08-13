@@ -12,6 +12,9 @@ const MotTool = lazy(() => import('./tools/mot/MotTool').then((m) => ({ default:
 const FicheImprimable = lazy(() =>
   import('./tools/mot/FicheImprimable').then((m) => ({ default: m.FicheImprimable })),
 )
+const FichesMultiples = lazy(() =>
+  import('./tools/mot/FichesMultiples').then((m) => ({ default: m.FichesMultiples })),
+)
 const DefinitionTool = lazy(() =>
   import('./tools/definition/DefinitionTool').then((m) => ({ default: m.DefinitionTool })),
 )
@@ -56,6 +59,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <FicheImprimable />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/fiches-imprimables"
+                element={
+                  <RequireAuth>
+                    <FichesMultiples />
                   </RequireAuth>
                 }
               />
