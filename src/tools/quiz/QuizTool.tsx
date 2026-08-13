@@ -7,6 +7,7 @@ import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
 import { lireHistorique, type EntreeHistorique } from '../../lib/historique'
 import { genererDistracteurs } from '../../lib/quizErreurs'
+import { ajouterResultatQuiz, lireResultatsQuiz, type ModeQuiz } from '../../lib/quizHistorique'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { LEMMA_IDS_DETERMINANTS, LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
 import { phonemes } from '../../lib/phonemes'
@@ -30,7 +31,7 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
   adverbe: '/mascottes/adverbe.png',
 }
 
-const NB_MOTS_SESSION = 8
+const NB_MOTS_SESSION = 10
 const NB_MOTS_MIN = 3
 
 // Rôle "de base" par catégorie (même logique que ROLE_DE_BASE dans
@@ -76,8 +77,6 @@ function melanger<T>(items: T[]): T[] {
   }
   return copie
 }
-
-type Mode = 'qcm' | 'reconstitution'
 
 interface Question {
   entree: EntreeHistorique
@@ -233,7 +232,10 @@ function QuestionReconstitution({
 export function QuizTool() {
   const [historique] = useState(() => lireHistorique())
   const [wordIndex, setWordIndex] = useState<WordEntry[] | null>(null)
-  const [mode, setMode] = useState<Mode>('qcm')
+  // null = pas encore choisi, écran de départ. Fixé pour toute la partie -
+  // changer de mode en cours de route mélangerait une question déjà
+  // comptabilisée avec une nouvelle tentative dans l'autre mode.
+  const [mode, setMode] = useState<ModeQuiz | null>(null)
   const [questions, setQuestions] = useState<Question[] | null>(null)
   const [index, setIndex] = useState(0)
   const [score, setScore] = useState(0)
@@ -266,13 +268,38 @@ export function QuizTool() {
   }
 
   function motSuivant() {
-    if (!questions) return
+    if (!questions || !mode) return
     if (index + 1 >= questions.length) {
+      ajouterResultatQuiz({ mode, score, total: questions.length })
       setTermine(true)
       return
     }
     setIndex((i) => i + 1)
     setARepondu(false)
+  }
+
+  if (!mode) {
+    return (
+      <ToolLayout title="Petit quiz" description="Révise les mots que tu as déjà consultés." showBackToKeyboard>
+        <p className="mb-4 text-center text-gray-500">Choisis comment tu veux jouer :</p>
+        <div className="mx-auto flex max-w-sm flex-col gap-3">
+          <button
+            type="button"
+            onClick={() => setMode('qcm')}
+            className="rounded-lg border-2 border-gray-200 px-4 py-3 text-lg font-medium hover:bg-gray-50"
+          >
+            Choix multiple
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('reconstitution')}
+            className="rounded-lg border-2 border-gray-200 px-4 py-3 text-lg font-medium hover:bg-gray-50"
+          >
+            Recomposer le mot
+          </button>
+        </div>
+      </ToolLayout>
+    )
   }
 
   if (!questions) {
@@ -289,9 +316,10 @@ export function QuizTool() {
   )
 
   if (termine) {
+    const resultats = lireResultatsQuiz()
     return (
       <ToolLayout title="Petit quiz" description="Révise les mots que tu as déjà consultés." showBackToKeyboard>
-        <div className="py-10 text-center">
+        <div className="py-6 text-center">
           <p className="mb-4 text-2xl font-semibold text-gray-800">
             Score : {score} / {questions.length}
           </p>
@@ -303,6 +331,24 @@ export function QuizTool() {
             Recommencer
           </button>
         </div>
+        {resultats.length > 1 && (
+          <div className="mx-auto max-w-sm">
+            <h2 className="mb-2 text-sm font-semibold tracking-wide text-gray-500 uppercase">Parties précédentes</h2>
+            <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200">
+              {resultats.slice(1).map((r) => (
+                <li key={r.termineLe} className="flex items-center justify-between px-4 py-2 text-sm">
+                  <span className="text-gray-500">
+                    {new Date(r.termineLe).toLocaleDateString('fr-FR')} ·{' '}
+                    {r.mode === 'qcm' ? 'Choix multiple' : 'Recomposer le mot'}
+                  </span>
+                  <span className="font-medium text-gray-800">
+                    {r.score} / {r.total}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </ToolLayout>
     )
   }
@@ -314,21 +360,6 @@ export function QuizTool() {
           Mot {index + 1} sur {questions.length}
         </span>
         <span className="text-sm font-medium text-brand-600">Score : {score}</span>
-      </div>
-
-      <div className="mb-6 flex justify-center gap-2">
-        {(['qcm', 'reconstitution'] as Mode[]).map((m) => (
-          <button
-            key={m}
-            type="button"
-            onClick={() => setMode(m)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium ${
-              mode === m ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            {m === 'qcm' ? 'Choix multiple' : 'Recomposer le mot'}
-          </button>
-        ))}
       </div>
 
       {mode === 'qcm' ? (
