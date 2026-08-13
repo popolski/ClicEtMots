@@ -5,7 +5,7 @@ import { SequenceBar } from '../../components/SequenceBar'
 import { PhonemeInfoModal } from '../../components/PhonemeInfoModal'
 import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
-import { lireHistorique, type EntreeHistorique } from '../../lib/historique'
+import type { EntreeHistorique } from '../../lib/historique'
 import { genererDistracteurs } from '../../lib/quizErreurs'
 import { ajouterResultatQuiz, lireResultatsQuiz, type ModeQuiz } from '../../lib/quizHistorique'
 import { loadWordIndex } from '../../lib/wordIndex'
@@ -32,12 +32,11 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
 }
 
 const NB_MOTS_SESSION = 10
-const NB_MOTS_MIN = 3
 
 // Rôle "de base" par catégorie (même logique que ROLE_DE_BASE dans
-// wordIndex.ts) : pour piocher dans les mots les plus fréquents du lexique
-// quand l'historique est trop court, on ne veut que la forme de base de
-// chaque mot (pas "chevaux" séparément de "cheval").
+// wordIndex.ts) : pour piocher dans les mots les plus fréquents du lexique,
+// on ne veut que la forme de base de chaque mot (pas "chevaux" séparément de
+// "cheval").
 const ROLE_DE_BASE: Record<WordCategory, WordEntry['formRole']> = {
   nom: 'singulier',
   adjectif: 'masculin',
@@ -46,14 +45,18 @@ const ROLE_DE_BASE: Record<WordCategory, WordEntry['formRole']> = {
   invariable: 'simple',
 }
 
-// Piochés dans les mots les plus fréquents du lexique (pas l'historique
-// automatique) : utile pour tester le quiz sans avoir déjà consulté des
-// fiches mots. Les mots les plus fréquents "bruts" sont presque tous des
-// mots-outils (le, de, un, il, pas...) plutôt que du vocabulaire à réviser -
-// on se limite aux noms/verbes/adjectifs (les adverbes/invariables les plus
-// fréquents sont quasi exclusivement des mots-outils), aux mots d'au moins 3
-// lettres, et on retire les mêmes listes noires que le clavier (déterminants,
-// homographes mal étiquetés par le corpus).
+// Piochés parmi les mots les plus fréquents du lexique - pas l'historique de
+// consultation de l'élève (trop court/répétitif pour donner une vraie
+// variété d'une partie à l'autre). Les mots les plus fréquents "bruts" sont
+// presque tous des mots-outils (le, de, un, il, pas...) plutôt que du
+// vocabulaire à réviser - on se limite aux noms/verbes/adjectifs (les
+// adverbes/invariables les plus fréquents sont quasi exclusivement des
+// mots-outils), aux mots d'au moins 3 lettres, et on retire les mêmes listes
+// noires que le clavier (déterminants, homographes mal étiquetés par le
+// corpus). Vivier large (1000 mots) pour qu'un tirage aléatoire donne une
+// vraie variété d'une partie à l'autre.
+const TAILLE_VIVIER = 1000
+
 function motsFrequentsPourQuiz(wordIndex: WordEntry[]): EntreeHistorique[] {
   return wordIndex
     .filter(
@@ -65,7 +68,7 @@ function motsFrequentsPourQuiz(wordIndex: WordEntry[]): EntreeHistorique[] {
         !LEMMA_IDS_HOMOGRAPHES_FANTOMES.has(e.lemmaId),
     )
     .sort((a, b) => b.frequency - a.frequency)
-    .slice(0, 200)
+    .slice(0, TAILLE_VIVIER)
     .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
 }
 
@@ -230,7 +233,6 @@ function QuestionReconstitution({
 }
 
 export function QuizTool() {
-  const [historique] = useState(() => lireHistorique())
   const [wordIndex, setWordIndex] = useState<WordEntry[] | null>(null)
   // null = pas encore choisi, écran de départ. Fixé pour toute la partie -
   // changer de mode en cours de route mélangerait une question déjà
@@ -247,19 +249,15 @@ export function QuizTool() {
   }, [])
 
   useEffect(() => {
-    if (questions) return
-    // L'historique suffit tel quel ; sinon on attend le lexique complet pour
-    // piocher parmi les mots fréquents (rien à faire tant qu'il n'est pas chargé).
-    const source = historique.length >= NB_MOTS_MIN ? historique : wordIndex ? motsFrequentsPourQuiz(wordIndex) : null
-    if (!source) return
-    const choisis = melanger(source).slice(0, NB_MOTS_SESSION)
+    if (questions || !wordIndex) return
+    const choisis = melanger(motsFrequentsPourQuiz(wordIndex)).slice(0, NB_MOTS_SESSION)
     setQuestions(
       choisis.map((entree) => ({
         entree,
         options: melanger([entree.word, ...genererDistracteurs(entree.word, 2)]),
       })),
     )
-  }, [historique, wordIndex, questions])
+  }, [wordIndex, questions])
 
   function handleReponse(correct: boolean) {
     if (aRepondu) return
@@ -280,7 +278,7 @@ export function QuizTool() {
 
   if (!mode) {
     return (
-      <ToolLayout title="Petit quiz" description="Révise les mots que tu as déjà consultés." showBackToKeyboard>
+      <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
         <p className="mb-4 text-center text-gray-500">Choisis comment tu veux jouer :</p>
         <div className="mx-auto flex max-w-sm flex-col gap-3">
           <button
@@ -304,7 +302,7 @@ export function QuizTool() {
 
   if (!questions) {
     return (
-      <ToolLayout title="Petit quiz" description="Révise les mots que tu as déjà consultés." showBackToKeyboard>
+      <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
         <p className="py-10 text-center text-gray-400">Préparation du quiz…</p>
       </ToolLayout>
     )
@@ -318,7 +316,7 @@ export function QuizTool() {
   if (termine) {
     const resultats = lireResultatsQuiz()
     return (
-      <ToolLayout title="Petit quiz" description="Révise les mots que tu as déjà consultés." showBackToKeyboard>
+      <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
         <div className="py-6 text-center">
           <p className="mb-4 text-2xl font-semibold text-gray-800">
             Score : {score} / {questions.length}
@@ -354,7 +352,7 @@ export function QuizTool() {
   }
 
   return (
-    <ToolLayout title="Petit quiz" description="Révise les mots que tu as déjà consultés." showBackToKeyboard>
+    <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
       <div className="mb-6 flex items-center justify-between">
         <span className="text-sm text-gray-500">
           Mot {index + 1} sur {questions.length}
