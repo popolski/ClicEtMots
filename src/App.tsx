@@ -9,6 +9,9 @@ const ConjugueurTool = lazy(() =>
   import('./tools/conjugueur/ConjugueurTool').then((m) => ({ default: m.ConjugueurTool })),
 )
 const MotTool = lazy(() => import('./tools/mot/MotTool').then((m) => ({ default: m.MotTool })))
+const FicheImprimable = lazy(() =>
+  import('./tools/mot/FicheImprimable').then((m) => ({ default: m.FicheImprimable })),
+)
 const DefinitionTool = lazy(() =>
   import('./tools/definition/DefinitionTool').then((m) => ({ default: m.DefinitionTool })),
 )
@@ -45,6 +48,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <MotTool />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/mot/:lemmaId/imprimer"
+                element={
+                  <RequireAuth>
+                    <FicheImprimable />
                   </RequireAuth>
                 }
               />

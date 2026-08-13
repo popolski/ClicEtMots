@@ -217,12 +217,18 @@ export function MotTool() {
         )
       }
     >
-      <div className="mb-8">
+      <div className="mb-8 flex flex-wrap gap-3">
         <Link
           to={`/definition/${primary.category}/${encodeURIComponent(primary.word)}`}
           className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           📖 Voir la définition
+        </Link>
+        <Link
+          to={`/mot/${encodeURIComponent(primary.lemmaId)}/imprimer`}
+          className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          🖨️ Fiche à imprimer
         </Link>
       </div>
 
