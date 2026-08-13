@@ -324,15 +324,23 @@ export function QuizTool() {
   }, [])
 
   useEffect(() => {
-    if (questions || !wordIndex) return
-    const choisis = melanger(motsFrequentsPourQuiz(wordIndex)).slice(0, NB_MOTS_SESSION)
-    setQuestions(
-      choisis.map((entree) => ({
-        entree,
-        options: melanger([entree.word, ...genererDistracteurs(entree.word, 2)]),
-      })),
-    )
-  }, [wordIndex, questions])
+    if (questions || !wordIndex || !mode) return
+    const choisis: Question[] = []
+    for (const entree of melanger(motsFrequentsPourQuiz(wordIndex))) {
+      if (choisis.length >= NB_MOTS_SESSION) break
+      if (mode !== 'qcm') {
+        choisis.push({ entree })
+        continue
+      }
+      // Un mot sans aucune confusion de son plausible donnerait un QCM à une
+      // seule option (donc pas un vrai choix) - on pioche un autre mot du
+      // vivier plutôt que d'inventer une fausse orthographe.
+      const distracteurs = genererDistracteurs(entree.word, 2)
+      if (distracteurs.length === 0) continue
+      choisis.push({ entree, options: melanger([entree.word, ...distracteurs]) })
+    }
+    setQuestions(choisis)
+  }, [wordIndex, mode, questions])
 
   function handleReponse(correct: boolean) {
     if (aRepondu) return

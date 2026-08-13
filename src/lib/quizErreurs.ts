@@ -9,9 +9,20 @@
 // pictos ailleurs dans le projet.
 const REGLES: [RegExp, string][] = [
   [/an/, 'en'], [/en/, 'an'],
+  // am/em : seulement devant b/p, où an/en s'écrivent am/en (règle du
+  // "m devant b/p/m") - "champ"/"tomber", pas "chan"/"tonber".
+  [/an(?=[bpm])/, 'am'], [/am(?=[bpm])/, 'an'],
+  [/en(?=[bpm])/, 'em'], [/em(?=[bpm])/, 'en'],
   [/in/, 'ain'], [/ain/, 'in'],
+  [/in/, 'ein'], [/ein/, 'in'],
+  [/in/, 'un'], [/un/, 'in'],
+  [/in(?=[bpm])/, 'im'], [/im(?=[bpm])/, 'in'],
+  [/ain(?=[bpm])/, 'aim'], [/aim(?=[bpm])/, 'ain'],
   [/eau/, 'o'], [/au/, 'o'], [/o/, 'au'],
   [/ai/, 'è'], [/è/, 'ai'],
+  [/eu/, 'œu'], [/œu/, 'eu'],
+  [/on(?=[bpm])/, 'om'], [/om(?=[bpm])/, 'on'],
+  [/oi/, 'oy'], [/oy/, 'oi'],
   [/ch/, 'sh'], [/sh/, 'ch'],
   // g/j : seulement devant e/i/y, là où les deux graphies se prononcent
   // pareil ([ʒ]) - devant a/o/u, "g" se prononce [g] (dur), une confusion
@@ -30,18 +41,24 @@ const REGLES: [RegExp, string][] = [
   [/x/, 'ks'], [/ks/, 'x'],
   [/c(?=[^eiy]|$)/, 'k'], [/k/, 'c'],
   [/y/, 'i'],
-  // Infinitif "-er" / participe-adjectif "-é" : même son [e], confusion
-  // classique CE1-CM2 ("manger"/"mangé").
-  [/er$/, 'é'], [/é$/, 'er'],
   [/[td]$/, ''],
   [/s$/, ''],
 ]
 
-// Filet de secours seulement (lettre doublée/dédoublée) : un vrai changement
-// de son (ci-dessus) est toujours préféré quand il existe - une simple
-// lettre en plus/en moins n'apprend pas grand-chose ("boxeurr" plutôt que
-// "bokseur", signalé comme peu utile par l'enseignant).
-const CONSONNES_DOUBLABLES = ['l', 'm', 'n', 'p', 't', 'r']
+// Famille de finales homophones en [e] : infinitif ("manger"), participe/
+// adjectif ("mangé"), féminin d'un nom ("allée"), 2e personne du pluriel
+// ("mangez"), nom en "-et" ("jouet") - toutes se prononcent pareil,
+// confusion classique CE1-CM2. Génère des mots RÉELS (juste la mauvaise
+// terminaison), contrairement à un simple ajout de lettre ("allerr" n'existe
+// pas, "allée" si).
+const FINALES_E = ['er', 'ée', 'ez', 'é', 'et']
+
+function variantesFinaleE(mot: string): string[] {
+  const suffixe = FINALES_E.filter((s) => mot.endsWith(s)).sort((a, b) => b.length - a.length)[0]
+  if (!suffixe) return []
+  const racine = mot.slice(0, -suffixe.length)
+  return FINALES_E.filter((s) => s !== suffixe).map((s) => racine + s)
+}
 
 function variantesPhonetiques(mot: string): string[] {
   const resultats = new Set<string>()
@@ -51,22 +68,7 @@ function variantesPhonetiques(mot: string): string[] {
       if (variante && variante !== mot) resultats.add(variante)
     }
   }
-  resultats.delete(mot)
-  return [...resultats]
-}
-
-function variantesStructurelles(mot: string): string[] {
-  const resultats = new Set<string>()
-
-  const dedouble = mot.replace(/(.)\1/, '$1')
-  if (dedouble !== mot) resultats.add(dedouble)
-
-  for (const lettre of CONSONNES_DOUBLABLES) {
-    if (mot.includes(lettre) && !mot.includes(lettre + lettre)) {
-      resultats.add(mot.replace(lettre, lettre + lettre))
-    }
-  }
-
+  for (const variante of variantesFinaleE(mot)) resultats.add(variante)
   resultats.delete(mot)
   return [...resultats]
 }
@@ -82,15 +84,11 @@ function melanger<T>(items: T[]): T[] {
 
 /**
  * Jusqu'à `nombre` fausses orthographes plausibles, différentes du mot et
- * entre elles. Les confusions phonétiques (an/en, x/ks, c/k...) sont
- * toujours préférées ; les variantes "lettre doublée" ne comblent que ce
- * qu'il manque, quand un mot n'a pas assez de vraies confusions possibles.
+ * entre elles - toujours de vraies confusions de son (an/en, ch/sh, x/ks,
+ * finales en [e]...). Peut renvoyer moins que `nombre` si le mot n'a pas
+ * assez de confusions possibles : mieux vaut deux bonnes options qu'une
+ * troisième inventée (lettre doublée/ajoutée), signalé comme peu utile.
  */
 export function genererDistracteurs(mot: string, nombre: number): string[] {
-  const motMinuscule = mot.toLowerCase()
-  const phonetiques = melanger(variantesPhonetiques(motMinuscule))
-  if (phonetiques.length >= nombre) return phonetiques.slice(0, nombre)
-
-  const structurelles = melanger(variantesStructurelles(motMinuscule)).filter((v) => !phonetiques.includes(v))
-  return [...phonetiques, ...structurelles].slice(0, nombre)
+  return melanger(variantesPhonetiques(mot.toLowerCase())).slice(0, nombre)
 }
