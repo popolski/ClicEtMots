@@ -9,9 +9,11 @@ import { buildPhonemeTrie, getMatches, getViableNextPhonemes, groupIntoCards } f
 import type { PhonemeTrieNode } from './clavierLogic'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { phonemes } from '../../lib/phonemes'
+import { useAuth } from '../../lib/authContext'
 import type { PhonemeId, WordEntry } from '../../types/phonetics'
 
 export function ClavierTool() {
+  const { session } = useAuth()
   // La séquence vit dans l'URL (?seq=ch,ou,e,t), pas dans un simple useState :
   // en cliquant un résultat on quitte cette page (fiche mot), ce qui démonte
   // le composant. Sans ça, le bouton "Retour" (navigate(-1)) revenait sur un
@@ -86,23 +88,31 @@ export function ClavierTool() {
         <p className="py-10 text-center text-gray-400">Chargement du lexique…</p>
       ) : (
         <>
-          <div className="mb-4 flex justify-end gap-4">
-            <Link to="/quiz" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
-              🎯 Petit quiz
-            </Link>
-            <Link
-              to="/mots-semaine"
-              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
-            >
-              📋 Mots de la semaine
-            </Link>
-            <Link to="/favoris" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
-              ⭐ Mes favoris
-            </Link>
-            <Link to="/historique" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
-              🕓 Mots récents
-            </Link>
-          </div>
+          {session?.role !== 'teacher' && (
+            <div className="mb-4 flex justify-end gap-4">
+              <Link to="/quiz" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
+                🎯 Petit quiz
+              </Link>
+              <Link
+                to="/mots-semaine"
+                className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
+              >
+                📋 Mots de la semaine
+              </Link>
+              <Link
+                to="/favoris"
+                className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
+              >
+                ⭐ Mes favoris
+              </Link>
+              <Link
+                to="/historique"
+                className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
+              >
+                🕓 Mots récents
+              </Link>
+            </div>
+          )}
 
           <SequenceBar
             sequence={sequence}
