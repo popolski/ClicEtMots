@@ -10,6 +10,7 @@ import { loadConjugations } from '../../lib/conjugations'
 import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
 import { ajouterAuHistorique } from '../../lib/historique'
+import { ajouterFavori, estFavori, retirerFavori } from '../../lib/favoris'
 import wordPictos from '../../data/word-pictos.json'
 import type {
   WordCategory,
@@ -148,11 +149,23 @@ export function MotTool() {
     [forms],
   )
   const { groupe, peutConjuguer } = useInfosVerbe(primaryMemo?.word ?? '', primaryMemo?.category)
+  const [favori, setFavori] = useState(false)
 
   useEffect(() => {
     if (!primaryMemo) return
     ajouterAuHistorique({ lemmaId: primaryMemo.lemmaId, word: primaryMemo.word, category: primaryMemo.category })
+    setFavori(estFavori(primaryMemo.lemmaId))
   }, [primaryMemo])
+
+  function basculerFavori() {
+    if (!primaryMemo) return
+    if (favori) {
+      retirerFavori(primaryMemo.lemmaId)
+    } else {
+      ajouterFavori({ lemmaId: primaryMemo.lemmaId, word: primaryMemo.word, category: primaryMemo.category })
+    }
+    setFavori(!favori)
+  }
 
   if (!forms || !family || !synonyms || !antonyms) {
     return (
@@ -205,16 +218,26 @@ export function MotTool() {
         </div>
       }
       titleAfter={
-        speechSupported() && (
+        <div className="flex items-center">
+          {speechSupported() && (
+            <button
+              type="button"
+              onClick={() => speak(primary.word, { category: primary.category, lemmaId: primary.lemmaId })}
+              aria-label={`Écouter « ${primary.word} »`}
+              className="rounded-full p-2 text-2xl leading-none text-gray-500 hover:bg-black/10 active:scale-95"
+            >
+              🔊
+            </button>
+          )}
           <button
             type="button"
-            onClick={() => speak(primary.word, { category: primary.category, lemmaId: primary.lemmaId })}
-            aria-label={`Écouter « ${primary.word} »`}
+            onClick={basculerFavori}
+            aria-label={favori ? `Retirer « ${primary.word} » des favoris` : `Ajouter « ${primary.word} » aux favoris`}
             className="rounded-full p-2 text-2xl leading-none text-gray-500 hover:bg-black/10 active:scale-95"
           >
-            🔊
+            {favori ? '⭐' : '☆'}
           </button>
-        )
+        </div>
       }
     >
       <div className="mb-8 flex flex-wrap gap-3">

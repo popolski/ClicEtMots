@@ -20,6 +20,7 @@ const DefinitionTool = lazy(() =>
 )
 const Admin = lazy(() => import('./routes/Admin').then((m) => ({ default: m.Admin })))
 const Historique = lazy(() => import('./routes/Historique').then((m) => ({ default: m.Historique })))
+const Favoris = lazy(() => import('./routes/Favoris').then((m) => ({ default: m.Favoris })))
 const QuizTool = lazy(() => import('./tools/quiz/QuizTool').then((m) => ({ default: m.QuizTool })))
 
 function App() {
@@ -83,6 +84,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <Historique />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/favoris"
+                element={
+                  <RequireAuth>
+                    <Favoris />
                   </RequireAuth>
                 }
               />
