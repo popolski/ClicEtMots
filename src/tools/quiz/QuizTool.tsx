@@ -152,10 +152,16 @@ function equilibrerParCategorie(source: EntreeHistorique[], count: number): Entr
 // "pas la bonne case attendue". Vérifié sur le lexique complet (pas
 // seulement le vivier de 1000), une même orthographe pouvant partager sa
 // fréquence avec une catégorie hors du top 1000.
+//
+// Compare TOUTES les formes, pas seulement les formes de base : "bonne" est
+// la forme de base du nom ("une bonne" = domestique) mais la forme FÉMININE
+// (pas de base) de l'adjectif "bon" - en ne comparant que les formes de
+// base, cette collision passait inaperçue ("bonne" proposé comme nom, sans
+// jamais détecter qu'un enfant y verrait tout aussi légitimement un
+// adjectif). Signalé à l'usage.
 function motsAmbigusPourGrammaire(wordIndex: WordEntry[]): Set<string> {
   const categoriesParMot = new Map<string, Set<WordCategory>>()
   for (const e of wordIndex) {
-    if (e.formRole !== ROLE_DE_BASE[e.category]) continue
     const cle = e.word.toLowerCase()
     const categories = categoriesParMot.get(cle) ?? new Set()
     categories.add(e.category)
