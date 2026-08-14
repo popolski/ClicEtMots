@@ -42,11 +42,11 @@ export function ToolLayout({
   const { session, logout } = useAuth()
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-6 flex items-center justify-between gap-4 overflow-x-auto">
         <Link to="/clavier" className="shrink-0">
           <img src={assetUrl('/logo.png')} alt="Clic &amp; Mots" className="h-8 w-auto" />
         </Link>
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex shrink-0 items-center gap-4 whitespace-nowrap">
           {session?.role === 'teacher' && <RechercheMotEnseignante />}
           {!hideBackButton && (
             <button
