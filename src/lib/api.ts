@@ -69,9 +69,10 @@ export interface MotDeListe {
 }
 
 export interface ListeMotsSemaine {
-  nom: string | null
+  id: number
+  nom: string
   mots: MotDeListe[]
-  updatedAt: string | null
+  updatedAt: string
 }
 
 export const api = {
@@ -130,11 +131,13 @@ export const api = {
       { method: 'DELETE' },
     ),
 
-  getListeMotsSemaine: () => request<ListeMotsSemaine>('mots-semaine.php'),
+  listListesMotsSemaine: () => request<{ listes: ListeMotsSemaine[] }>('mots-semaine.php'),
 
-  saveListeMotsSemaine: (nom: string, mots: MotDeListe[]) =>
-    request<{ ok: true }>('mots-semaine.php', {
+  saveListeMotsSemaine: (nom: string, mots: MotDeListe[], id?: number) =>
+    request<{ ok: true; id: number }>('mots-semaine.php', {
       method: 'POST',
-      body: JSON.stringify({ nom, mots }),
+      body: JSON.stringify({ nom, mots, id }),
     }),
+
+  deleteListeMotsSemaine: (id: number) => request<{ ok: true }>(`mots-semaine.php?id=${id}`, { method: 'DELETE' }),
 }

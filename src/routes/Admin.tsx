@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ToolLayout } from '../components/ToolLayout'
 import { api } from '../lib/api'
-import type { LexiconWord, MotDeListe, Student } from '../lib/api'
+import type { LexiconWord, ListeMotsSemaine, MotDeListe, Student } from '../lib/api'
 import { phonemes } from '../lib/phonemes'
 import { RelationsEditor } from './RelationsEditor'
 import type { VerbConjugation } from '../lib/conjugations'
@@ -468,19 +469,30 @@ const ROLE_DE_BASE: Record<WordCategory, WordEntry['formRole']> = {
   invariable: 'simple',
 }
 
+// Suggestion de nom pour une nouvelle liste - l'enseignante peut toujours la
+// modifier, ça évite juste de taper "Semaine du ..." à chaque fois.
+function nomSemaineSuggere(): string {
+  return `Semaine du ${new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}`
+}
+
 /**
- * Liste de mots choisie par l'enseignante, visible par tous les élèves
- * (quiz, fiches à imprimer) - contrairement à l'historique/favoris/scores,
- * qui restent locaux à l'appareil de chaque élève, cette liste est bien
- * partagée : ce n'est pas une donnée personnelle d'élève, juste du
- * vocabulaire choisi par l'enseignante (voir server/schema-v4.sql).
+ * Listes de mots hebdomadaires choisies par l'enseignante, visibles par tous
+ * les élèves dans le quiz (révision cumulée de toutes les semaines) -
+ * contrairement à l'historique/favoris/scores, qui restent locaux à
+ * l'appareil de chaque élève, ces listes sont bien partagées : ce n'est pas
+ * une donnée personnelle d'élève, juste du vocabulaire choisi par
+ * l'enseignante (voir server/schema-v4.sql). Chaque semaine reste une liste
+ * distincte, imprimable séparément - pas une "liste courante" unique
+ * écrasée à chaque fois.
  */
 function SectionMotsSemaine() {
   const [wordIndex, setWordIndex] = useState<WordEntry[] | null>(null)
-  const [nom, setNom] = useState('Mots de la semaine')
+  const [listes, setListes] = useState<ListeMotsSemaine[] | null>(null)
+  // null = nouvelle liste ; sinon id de la liste en cours de modification.
+  const [idEnCours, setIdEnCours] = useState<number | null>(null)
+  const [nom, setNom] = useState(nomSemaineSuggere())
   const [mots, setMots] = useState<MotDeListe[]>([])
   const [recherche, setRecherche] = useState('')
-  const [chargement, setChargement] = useState(true)
   const [enregistrement, setEnregistrement] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -488,17 +500,15 @@ function SectionMotsSemaine() {
     loadWordIndex().then(setWordIndex)
   }, [])
 
+  function rafraichir() {
+    return api
+      .listListesMotsSemaine()
+      .then((r) => setListes(r.listes))
+      .catch(() => setListes([]))
+  }
+
   useEffect(() => {
-    api
-      .getListeMotsSemaine()
-      .then((r) => {
-        if (r.nom) setNom(r.nom)
-        setMots(Array.isArray(r.mots) ? r.mots : [])
-      })
-      .catch(() => {
-        // Pas de liste enregistrée pour l'instant, ou serveur injoignable : on repart d'une liste vide.
-      })
-      .finally(() => setChargement(false))
+    rafraichir()
   }, [])
 
   const suggestions = useMemo(() => {
@@ -525,12 +535,36 @@ function SectionMotsSemaine() {
     setMots((m) => m.filter((mot) => mot.lemmaId !== lemmaId))
   }
 
+  function nouvelleListe() {
+    setIdEnCours(null)
+    setNom(nomSemaineSuggere())
+    setMots([])
+    setMessage(null)
+  }
+
+  function modifier(liste: ListeMotsSemaine) {
+    setIdEnCours(liste.id)
+    setNom(liste.nom)
+    setMots(liste.mots)
+    setMessage(null)
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+  }
+
+  async function supprimer(liste: ListeMotsSemaine) {
+    if (!confirm(`Supprimer la liste « ${liste.nom} » ? Cette action est définitive.`)) return
+    await api.deleteListeMotsSemaine(liste.id)
+    if (idEnCours === liste.id) nouvelleListe()
+    await rafraichir()
+  }
+
   async function enregistrer() {
     setEnregistrement(true)
     setMessage(null)
     try {
-      await api.saveListeMotsSemaine(nom.trim() || 'Mots de la semaine', mots)
-      setMessage('Liste enregistrée - visible par les élèves.')
+      const r = await api.saveListeMotsSemaine(nom.trim() || nomSemaineSuggere(), mots, idEnCours ?? undefined)
+      setIdEnCours(r.id)
+      setMessage('Liste enregistrée - les élèves peuvent la réviser dans le quiz.')
+      await rafraichir()
     } catch (e) {
       setMessage(e instanceof Error ? e.message : 'Une erreur est survenue')
     } finally {
@@ -542,78 +576,118 @@ function SectionMotsSemaine() {
     <section className="mb-10 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
       <h2 className="mb-1 text-xl font-bold text-gray-800">Mots de la semaine</h2>
       <p className="mb-4 text-sm text-gray-500">
-        Cette liste est visible par tous les élèves (dans le quiz et les fiches à imprimer), à la place des mots les
-        plus fréquents du lexique.
+        Une liste par semaine, imprimable séparément. Dans le quiz, les élèves peuvent réviser l'ensemble des mots de
+        toutes les semaines enregistrées, à la place des mots les plus fréquents du lexique.
       </p>
 
-      {chargement ? (
+      {listes === null ? (
         <p className="text-gray-400">Chargement…</p>
       ) : (
         <>
-          <input
-            type="text"
-            value={nom}
-            onChange={(e) => setNom(e.target.value)}
-            placeholder="Nom de la liste (ex. Semaine du 18 août)"
-            className="mb-4 w-full max-w-sm rounded-lg border-2 border-gray-200 px-4 py-2 focus:border-brand-400 focus:outline-none"
-          />
+          {listes.length > 0 && (
+            <ul className="mb-6 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white">
+              {listes.map((liste) => (
+                <li key={liste.id} className="flex items-center justify-between gap-3 px-4 py-3">
+                  <div>
+                    <p className="font-medium text-gray-800">{liste.nom}</p>
+                    <p className="text-xs text-gray-400">{liste.mots.length} mot(s)</p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3 text-sm">
+                    <Link
+                      to={`/fiches-imprimables?liste=${liste.id}`}
+                      className="text-brand-600 hover:underline"
+                    >
+                      🖨️ Imprimer
+                    </Link>
+                    <button type="button" onClick={() => modifier(liste)} className="text-gray-600 hover:underline">
+                      Modifier
+                    </button>
+                    <button type="button" onClick={() => supprimer(liste)} className="text-red-600 hover:underline">
+                      Supprimer
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
 
-          <div className="relative mb-4">
+          <div className="rounded-lg border-2 border-dashed border-gray-300 p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-sm font-semibold tracking-wide text-gray-500 uppercase">
+                {idEnCours === null ? 'Nouvelle liste' : 'Modifier la liste'}
+              </h3>
+              {idEnCours !== null && (
+                <button type="button" onClick={nouvelleListe} className="text-xs text-gray-500 hover:underline">
+                  Annuler / nouvelle liste
+                </button>
+              )}
+            </div>
+
             <input
               type="text"
-              value={recherche}
-              onChange={(e) => setRecherche(e.target.value)}
-              placeholder="Tape le début d'un mot…"
-              className="w-full max-w-sm rounded-lg border-2 border-gray-200 px-4 py-2 focus:border-brand-400 focus:outline-none"
+              value={nom}
+              onChange={(e) => setNom(e.target.value)}
+              placeholder="Nom de la liste (ex. Semaine du 18 août)"
+              className="mb-4 w-full max-w-sm rounded-lg border-2 border-gray-200 px-4 py-2 focus:border-brand-400 focus:outline-none"
             />
-            {suggestions.length > 0 && (
-              <div className="absolute z-10 mt-1 w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow-lg">
-                {suggestions.map((e) => (
-                  <button
-                    key={e.lemmaId}
-                    type="button"
-                    onClick={() => ajouter(e)}
-                    className="block w-full px-4 py-2 text-left hover:bg-gray-50"
+
+            <div className="relative mb-4">
+              <input
+                type="text"
+                value={recherche}
+                onChange={(e) => setRecherche(e.target.value)}
+                placeholder="Tape le début d'un mot…"
+                className="w-full max-w-sm rounded-lg border-2 border-gray-200 px-4 py-2 focus:border-brand-400 focus:outline-none"
+              />
+              {suggestions.length > 0 && (
+                <div className="absolute z-10 mt-1 w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow-lg">
+                  {suggestions.map((e) => (
+                    <button
+                      key={e.lemmaId}
+                      type="button"
+                      onClick={() => ajouter(e)}
+                      className="block w-full px-4 py-2 text-left hover:bg-gray-50"
+                    >
+                      {e.word} <span className="text-xs text-gray-400">({e.category})</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {mots.length === 0 ? (
+              <p className="mb-4 text-gray-400">Aucun mot dans la liste pour l'instant.</p>
+            ) : (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {mots.map((mot) => (
+                  <span
+                    key={mot.lemmaId}
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1 text-sm"
                   >
-                    {e.word} <span className="text-xs text-gray-400">({e.category})</span>
-                  </button>
+                    {mot.word}
+                    <button
+                      type="button"
+                      onClick={() => retirer(mot.lemmaId)}
+                      aria-label={`Retirer « ${mot.word} »`}
+                      className="text-gray-400 hover:text-red-600"
+                    >
+                      ✕
+                    </button>
+                  </span>
                 ))}
               </div>
             )}
+
+            <button
+              type="button"
+              disabled={enregistrement}
+              onClick={enregistrer}
+              className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-40"
+            >
+              {enregistrement ? 'Enregistrement…' : idEnCours === null ? 'Enregistrer la liste' : 'Mettre à jour'}
+            </button>
+            {message && <p className="mt-2 text-sm text-gray-600">{message}</p>}
           </div>
-
-          {mots.length === 0 ? (
-            <p className="mb-4 text-gray-400">Aucun mot dans la liste pour l'instant.</p>
-          ) : (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {mots.map((mot) => (
-                <span
-                  key={mot.lemmaId}
-                  className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1 text-sm"
-                >
-                  {mot.word}
-                  <button
-                    type="button"
-                    onClick={() => retirer(mot.lemmaId)}
-                    aria-label={`Retirer « ${mot.word} »`}
-                    className="text-gray-400 hover:text-red-600"
-                  >
-                    ✕
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
-
-          <button
-            type="button"
-            disabled={enregistrement}
-            onClick={enregistrer}
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-40"
-          >
-            {enregistrement ? 'Enregistrement…' : 'Enregistrer la liste'}
-          </button>
-          {message && <p className="mt-2 text-sm text-gray-600">{message}</p>}
         </>
       )}
     </section>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { api } from '../../lib/api'
 import { useFicheMot } from './useFicheMot'
@@ -62,17 +62,36 @@ function FicheEnListe({ lemmaId, onRetirer }: { lemmaId: string; onRetirer: () =
  * une enseignante qui sait déjà comment le mot s'écrit).
  */
 export function FichesMultiples() {
+  const [searchParams] = useSearchParams()
+  const idListeSemaine = searchParams.get('liste')
   const [wordIndex, setWordIndex] = useState<WordEntry[] | null>(null)
   const [recherche, setRecherche] = useState('')
-  const [liste, setListe] = useState<string[]>(() => lireListe())
+  // Venir d'un lien "Imprimer" d'une liste de la semaine (espace enseignant)
+  // remplace la composition libre par cette liste précise, plutôt que de la
+  // mélanger avec ce qui traînait déjà dans le composeur personnel.
+  const [liste, setListe] = useState<string[]>(() => (idListeSemaine ? [] : lireListe()))
 
   useEffect(() => {
     loadWordIndex().then(setWordIndex)
   }, [])
 
   useEffect(() => {
+    if (!idListeSemaine) return
+    api
+      .listListesMotsSemaine()
+      .then((r) => {
+        const cible = r.listes.find((l) => l.id === Number(idListeSemaine))
+        if (cible) setListe(cible.mots.map((m) => m.lemmaId))
+      })
+      .catch(() => {
+        // Liste introuvable/serveur injoignable : le composeur reste vide, rien de plus à faire.
+      })
+  }, [idListeSemaine])
+
+  useEffect(() => {
+    if (idListeSemaine) return // liste imposée par l'enseignante : pas de sauvegarde locale à part.
     ecrireListe(liste)
-  }, [liste])
+  }, [liste, idListeSemaine])
 
   const suggestions = useMemo(() => {
     const terme = recherche.trim().toLowerCase()
@@ -98,9 +117,11 @@ export function FichesMultiples() {
   }
 
   async function chargerListeSemaine() {
-    const r = await api.getListeMotsSemaine().catch(() => null)
-    if (!r || !Array.isArray(r.mots) || r.mots.length === 0) return
-    setListe((l) => [...l, ...r.mots.filter((m) => !l.includes(m.lemmaId)).map((m) => m.lemmaId)])
+    const r = await api.listListesMotsSemaine().catch(() => null)
+    // La plus récente (id le plus grand) : "la liste de la semaine" par défaut pour ce bouton rapide.
+    const derniere = r?.listes.reduce((a, b) => (b.id > (a?.id ?? 0) ? b : a), r.listes[0])
+    if (!derniere || derniere.mots.length === 0) return
+    setListe((l) => [...l, ...derniere.mots.filter((m) => !l.includes(m.lemmaId)).map((m) => m.lemmaId)])
   }
 
   return (
@@ -133,13 +154,15 @@ export function FichesMultiples() {
           Ajoute les mots à imprimer (ex. la liste de la semaine), puis imprime-les toutes ensemble.
         </p>
 
-        <button
-          type="button"
-          onClick={chargerListeSemaine}
-          className="mb-4 text-sm text-brand-600 hover:underline"
-        >
-          📋 Charger les mots de la semaine
-        </button>
+        {!idListeSemaine && (
+          <button
+            type="button"
+            onClick={chargerListeSemaine}
+            className="mb-4 text-sm text-brand-600 hover:underline"
+          >
+            📋 Charger la dernière liste de la semaine
+          </button>
+        )}
 
         <div className="relative">
           <input

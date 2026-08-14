@@ -353,8 +353,11 @@ export function QuizTool() {
   const [aRepondu, setARepondu] = useState(false)
   const [termine, setTermine] = useState(false)
   const [resultats, setResultats] = useState<ResultatQuiz[]>([])
-  // null = pas encore chargée (ou aucune liste enregistrée par l'enseignante).
-  const [listeSemaine, setListeSemaine] = useState<{ nom: string; mots: MotDeListe[] } | null>(null)
+  // null = pas encore chargés (ou aucune liste enregistrée par l'enseignante).
+  // Cumule TOUTES les listes hebdomadaires enregistrées (pas seulement la
+  // plus récente) - la liste à réviser grossit semaine après semaine, comme
+  // le vocabulaire réellement vu en classe depuis la rentrée.
+  const [motsSemaineCumules, setMotsSemaineCumules] = useState<MotDeListe[] | null>(null)
   const [utiliserListeSemaine, setUtiliserListeSemaine] = useState(true)
 
   useEffect(() => {
@@ -363,9 +366,13 @@ export function QuizTool() {
 
   useEffect(() => {
     api
-      .getListeMotsSemaine()
+      .listListesMotsSemaine()
       .then((r) => {
-        if (r.nom && Array.isArray(r.mots) && r.mots.length > 0) setListeSemaine({ nom: r.nom, mots: r.mots })
+        const vus = new Map<string, MotDeListe>()
+        for (const liste of Array.isArray(r.listes) ? r.listes : []) {
+          for (const mot of Array.isArray(liste.mots) ? liste.mots : []) vus.set(mot.lemmaId, mot)
+        }
+        if (vus.size > 0) setMotsSemaineCumules([...vus.values()])
       })
       .catch(() => {
         // Pas de liste dispo (hors ligne, pas encore créée...) : on retombe
@@ -397,8 +404,8 @@ export function QuizTool() {
       return choisis
     }
 
-    if (utiliserListeSemaine && listeSemaine) {
-      const depuisListe = construire(listeSemaine.mots.map((m) => ({ ...m, consulteLe: 0 })))
+    if (utiliserListeSemaine && motsSemaineCumules) {
+      const depuisListe = construire(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 })))
       // Liste trop courte ou trop d'homographes/confusions manquantes pour
       // fournir des questions valables : on retombe sur le vivier général
       // plutôt que de bloquer le quiz.
@@ -408,7 +415,7 @@ export function QuizTool() {
       }
     }
     setQuestions(construire(motsFrequentsPourQuiz(wordIndex)))
-  }, [wordIndex, mode, questions, utiliserListeSemaine, listeSemaine])
+  }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules])
 
   function handleReponse(correct: boolean) {
     if (aRepondu) return
@@ -431,14 +438,14 @@ export function QuizTool() {
   if (!mode) {
     return (
       <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
-        {listeSemaine && (
+        {motsSemaineCumules && (
           <label className="mx-auto mb-4 flex max-w-sm items-center justify-center gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
               checked={utiliserListeSemaine}
               onChange={(e) => setUtiliserListeSemaine(e.target.checked)}
             />
-            📋 Réviser « {listeSemaine.nom} » ({listeSemaine.mots.length} mots)
+            📋 Réviser les mots vus en classe ({motsSemaineCumules.length} mots)
           </label>
         )}
         <p className="mb-4 text-center text-gray-500">Choisis comment tu veux jouer :</p>
