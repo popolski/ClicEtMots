@@ -40,10 +40,30 @@ l'orthographe correspondante apparaît.
   l'enseignante), écoutable depuis la fiche de chaque son.
 - **Mascottes par catégorie grammaticale** (nom, adjectif, verbe, adverbe) et
   par temps de conjugaison, pour un repérage visuel immédiat.
+- **Mots récents et favoris** : historique automatique des mots consultés, et
+  possibilité de marquer volontairement des mots à retrouver plus tard (⭐) —
+  les deux restent locaux à l'appareil, jamais envoyés au serveur.
+- **Petit quiz de révision**, trois modes au choix : choix multiple (mauvaises
+  réponses générées à partir de vraies confusions de son du français — jamais
+  une orthographe inventée), recomposition au clavier phonétique (3 essais
+  avant de révéler la solution, sons corrects mis en surbrillance), et
+  reconnaissance de la catégorie grammaticale (tirage équilibré entre les
+  natures de mots). Petites médailles bronze/argent/or selon le score d'une
+  partie, sans classement ni comparaison entre élèves.
+- **Fiches imprimables** : une fiche compacte par mot (mot, catégorie,
+  définition, synonyme/contraire, famille) au format bandeau, pensée pour
+  être découpée et collée dans un cahier — un seul mot ou une liste composée
+  à la main.
+- **Mots de la semaine** : l'enseignante compose une liste de mots par
+  semaine (visible et révisable par les élèves dans le quiz, qui cumule
+  toutes les semaines enregistrées), imprimable séparément d'une semaine à
+  l'autre.
 - **Espace enseignant** : gestion des comptes élèves, ajout de mots absents
   du lexique avec prononciation générée automatiquement et conjugaison
-  proposée en aperçu (base de ~7000 verbes, tous groupes confondus) avant
-  validation, et saisie des relations lexicales (synonymes/contraires/famille).
+  proposée en aperçu (base de ~7000 verbes, tous groupes confondus), saisie
+  des relations lexicales (synonymes/contraires/famille), gestion des listes
+  de mots de la semaine, et recherche directe par orthographe (en plus du
+  clavier phonétique, pensé pour l'élève).
 
 ## Stack technique
 
