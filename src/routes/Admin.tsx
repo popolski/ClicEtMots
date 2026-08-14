@@ -470,9 +470,23 @@ const ROLE_DE_BASE: Record<WordCategory, WordEntry['formRole']> = {
 }
 
 // Suggestion de nom pour une nouvelle liste - l'enseignante peut toujours la
-// modifier, ça évite juste de taper "Semaine du ..." à chaque fois.
+// modifier, ça évite juste de taper "Semaine du ... au ..." à chaque fois.
+// Plage lundi-vendredi de la semaine en cours (semaine d'école typique),
+// avec le mois répété seulement si les deux dates ne sont pas dans le même
+// mois (ex. "du 28 juillet au 1 août").
 function nomSemaineSuggere(): string {
-  return `Semaine du ${new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}`
+  const aujourdhui = new Date()
+  // getDay() : 0 = dimanche, 1 = lundi... on ramène tout à "jours depuis lundi".
+  const joursDepuisLundi = (aujourdhui.getDay() + 6) % 7
+  const lundi = new Date(aujourdhui)
+  lundi.setDate(aujourdhui.getDate() - joursDepuisLundi)
+  const vendredi = new Date(lundi)
+  vendredi.setDate(lundi.getDate() + 4)
+
+  const memeMois = lundi.getMonth() === vendredi.getMonth()
+  const debut = lundi.toLocaleDateString('fr-FR', memeMois ? { day: 'numeric' } : { day: 'numeric', month: 'long' })
+  const fin = vendredi.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
+  return `Semaine du ${debut} au ${fin}`
 }
 
 /**
