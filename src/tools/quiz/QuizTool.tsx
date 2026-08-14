@@ -87,6 +87,62 @@ function motsFrequentsPourQuiz(wordIndex: WordEntry[]): EntreeHistorique[] {
     .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
 }
 
+// Adverbes réels d'usage courant (pas des mots-outils comme "pas"/"y"/
+// "comme", qui dominent le classement par fréquence brute) - liste choisie
+// à la main, seule façon fiable de proposer de vrais adverbes au quiz de
+// grammaire sans reprendre tout le bruit du corpus (même logique que
+// EXCLUDED_WORDS/HOMOGRAPHES_FANTOMES ailleurs dans le projet, en positif
+// cette fois : une liste blanche plutôt qu'une liste noire).
+const ADVERBES_SURS = new Set([
+  'bien', 'mal', 'vite', 'souvent', 'toujours', 'jamais', 'encore', 'beaucoup', 'trop', 'peu',
+  'aussi', 'ainsi', 'dehors', 'dedans', 'ici', 'là', 'loin', 'près', "aujourd'hui", 'demain',
+  'hier', 'ensuite', 'enfin', 'vraiment', 'gentiment', 'doucement', 'lentement', 'rapidement',
+  'joyeusement', 'tristement', 'fortement', 'calmement', 'simplement', 'parfaitement',
+  'heureusement', 'malheureusement', 'exactement', 'certainement', 'probablement', 'autrefois',
+  'longtemps', 'partout', 'ailleurs', 'dessus', 'dessous', 'maintenant', 'bientôt', 'tard', 'tôt',
+])
+
+// Vivier du quiz de grammaire : comme motsFrequentsPourQuiz, mais inclut
+// aussi les adverbes de la liste blanche ci-dessus - sans ça, seuls noms/
+// verbes/adjectifs sont proposables, et le tri par fréquence brute favorise
+// nettement les noms (signalé comme déséquilibré). Le tirage lui-même est
+// équilibré ensuite par equilibrerParCategorie, catégorie par catégorie.
+function motsFrequentsPourGrammaire(wordIndex: WordEntry[]): EntreeHistorique[] {
+  const base = motsFrequentsPourQuiz(wordIndex)
+  const adverbes = wordIndex
+    .filter((e) => e.category === 'adverbe' && e.formRole === 'simple' && ADVERBES_SURS.has(e.word))
+    .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
+  return [...base, ...adverbes]
+}
+
+// Répartit le tirage à peu près également entre les catégories présentes
+// dans `source` (un tour par catégorie, dans un ordre mélangé), plutôt que
+// de piocher au hasard dans un tas dominé par les noms.
+function equilibrerParCategorie(source: EntreeHistorique[], count: number): EntreeHistorique[] {
+  const parCategorie = new Map<WordCategory, EntreeHistorique[]>()
+  for (const entree of melanger(source)) {
+    const liste = parCategorie.get(entree.category) ?? []
+    liste.push(entree)
+    parCategorie.set(entree.category, liste)
+  }
+  const categories = melanger([...parCategorie.keys()])
+  const resultat: EntreeHistorique[] = []
+  let progression = true
+  while (resultat.length < count && progression) {
+    progression = false
+    for (const categorie of categories) {
+      if (resultat.length >= count) break
+      const liste = parCategorie.get(categorie)
+      const suivant = liste?.shift()
+      if (suivant) {
+        resultat.push(suivant)
+        progression = true
+      }
+    }
+  }
+  return resultat
+}
+
 // Pour le quiz "catégorie grammaticale" uniquement : un mot qui existe
 // réellement dans plusieurs catégories ("grand" nom ET adjectif, "pouvoir"
 // verbe ET nom...) n'a pas de bonne réponse unique tant qu'il est montré
@@ -199,12 +255,13 @@ function QuestionQCM({
   )
 }
 
-// Les 5 catégories sont toujours proposées comme réponses possibles, même si
-// motsFrequentsPourQuiz ne pioche que des noms/verbes/adjectifs (voir plus
-// haut - les adverbes/invariables les plus fréquents sont presque tous des
-// mots-outils) : adverbe et invariable ne seront donc jamais la bonne
-// réponse pour l'instant, mais restent visibles comme vrais choix parmi les
-// "5 personnages".
+// Les 5 catégories sont toujours proposées comme réponses possibles.
+// motsFrequentsPourGrammaire pioche des noms/verbes/adjectifs/adverbes (voir
+// plus haut - liste blanche pour les adverbes, "invariable" reste écarté :
+// dans ce lexique, les invariables les plus fréquents sont quasiment tous
+// des mots-outils, sans équivalent utilisable pour un exercice de
+// reconnaissance). "Mot invariable" reste un vrai choix parmi les "5
+// personnages" même s'il ne sera jamais la bonne réponse pour l'instant.
 const CATEGORIES: WordCategory[] = ['nom', 'adjectif', 'verbe', 'adverbe', 'invariable']
 
 // Contrairement à QuestionCarte, n'affiche NI la mascotte/l'étiquette de
@@ -268,6 +325,11 @@ function QuestionGrammaire({
   )
 }
 
+// On cherche le SON, pas l'orthographe : révéler le mot dès la 1re erreur
+// court-circuiterait l'exercice. On laisse 3 essais avant de révéler et de
+// passer au mot suivant - signalé comme plus formateur.
+const ESSAIS_MAX = 3
+
 function QuestionReconstitution({
   question,
   entreeCible,
@@ -278,22 +340,40 @@ function QuestionReconstitution({
   onReponse: (correct: boolean) => void
 }) {
   const [sequence, setSequence] = useState<PhonemeId[]>([])
-  const [valide, setValide] = useState(false)
+  // undefined = pas encore validé pour de bon (peut encore réessayer).
+  const [succesFinal, setSuccesFinal] = useState<boolean | undefined>(undefined)
+  const [essais, setEssais] = useState(0)
+  const [dernierEssaiFaux, setDernierEssaiFaux] = useState(false)
   const [infoPhonemeId, setInfoPhonemeId] = useState<PhonemeId | null>(null)
   const phonemesById = useMemo(() => new Map(phonemes.map((p) => [p.id, p])), [])
 
   useEffect(() => {
     setSequence([])
-    setValide(false)
+    setSuccesFinal(undefined)
+    setEssais(0)
+    setDernierEssaiFaux(false)
   }, [question])
 
   const infoPhoneme = infoPhonemeId ? phonemesById.get(infoPhonemeId) : undefined
+  const valide = succesFinal !== undefined
 
   function valider() {
     if (!entreeCible) return
     const correct = JSON.stringify(sequence) === JSON.stringify(entreeCible.phonemes)
-    setValide(true)
-    onReponse(correct)
+    if (correct) {
+      setSuccesFinal(true)
+      onReponse(true)
+      return
+    }
+    const essaisSuivant = essais + 1
+    setEssais(essaisSuivant)
+    if (essaisSuivant >= ESSAIS_MAX) {
+      setSuccesFinal(false)
+      onReponse(false)
+    } else {
+      setDernierEssaiFaux(true)
+      setSequence([])
+    }
   }
 
   return (
@@ -303,28 +383,37 @@ function QuestionReconstitution({
       <SequenceBar
         sequence={sequence}
         phonemesById={phonemesById}
-        onBackspace={() => setSequence((s) => s.slice(0, -1))}
-        onClear={() => setSequence([])}
+        onBackspace={() => {
+          setDernierEssaiFaux(false)
+          setSequence((s) => s.slice(0, -1))
+        }}
+        onClear={() => {
+          setDernierEssaiFaux(false)
+          setSequence([])
+        }}
       />
       {!valide ? (
-        <div className="mt-4 text-center">
-          <button
-            type="button"
-            disabled={sequence.length === 0 || !entreeCible}
-            onClick={valider}
-            className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-6 py-3 text-lg font-medium text-white shadow-sm hover:bg-brand-700 active:scale-95 disabled:opacity-40"
-          >
-            Valider
-          </button>
-        </div>
+        <>
+          {dernierEssaiFaux && (
+            <p className="mt-3 text-center font-medium text-red-600">
+              Pas tout à fait, réessaie ! (essai {essais}/{ESSAIS_MAX})
+            </p>
+          )}
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              disabled={sequence.length === 0 || !entreeCible}
+              onClick={valider}
+              className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-6 py-3 text-lg font-medium text-white shadow-sm hover:bg-brand-700 active:scale-95 disabled:opacity-40"
+            >
+              Valider
+            </button>
+          </div>
+        </>
       ) : (
-        <p
-          className={`mt-4 text-center text-lg font-semibold ${
-            JSON.stringify(sequence) === JSON.stringify(entreeCible?.phonemes) ? 'text-green-600' : 'text-red-600'
-          }`}
-        >
-          {JSON.stringify(sequence) === JSON.stringify(entreeCible?.phonemes)
-            ? 'Bravo, c’est ça !'
+        <p className={`mt-4 text-center text-lg font-semibold ${succesFinal ? 'text-green-600' : 'text-red-600'}`}>
+          {succesFinal
+            ? `Bravo, c'est ça : ${question.entree.word} !`
             : `Pas tout à fait. La bonne orthographe : ${question.entree.word}`}
         </p>
       )}
@@ -332,7 +421,11 @@ function QuestionReconstitution({
         <PhonemeKeyboard
           phonemes={phonemes}
           viableNext={null}
-          onSelect={(id) => !valide && setSequence((s) => [...s, id])}
+          onSelect={(id) => {
+            if (valide) return
+            setDernierEssaiFaux(false)
+            setSequence((s) => [...s, id])
+          }}
           onShowInfo={setInfoPhonemeId}
         />
       </div>
@@ -383,12 +476,27 @@ export function QuizTool() {
   useEffect(() => {
     if (questions || !wordIndex || !mode) return
 
+    if (mode === 'grammaire') {
+      const ambigus = motsAmbigusPourGrammaire(wordIndex)
+      const sansAmbigus = (source: EntreeHistorique[]) => source.filter((e) => !ambigus.has(e.word.toLowerCase()))
+
+      const depuisListe =
+        utiliserListeSemaine && motsSemaineCumules
+          ? equilibrerParCategorie(sansAmbigus(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 }))), NB_MOTS_SESSION)
+          : []
+      // Liste trop courte/peu variée pour fournir des questions équilibrées : on retombe sur le vivier général.
+      const choisis =
+        depuisListe.length > 0
+          ? depuisListe
+          : equilibrerParCategorie(sansAmbigus(motsFrequentsPourGrammaire(wordIndex)), NB_MOTS_SESSION)
+      setQuestions(choisis.map((entree) => ({ entree })))
+      return
+    }
+
     function construire(source: EntreeHistorique[]): Question[] {
-      const ambigus = mode === 'grammaire' ? motsAmbigusPourGrammaire(wordIndex!) : null
       const choisis: Question[] = []
       for (const entree of melanger(source)) {
         if (choisis.length >= NB_MOTS_SESSION) break
-        if (ambigus?.has(entree.word.toLowerCase())) continue
         if (mode !== 'qcm') {
           choisis.push({ entree })
           continue
