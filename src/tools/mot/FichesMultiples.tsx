@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { loadWordIndex } from '../../lib/wordIndex'
+import { api } from '../../lib/api'
 import { useFicheMot } from './useFicheMot'
 import { BandeauMot } from './BandeauMot'
 import type { WordCategory, WordEntry } from '../../types/phonetics'
@@ -96,6 +97,12 @@ export function FichesMultiples() {
     setListe((l) => l.filter((id) => id !== lemmaId))
   }
 
+  async function chargerListeSemaine() {
+    const r = await api.getListeMotsSemaine().catch(() => null)
+    if (!r || !Array.isArray(r.mots) || r.mots.length === 0) return
+    setListe((l) => [...l, ...r.mots.filter((m) => !l.includes(m.lemmaId)).map((m) => m.lemmaId)])
+  }
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <style>{`
@@ -125,6 +132,14 @@ export function FichesMultiples() {
         <p className="mb-4 text-gray-500">
           Ajoute les mots à imprimer (ex. la liste de la semaine), puis imprime-les toutes ensemble.
         </p>
+
+        <button
+          type="button"
+          onClick={chargerListeSemaine}
+          className="mb-4 text-sm text-brand-600 hover:underline"
+        >
+          📋 Charger les mots de la semaine
+        </button>
 
         <div className="relative">
           <input

@@ -16,6 +16,8 @@ import {
 } from '../../lib/quizHistorique'
 import { badgePour, BADGE_EMOJI, BADGE_LABEL, type Badge } from '../../lib/quizBadges'
 import { loadWordIndex } from '../../lib/wordIndex'
+import { api } from '../../lib/api'
+import type { MotDeListe } from '../../lib/api'
 import { LEMMA_IDS_DETERMINANTS, LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
 import { phonemes } from '../../lib/phonemes'
 import wordPictos from '../../data/word-pictos.json'
@@ -351,32 +353,62 @@ export function QuizTool() {
   const [aRepondu, setARepondu] = useState(false)
   const [termine, setTermine] = useState(false)
   const [resultats, setResultats] = useState<ResultatQuiz[]>([])
+  // null = pas encore chargée (ou aucune liste enregistrée par l'enseignante).
+  const [listeSemaine, setListeSemaine] = useState<{ nom: string; mots: MotDeListe[] } | null>(null)
+  const [utiliserListeSemaine, setUtiliserListeSemaine] = useState(true)
 
   useEffect(() => {
     loadWordIndex().then(setWordIndex)
   }, [])
 
   useEffect(() => {
+    api
+      .getListeMotsSemaine()
+      .then((r) => {
+        if (r.nom && Array.isArray(r.mots) && r.mots.length > 0) setListeSemaine({ nom: r.nom, mots: r.mots })
+      })
+      .catch(() => {
+        // Pas de liste dispo (hors ligne, pas encore créée...) : on retombe
+        // silencieusement sur le vivier de mots fréquents, comme avant.
+      })
+  }, [])
+
+  useEffect(() => {
     if (questions || !wordIndex || !mode) return
-    const ambigus = mode === 'grammaire' ? motsAmbigusPourGrammaire(wordIndex) : null
-    const choisis: Question[] = []
-    for (const entree of melanger(motsFrequentsPourQuiz(wordIndex))) {
-      if (choisis.length >= NB_MOTS_SESSION) break
-      if (ambigus?.has(entree.word.toLowerCase())) continue
-      if (mode !== 'qcm') {
-        choisis.push({ entree })
-        continue
+
+    function construire(source: EntreeHistorique[]): Question[] {
+      const ambigus = mode === 'grammaire' ? motsAmbigusPourGrammaire(wordIndex!) : null
+      const choisis: Question[] = []
+      for (const entree of melanger(source)) {
+        if (choisis.length >= NB_MOTS_SESSION) break
+        if (ambigus?.has(entree.word.toLowerCase())) continue
+        if (mode !== 'qcm') {
+          choisis.push({ entree })
+          continue
+        }
+        // Toujours 3 options (le mot + 2 vraies confusions), jamais moins et
+        // jamais une orthographe inventée pour compléter - un mot qui n'a pas
+        // 2 confusions de son plausibles est simplement écarté du tirage, on
+        // en pioche un autre dans le vivier.
+        const distracteurs = genererDistracteurs(entree.word, 2)
+        if (distracteurs.length < 2) continue
+        choisis.push({ entree, options: melanger([entree.word, ...distracteurs]) })
       }
-      // Toujours 3 options (le mot + 2 vraies confusions), jamais moins et
-      // jamais une orthographe inventée pour compléter - un mot qui n'a pas
-      // 2 confusions de son plausibles est simplement écarté du tirage, on
-      // en pioche un autre dans le vivier.
-      const distracteurs = genererDistracteurs(entree.word, 2)
-      if (distracteurs.length < 2) continue
-      choisis.push({ entree, options: melanger([entree.word, ...distracteurs]) })
+      return choisis
     }
-    setQuestions(choisis)
-  }, [wordIndex, mode, questions])
+
+    if (utiliserListeSemaine && listeSemaine) {
+      const depuisListe = construire(listeSemaine.mots.map((m) => ({ ...m, consulteLe: 0 })))
+      // Liste trop courte ou trop d'homographes/confusions manquantes pour
+      // fournir des questions valables : on retombe sur le vivier général
+      // plutôt que de bloquer le quiz.
+      if (depuisListe.length > 0) {
+        setQuestions(depuisListe)
+        return
+      }
+    }
+    setQuestions(construire(motsFrequentsPourQuiz(wordIndex)))
+  }, [wordIndex, mode, questions, utiliserListeSemaine, listeSemaine])
 
   function handleReponse(correct: boolean) {
     if (aRepondu) return
@@ -399,6 +431,16 @@ export function QuizTool() {
   if (!mode) {
     return (
       <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
+        {listeSemaine && (
+          <label className="mx-auto mb-4 flex max-w-sm items-center justify-center gap-2 text-sm text-gray-600">
+            <input
+              type="checkbox"
+              checked={utiliserListeSemaine}
+              onChange={(e) => setUtiliserListeSemaine(e.target.checked)}
+            />
+            📋 Réviser « {listeSemaine.nom} » ({listeSemaine.mots.length} mots)
+          </label>
+        )}
         <p className="mb-4 text-center text-gray-500">Choisis comment tu veux jouer :</p>
         <div className="mx-auto flex max-w-sm flex-col gap-3">
           {(Object.keys(MODE_LABEL) as ModeQuiz[]).map((m) => (

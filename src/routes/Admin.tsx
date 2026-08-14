@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ToolLayout } from '../components/ToolLayout'
 import { api } from '../lib/api'
-import type { LexiconWord, Student } from '../lib/api'
+import type { LexiconWord, MotDeListe, Student } from '../lib/api'
 import { phonemes } from '../lib/phonemes'
 import { RelationsEditor } from './RelationsEditor'
 import type { VerbConjugation } from '../lib/conjugations'
 import { PERSONNES_SINGULIER, PERSONNES_PLURIEL, pronomAfficheTexte } from '../tools/conjugueur/conjugueurLogic'
+import { loadWordIndex } from '../lib/wordIndex'
+import type { WordCategory, WordEntry } from '../types/phonetics'
 
 type Categorie = LexiconWord['categorie']
 
@@ -458,11 +460,172 @@ function SectionMots() {
   )
 }
 
+const ROLE_DE_BASE: Record<WordCategory, WordEntry['formRole']> = {
+  nom: 'singulier',
+  adjectif: 'masculin',
+  verbe: 'infinitif',
+  adverbe: 'simple',
+  invariable: 'simple',
+}
+
+/**
+ * Liste de mots choisie par l'enseignante, visible par tous les élèves
+ * (quiz, fiches à imprimer) - contrairement à l'historique/favoris/scores,
+ * qui restent locaux à l'appareil de chaque élève, cette liste est bien
+ * partagée : ce n'est pas une donnée personnelle d'élève, juste du
+ * vocabulaire choisi par l'enseignante (voir server/schema-v4.sql).
+ */
+function SectionMotsSemaine() {
+  const [wordIndex, setWordIndex] = useState<WordEntry[] | null>(null)
+  const [nom, setNom] = useState('Mots de la semaine')
+  const [mots, setMots] = useState<MotDeListe[]>([])
+  const [recherche, setRecherche] = useState('')
+  const [chargement, setChargement] = useState(true)
+  const [enregistrement, setEnregistrement] = useState(false)
+  const [message, setMessage] = useState<string | null>(null)
+
+  useEffect(() => {
+    loadWordIndex().then(setWordIndex)
+  }, [])
+
+  useEffect(() => {
+    api
+      .getListeMotsSemaine()
+      .then((r) => {
+        if (r.nom) setNom(r.nom)
+        setMots(Array.isArray(r.mots) ? r.mots : [])
+      })
+      .catch(() => {
+        // Pas de liste enregistrée pour l'instant, ou serveur injoignable : on repart d'une liste vide.
+      })
+      .finally(() => setChargement(false))
+  }, [])
+
+  const suggestions = useMemo(() => {
+    const terme = recherche.trim().toLowerCase()
+    if (!terme || !wordIndex) return []
+    const lemmaIdsDejaLa = new Set(mots.map((m) => m.lemmaId))
+    return wordIndex
+      .filter(
+        (e) =>
+          e.formRole === ROLE_DE_BASE[e.category] &&
+          e.word.toLowerCase().startsWith(terme) &&
+          !lemmaIdsDejaLa.has(e.lemmaId),
+      )
+      .sort((a, b) => b.frequency - a.frequency)
+      .slice(0, 8)
+  }, [recherche, wordIndex, mots])
+
+  function ajouter(entry: WordEntry) {
+    setMots((m) => [...m, { lemmaId: entry.lemmaId, word: entry.word, category: entry.category }])
+    setRecherche('')
+  }
+
+  function retirer(lemmaId: string) {
+    setMots((m) => m.filter((mot) => mot.lemmaId !== lemmaId))
+  }
+
+  async function enregistrer() {
+    setEnregistrement(true)
+    setMessage(null)
+    try {
+      await api.saveListeMotsSemaine(nom.trim() || 'Mots de la semaine', mots)
+      setMessage('Liste enregistrée - visible par les élèves.')
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : 'Une erreur est survenue')
+    } finally {
+      setEnregistrement(false)
+    }
+  }
+
+  return (
+    <section className="mb-10 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
+      <h2 className="mb-1 text-xl font-bold text-gray-800">Mots de la semaine</h2>
+      <p className="mb-4 text-sm text-gray-500">
+        Cette liste est visible par tous les élèves (dans le quiz et les fiches à imprimer), à la place des mots les
+        plus fréquents du lexique.
+      </p>
+
+      {chargement ? (
+        <p className="text-gray-400">Chargement…</p>
+      ) : (
+        <>
+          <input
+            type="text"
+            value={nom}
+            onChange={(e) => setNom(e.target.value)}
+            placeholder="Nom de la liste (ex. Semaine du 18 août)"
+            className="mb-4 w-full max-w-sm rounded-lg border-2 border-gray-200 px-4 py-2 focus:border-brand-400 focus:outline-none"
+          />
+
+          <div className="relative mb-4">
+            <input
+              type="text"
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+              placeholder="Tape le début d'un mot…"
+              className="w-full max-w-sm rounded-lg border-2 border-gray-200 px-4 py-2 focus:border-brand-400 focus:outline-none"
+            />
+            {suggestions.length > 0 && (
+              <div className="absolute z-10 mt-1 w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow-lg">
+                {suggestions.map((e) => (
+                  <button
+                    key={e.lemmaId}
+                    type="button"
+                    onClick={() => ajouter(e)}
+                    className="block w-full px-4 py-2 text-left hover:bg-gray-50"
+                  >
+                    {e.word} <span className="text-xs text-gray-400">({e.category})</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {mots.length === 0 ? (
+            <p className="mb-4 text-gray-400">Aucun mot dans la liste pour l'instant.</p>
+          ) : (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {mots.map((mot) => (
+                <span
+                  key={mot.lemmaId}
+                  className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1 text-sm"
+                >
+                  {mot.word}
+                  <button
+                    type="button"
+                    onClick={() => retirer(mot.lemmaId)}
+                    aria-label={`Retirer « ${mot.word} »`}
+                    className="text-gray-400 hover:text-red-600"
+                  >
+                    ✕
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          <button
+            type="button"
+            disabled={enregistrement}
+            onClick={enregistrer}
+            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-40"
+          >
+            {enregistrement ? 'Enregistrement…' : 'Enregistrer la liste'}
+          </button>
+          {message && <p className="mt-2 text-sm text-gray-600">{message}</p>}
+        </>
+      )}
+    </section>
+  )
+}
+
 export function Admin() {
   return (
     <ToolLayout title="Espace enseignant" description="Gérer les comptes élèves et enrichir le lexique.">
       <SectionEleves />
       <SectionMots />
+      <SectionMotsSemaine />
     </ToolLayout>
   )
 }

@@ -62,6 +62,18 @@ export interface LexiconWord {
   feminin_phonemes?: string[] | null
 }
 
+export interface MotDeListe {
+  lemmaId: string
+  word: string
+  category: 'nom' | 'adjectif' | 'verbe' | 'adverbe' | 'invariable'
+}
+
+export interface ListeMotsSemaine {
+  nom: string | null
+  mots: MotDeListe[]
+  updatedAt: string | null
+}
+
 export const api = {
   session: () => request<SessionState>('session.php'),
 
@@ -117,4 +129,12 @@ export const api = {
       `relations.php?wordId=${wordId}&type=${type}&targetLemmaId=${encodeURIComponent(targetLemmaId)}`,
       { method: 'DELETE' },
     ),
+
+  getListeMotsSemaine: () => request<ListeMotsSemaine>('mots-semaine.php'),
+
+  saveListeMotsSemaine: (nom: string, mots: MotDeListe[]) =>
+    request<{ ok: true }>('mots-semaine.php', {
+      method: 'POST',
+      body: JSON.stringify({ nom, mots }),
+    }),
 }
