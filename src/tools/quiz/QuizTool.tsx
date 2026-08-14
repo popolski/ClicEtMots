@@ -411,16 +411,22 @@ function QuestionReconstitution({
           </div>
         </>
       ) : (
-        <p className={`mt-4 text-center text-lg font-semibold ${succesFinal ? 'text-green-600' : 'text-red-600'}`}>
-          {succesFinal
-            ? `Bravo, c'est ça : ${question.entree.word} !`
-            : `Pas tout à fait. La bonne orthographe : ${question.entree.word}`}
-        </p>
+        <div className="mt-4 text-center">
+          <p className={`text-lg font-semibold ${succesFinal ? 'text-green-600' : 'text-red-600'}`}>
+            {succesFinal
+              ? `Bravo, c'est ça : ${question.entree.word} !`
+              : `Pas tout à fait. La bonne orthographe : ${question.entree.word}`}
+          </p>
+          {!succesFinal && (
+            <p className="mt-1 text-sm text-gray-500">Les touches en jaune sont les sons de ce mot.</p>
+          )}
+        </div>
       )}
       <div className="mt-6">
         <PhonemeKeyboard
           phonemes={phonemes}
           viableNext={null}
+          misEnAvant={valide && !succesFinal && entreeCible ? new Set(entreeCible.phonemes) : undefined}
           onSelect={(id) => {
             if (valide) return
             setDernierEssaiFaux(false)

@@ -4,6 +4,8 @@ import { assetUrl } from '../lib/assetUrl'
 interface PhonemeTileProps {
   phoneme: Phoneme
   disabled: boolean
+  /** Touche appartenant à la solution d'un mot révélé (quiz "recomposer le mot") - juste un repère visuel, pas un état désactivé. */
+  misEnAvant?: boolean
   onSelect: (id: PhonemeId) => void
   onShowInfo: (id: PhonemeId) => void
 }
@@ -18,7 +20,7 @@ interface PhonemeTileProps {
 // graphies possibles) restent dans la fiche du son, pas sur la touche.
 const MAX_SECONDARY_GRAPHEMES = 2
 
-export function PhonemeTile({ phoneme, disabled, onSelect, onShowInfo }: PhonemeTileProps) {
+export function PhonemeTile({ phoneme, disabled, misEnAvant, onSelect, onShowInfo }: PhonemeTileProps) {
   const primary = phoneme.graphemes[0]
   const secondaryGraphemes = phoneme.graphemes.slice(1, 1 + MAX_SECONDARY_GRAPHEMES).map((g) => g.grapheme)
 
@@ -31,7 +33,9 @@ export function PhonemeTile({ phoneme, disabled, onSelect, onShowInfo }: Phoneme
         className={`flex w-full items-center justify-between gap-2 rounded-xl border-2 p-2 pt-3 text-left transition ${
           disabled
             ? 'cursor-not-allowed border-gray-100 bg-gray-50 text-gray-300'
-            : 'border-brand-200 bg-white text-gray-900 hover:border-brand-500 hover:bg-brand-50 active:scale-95'
+            : misEnAvant
+              ? 'border-amber-400 bg-amber-100 text-gray-900 ring-2 ring-amber-300 hover:border-amber-500'
+              : 'border-brand-200 bg-white text-gray-900 hover:border-brand-500 hover:bg-brand-50 active:scale-95'
         }`}
       >
         <div className="flex flex-col gap-0.5">

@@ -5,6 +5,8 @@ interface PhonemeKeyboardProps {
   phonemes: Phoneme[]
   /** null = no constraint yet (empty sequence, every tile is a valid start). */
   viableNext: Set<PhonemeId> | null
+  /** Touches à mettre en avant (ex. solution révélée du quiz "recomposer le mot") - purement visuel. */
+  misEnAvant?: Set<PhonemeId>
   onSelect: (id: PhonemeId) => void
   onShowInfo: (id: PhonemeId) => void
 }
@@ -26,7 +28,7 @@ function splitIntoRows<T>(items: T[], sizes: number[]): T[][] {
   return rows
 }
 
-export function PhonemeKeyboard({ phonemes, viableNext, onSelect, onShowInfo }: PhonemeKeyboardProps) {
+export function PhonemeKeyboard({ phonemes, viableNext, misEnAvant, onSelect, onShowInfo }: PhonemeKeyboardProps) {
   const rows = splitIntoRows(phonemes, ROW_SIZES)
 
   return (
@@ -38,6 +40,7 @@ export function PhonemeKeyboard({ phonemes, viableNext, onSelect, onShowInfo }: 
               <PhonemeTile
                 phoneme={phoneme}
                 disabled={viableNext !== null && !viableNext.has(phoneme.id)}
+                misEnAvant={misEnAvant?.has(phoneme.id)}
                 onSelect={onSelect}
                 onShowInfo={onShowInfo}
               />
