@@ -14,6 +14,7 @@ import {
   type ModeQuiz,
   type ResultatQuiz,
 } from '../../lib/quizHistorique'
+import { badgePour, BADGE_EMOJI, BADGE_LABEL, type Badge } from '../../lib/quizBadges'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { LEMMA_IDS_DETERMINANTS, LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
 import { phonemes } from '../../lib/phonemes'
@@ -429,12 +430,26 @@ export function QuizTool() {
   )
 
   if (termine) {
+    const badge = badgePour(score, questions.length)
+    // Décompte des médailles déjà gagnées (collection, pas un classement -
+    // ne compare jamais à d'autres élèves, voir quizBadges.ts).
+    const collection = resultats.reduce(
+      (acc, r) => {
+        const b = badgePour(r.score, r.total)
+        if (b) acc[b]++
+        return acc
+      },
+      { or: 0, argent: 0, bronze: 0 } as Record<Badge, number>,
+    )
+
     return (
       <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
         <div className="py-6 text-center">
-          <p className="mb-4 text-2xl font-semibold text-gray-800">
+          {badge && <p className="mb-2 text-6xl">{BADGE_EMOJI[badge]}</p>}
+          <p className="mb-1 text-2xl font-semibold text-gray-800">
             Score : {score} / {questions.length}
           </p>
+          {badge && <p className="mb-4 text-gray-500">{BADGE_LABEL[badge]} !</p>}
           <button
             type="button"
             onClick={() => window.location.reload()}
@@ -443,20 +458,35 @@ export function QuizTool() {
             Recommencer
           </button>
         </div>
+
+        {(collection.or > 0 || collection.argent > 0 || collection.bronze > 0) && (
+          <p className="mb-6 text-center text-sm text-gray-500">
+            Ta collection : {collection.or > 0 && `${BADGE_EMOJI.or} × ${collection.or}`}
+            {collection.or > 0 && (collection.argent > 0 || collection.bronze > 0) && '  '}
+            {collection.argent > 0 && `${BADGE_EMOJI.argent} × ${collection.argent}`}
+            {collection.argent > 0 && collection.bronze > 0 && '  '}
+            {collection.bronze > 0 && `${BADGE_EMOJI.bronze} × ${collection.bronze}`}
+          </p>
+        )}
+
         {resultats.length > 1 && (
           <div className="mx-auto max-w-sm">
             <h2 className="mb-2 text-sm font-semibold tracking-wide text-gray-500 uppercase">Parties précédentes</h2>
             <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200">
-              {resultats.slice(1).map((r) => (
-                <li key={r.termineLe} className="flex items-center justify-between px-4 py-2 text-sm">
-                  <span className="text-gray-500">
-                    {new Date(r.termineLe).toLocaleDateString('fr-FR')} · {MODE_LABEL[r.mode]}
-                  </span>
-                  <span className="font-medium text-gray-800">
-                    {r.score} / {r.total}
-                  </span>
-                </li>
-              ))}
+              {resultats.slice(1).map((r) => {
+                const b = badgePour(r.score, r.total)
+                return (
+                  <li key={r.termineLe} className="flex items-center justify-between px-4 py-2 text-sm">
+                    <span className="text-gray-500">
+                      {new Date(r.termineLe).toLocaleDateString('fr-FR')} · {MODE_LABEL[r.mode]}
+                    </span>
+                    <span className="font-medium text-gray-800">
+                      {b && `${BADGE_EMOJI[b]} `}
+                      {r.score} / {r.total}
+                    </span>
+                  </li>
+                )
+              })}
             </ul>
             <button
               type="button"
