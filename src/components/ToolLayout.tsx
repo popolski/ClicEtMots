@@ -2,6 +2,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { assetUrl } from '../lib/assetUrl'
 import { useAuth } from '../lib/authContext'
+import { RechercheMotEnseignante } from './RechercheMotEnseignante'
 
 interface ToolLayoutProps {
   title: string
@@ -46,6 +47,7 @@ export function ToolLayout({
           <img src={assetUrl('/logo.png')} alt="Clic &amp; Mots" className="h-8 w-auto" />
         </Link>
         <div className="flex flex-wrap items-center gap-4">
+          {session?.role === 'teacher' && <RechercheMotEnseignante />}
           {!hideBackButton && (
             <button
               type="button"
