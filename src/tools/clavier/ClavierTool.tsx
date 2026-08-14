@@ -90,6 +90,12 @@ export function ClavierTool() {
             <Link to="/quiz" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
               🎯 Petit quiz
             </Link>
+            <Link
+              to="/mots-semaine"
+              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
+            >
+              📋 Mots de la semaine
+            </Link>
             <Link to="/favoris" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
               ⭐ Mes favoris
             </Link>
