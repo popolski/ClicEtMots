@@ -17,6 +17,15 @@ interface ToolLayoutProps {
   showBackToKeyboard?: boolean
   /** Masque le "← Retour" habituel — sur /clavier, remonter dans l'historique ne sert à rien. */
   hideBackButton?: boolean
+  /**
+   * Remplace la navigation par défaut du "← Retour" (navigate(-1), donc
+   * l'historique du navigateur) par une action personnalisée — utile quand
+   * la page a son propre état interne d'étapes (ex. QuizTool : une fois un
+   * mode choisi, l'historique du navigateur ne connaît que l'entrée
+   * précédant /quiz, donc "← Retour" ramènerait directement au clavier en
+   * sautant l'écran de choix du mode).
+   */
+  onBack?: () => void
   /** Mascotte affichée à côté du titre (ex. fiche mot : icône de catégorie grammaticale). */
   titleIcon?: ReactNode
   /** Contenu affiché juste après le titre, sur la même ligne (ex. bouton haut-parleur). */
@@ -34,6 +43,7 @@ export function ToolLayout({
   children,
   showBackToKeyboard,
   hideBackButton,
+  onBack,
   titleIcon,
   titleAfter,
   titleBelow,
@@ -51,7 +61,7 @@ export function ToolLayout({
           {!hideBackButton && (
             <button
               type="button"
-              onClick={() => navigate(-1)}
+              onClick={onBack ?? (() => navigate(-1))}
               className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
             >
               ← Retour

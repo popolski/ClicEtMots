@@ -582,6 +582,20 @@ export function QuizTool() {
     if (correct) setScore((s) => s + 1)
   }
 
+  // Une fois un mode choisi, l'historique du navigateur ne connaît que
+  // l'entrée précédant /quiz — le "← Retour" par défaut de ToolLayout
+  // (navigate(-1)) ramènerait donc directement au clavier en sautant l'écran
+  // de choix du mode, plutôt que d'y revenir comme on s'y attend en pleine
+  // partie. Signalé à l'usage.
+  function revenirAuChoixDuMode() {
+    setMode(null)
+    setQuestions(null)
+    setIndex(0)
+    setScore(0)
+    setARepondu(false)
+    setTermine(false)
+  }
+
   function motSuivant() {
     if (!questions || !mode) return
     if (index + 1 >= questions.length) {
@@ -626,7 +640,12 @@ export function QuizTool() {
 
   if (!questions) {
     return (
-      <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
+      <ToolLayout
+        title="Petit quiz"
+        description="Révise l'orthographe des mots les plus courants."
+        showBackToKeyboard
+        onBack={revenirAuChoixDuMode}
+      >
         <p className="py-10 text-center text-gray-400">Préparation du quiz…</p>
       </ToolLayout>
     )
@@ -651,7 +670,12 @@ export function QuizTool() {
     )
 
     return (
-      <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
+      <ToolLayout
+        title="Petit quiz"
+        description="Révise l'orthographe des mots les plus courants."
+        showBackToKeyboard
+        onBack={revenirAuChoixDuMode}
+      >
         <div className="py-6 text-center">
           {badge && <p className="mb-2 text-6xl">{BADGE_EMOJI[badge]}</p>}
           <p className="mb-1 text-2xl font-semibold text-gray-800">
@@ -713,7 +737,12 @@ export function QuizTool() {
   }
 
   return (
-    <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
+    <ToolLayout
+      title="Petit quiz"
+      description="Révise l'orthographe des mots les plus courants."
+      showBackToKeyboard
+      onBack={revenirAuChoixDuMode}
+    >
       <div className="mb-6 flex items-center justify-between">
         <span className="text-sm text-gray-500">
           Mot {index + 1} sur {questions.length}
