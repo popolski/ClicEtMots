@@ -52,7 +52,17 @@ export function ToolLayout({
   const { session, logout } = useAuth()
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-6 flex items-center justify-between gap-4 overflow-x-auto">
+      {/* PAS de overflow-x-auto ici : ça coupe aussi le débordement vertical
+          (CSS - un axe non "visible" force l'autre à "auto"), ce qui rendait
+          invisible la liste déroulante de RechercheMotEnseignante (positionnée
+          en absolute sous la barre de recherche) sans aucune erreur console -
+          signalé par l'enseignante ("la recherche ne retourne aucun mot" alors
+          que les résultats étaient bien présents dans la page, juste coupés
+          visuellement). shrink-0 + whitespace-nowrap suffisent à garder tout
+          sur une ligne (voir commit "tout sur une seule ligne") ; le
+          overflow-x-auto n'était qu'un filet de sécurité jamais nécessaire en
+          pratique. */}
+      <div className="mb-6 flex items-center justify-between gap-4">
         <Link to="/clavier" className="shrink-0">
           <img src={assetUrl('/logo.png')} alt="Clic &amp; Mots" className="h-8 w-auto" />
         </Link>
