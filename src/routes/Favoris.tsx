@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ToolLayout } from '../components/ToolLayout'
 import { assetUrl } from '../lib/assetUrl'
 import { lireFavoris, retirerFavori } from '../lib/favoris'
+import { natureInvariable } from '../lib/natureInvariable'
 import type { WordCategory } from '../types/phonetics'
 
 // Mêmes libellés/couleurs/mascottes que la fiche mot (voir MotTool.tsx) —
@@ -31,6 +32,11 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
   adverbe: '/mascottes/adverbe.png',
 }
 
+// Remplace "Mot invariable" par la nature précise quand on la connaît (même
+// choix que WordCardView.tsx/Historique.tsx - voir natureInvariable.ts).
+const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Préposition' } as const
+const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
+
 export function Favoris() {
   const [entrees, setEntrees] = useState(() => lireFavoris())
 
@@ -42,31 +48,38 @@ export function Favoris() {
         </p>
       ) : (
         <div className="flex flex-wrap gap-3">
-          {entrees.map((entree) => (
-            <div
-              key={entree.lemmaId}
-              className={`relative flex items-center gap-2 rounded-lg border px-4 py-2 pr-9 shadow-sm transition hover:shadow-md ${categoryStyles[entree.category]}`}
-            >
-              <Link to={`/mot/${encodeURIComponent(entree.lemmaId)}`} className="flex items-center gap-2">
-                <img src={assetUrl(CATEGORY_MASCOT[entree.category])} alt="" className="h-8 w-8 object-contain" />
-                <div>
-                  <div className="text-xs opacity-70">{CATEGORY_LABEL[entree.category]}</div>
-                  <div className="text-xl font-medium">{entree.word}</div>
-                </div>
-              </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  retirerFavori(entree.lemmaId)
-                  setEntrees((e) => e.filter((f) => f.lemmaId !== entree.lemmaId))
-                }}
-                aria-label={`Retirer « ${entree.word} » des favoris`}
-                className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-1 text-lg leading-none opacity-60 hover:bg-black/10 hover:opacity-100"
+          {entrees.map((entree) => {
+            const nature = entree.category === 'invariable' ? natureInvariable(entree.word) : null
+            return (
+              <div
+                key={entree.lemmaId}
+                className={`relative flex items-center gap-2 rounded-lg border px-4 py-2 pr-9 shadow-sm transition hover:shadow-md ${categoryStyles[entree.category]}`}
               >
-                ✕
-              </button>
-            </div>
-          ))}
+                <Link to={`/mot/${encodeURIComponent(entree.lemmaId)}`} className="flex items-center gap-2">
+                  <img
+                    src={assetUrl(nature ? NATURE_INVARIABLE_MASCOT[nature] : CATEGORY_MASCOT[entree.category])}
+                    alt=""
+                    className="h-8 w-8 object-contain"
+                  />
+                  <div>
+                    <div className="text-xs opacity-70">{nature ? NATURE_INVARIABLE_LABEL[nature] : CATEGORY_LABEL[entree.category]}</div>
+                    <div className="text-xl font-medium">{entree.word}</div>
+                  </div>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    retirerFavori(entree.lemmaId)
+                    setEntrees((e) => e.filter((f) => f.lemmaId !== entree.lemmaId))
+                  }}
+                  aria-label={`Retirer « ${entree.word} » des favoris`}
+                  className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-1 text-lg leading-none opacity-60 hover:bg-black/10 hover:opacity-100"
+                >
+                  ✕
+                </button>
+              </div>
+            )
+          })}
         </div>
       )}
     </ToolLayout>

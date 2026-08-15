@@ -3,6 +3,7 @@ import type { WordCard, WordCategory } from '../types/phonetics'
 import { pickPrimaryForm } from '../tools/clavier/clavierLogic'
 import { assetUrl } from '../lib/assetUrl'
 import { speak, speechSupported } from '../lib/speech'
+import { natureInvariable } from '../lib/natureInvariable'
 
 interface WordCardViewProps {
   card: WordCard
@@ -32,6 +33,13 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
   adverbe: '/mascottes/adverbe.png',
 }
 
+// Contrairement à la fiche mot (qui garde "Mot invariable" EN PLUS du picto
+// de nature, les deux affichés côte à côte), la carte résultat n'a la place
+// que pour une seule mascotte : quand la nature précise est connue (pronom
+// personnel, préposition — voir natureInvariable.ts), elle REMPLACE le
+// générique "Mot invariable" plutôt que de s'y ajouter. Signalé à l'usage.
+const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
+
 export function WordCardView({ card }: WordCardViewProps) {
   const style = categoryStyles[card.category]
   // Forme "de base" affichée dans les résultats — les autres formes (pluriel,
@@ -39,6 +47,8 @@ export function WordCardView({ card }: WordCardViewProps) {
   // cliquable), pour ne pas surcharger la liste de résultats. Le groupe
   // verbal n'est affiché que sur la fiche mot elle-même (MotTool), pas ici.
   const primary = pickPrimaryForm(card.forms)
+  const nature = card.category === 'invariable' ? natureInvariable(primary.word) : null
+  const mascotte = nature ? NATURE_INVARIABLE_MASCOT[nature] : CATEGORY_MASCOT[card.category]
 
   return (
     <div className={`relative flex items-center justify-between gap-2 rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${style}`}>
@@ -65,7 +75,7 @@ export function WordCardView({ card }: WordCardViewProps) {
             🔊
           </button>
         )}
-        <img src={assetUrl(CATEGORY_MASCOT[card.category])} alt="" className="h-10 w-10 shrink-0 object-contain" />
+        <img src={assetUrl(mascotte)} alt="" className="h-10 w-10 shrink-0 object-contain" />
       </div>
     </div>
   )

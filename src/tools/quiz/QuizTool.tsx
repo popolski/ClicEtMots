@@ -106,9 +106,13 @@ const ROLE_DE_BASE: Record<WordCategory, WordEntry['formRole']> = {
 // adverbes/invariables les plus fréquents sont quasi exclusivement des
 // mots-outils), aux mots d'au moins 3 lettres, et on retire les mêmes listes
 // noires que le clavier (déterminants, homographes mal étiquetés par le
-// corpus). Vivier large (1000 mots) pour qu'un tirage aléatoire donne une
-// vraie variété d'une partie à l'autre.
-const TAILLE_VIVIER = 1000
+// corpus). Vivier volontairement large : ~45% de ces mots sont ensuite
+// écartés par motsAmbigus (double nature - "paysan" nom ET adjectif, etc.),
+// donc 1000 mots bruts ne laissent plus que ~500 mots réellement utilisables
+// - repéré comme insuffisant pour un élève qui enchaîne beaucoup de parties
+// (trop de répétitions). 2000 mots bruts donnent environ 1000 mots
+// utilisables, la vraie taille visée.
+const TAILLE_VIVIER = 2000
 
 function motsFrequentsPourQuiz(wordIndex: WordEntry[]): EntreeHistorique[] {
   return wordIndex
@@ -191,15 +195,20 @@ function equilibrerParNature(source: EntreeHistorique[], count: number): Questio
   return resultat
 }
 
-// Pour le quiz "catégorie grammaticale" uniquement : un mot qui existe
-// réellement dans plusieurs catégories ("grand" nom ET adjectif, "pouvoir"
-// verbe ET nom...) n'a pas de bonne réponse unique tant qu'il est montré
-// seul, sans phrase - contrairement aux erreurs de corpus déjà nettoyées
-// (LEMMA_IDS_HOMOGRAPHES_FANTOMES), ici les deux catégories sont vraies. On
-// écarte ces mots plutôt que de pénaliser un élève qui répond juste mais
-// "pas la bonne case attendue". Vérifié sur le lexique complet (pas
-// seulement le vivier de 1000), une même orthographe pouvant partager sa
-// fréquence avec une catégorie hors du top 1000.
+// Un mot qui existe réellement dans plusieurs catégories ("grand" nom ET
+// adjectif, "pouvoir" verbe ET nom, "paysan" nom ET adjectif, "revient" verbe
+// ET nom...) n'a pas de nature unique - contrairement aux erreurs de corpus
+// déjà nettoyées (LEMMA_IDS_HOMOGRAPHES_FANTOMES), ici les deux catégories
+// sont vraies. Pour le quiz "catégorie grammaticale", ça n'a pas de bonne
+// réponse tant que le mot est montré seul, sans phrase - on écarte ces mots
+// plutôt que de pénaliser un élève qui répond juste mais "pas la bonne case
+// attendue". Pour les autres modes (QCM/reconstitution), la catégorie n'est
+// qu'une étiquette affichée à côté du mot, jamais notée - mais une étiquette
+// tout aussi arbitraire ("revient" étiqueté NOM alors que l'enfant y pense
+// comme un verbe) reste trompeuse, d'où ce même filtre partout (signalé à
+// l'usage). Vérifié sur le lexique complet (pas seulement le vivier de
+// 1000), une même orthographe pouvant partager sa fréquence avec une
+// catégorie hors du top 1000.
 //
 // Compare TOUTES les formes, pas seulement les formes de base : "bonne" est
 // la forme de base du nom ("une bonne" = domestique) mais la forme FÉMININE
@@ -207,7 +216,7 @@ function equilibrerParNature(source: EntreeHistorique[], count: number): Questio
 // base, cette collision passait inaperçue ("bonne" proposé comme nom, sans
 // jamais détecter qu'un enfant y verrait tout aussi légitimement un
 // adjectif). Signalé à l'usage.
-function motsAmbigusPourGrammaire(wordIndex: WordEntry[]): Set<string> {
+function motsAmbigus(wordIndex: WordEntry[]): Set<string> {
   const categoriesParMot = new Map<string, Set<WordCategory>>()
   for (const e of wordIndex) {
     const cle = e.word.toLowerCase()
@@ -529,10 +538,10 @@ export function QuizTool() {
   useEffect(() => {
     if (questions || !wordIndex || !mode) return
 
-    if (mode === 'grammaire') {
-      const ambigus = motsAmbigusPourGrammaire(wordIndex)
-      const sansAmbigus = (source: EntreeHistorique[]) => source.filter((e) => !ambigus.has(e.word.toLowerCase()))
+    const ambigus = motsAmbigus(wordIndex)
+    const sansAmbigus = (source: EntreeHistorique[]) => source.filter((e) => !ambigus.has(e.word.toLowerCase()))
 
+    if (mode === 'grammaire') {
       const depuisListe =
         utiliserListeSemaine && motsSemaineCumules
           ? equilibrerParNature(sansAmbigus(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 }))), NB_MOTS_SESSION)
@@ -564,7 +573,7 @@ export function QuizTool() {
     }
 
     if (utiliserListeSemaine && motsSemaineCumules) {
-      const depuisListe = construire(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 })))
+      const depuisListe = construire(sansAmbigus(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 }))))
       // Liste trop courte ou trop d'homographes/confusions manquantes pour
       // fournir des questions valables : on retombe sur le vivier général
       // plutôt que de bloquer le quiz.
@@ -573,7 +582,7 @@ export function QuizTool() {
         return
       }
     }
-    setQuestions(construire(motsFrequentsPourQuiz(wordIndex)))
+    setQuestions(construire(sansAmbigus(motsFrequentsPourQuiz(wordIndex))))
   }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules])
 
   function handleReponse(correct: boolean) {

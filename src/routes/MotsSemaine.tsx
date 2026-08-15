@@ -4,6 +4,7 @@ import { ToolLayout } from '../components/ToolLayout'
 import { assetUrl } from '../lib/assetUrl'
 import { api } from '../lib/api'
 import type { ListeMotsSemaine, MotDeListe } from '../lib/api'
+import { natureInvariable } from '../lib/natureInvariable'
 import type { WordCategory } from '../types/phonetics'
 
 // Mêmes libellés/couleurs/mascottes que la fiche mot (voir MotTool.tsx) —
@@ -33,15 +34,25 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
   adverbe: '/mascottes/adverbe.png',
 }
 
+// Remplace "Mot invariable" par la nature précise quand on la connaît (même
+// choix que WordCardView.tsx/Historique.tsx/Favoris.tsx - voir natureInvariable.ts).
+const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Préposition' } as const
+const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
+
 function ChipMot({ mot }: { mot: MotDeListe }) {
+  const nature = mot.category === 'invariable' ? natureInvariable(mot.word) : null
   return (
     <Link
       to={`/mot/${encodeURIComponent(mot.lemmaId)}`}
       className={`flex items-center gap-2 rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${categoryStyles[mot.category]}`}
     >
-      <img src={assetUrl(CATEGORY_MASCOT[mot.category])} alt="" className="h-8 w-8 object-contain" />
+      <img
+        src={assetUrl(nature ? NATURE_INVARIABLE_MASCOT[nature] : CATEGORY_MASCOT[mot.category])}
+        alt=""
+        className="h-8 w-8 object-contain"
+      />
       <div>
-        <div className="text-xs opacity-70">{CATEGORY_LABEL[mot.category]}</div>
+        <div className="text-xs opacity-70">{nature ? NATURE_INVARIABLE_LABEL[nature] : CATEGORY_LABEL[mot.category]}</div>
         <div className="text-xl font-medium">{mot.word}</div>
       </div>
     </Link>

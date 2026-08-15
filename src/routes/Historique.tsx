@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ToolLayout } from '../components/ToolLayout'
 import { assetUrl } from '../lib/assetUrl'
 import { lireHistorique, viderHistorique } from '../lib/historique'
+import { natureInvariable } from '../lib/natureInvariable'
 import type { WordCategory } from '../types/phonetics'
 
 // Mêmes libellés/couleurs/mascottes que la fiche mot (voir MotTool.tsx) —
@@ -32,6 +33,14 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
   adverbe: '/mascottes/adverbe.png',
 }
 
+// Contrairement à la fiche mot (qui garde "Mot invariable" EN PLUS du picto
+// de nature), cette carte compacte n'a la place que pour une seule mascotte :
+// quand la nature précise est connue (pronom personnel, préposition — voir
+// natureInvariable.ts), elle REMPLACE le générique "Mot invariable" plutôt
+// que de s'y ajouter (même choix que WordCardView.tsx). Signalé à l'usage.
+const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Préposition' } as const
+const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
+
 export function Historique() {
   const [entrees, setEntrees] = useState(() => lireHistorique())
 
@@ -46,19 +55,26 @@ export function Historique() {
       ) : (
         <>
           <div className="mb-6 flex flex-wrap gap-3">
-            {entrees.map((entree) => (
-              <Link
-                key={entree.lemmaId}
-                to={`/mot/${encodeURIComponent(entree.lemmaId)}`}
-                className={`flex items-center gap-2 rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${categoryStyles[entree.category]}`}
-              >
-                <img src={assetUrl(CATEGORY_MASCOT[entree.category])} alt="" className="h-8 w-8 object-contain" />
-                <div>
-                  <div className="text-xs opacity-70">{CATEGORY_LABEL[entree.category]}</div>
-                  <div className="text-xl font-medium">{entree.word}</div>
-                </div>
-              </Link>
-            ))}
+            {entrees.map((entree) => {
+              const nature = entree.category === 'invariable' ? natureInvariable(entree.word) : null
+              return (
+                <Link
+                  key={entree.lemmaId}
+                  to={`/mot/${encodeURIComponent(entree.lemmaId)}`}
+                  className={`flex items-center gap-2 rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${categoryStyles[entree.category]}`}
+                >
+                  <img
+                    src={assetUrl(nature ? NATURE_INVARIABLE_MASCOT[nature] : CATEGORY_MASCOT[entree.category])}
+                    alt=""
+                    className="h-8 w-8 object-contain"
+                  />
+                  <div>
+                    <div className="text-xs opacity-70">{nature ? NATURE_INVARIABLE_LABEL[nature] : CATEGORY_LABEL[entree.category]}</div>
+                    <div className="text-xl font-medium">{entree.word}</div>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
           <button
             type="button"

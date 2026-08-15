@@ -1,5 +1,6 @@
 import { assetUrl } from '../../lib/assetUrl'
 import wordPictos from '../../data/word-pictos.json'
+import { natureInvariable } from '../../lib/natureInvariable'
 import type { WordCategory } from '../../types/phonetics'
 import type { DonneesFicheMot } from './useFicheMot'
 
@@ -20,12 +21,19 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
   adverbe: '/mascottes/adverbe.png',
 }
 
+// Remplace "Mot invariable" par la nature précise quand on la connaît (même
+// choix que WordCardView.tsx - voir natureInvariable.ts) : le bandeau
+// imprimable n'a la place que pour une seule mascotte.
+const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Préposition' } as const
+const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
+
 /** Le rectangle imprimable lui-même - un bandeau, pas une carte carrée (voir FicheImprimable.tsx). */
 export function BandeauMot({ primary, groupe, definition, synonyme, contraire, famille }: DonneesFicheMot) {
   if (!primary) return null
   const picto = (wordPictos as Record<string, string>)[primary.word]
+  const nature = primary.category === 'invariable' ? natureInvariable(primary.word) : null
   const sousLigne = [
-    CATEGORY_LABEL[primary.category],
+    nature ? NATURE_INVARIABLE_LABEL[nature] : CATEGORY_LABEL[primary.category],
     groupe,
     primary.category === 'nom' && primary.genre ? (primary.genre === 'm' ? 'masculin' : 'féminin') : null,
   ]
@@ -35,7 +43,11 @@ export function BandeauMot({ primary, groupe, definition, synonyme, contraire, f
   return (
     <div className="fiche-carte mx-auto flex w-full max-w-[18cm] items-center gap-4 rounded-xl border-2 border-gray-800 p-4">
       <div className="flex shrink-0 items-center gap-1">
-        <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-16 w-16 object-contain" />
+        <img
+          src={assetUrl(nature ? NATURE_INVARIABLE_MASCOT[nature] : CATEGORY_MASCOT[primary.category])}
+          alt=""
+          className="h-16 w-16 object-contain"
+        />
         {picto && <img src={assetUrl(picto)} alt="" className="h-16 w-16 object-contain" />}
       </div>
 
