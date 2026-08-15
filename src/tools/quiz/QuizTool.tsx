@@ -19,9 +19,47 @@ import { loadWordIndex } from '../../lib/wordIndex'
 import { api } from '../../lib/api'
 import type { MotDeListe } from '../../lib/api'
 import { LEMMA_IDS_DETERMINANTS, LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
+import { natureInvariable } from '../../lib/natureInvariable'
 import { phonemes } from '../../lib/phonemes'
 import wordPictos from '../../data/word-pictos.json'
 import type { PhonemeId, WordCategory, WordEntry } from '../../types/phonetics'
+
+// Catégories proposées par le quiz "grammaire" - un sur-ensemble de
+// WordCategory, puisque le lexique ne distingue pas pronom/préposition à
+// l'intérieur de "invariable" (voir natureInvariable.ts). "invariable" n'est
+// plus une réponse possible : ce n'est pas une nature de mot mais une
+// propriété (signalé à l'usage) - on demande maintenant la vraie nature
+// quand on la connaît (pronom personnel, préposition), sinon le mot est
+// simplement écarté du quiz de grammaire (voir natureGrammaireDe ci-dessous).
+type CategorieGrammaireQuiz = 'nom' | 'adjectif' | 'verbe' | 'adverbe' | 'pronom' | 'preposition'
+
+const CATEGORIES_GRAMMAIRE: CategorieGrammaireQuiz[] = ['nom', 'adjectif', 'verbe', 'adverbe', 'pronom', 'preposition']
+
+const LABEL_GRAMMAIRE: Record<CategorieGrammaireQuiz, string> = {
+  nom: 'Nom',
+  adjectif: 'Adjectif',
+  verbe: 'Verbe',
+  adverbe: 'Adverbe',
+  pronom: 'Pronom personnel',
+  preposition: 'Préposition',
+}
+
+const MASCOTTE_GRAMMAIRE: Record<CategorieGrammaireQuiz, string> = {
+  nom: '/mascottes/nom.png',
+  adjectif: '/mascottes/adjectif.png',
+  verbe: '/mascottes/verbe.png',
+  adverbe: '/mascottes/adverbe.png',
+  pronom: '/mascottes/pronom.png',
+  preposition: '/mascottes/preposition.png',
+}
+
+/** nom/adjectif/verbe/adverbe : la catégorie EST la nature. Invariable : la
+ * nature précise vient de natureInvariable (pronom/préposition), sinon on ne
+ * sait pas (conjonction, interjection...) et le mot est écarté du quiz. */
+function natureGrammaireDe(entree: { word: string; category: WordCategory }): CategorieGrammaireQuiz | null {
+  if (entree.category !== 'invariable') return entree.category
+  return natureInvariable(entree.word)
+}
 
 // Mêmes libellés/mascottes que la fiche mot (MotTool.tsx) - petite
 // duplication assumée, comme ailleurs dans le projet (Historique.tsx).
@@ -103,39 +141,49 @@ const ADVERBES_SURS = new Set([
 ])
 
 // Vivier du quiz de grammaire : comme motsFrequentsPourQuiz, mais inclut
-// aussi les adverbes de la liste blanche ci-dessus - sans ça, seuls noms/
-// verbes/adjectifs sont proposables, et le tri par fréquence brute favorise
+// aussi les adverbes de la liste blanche ci-dessus ainsi que les mots
+// invariables dont on connaît la nature précise (pronom personnel ou
+// préposition, voir natureInvariable.ts) - sans ça, seuls noms/verbes/
+// adjectifs sont proposables, et le tri par fréquence brute favorise
 // nettement les noms (signalé comme déséquilibré). Le tirage lui-même est
-// équilibré ensuite par equilibrerParCategorie, catégorie par catégorie.
+// équilibré ensuite par equilibrerParNature, nature par nature.
 function motsFrequentsPourGrammaire(wordIndex: WordEntry[]): EntreeHistorique[] {
   const base = motsFrequentsPourQuiz(wordIndex)
   const adverbes = wordIndex
     .filter((e) => e.category === 'adverbe' && e.formRole === 'simple' && ADVERBES_SURS.has(e.word))
     .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
-  return [...base, ...adverbes]
+  const pronomsEtPrepositions = wordIndex
+    .filter((e) => e.category === 'invariable' && e.formRole === 'simple' && natureInvariable(e.word) !== null)
+    .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
+  return [...base, ...adverbes, ...pronomsEtPrepositions]
 }
 
-// Répartit le tirage à peu près également entre les catégories présentes
-// dans `source` (un tour par catégorie, dans un ordre mélangé), plutôt que
-// de piocher au hasard dans un tas dominé par les noms.
-function equilibrerParCategorie(source: EntreeHistorique[], count: number): EntreeHistorique[] {
-  const parCategorie = new Map<WordCategory, EntreeHistorique[]>()
+// Répartit le tirage à peu près également entre les natures présentes dans
+// `source` (un tour par nature, dans un ordre mélangé), plutôt que de
+// piocher au hasard dans un tas dominé par les noms. Les entrées dont on ne
+// connaît pas la nature précise (mot invariable hors pronom/préposition,
+// ex. "et"/"mais") sont écartées ici, pas avant, pour rester la SEULE
+// fonction responsable de ce filtre.
+function equilibrerParNature(source: EntreeHistorique[], count: number): Question[] {
+  const parNature = new Map<CategorieGrammaireQuiz, EntreeHistorique[]>()
   for (const entree of melanger(source)) {
-    const liste = parCategorie.get(entree.category) ?? []
+    const nature = natureGrammaireDe(entree)
+    if (!nature) continue
+    const liste = parNature.get(nature) ?? []
     liste.push(entree)
-    parCategorie.set(entree.category, liste)
+    parNature.set(nature, liste)
   }
-  const categories = melanger([...parCategorie.keys()])
-  const resultat: EntreeHistorique[] = []
+  const natures = melanger([...parNature.keys()])
+  const resultat: Question[] = []
   let progression = true
   while (resultat.length < count && progression) {
     progression = false
-    for (const categorie of categories) {
+    for (const nature of natures) {
       if (resultat.length >= count) break
-      const liste = parCategorie.get(categorie)
+      const liste = parNature.get(nature)
       const suivant = liste?.shift()
       if (suivant) {
-        resultat.push(suivant)
+        resultat.push({ entree: suivant, nature })
         progression = true
       }
     }
@@ -187,6 +235,8 @@ interface Question {
   entree: EntreeHistorique
   /** Uniquement en mode QCM : mot correct + distracteurs, mélangés. */
   options?: string[]
+  /** Uniquement en mode grammaire : nature attendue (peut différer de entree.category - voir natureGrammaireDe). */
+  nature?: CategorieGrammaireQuiz
 }
 
 function QuestionCarte({ entree }: { entree: EntreeHistorique }) {
@@ -261,18 +311,9 @@ function QuestionQCM({
   )
 }
 
-// Les 5 catégories sont toujours proposées comme réponses possibles.
-// motsFrequentsPourGrammaire pioche des noms/verbes/adjectifs/adverbes (voir
-// plus haut - liste blanche pour les adverbes, "invariable" reste écarté :
-// dans ce lexique, les invariables les plus fréquents sont quasiment tous
-// des mots-outils, sans équivalent utilisable pour un exercice de
-// reconnaissance). "Mot invariable" reste un vrai choix parmi les "5
-// personnages" même s'il ne sera jamais la bonne réponse pour l'instant.
-const CATEGORIES: WordCategory[] = ['nom', 'adjectif', 'verbe', 'adverbe', 'invariable']
-
 // Contrairement à QuestionCarte, n'affiche NI la mascotte/l'étiquette de
-// catégorie NI le picto du mot : c'est justement la catégorie qu'on demande
-// de deviner ici, la révéler à l'avance viderait l'exercice de son sens.
+// catégorie NI le picto du mot : c'est justement la nature qu'on demande de
+// deviner ici, la révéler à l'avance viderait l'exercice de son sens.
 function QuestionGrammaire({
   question,
   onReponse,
@@ -280,7 +321,7 @@ function QuestionGrammaire({
   question: Question
   onReponse: (correct: boolean) => void
 }) {
-  const [choisi, setChoisi] = useState<WordCategory | null>(null)
+  const [choisi, setChoisi] = useState<CategorieGrammaireQuiz | null>(null)
 
   useEffect(() => setChoisi(null), [question])
 
@@ -299,30 +340,30 @@ function QuestionGrammaire({
         )}
       </div>
       <p className="mb-3 text-center text-gray-500">Quelle est sa catégorie grammaticale ?</p>
-      <div className="mx-auto grid max-w-md grid-cols-5 gap-2">
-        {CATEGORIES.map((categorie) => {
-          const estCorrect = categorie === question.entree.category
+      <div className="mx-auto grid max-w-md grid-cols-6 gap-2">
+        {CATEGORIES_GRAMMAIRE.map((nature) => {
+          const estCorrect = nature === question.nature
           const style =
             choisi === null
               ? 'border-gray-200 hover:bg-gray-50'
               : estCorrect
                 ? 'border-green-400 bg-green-50'
-                : choisi === categorie
+                : choisi === nature
                   ? 'border-red-400 bg-red-50'
                   : 'border-gray-200 opacity-60'
           return (
             <button
-              key={categorie}
+              key={nature}
               type="button"
               disabled={choisi !== null}
               onClick={() => {
-                setChoisi(categorie)
+                setChoisi(nature)
                 onReponse(estCorrect)
               }}
               className={`flex flex-col items-center gap-1 rounded-lg border-2 p-2 ${style}`}
             >
-              <img src={assetUrl(CATEGORY_MASCOT[categorie])} alt="" className="h-14 w-14 object-contain" />
-              <span className="text-xs font-medium text-gray-600">{CATEGORY_LABEL[categorie]}</span>
+              <img src={assetUrl(MASCOTTE_GRAMMAIRE[nature])} alt="" className="h-14 w-14 object-contain" />
+              <span className="text-xs font-medium text-gray-600">{LABEL_GRAMMAIRE[nature]}</span>
             </button>
           )
         })}
@@ -494,14 +535,12 @@ export function QuizTool() {
 
       const depuisListe =
         utiliserListeSemaine && motsSemaineCumules
-          ? equilibrerParCategorie(sansAmbigus(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 }))), NB_MOTS_SESSION)
+          ? equilibrerParNature(sansAmbigus(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 }))), NB_MOTS_SESSION)
           : []
       // Liste trop courte/peu variée pour fournir des questions équilibrées : on retombe sur le vivier général.
       const choisis =
-        depuisListe.length > 0
-          ? depuisListe
-          : equilibrerParCategorie(sansAmbigus(motsFrequentsPourGrammaire(wordIndex)), NB_MOTS_SESSION)
-      setQuestions(choisis.map((entree) => ({ entree })))
+        depuisListe.length > 0 ? depuisListe : equilibrerParNature(sansAmbigus(motsFrequentsPourGrammaire(wordIndex)), NB_MOTS_SESSION)
+      setQuestions(choisis)
       return
     }
 

@@ -11,6 +11,7 @@ import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
 import { ajouterAuHistorique } from '../../lib/historique'
 import { ajouterFavori, estFavori, retirerFavori } from '../../lib/favoris'
+import { natureInvariable } from '../../lib/natureInvariable'
 import wordPictos from '../../data/word-pictos.json'
 import type {
   WordCategory,
@@ -48,6 +49,13 @@ const CATEGORY_MASCOT: Record<WordCategory, string> = {
   invariable: '/mascottes/invariable.png',
   adverbe: '/mascottes/adverbe.png',
 }
+
+// Nature précise d'un mot invariable, quand on la connaît (voir
+// natureInvariable.ts) - affichée EN PLUS du picto "Mot invariable" (pas à
+// sa place : "invariable" reste vrai, "pronom"/"préposition" est juste plus
+// précis), signalé par l'enseignante.
+const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Préposition' } as const
+const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
 
 const FORM_ROLE_LABEL: Partial<Record<WordFormRole, string>> = {
   singulier: 'Singulier',
@@ -187,6 +195,7 @@ export function MotTool() {
   const otherForms = forms.filter((f) => f !== primary && !ROLES_HIDDEN_FROM_FICHE.includes(f.formRole))
   const hasBothGenders = forms.some((f) => f.genre === 'm') && forms.some((f) => f.genre === 'f')
   const style = categoryStyles[primary.category]
+  const natureInvariablePrimary = primary.category === 'invariable' ? natureInvariable(primary.word) : null
 
   return (
     <ToolLayout
@@ -202,6 +211,14 @@ export function MotTool() {
       }
       titleIcon={
         <div className="flex items-end gap-2">
+          {natureInvariablePrimary && (
+            <div className="flex flex-col items-center gap-1">
+              <img src={assetUrl(NATURE_INVARIABLE_MASCOT[natureInvariablePrimary])} alt="" className="h-20 w-20 object-contain" />
+              <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                {NATURE_INVARIABLE_LABEL[natureInvariablePrimary]}
+              </span>
+            </div>
+          )}
           <div className="flex flex-col items-center gap-1">
             <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-20 w-20 object-contain" />
             <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
