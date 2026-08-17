@@ -30,6 +30,20 @@ if ($method === 'POST') {
         jsonResponse(400, ['error' => 'Le mot de passe doit faire au moins 4 caractères']);
     }
 
+    // Le prénom sert aussi d'identifiant de connexion (voir login.php, qui
+    // ne vérifie que le PREMIER compte trouvé pour un prénom donné) : deux
+    // comptes avec le même prénom rendraient le second injoignable. On ne
+    // bloque que ce cas précis (rare), plutôt que d'imposer un champ
+    // supplémentaire à tout le monde - le message invite à ajouter une
+    // initiale, ex. "Lucas B.", comme le ferait l'enseignante à l'oral.
+    $stmt = $db->prepare('SELECT COUNT(*) FROM students WHERE prenom = ?');
+    $stmt->execute([$prenom]);
+    if ((int) $stmt->fetchColumn() > 0) {
+        jsonResponse(409, [
+            'error' => "Il y a déjà un élève prénommé « $prenom ». Ajoute une initiale pour le distinguer (ex. « $prenom B. »).",
+        ]);
+    }
+
     $hash = password_hash($motDePasse, PASSWORD_DEFAULT);
     $stmt = $db->prepare('INSERT INTO students (prenom, password_hash) VALUES (?, ?)');
     $stmt->execute([$prenom, $hash]);
