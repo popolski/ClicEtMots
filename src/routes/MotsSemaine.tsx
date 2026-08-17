@@ -70,7 +70,7 @@ type Vue = 'alphabetique' | 'semaine'
 export function MotsSemaine() {
   // undefined = chargement, null = pas de liste dispo (hors ligne, aucune liste enregistrée...).
   const [listes, setListes] = useState<ListeMotsSemaine[] | null | undefined>(undefined)
-  const [vue, setVue] = useState<Vue>('alphabetique')
+  const [vue, setVue] = useState<Vue>('semaine')
 
   useEffect(() => {
     api
@@ -99,21 +99,21 @@ export function MotsSemaine() {
           <div className="mb-6 flex justify-center gap-2">
             <button
               type="button"
-              onClick={() => setVue('alphabetique')}
-              className={`rounded-full px-4 py-1.5 text-sm font-medium ${
-                vue === 'alphabetique' ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              Par ordre alphabétique
-            </button>
-            <button
-              type="button"
               onClick={() => setVue('semaine')}
               className={`rounded-full px-4 py-1.5 text-sm font-medium ${
                 vue === 'semaine' ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
               Semaine par semaine
+            </button>
+            <button
+              type="button"
+              onClick={() => setVue('alphabetique')}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium ${
+                vue === 'alphabetique' ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Par ordre alphabétique
             </button>
           </div>
 
