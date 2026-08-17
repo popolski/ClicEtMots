@@ -45,3 +45,11 @@ export function retirerFavori(lemmaId: string): void {
     // idem
   }
 }
+
+export function viderFavoris(): void {
+  try {
+    localStorage.removeItem(CLE)
+  } catch {
+    // idem
+  }
+}
