@@ -7,8 +7,15 @@ $db = getDb();
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    $stmt = $db->query('SELECT id, prenom, created_at FROM students ORDER BY prenom');
-    jsonResponse(200, ['students' => $stmt->fetchAll()]);
+    $stmt = $db->query('SELECT id, prenom, created_at, recherche_directe FROM students ORDER BY prenom');
+    $rows = $stmt->fetchAll();
+    $students = array_map(fn($row) => [
+        'id' => (int) $row['id'],
+        'prenom' => $row['prenom'],
+        'created_at' => $row['created_at'],
+        'recherche_directe' => (bool) $row['recherche_directe'],
+    ], $rows);
+    jsonResponse(200, ['students' => $students]);
 }
 
 if ($method === 'POST') {
@@ -28,6 +35,22 @@ if ($method === 'POST') {
     $stmt->execute([$prenom, $hash]);
 
     jsonResponse(201, ['id' => (int) $db->lastInsertId(), 'prenom' => $prenom]);
+}
+
+// Autorise/retire la recherche directe par orthographe pour un élève -
+// décidé au cas par cas par l'enseignante (voir schema-v5.sql).
+if ($method === 'PATCH') {
+    $id = (int) ($_GET['id'] ?? 0);
+    if ($id <= 0) {
+        jsonResponse(400, ['error' => 'id manquant']);
+    }
+    $body = jsonBody();
+    if (!array_key_exists('rechercheDirecte', $body)) {
+        jsonResponse(400, ['error' => 'rechercheDirecte manquant']);
+    }
+    $stmt = $db->prepare('UPDATE students SET recherche_directe = ? WHERE id = ?');
+    $stmt->execute([$body['rechercheDirecte'] ? 1 : 0, $id]);
+    jsonResponse(200, ['ok' => true]);
 }
 
 if ($method === 'DELETE') {

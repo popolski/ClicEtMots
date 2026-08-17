@@ -22,12 +22,15 @@ export interface SessionState {
   authenticated: boolean
   role?: 'teacher' | 'student'
   label?: string
+  /** Élève uniquement - recherche directe par orthographe autorisée par l'enseignante (voir students.php). */
+  rechercheDirecte?: boolean | null
 }
 
 export interface Student {
   id: number
   prenom: string
   created_at: string
+  recherche_directe: boolean
 }
 
 export type RelationType = 'synonyme' | 'antonyme' | 'famille'
@@ -79,7 +82,7 @@ export const api = {
   session: () => request<SessionState>('session.php'),
 
   login: (identifiant: string, motDePasse: string) =>
-    request<{ role: 'teacher' | 'student'; label: string }>('login.php', {
+    request<{ role: 'teacher' | 'student'; label: string; rechercheDirecte?: boolean }>('login.php', {
       method: 'POST',
       body: JSON.stringify({ identifiant, motDePasse }),
     }),
@@ -92,6 +95,12 @@ export const api = {
     request<{ id: number; prenom: string }>('students.php', {
       method: 'POST',
       body: JSON.stringify({ prenom, motDePasse }),
+    }),
+
+  setRechercheDirecte: (id: number, rechercheDirecte: boolean) =>
+    request<{ ok: true }>(`students.php?id=${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ rechercheDirecte }),
     }),
 
   deleteStudent: (id: number) => request<{ ok: true }>(`students.php?id=${id}`, { method: 'DELETE' }),

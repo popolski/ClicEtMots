@@ -25,8 +25,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = useCallback(async (identifiant: string, motDePasse: string) => {
-    const { role, label } = await api.login(identifiant, motDePasse)
-    setSession({ authenticated: true, role, label })
+    const { role, label, rechercheDirecte } = await api.login(identifiant, motDePasse)
+    setSession({ authenticated: true, role, label, rechercheDirecte })
   }, [])
 
   const logout = useCallback(async () => {

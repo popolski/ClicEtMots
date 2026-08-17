@@ -2,7 +2,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { assetUrl } from '../lib/assetUrl'
 import { useAuth } from '../lib/authContext'
-import { RechercheMotEnseignante } from './RechercheMotEnseignante'
+import { RechercheMotDirecte } from './RechercheMotDirecte'
 
 interface ToolLayoutProps {
   title: string
@@ -54,7 +54,7 @@ export function ToolLayout({
     <div className="mx-auto max-w-5xl px-4 py-8">
       {/* PAS de overflow-x-auto ici : ça coupe aussi le débordement vertical
           (CSS - un axe non "visible" force l'autre à "auto"), ce qui rendait
-          invisible la liste déroulante de RechercheMotEnseignante (positionnée
+          invisible la liste déroulante de RechercheMotDirecte (positionnée
           en absolute sous la barre de recherche) sans aucune erreur console -
           signalé par l'enseignante ("la recherche ne retourne aucun mot" alors
           que les résultats étaient bien présents dans la page, juste coupés
@@ -67,7 +67,12 @@ export function ToolLayout({
           <img src={assetUrl('/logo.png')} alt="Clic &amp; Mots" className="h-8 w-auto" />
         </Link>
         <div className="flex shrink-0 items-center gap-4 whitespace-nowrap">
-          {session?.role === 'teacher' && <RechercheMotEnseignante />}
+          {/* Enseignante : toujours. Élève : seulement si autorisé au cas par
+              cas (voir SectionEleves dans Admin.tsx) - les autres restent
+              limités au clavier phonétique. */}
+          {(session?.role === 'teacher' || (session?.role === 'student' && session.rechercheDirecte)) && (
+            <RechercheMotDirecte />
+          )}
           {!hideBackButton && (
             <button
               type="button"

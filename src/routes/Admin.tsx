@@ -58,6 +58,20 @@ function SectionEleves() {
     setStudents(r.students)
   }
 
+  async function basculerRechercheDirecte(student: Student) {
+    const valeur = !student.recherche_directe
+    // Optimiste : évite d'attendre l'aller-retour serveur pour un simple
+    // interrupteur, comme ailleurs dans le projet (favoris, etc.).
+    setStudents((prev) => prev?.map((s) => (s.id === student.id ? { ...s, recherche_directe: valeur } : s)) ?? null)
+    try {
+      await api.setRechercheDirecte(student.id, valeur)
+    } catch {
+      // Échec (hors ligne, etc.) : on revient à l'état d'avant plutôt que de
+      // laisser l'interrupteur mentir sur ce qui est vraiment enregistré.
+      setStudents((prev) => prev?.map((s) => (s.id === student.id ? { ...s, recherche_directe: !valeur } : s)) ?? null)
+    }
+  }
+
   return (
     <section className="mb-10 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
       <h2 className="mb-4 text-xl font-bold text-gray-800">Les élèves</h2>
@@ -107,6 +121,14 @@ function SectionEleves() {
               className="flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2"
             >
               <span className="text-lg font-medium text-blue-900">{s.prenom}</span>
+              <label className="flex items-center gap-1 text-xs text-blue-800" title="Autoriser la recherche directe par orthographe">
+                <input
+                  type="checkbox"
+                  checked={s.recherche_directe}
+                  onChange={() => basculerRechercheDirecte(s)}
+                />
+                🔍 Recherche
+              </label>
               <button
                 type="button"
                 onClick={() => supprimer(s)}
