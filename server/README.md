@@ -47,8 +47,8 @@ dans `/clicmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 - Mots de passe jamais stockés en clair (`password_hash`/`password_verify`).
 - Sessions HttpOnly + Secure + SameSite=Lax.
 - Anti brute-force basique : 10 tentatives / 15 min par IP (voir `auth.php`).
-- Toutes les requêtes SQL passent par des requêtes préparées (PDO) — pas
-  d'injection SQL possible depuis les entrées utilisateur.
+- Toutes les requêtes SQL intégrant des entrées utilisateur utilisent des
+  requêtes préparées PDO afin de prévenir les injections SQL.
 - Le lexique ajouté manuellement valide la catégorie et chaque touche
   phonétique contre une liste fermée côté serveur — impossible d'y glisser
   autre chose que des données conformes au format attendu par le site.
