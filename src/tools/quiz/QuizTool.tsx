@@ -5,19 +5,11 @@ import { SequenceBar } from '../../components/SequenceBar'
 import { PhonemeInfoModal } from '../../components/PhonemeInfoModal'
 import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
-import type { EntreeHistorique } from '../../lib/historique'
 import { genererDistracteurs } from '../../lib/quizErreurs'
-import {
-  ajouterResultatQuiz,
-  lireResultatsQuiz,
-  viderResultatsQuiz,
-  type ModeQuiz,
-  type ResultatQuiz,
-} from '../../lib/quizHistorique'
 import { badgePour, BADGE_EMOJI, BADGE_LABEL, type Badge } from '../../lib/quizBadges'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { api } from '../../lib/api'
-import type { MotDeListe } from '../../lib/api'
+import type { MotDeListe, ModeQuiz, ResultatQuiz } from '../../lib/api'
 import { LEMMA_IDS_DETERMINANTS, LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
 import { natureInvariable } from '../../lib/natureInvariable'
 import { phonemes } from '../../lib/phonemes'
@@ -86,6 +78,13 @@ const MODE_LABEL: Record<ModeQuiz, string> = {
   grammaire: 'Catégorie grammaticale',
 }
 
+/** Mot candidat pour une question de quiz - un sous-ensemble de WordEntry/MotDeListe. */
+interface MotCandidat {
+  lemmaId: string
+  word: string
+  category: WordCategory
+}
+
 // Rôle "de base" par catégorie (même logique que ROLE_DE_BASE dans
 // wordIndex.ts) : pour piocher dans les mots les plus fréquents du lexique,
 // on ne veut que la forme de base de chaque mot (pas "chevaux" séparément de
@@ -114,7 +113,7 @@ const ROLE_DE_BASE: Record<WordCategory, WordEntry['formRole']> = {
 // utilisables, la vraie taille visée.
 const TAILLE_VIVIER = 2000
 
-function motsFrequentsPourQuiz(wordIndex: WordEntry[]): EntreeHistorique[] {
+function motsFrequentsPourQuiz(wordIndex: WordEntry[]): MotCandidat[] {
   return wordIndex
     .filter(
       (e) =>
@@ -126,7 +125,7 @@ function motsFrequentsPourQuiz(wordIndex: WordEntry[]): EntreeHistorique[] {
     )
     .sort((a, b) => b.frequency - a.frequency)
     .slice(0, TAILLE_VIVIER)
-    .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
+    .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category }))
 }
 
 // Adverbes réels d'usage courant (pas des mots-outils comme "pas"/"y"/
@@ -151,14 +150,14 @@ const ADVERBES_SURS = new Set([
 // adjectifs sont proposables, et le tri par fréquence brute favorise
 // nettement les noms (signalé comme déséquilibré). Le tirage lui-même est
 // équilibré ensuite par equilibrerParNature, nature par nature.
-function motsFrequentsPourGrammaire(wordIndex: WordEntry[]): EntreeHistorique[] {
+function motsFrequentsPourGrammaire(wordIndex: WordEntry[]): MotCandidat[] {
   const base = motsFrequentsPourQuiz(wordIndex)
   const adverbes = wordIndex
     .filter((e) => e.category === 'adverbe' && e.formRole === 'simple' && ADVERBES_SURS.has(e.word))
-    .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
+    .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category }))
   const pronomsEtPrepositions = wordIndex
     .filter((e) => e.category === 'invariable' && e.formRole === 'simple' && natureInvariable(e.word) !== null)
-    .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category, consulteLe: 0 }))
+    .map((e) => ({ lemmaId: e.lemmaId, word: e.word, category: e.category }))
   return [...base, ...adverbes, ...pronomsEtPrepositions]
 }
 
@@ -168,8 +167,8 @@ function motsFrequentsPourGrammaire(wordIndex: WordEntry[]): EntreeHistorique[] 
 // connaît pas la nature précise (mot invariable hors pronom/préposition,
 // ex. "et"/"mais") sont écartées ici, pas avant, pour rester la SEULE
 // fonction responsable de ce filtre.
-function equilibrerParNature(source: EntreeHistorique[], count: number): Question[] {
-  const parNature = new Map<CategorieGrammaireQuiz, EntreeHistorique[]>()
+function equilibrerParNature(source: MotCandidat[], count: number): Question[] {
+  const parNature = new Map<CategorieGrammaireQuiz, MotCandidat[]>()
   for (const entree of melanger(source)) {
     const nature = natureGrammaireDe(entree)
     if (!nature) continue
@@ -241,14 +240,14 @@ function melanger<T>(items: T[]): T[] {
 }
 
 interface Question {
-  entree: EntreeHistorique
+  entree: MotCandidat
   /** Uniquement en mode QCM : mot correct + distracteurs, mélangés. */
   options?: string[]
   /** Uniquement en mode grammaire : nature attendue (peut différer de entree.category - voir natureGrammaireDe). */
   nature?: CategorieGrammaireQuiz
 }
 
-function QuestionCarte({ entree }: { entree: EntreeHistorique }) {
+function QuestionCarte({ entree }: { entree: MotCandidat }) {
   const picto = (wordPictos as Record<string, string>)[entree.word]
   return (
     <div className="mb-6 flex flex-col items-center">
@@ -539,12 +538,12 @@ export function QuizTool() {
     if (questions || !wordIndex || !mode) return
 
     const ambigus = motsAmbigus(wordIndex)
-    const sansAmbigus = (source: EntreeHistorique[]) => source.filter((e) => !ambigus.has(e.word.toLowerCase()))
+    const sansAmbigus = (source: MotCandidat[]) => source.filter((e) => !ambigus.has(e.word.toLowerCase()))
 
     if (mode === 'grammaire') {
       const depuisListe =
         utiliserListeSemaine && motsSemaineCumules
-          ? equilibrerParNature(sansAmbigus(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 }))), NB_MOTS_SESSION)
+          ? equilibrerParNature(sansAmbigus(motsSemaineCumules), NB_MOTS_SESSION)
           : []
       // Liste trop courte/peu variée pour fournir des questions équilibrées : on retombe sur le vivier général.
       const choisis =
@@ -553,7 +552,7 @@ export function QuizTool() {
       return
     }
 
-    function construire(source: EntreeHistorique[]): Question[] {
+    function construire(source: MotCandidat[]): Question[] {
       const choisis: Question[] = []
       for (const entree of melanger(source)) {
         if (choisis.length >= NB_MOTS_SESSION) break
@@ -573,7 +572,7 @@ export function QuizTool() {
     }
 
     if (utiliserListeSemaine && motsSemaineCumules) {
-      const depuisListe = construire(sansAmbigus(motsSemaineCumules.map((m) => ({ ...m, consulteLe: 0 }))))
+      const depuisListe = construire(sansAmbigus(motsSemaineCumules))
       // Liste trop courte ou trop d'homographes/confusions manquantes pour
       // fournir des questions valables : on retombe sur le vivier général
       // plutôt que de bloquer le quiz.
@@ -608,8 +607,15 @@ export function QuizTool() {
   function motSuivant() {
     if (!questions || !mode) return
     if (index + 1 >= questions.length) {
-      ajouterResultatQuiz({ mode, score, total: questions.length })
-      setResultats(lireResultatsQuiz())
+      // Best-effort : le score s'affiche même si l'enregistrement échoue
+      // (hors ligne) - on retente juste de recharger la liste ensuite,
+      // qu'il ait réussi ou non.
+      api
+        .ajouterResultatQuiz(mode, score, questions.length)
+        .catch(() => {})
+        .then(() => api.listResultatsQuiz())
+        .then((r) => setResultats(Array.isArray(r.resultats) ? r.resultats : []))
+        .catch(() => {})
       setTermine(true)
       return
     }
@@ -732,7 +738,7 @@ export function QuizTool() {
             <button
               type="button"
               onClick={() => {
-                viderResultatsQuiz()
+                api.viderResultatsQuiz().catch(() => {})
                 setResultats([])
               }}
               className="mt-3 text-sm text-gray-500 hover:text-brand-600"

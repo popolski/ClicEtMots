@@ -3,7 +3,11 @@
 -- données -> Adminer/phpMyAdmin) sur la base créée pour ce projet.
 --
 -- Volontairement minimal côté données personnelles (RGPD, élèves mineurs) :
--- prénom seul, pas de nom de famille, pas d'email, pas de suivi d'activité.
+-- prénom seul, pas de nom de famille, pas d'email. Depuis schema-v6.sql, la
+-- progression (quiz/favoris/historique) est centralisée ici aussi, à la
+-- demande explicite de l'enseignante pour faciliter son suivi - en échange
+-- d'une purge automatique par année scolaire (voir purgerSiNouvelleAnneeScolaire
+-- dans api/auth.php) et d'un bouton de réinitialisation manuelle.
 
 CREATE TABLE IF NOT EXISTS teachers (
   id INT AUTO_INCREMENT PRIMARY KEY,

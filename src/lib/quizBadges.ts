@@ -1,8 +1,7 @@
 // Petite émulation sans comparaison entre élèves (pas de classement, pas de
-// moyenne de classe - voir la discussion produit : ça nécessiterait de
-// remonter les scores au serveur, un vrai changement de politique de
-// données face au choix RGPD déjà pris ailleurs dans le projet). Un badge
-// ne dépend que du score de SA PROPRE partie, jamais de celui des autres.
+// moyenne de classe - écarté volontairement même après la centralisation
+// des scores côté serveur, voir server/schema-v6.sql). Un badge ne dépend
+// que du score de SA PROPRE partie, jamais de celui des autres.
 export type Badge = 'or' | 'argent' | 'bronze'
 
 export const BADGE_EMOJI: Record<Badge, string> = {

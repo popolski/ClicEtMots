@@ -9,8 +9,8 @@ import { verbGroup } from '../conjugueur/conjugueurLogic'
 import { loadConjugations } from '../../lib/conjugations'
 import { assetUrl } from '../../lib/assetUrl'
 import { speak, speechSupported } from '../../lib/speech'
-import { ajouterAuHistorique } from '../../lib/historique'
-import { ajouterFavori, estFavori, retirerFavori } from '../../lib/favoris'
+import { api } from '../../lib/api'
+import { useAuth } from '../../lib/authContext'
 import { natureInvariable } from '../../lib/natureInvariable'
 import wordPictos from '../../data/word-pictos.json'
 import type {
@@ -157,20 +157,35 @@ export function MotTool() {
     [forms],
   )
   const { groupe, peutConjuguer } = useInfosVerbe(primaryMemo?.word ?? '', primaryMemo?.category)
+  const { session } = useAuth()
+  // Historique et favoris sont désormais centralisés côté serveur, réservés
+  // aux comptes élève (voir favoris.php/historique.php) - une enseignante
+  // qui consulte une fiche via RechercheMotDirecte n'a ni bouton favori ni
+  // suivi d'historique, ça n'aurait pas de sens sur son propre compte.
+  const estEleve = session?.role === 'student'
   const [favori, setFavori] = useState(false)
 
   useEffect(() => {
-    if (!primaryMemo) return
-    ajouterAuHistorique({ lemmaId: primaryMemo.lemmaId, word: primaryMemo.word, category: primaryMemo.category })
-    setFavori(estFavori(primaryMemo.lemmaId))
-  }, [primaryMemo])
+    if (!primaryMemo || !estEleve) return
+    api
+      .ajouterAuHistorique({ lemmaId: primaryMemo.lemmaId, word: primaryMemo.word, category: primaryMemo.category })
+      .catch(() => {
+        // Hors ligne/serveur indisponible : l'historique est un confort, pas une nécessité.
+      })
+    api
+      .listFavoris()
+      .then((r) => setFavori(Array.isArray(r.favoris) && r.favoris.some((f) => f.lemmaId === primaryMemo.lemmaId)))
+      .catch(() => setFavori(false))
+  }, [primaryMemo, estEleve])
 
   function basculerFavori() {
     if (!primaryMemo) return
     if (favori) {
-      retirerFavori(primaryMemo.lemmaId)
+      api.retirerFavori(primaryMemo.lemmaId).catch(() => {})
     } else {
-      ajouterFavori({ lemmaId: primaryMemo.lemmaId, word: primaryMemo.word, category: primaryMemo.category })
+      api
+        .ajouterFavori({ lemmaId: primaryMemo.lemmaId, word: primaryMemo.word, category: primaryMemo.category })
+        .catch(() => {})
     }
     setFavori(!favori)
   }
@@ -246,14 +261,16 @@ export function MotTool() {
               🔊
             </button>
           )}
-          <button
-            type="button"
-            onClick={basculerFavori}
-            aria-label={favori ? `Retirer « ${primary.word} » des favoris` : `Ajouter « ${primary.word} » aux favoris`}
-            className="rounded-full p-2 text-2xl leading-none text-gray-500 hover:bg-black/10 active:scale-95"
-          >
-            {favori ? '⭐' : '☆'}
-          </button>
+          {estEleve && (
+            <button
+              type="button"
+              onClick={basculerFavori}
+              aria-label={favori ? `Retirer « ${primary.word} » des favoris` : `Ajouter « ${primary.word} » aux favoris`}
+              className="rounded-full p-2 text-2xl leading-none text-gray-500 hover:bg-black/10 active:scale-95"
+            >
+              {favori ? '⭐' : '☆'}
+            </button>
+          )}
         </div>
       }
     >

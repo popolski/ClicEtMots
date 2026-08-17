@@ -76,3 +76,48 @@ function requireTeacher(): array
     }
     return $user;
 }
+
+// --- Purge annuelle des données élève (quiz/favoris/historique) -----------
+// Miroir côté serveur de src/lib/rotationAnneeScolaire.ts : un PC de classe
+// réutilisé d'un élève à l'autre ou d'une année sur l'autre ne doit jamais
+// montrer les données d'un autre élève. Rentrée = 1er septembre.
+function anneeScolaireActuelle(): string
+{
+    $mois = (int) date('n');
+    $annee = (int) date('Y');
+    $debut = $mois >= 9 ? $annee : $annee - 1;
+    return "$debut-" . ($debut + 1);
+}
+
+// À appeler juste après une connexion élève réussie (voir login.php) :
+// purge silencieusement quiz_resultats/favoris/historique_consultation de
+// CET élève si l'année scolaire a changé depuis sa dernière connexion.
+// Jamais au tout premier login (derniere_annee_scolaire encore NULL - rien
+// à purger).
+function purgerSiNouvelleAnneeScolaire(int $studentId): void
+{
+    $db = getDb();
+    $actuelle = anneeScolaireActuelle();
+
+    $stmt = $db->prepare('SELECT derniere_annee_scolaire FROM students WHERE id = ?');
+    $stmt->execute([$studentId]);
+    $derniere = $stmt->fetchColumn();
+
+    if ($derniere && $derniere !== $actuelle) {
+        reinitialiserDonneesEleve($db, $studentId);
+    }
+
+    $stmt = $db->prepare('UPDATE students SET derniere_annee_scolaire = ? WHERE id = ?');
+    $stmt->execute([$actuelle, $studentId]);
+}
+
+// Vide les 3 tables de données d'un élève - réutilisé par la purge
+// automatique ci-dessus ET par le bouton de réinitialisation manuelle de
+// l'enseignante (voir reset-donnees.php).
+function reinitialiserDonneesEleve(PDO $db, int $studentId): void
+{
+    foreach (['quiz_resultats', 'favoris', 'historique_consultation'] as $table) {
+        $stmt = $db->prepare("DELETE FROM $table WHERE student_id = ?");
+        $stmt->execute([$studentId]);
+    }
+}

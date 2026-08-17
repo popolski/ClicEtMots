@@ -78,6 +78,29 @@ export interface ListeMotsSemaine {
   updatedAt: string
 }
 
+export type ModeQuiz = 'qcm' | 'reconstitution' | 'grammaire'
+
+export interface ResultatQuiz {
+  mode: ModeQuiz
+  score: number
+  total: number
+  termineLe: string
+}
+
+export interface FavoriServeur {
+  lemmaId: string
+  word: string
+  category: 'nom' | 'adjectif' | 'verbe' | 'adverbe' | 'invariable'
+  ajouteLe: string
+}
+
+export interface EntreeHistorique {
+  lemmaId: string
+  word: string
+  category: 'nom' | 'adjectif' | 'verbe' | 'adverbe' | 'invariable'
+  consulteLe: string
+}
+
 export const api = {
   session: () => request<SessionState>('session.php'),
 
@@ -149,4 +172,33 @@ export const api = {
     }),
 
   deleteListeMotsSemaine: (id: number) => request<{ ok: true }>(`mots-semaine.php?id=${id}`, { method: 'DELETE' }),
+
+  listResultatsQuiz: () => request<{ resultats: ResultatQuiz[] }>('quiz-resultats.php'),
+
+  ajouterResultatQuiz: (mode: ModeQuiz, score: number, total: number) =>
+    request<{ ok: true }>('quiz-resultats.php', {
+      method: 'POST',
+      body: JSON.stringify({ mode, score, total }),
+    }),
+
+  viderResultatsQuiz: () => request<{ ok: true }>('quiz-resultats.php', { method: 'DELETE' }),
+
+  listFavoris: () => request<{ favoris: FavoriServeur[] }>('favoris.php'),
+
+  ajouterFavori: (entree: Omit<FavoriServeur, 'ajouteLe'>) =>
+    request<{ ok: true }>('favoris.php', { method: 'POST', body: JSON.stringify(entree) }),
+
+  retirerFavori: (lemmaId: string) =>
+    request<{ ok: true }>(`favoris.php?lemmaId=${encodeURIComponent(lemmaId)}`, { method: 'DELETE' }),
+
+  lireHistorique: () => request<{ entrees: EntreeHistorique[] }>('historique.php'),
+
+  ajouterAuHistorique: (entree: Omit<EntreeHistorique, 'consulteLe'>) =>
+    request<{ ok: true }>('historique.php', { method: 'POST', body: JSON.stringify(entree) }),
+
+  viderHistorique: () => request<{ ok: true }>('historique.php', { method: 'DELETE' }),
+
+  /** Réservé à l'enseignante - sans studentId, réinitialise TOUTE la classe. */
+  reinitialiserDonneesEleve: (studentId?: number) =>
+    request<{ ok: true }>('reset-donnees.php', { method: 'POST', body: JSON.stringify({ studentId }) }),
 }

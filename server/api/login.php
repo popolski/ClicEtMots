@@ -38,6 +38,7 @@ $stmt->execute([$identifiant]);
 $student = $stmt->fetch();
 
 if ($student && password_verify($motDePasse, $student['password_hash'])) {
+    purgerSiNouvelleAnneeScolaire((int) $student['id']);
     $rechercheDirecte = (bool) $student['recherche_directe'];
     $_SESSION['user'] = [
         'id' => $student['id'],

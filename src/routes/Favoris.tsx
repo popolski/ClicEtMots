@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ToolLayout } from '../components/ToolLayout'
 import { assetUrl } from '../lib/assetUrl'
-import { lireFavoris, retirerFavori } from '../lib/favoris'
+import { api } from '../lib/api'
+import type { FavoriServeur } from '../lib/api'
 import { natureInvariable } from '../lib/natureInvariable'
 import type { WordCategory } from '../types/phonetics'
 
@@ -38,11 +39,21 @@ const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Pré
 const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
 
 export function Favoris() {
-  const [entrees, setEntrees] = useState(() => lireFavoris())
+  // null = pas encore chargé.
+  const [entrees, setEntrees] = useState<FavoriServeur[] | null>(null)
+
+  useEffect(() => {
+    api
+      .listFavoris()
+      .then((r) => setEntrees(Array.isArray(r.favoris) ? r.favoris : []))
+      .catch(() => setEntrees([]))
+  }, [])
 
   return (
     <ToolLayout title="Mes favoris" description="Les mots que tu as choisi de retenir." showBackToKeyboard>
-      {entrees.length === 0 ? (
+      {entrees === null ? (
+        <p className="py-10 text-center text-gray-400">Chargement…</p>
+      ) : entrees.length === 0 ? (
         <p className="py-10 text-center text-gray-400">
           Aucun favori pour l'instant. Clique sur l'étoile ☆ d'une fiche mot pour l'ajouter ici.
         </p>
@@ -69,8 +80,8 @@ export function Favoris() {
                 <button
                   type="button"
                   onClick={() => {
-                    retirerFavori(entree.lemmaId)
-                    setEntrees((e) => e.filter((f) => f.lemmaId !== entree.lemmaId))
+                    api.retirerFavori(entree.lemmaId).catch(() => {})
+                    setEntrees((e) => e?.filter((f) => f.lemmaId !== entree.lemmaId) ?? null)
                   }}
                   aria-label={`Retirer « ${entree.word} » des favoris`}
                   className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-1 text-lg leading-none opacity-60 hover:bg-black/10 hover:opacity-100"

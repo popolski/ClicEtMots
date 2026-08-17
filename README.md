@@ -42,7 +42,8 @@ l'orthographe correspondante apparaît.
   par temps de conjugaison, pour un repérage visuel immédiat.
 - **Mots récents et favoris** : historique automatique des mots consultés, et
   possibilité de marquer volontairement des mots à retrouver plus tard (⭐) —
-  les deux restent locaux à l'appareil, jamais envoyés au serveur.
+  liés au compte élève, purgés automatiquement à chaque changement d'année
+  scolaire.
 - **Petit quiz de révision**, trois modes au choix : choix multiple (mauvaises
   réponses générées à partir de vraies confusions de son du français — jamais
   une orthographe inventée), recomposition au clavier phonétique (3 essais

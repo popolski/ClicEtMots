@@ -72,6 +72,24 @@ function SectionEleves() {
     }
   }
 
+  // Réinitialisation manuelle des scores de quiz/favoris/historique - en
+  // complément de la purge automatique par année scolaire (voir
+  // purgerSiNouvelleAnneeScolaire dans server/api/auth.php).
+  async function reinitialiserUnEleve(student: Student) {
+    if (!confirm(`Effacer les scores de quiz, favoris et historique de ${student.prenom} ? Cette action est définitive.`)) return
+    await api.reinitialiserDonneesEleve(student.id)
+  }
+
+  async function reinitialiserTousLesEleves() {
+    if (
+      !confirm(
+        "Effacer les scores de quiz, favoris et historique de TOUS les élèves ? Cette action est définitive et ne supprime pas les comptes eux-mêmes.",
+      )
+    )
+      return
+    await api.reinitialiserDonneesEleve()
+  }
+
   return (
     <section className="mb-10 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
       <h2 className="mb-4 text-xl font-bold text-gray-800">Les élèves</h2>
@@ -131,6 +149,15 @@ function SectionEleves() {
               </label>
               <button
                 type="button"
+                onClick={() => reinitialiserUnEleve(s)}
+                aria-label={`Réinitialiser les données de ${s.prenom}`}
+                title="Effacer ses scores de quiz, favoris et historique"
+                className="text-sm text-gray-400 hover:text-brand-600"
+              >
+                🗑
+              </button>
+              <button
+                type="button"
                 onClick={() => supprimer(s)}
                 aria-label={`Supprimer ${s.prenom}`}
                 className="text-sm text-gray-400 hover:text-red-600"
@@ -140,6 +167,16 @@ function SectionEleves() {
             </li>
           ))}
         </ul>
+      )}
+
+      {students !== null && students.length > 0 && (
+        <button
+          type="button"
+          onClick={reinitialiserTousLesEleves}
+          className="mt-4 text-sm text-gray-500 hover:text-red-600"
+        >
+          🗑 Réinitialiser les scores de quiz, favoris et historique de tous les élèves
+        </button>
       )}
 
       <p className="mt-4 text-xs text-gray-500">

@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ToolLayout } from '../components/ToolLayout'
 import { assetUrl } from '../lib/assetUrl'
-import { lireHistorique, viderHistorique } from '../lib/historique'
+import { api } from '../lib/api'
+import type { EntreeHistorique } from '../lib/api'
 import { natureInvariable } from '../lib/natureInvariable'
 import type { WordCategory } from '../types/phonetics'
 
@@ -42,15 +43,25 @@ const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Pré
 const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
 
 export function Historique() {
-  const [entrees, setEntrees] = useState(() => lireHistorique())
+  // null = pas encore chargé.
+  const [entrees, setEntrees] = useState<EntreeHistorique[] | null>(null)
+
+  useEffect(() => {
+    api
+      .lireHistorique()
+      .then((r) => setEntrees(Array.isArray(r.entrees) ? r.entrees : []))
+      .catch(() => setEntrees([]))
+  }, [])
 
   return (
     <ToolLayout
       title="Mots récents"
-      description="Les derniers mots que tu as consultés sur cet appareil."
+      description="Les derniers mots que tu as consultés."
       showBackToKeyboard
     >
-      {entrees.length === 0 ? (
+      {entrees === null ? (
+        <p className="py-10 text-center text-gray-400">Chargement…</p>
+      ) : entrees.length === 0 ? (
         <p className="py-10 text-center text-gray-400">Aucun mot consulté pour l'instant.</p>
       ) : (
         <>
@@ -79,7 +90,7 @@ export function Historique() {
           <button
             type="button"
             onClick={() => {
-              viderHistorique()
+              api.viderHistorique().catch(() => {})
               setEntrees([])
             }}
             className="text-sm text-gray-500 hover:text-brand-600"
