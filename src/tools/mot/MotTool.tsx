@@ -12,6 +12,7 @@ import { speak, speechSupported } from '../../lib/speech'
 import { api } from '../../lib/api'
 import { useAuth } from '../../lib/authContext'
 import { natureInvariable } from '../../lib/natureInvariable'
+import { DecompositionSonGraphie } from './DecompositionSonGraphie'
 import wordPictos from '../../data/word-pictos.json'
 import type {
   WordCategory,
@@ -274,6 +275,8 @@ export function MotTool() {
         </div>
       }
     >
+      <DecompositionSonGraphie word={primary.word} phonemeSeq={primary.phonemes} />
+
       <div className="mb-8 flex flex-wrap gap-3">
         <Link
           to={`/definition/${primary.category}/${encodeURIComponent(primary.word)}`}
