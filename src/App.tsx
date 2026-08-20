@@ -1,8 +1,9 @@
 import { Suspense, lazy } from 'react'
+import type { ReactNode } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './routes/Home'
 import { AuthProvider } from './lib/auth'
-import { ConfortLectureProvider } from './lib/ConfortLectureProvider'
+import { useAuth } from './lib/authContext'
 import { RequireAuth } from './components/RequireAuth'
 
 const ClavierTool = lazy(() => import('./tools/clavier/ClavierTool').then((m) => ({ default: m.ClavierTool })))
@@ -25,11 +26,24 @@ const Favoris = lazy(() => import('./routes/Favoris').then((m) => ({ default: m.
 const MotsSemaine = lazy(() => import('./routes/MotsSemaine').then((m) => ({ default: m.MotsSemaine })))
 const QuizTool = lazy(() => import('./tools/quiz/QuizTool').then((m) => ({ default: m.QuizTool })))
 
+/**
+ * Applique la classe CSS du mode confort de lecture (police Lexend +
+ * espacement, voir index.css) sur toute l'app quand l'enseignante l'a
+ * activé pour cet élève (voir SectionEleves dans Admin.tsx) - un réglage
+ * décidé par elle, pas par l'élève lui-même (revu après un premier essai en
+ * auto-activation côté élève).
+ */
+function ZoneConfortLecture({ children }: { children: ReactNode }) {
+  const { session } = useAuth()
+  const confort = session?.role === 'student' && session.confortLecture === true
+  return <div className={confort ? 'confort-lecture' : undefined}>{children}</div>
+}
+
 function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <AuthProvider>
-        <ConfortLectureProvider>
+        <ZoneConfortLecture>
           <div className="min-h-screen">
             <Suspense fallback={<div className="p-10 text-center text-gray-400">Chargement…</div>}>
               <Routes>
@@ -125,7 +139,7 @@ function App() {
               </Routes>
             </Suspense>
           </div>
-        </ConfortLectureProvider>
+        </ZoneConfortLecture>
       </AuthProvider>
     </BrowserRouter>
   )

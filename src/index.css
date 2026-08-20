@@ -21,7 +21,8 @@ body {
 }
 
 /* Mode confort de lecture (dys) : police plus aérée + espacement des
-   lettres, activable par l'élève lui-même (voir ConfortLectureProvider.tsx). */
+   lettres, activé par l'enseignante au cas par cas (voir App.tsx,
+   ZoneConfortLecture, et SectionEleves dans Admin.tsx). */
 .confort-lecture {
   font-family: "Lexend", sans-serif;
   letter-spacing: 0.02em;

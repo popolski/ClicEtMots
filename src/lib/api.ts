@@ -24,6 +24,8 @@ export interface SessionState {
   label?: string
   /** Élève uniquement - recherche directe par orthographe autorisée par l'enseignante (voir students.php). */
   rechercheDirecte?: boolean | null
+  /** Élève uniquement - mode confort de lecture (dys) activé par l'enseignante (voir students.php). */
+  confortLecture?: boolean | null
 }
 
 export interface Student {
@@ -31,6 +33,7 @@ export interface Student {
   prenom: string
   created_at: string
   recherche_directe: boolean
+  confort_lecture: boolean
 }
 
 export type RelationType = 'synonyme' | 'antonyme' | 'famille'
@@ -105,10 +108,10 @@ export const api = {
   session: () => request<SessionState>('session.php'),
 
   login: (identifiant: string, motDePasse: string) =>
-    request<{ role: 'teacher' | 'student'; label: string; rechercheDirecte?: boolean }>('login.php', {
-      method: 'POST',
-      body: JSON.stringify({ identifiant, motDePasse }),
-    }),
+    request<{ role: 'teacher' | 'student'; label: string; rechercheDirecte?: boolean; confortLecture?: boolean }>(
+      'login.php',
+      { method: 'POST', body: JSON.stringify({ identifiant, motDePasse }) },
+    ),
 
   logout: () => request<{ ok: true }>('logout.php', { method: 'POST' }),
 
@@ -124,6 +127,12 @@ export const api = {
     request<{ ok: true }>(`students.php?id=${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ rechercheDirecte }),
+    }),
+
+  setConfortLecture: (id: number, confortLecture: boolean) =>
+    request<{ ok: true }>(`students.php?id=${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ confortLecture }),
     }),
 
   deleteStudent: (id: number) => request<{ ok: true }>(`students.php?id=${id}`, { method: 'DELETE' }),

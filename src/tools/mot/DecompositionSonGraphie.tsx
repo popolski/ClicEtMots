@@ -1,12 +1,13 @@
 import { useMemo } from 'react'
 import { decomposerMot } from '../../lib/alignementGraphemes'
 import { phonemes } from '../../lib/phonemes'
-import { useConfortLecture } from '../../lib/confortLectureContext'
 import type { PhonemeId } from '../../types/phonetics'
 
 interface DecompositionSonGraphieProps {
   word: string
   phonemeSeq: PhonemeId[]
+  /** Mode confort de lecture (dys), activé par l'enseignante - voir MotTool.tsx. */
+  confort: boolean
 }
 
 const phonemesParId = new Map(phonemes.map((p) => [p.id, p]))
@@ -35,9 +36,8 @@ function couleurGrapheme(phonemeId: PhonemeId, grapheme: string): string {
  * "l'orthographe apparaît" du clavier par une vraie décomposition - signalé
  * par l'enseignante comme le vrai manque de l'outil.
  */
-export function DecompositionSonGraphie({ word, phonemeSeq }: DecompositionSonGraphieProps) {
+export function DecompositionSonGraphie({ word, phonemeSeq, confort }: DecompositionSonGraphieProps) {
   const decomposition = useMemo(() => decomposerMot(word, phonemeSeq, phonemes), [word, phonemeSeq])
-  const { actif: confort } = useConfortLecture()
 
   return (
     <div className="mb-8 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">

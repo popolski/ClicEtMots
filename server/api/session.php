@@ -10,6 +10,7 @@ jsonResponse(200, [
     'authenticated' => true,
     'role' => $_SESSION['user']['role'],
     'label' => $_SESSION['user']['label'],
-    // Absent pour un enseignant - seuls les élèves ont ce champ (voir login.php).
+    // Absents pour un enseignant - seuls les élèves ont ces champs (voir login.php).
     'rechercheDirecte' => $_SESSION['user']['rechercheDirecte'] ?? null,
+    'confortLecture' => $_SESSION['user']['confortLecture'] ?? null,
 ]);

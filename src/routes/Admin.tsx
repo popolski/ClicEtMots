@@ -72,6 +72,16 @@ function SectionEleves() {
     }
   }
 
+  async function basculerConfortLecture(student: Student) {
+    const valeur = !student.confort_lecture
+    setStudents((prev) => prev?.map((s) => (s.id === student.id ? { ...s, confort_lecture: valeur } : s)) ?? null)
+    try {
+      await api.setConfortLecture(student.id, valeur)
+    } catch {
+      setStudents((prev) => prev?.map((s) => (s.id === student.id ? { ...s, confort_lecture: !valeur } : s)) ?? null)
+    }
+  }
+
   // Réinitialisation manuelle des scores de quiz/favoris/historique - en
   // complément de la purge automatique par année scolaire (voir
   // purgerSiNouvelleAnneeScolaire dans server/api/auth.php).
@@ -146,6 +156,14 @@ function SectionEleves() {
                   onChange={() => basculerRechercheDirecte(s)}
                 />
                 🔍 Recherche
+              </label>
+              <label className="flex items-center gap-1 text-xs text-blue-800" title="Activer le mode confort de lecture (dys)">
+                <input
+                  type="checkbox"
+                  checked={s.confort_lecture}
+                  onChange={() => basculerConfortLecture(s)}
+                />
+                👓 Confort
               </label>
               <button
                 type="button"
