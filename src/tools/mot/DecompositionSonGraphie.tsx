@@ -12,9 +12,20 @@ interface DecompositionSonGraphieProps {
 const phonemesParId = new Map(phonemes.map((p) => [p.id, p]))
 
 // Distinction voyelles/consonnes du clavier (les 11 premiers phonèmes de
-// phonemes.json) - repère visuel supplémentaire proposé en mode confort de
-// lecture, pas affiché par défaut pour ne pas surcharger la fiche.
+// phonemes.json).
 const VOYELLES: Set<PhonemeId> = new Set(['a', 'e', 'i', 'o', 'u', 'ou', 'on', 'an', 'in', 'oi', 'eu'])
+
+// Code couleur repris de LireCouleur (Éduscol - primabord.eduscol.education.fr/lirecouleur),
+// convention la plus reprise en orthophonie/classe pour les dys, PAS mon
+// invention (une première version en vert/turquoise avait été corrigée après
+// vérification - le vert seul posait aussi un souci de daltonisme) :
+// rouge = voyelle simple, bleu = consonne simple, vert = graphème complexe
+// (digramme/trigramme comme "ch"/"ou"/"eau" - pour éviter de le lire lettre
+// par lettre), gris = muet (géré séparément plus bas).
+function couleurGrapheme(phonemeId: PhonemeId, grapheme: string): string {
+  if (grapheme.length > 1) return 'bg-green-100 text-green-900'
+  return VOYELLES.has(phonemeId) ? 'bg-red-100 text-red-900' : 'bg-blue-100 text-blue-900'
+}
 
 /**
  * Montre explicitement le lien son -> lettres pour CE mot, geste Eduscol du
@@ -35,7 +46,7 @@ export function DecompositionSonGraphie({ word, phonemeSeq }: DecompositionSonGr
         {decomposition.segments.map((segment, i) => {
           const phoneme = phonemesParId.get(segment.phonemeId)
           const autresGraphies = phoneme?.graphemes.filter((g) => g.grapheme !== segment.grapheme) ?? []
-          const couleurConfort = confort ? (VOYELLES.has(segment.phonemeId) ? 'bg-green-200 text-green-900' : 'bg-brand-100 text-brand-700') : 'bg-brand-100 text-brand-700'
+          const couleurConfort = confort ? couleurGrapheme(segment.phonemeId, segment.grapheme) : 'bg-brand-100 text-brand-700'
           return (
             <div key={i} className="flex flex-col items-center gap-1">
               <span className="text-xs font-medium text-gray-400">[{phoneme?.displaySymbol ?? segment.phonemeId}]</span>
