@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { decomposerMot } from '../../lib/alignementGraphemes'
 import { phonemes } from '../../lib/phonemes'
+import { useConfortLecture } from '../../lib/confortLectureContext'
 import type { PhonemeId } from '../../types/phonetics'
 
 interface DecompositionSonGraphieProps {
@@ -9,6 +10,11 @@ interface DecompositionSonGraphieProps {
 }
 
 const phonemesParId = new Map(phonemes.map((p) => [p.id, p]))
+
+// Distinction voyelles/consonnes du clavier (les 11 premiers phonèmes de
+// phonemes.json) - repère visuel supplémentaire proposé en mode confort de
+// lecture, pas affiché par défaut pour ne pas surcharger la fiche.
+const VOYELLES: Set<PhonemeId> = new Set(['a', 'e', 'i', 'o', 'u', 'ou', 'on', 'an', 'in', 'oi', 'eu'])
 
 /**
  * Montre explicitement le lien son -> lettres pour CE mot, geste Eduscol du
@@ -20,6 +26,7 @@ const phonemesParId = new Map(phonemes.map((p) => [p.id, p]))
  */
 export function DecompositionSonGraphie({ word, phonemeSeq }: DecompositionSonGraphieProps) {
   const decomposition = useMemo(() => decomposerMot(word, phonemeSeq, phonemes), [word, phonemeSeq])
+  const { actif: confort } = useConfortLecture()
 
   return (
     <div className="mb-8 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
@@ -28,12 +35,11 @@ export function DecompositionSonGraphie({ word, phonemeSeq }: DecompositionSonGr
         {decomposition.segments.map((segment, i) => {
           const phoneme = phonemesParId.get(segment.phonemeId)
           const autresGraphies = phoneme?.graphemes.filter((g) => g.grapheme !== segment.grapheme) ?? []
+          const couleurConfort = confort ? (VOYELLES.has(segment.phonemeId) ? 'bg-green-200 text-green-900' : 'bg-brand-100 text-brand-700') : 'bg-brand-100 text-brand-700'
           return (
             <div key={i} className="flex flex-col items-center gap-1">
               <span className="text-xs font-medium text-gray-400">[{phoneme?.displaySymbol ?? segment.phonemeId}]</span>
-              <span className="rounded-lg bg-brand-100 px-3 py-1 text-2xl font-semibold text-brand-700">
-                {segment.grapheme}
-              </span>
+              <span className={`rounded-lg px-3 py-1 text-2xl font-semibold ${couleurConfort}`}>{segment.grapheme}</span>
               {autresGraphies.length > 0 && (
                 <span className="max-w-24 text-center text-xs text-gray-400">
                   aussi : {autresGraphies.map((g) => g.grapheme).join(', ')}

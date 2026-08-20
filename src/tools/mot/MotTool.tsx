@@ -12,6 +12,7 @@ import { speak, speechSupported } from '../../lib/speech'
 import { api } from '../../lib/api'
 import { useAuth } from '../../lib/authContext'
 import { natureInvariable } from '../../lib/natureInvariable'
+import { useConfortLecture } from '../../lib/confortLectureContext'
 import { DecompositionSonGraphie } from './DecompositionSonGraphie'
 import wordPictos from '../../data/word-pictos.json'
 import type {
@@ -165,6 +166,7 @@ export function MotTool() {
   // suivi d'historique, ça n'aurait pas de sens sur son propre compte.
   const estEleve = session?.role === 'student'
   const [favori, setFavori] = useState(false)
+  const { actif: confort, basculer: basculerConfort } = useConfortLecture()
 
   useEffect(() => {
     if (!primaryMemo || !estEleve) return
@@ -229,18 +231,23 @@ export function MotTool() {
         <div className="flex items-end gap-2">
           {natureInvariablePrimary && (
             <div className="flex flex-col items-center gap-1">
-              <img src={assetUrl(NATURE_INVARIABLE_MASCOT[natureInvariablePrimary])} alt="" className="h-20 w-20 object-contain" />
+              {!confort && (
+                <img src={assetUrl(NATURE_INVARIABLE_MASCOT[natureInvariablePrimary])} alt="" className="h-20 w-20 object-contain" />
+              )}
               <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
                 {NATURE_INVARIABLE_LABEL[natureInvariablePrimary]}
               </span>
             </div>
           )}
           <div className="flex flex-col items-center gap-1">
-            <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-20 w-20 object-contain" />
+            {!confort && <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-20 w-20 object-contain" />}
             <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
               {CATEGORY_LABEL[primary.category]}
             </span>
           </div>
+          {/* Le picto ARASAAC reste visible même en mode confort : c'est une
+              aide au sens (illustration du mot), pas une mascotte décorative
+              - contrairement aux mascottes de catégorie ci-dessus. */}
           {(wordPictos as Record<string, string>)[primary.word] && (
             <img
               src={assetUrl((wordPictos as Record<string, string>)[primary.word])}
@@ -270,6 +277,18 @@ export function MotTool() {
               className="rounded-full p-2 text-2xl leading-none text-gray-500 hover:bg-black/10 active:scale-95"
             >
               {favori ? '⭐' : '☆'}
+            </button>
+          )}
+          {estEleve && (
+            <button
+              type="button"
+              onClick={basculerConfort}
+              aria-pressed={confort}
+              aria-label={confort ? 'Désactiver le mode confort de lecture' : 'Activer le mode confort de lecture'}
+              title="Confort de lecture"
+              className={`rounded-full p-2 text-2xl leading-none hover:bg-black/10 active:scale-95 ${confort ? 'text-brand-600' : 'text-gray-500'}`}
+            >
+              👓
             </button>
           )}
         </div>
