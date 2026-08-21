@@ -29,6 +29,11 @@ $stmt->execute([$identifiant]);
 $teacher = $stmt->fetch();
 
 if ($teacher && password_verify($motDePasse, $teacher['password_hash'])) {
+    // Nouvel identifiant de session à chaque connexion réussie : sans ça,
+    // un identifiant obtenu AVANT le login (ex. posé par un attaquant sur
+    // le poste, puis réutilisé) resterait valable une fois la personne
+    // authentifiée - c'est la fixation de session. Signalé en revue de code.
+    session_regenerate_id(true);
     $_SESSION['user'] = ['id' => $teacher['id'], 'role' => 'teacher', 'label' => $teacher['label']];
     jsonResponse(200, ['role' => 'teacher', 'label' => $teacher['label']]);
 }
@@ -38,6 +43,7 @@ $stmt->execute([$identifiant]);
 $student = $stmt->fetch();
 
 if ($student && password_verify($motDePasse, $student['password_hash'])) {
+    session_regenerate_id(true); // voir le commentaire côté enseignant ci-dessus
     purgerSiNouvelleAnneeScolaire((int) $student['id']);
     $rechercheDirecte = (bool) $student['recherche_directe'];
     $confortLecture = (bool) $student['confort_lecture'];
