@@ -15,7 +15,7 @@ import {
   natureGrammaireDe,
 } from './quizLogic'
 import { natureInvariable } from '../../lib/natureInvariable'
-import { LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
+import { LEMMA_IDS_ADJECTIFS_PARASITES, LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
 import type { WordEntry } from '../../types/phonetics'
 
 const lexique = words as WordEntry[]
@@ -63,6 +63,32 @@ describe('homographes fantômes (erreurs de corpus, pas de vraies doubles nature
     expect(LEMMA_IDS_HOMOGRAPHES_FANTOMES.has(`adjectif:${mot}`)).toBe(true)
     expect(vivierQcm.some((e) => e.word === mot)).toBe(false)
     expect(vivierGrammaire.some((e) => e.word === mot)).toBe(false)
+  })
+})
+
+describe('adjectifs parasites (fréquence héritée d\'un nom homographe au féminin)', () => {
+  // "tortu" est apparu au quiz : un enfant y lit "tortue" mal orthographié.
+  // Sa fréquence est celle de l'animal, parce que "tortue" est aussi le
+  // féminin de l'adjectif archaïque "tortu".
+  it.each(['tortu', 'tors', 'berceur', 'conjonctif', 'subordonné'])('%s n\'est jamais proposé au quiz', (mot) => {
+    expect(vivierQcm.some((e) => e.word === mot)).toBe(false)
+    expect(vivierGrammaire.some((e) => e.word === mot)).toBe(false)
+  })
+
+  it('le nom courant homographe, lui, reste disponible', () => {
+    // On écarte l'adjectif parasite, pas le mot que l'enfant cherche vraiment.
+    expect(lexique.some((e) => e.lemmaId === 'nom:tortue')).toBe(true)
+    expect(lexique.some((e) => e.lemmaId === 'nom:torse')).toBe(true)
+  })
+
+  it('les paires du même type qui sont de vrais mots courants ne sont PAS écartées', () => {
+    // cochon/cochonne, tricheur/tricheuse... héritent aussi leur fréquence
+    // d'un nom homographe, mais ce sont des adjectifs bien réels du
+    // vocabulaire scolaire : le filtre doit rester une liste courte et
+    // choisie, pas une règle automatique sur ce motif.
+    for (const lemma of ['adjectif:tricheur', 'adjectif:grincheux', 'adjectif:glouton']) {
+      expect(LEMMA_IDS_ADJECTIFS_PARASITES.has(lemma)).toBe(false)
+    }
   })
 })
 

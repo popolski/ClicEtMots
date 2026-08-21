@@ -4,7 +4,11 @@
 // que sont apparus la plupart des bugs signalés à l'usage - "bonne" proposé
 // comme nom, "revient" comme nom, "paysan" comme nom... Voir quizLogic.test.ts,
 // qui rejoue ces cas réels contre le lexique livré.
-import { LEMMA_IDS_DETERMINANTS, LEMMA_IDS_HOMOGRAPHES_FANTOMES } from '../clavier/clavierLogic'
+import {
+  LEMMA_IDS_ADJECTIFS_PARASITES,
+  LEMMA_IDS_DETERMINANTS,
+  LEMMA_IDS_HOMOGRAPHES_FANTOMES,
+} from '../clavier/clavierLogic'
 import { natureInvariable } from '../../lib/natureInvariable'
 import type { WordCategory, WordEntry } from '../../types/phonetics'
 
@@ -77,7 +81,8 @@ export function motsFrequentsPourQuiz(wordIndex: WordEntry[]): MotCandidat[] {
         (e.category === 'nom' || e.category === 'verbe' || e.category === 'adjectif') &&
         e.word.length >= 3 &&
         !LEMMA_IDS_DETERMINANTS.has(e.lemmaId) &&
-        !LEMMA_IDS_HOMOGRAPHES_FANTOMES.has(e.lemmaId),
+        !LEMMA_IDS_HOMOGRAPHES_FANTOMES.has(e.lemmaId) &&
+        !LEMMA_IDS_ADJECTIFS_PARASITES.has(e.lemmaId),
     )
     .sort((a, b) => b.frequency - a.frequency)
     .slice(0, TAILLE_VIVIER)

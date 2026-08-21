@@ -137,6 +137,32 @@ export const LEMMA_IDS_HOMOGRAPHES_FANTOMES = new Set([
 ])
 
 /**
+ * Adjectifs archaïques ou techniques qui n'ont rien à faire devant une classe
+ * de primaire, mais que le filtre de fréquence ne peut pas écarter : leur
+ * forme FÉMININE est homographe d'un nom courant ("tortue", "torse",
+ * "berceuse"...), et c'est la fréquence de ce nom - élevée, puisque l'animal
+ * ou l'objet est banal à l'école - qui a qualifié tout le lemme adjectif.
+ * Le masculin hérite donc d'une fréquence qu'il n'a jamais méritée.
+ *
+ * Signalé à l'usage : "tortu" est apparu au quiz de grammaire, où un enfant
+ * lit forcément "tortue" mal orthographié. Pire, "tortu" et "tortue" ont
+ * exactement la même suite de sons (t-o-r-t-u), donc le clavier affichait
+ * aussi les deux tuiles côte à côte pour une recherche parfaitement normale.
+ *
+ * Liste courte et vérifiée : ce sont les 5 SEULS cas de tout le lexique où
+ * ce masculin "parasite" survit aux autres filtres (les autres paires du même
+ * type - cochon/cochonne, tricheur/tricheuse... - sont de vrais mots courants
+ * et restent). Voir clavierLogic.test.ts.
+ */
+export const LEMMA_IDS_ADJECTIFS_PARASITES = new Set([
+  'adjectif:tortu', // "un chemin tortu" - lu "tortue" par un enfant
+  'adjectif:tors', // "un fil tors" - lu "torse"
+  'adjectif:berceur', // rare, alors que la berceuse (chanson) est courante
+  'adjectif:conjonctif', // "tissu conjonctif", vocabulaire médical
+  'adjectif:subordonné', // terme de grammaire ou de hiérarchie, trop abstrait
+])
+
+/**
  * Groups matched entries by word family (lemmaId) into cards, matching the
  * original tool's results page — one card per word, its inflected forms
  * shown together rather than as separate results.
@@ -184,7 +210,12 @@ export function groupIntoCards(entries: WordEntry[], fullIndex?: WordEntry[]): W
   })
 
   return cards
-    .filter((c) => !LEMMA_IDS_DETERMINANTS.has(c.lemmaId) && !LEMMA_IDS_HOMOGRAPHES_FANTOMES.has(c.lemmaId))
+    .filter(
+      (c) =>
+        !LEMMA_IDS_DETERMINANTS.has(c.lemmaId) &&
+        !LEMMA_IDS_HOMOGRAPHES_FANTOMES.has(c.lemmaId) &&
+        !LEMMA_IDS_ADJECTIFS_PARASITES.has(c.lemmaId),
+    )
     .sort((a, b) => {
       const parCategorie = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category)
       return parCategorie !== 0 ? parCategorie : b.frequency - a.frequency
