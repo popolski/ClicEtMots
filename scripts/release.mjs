@@ -103,8 +103,21 @@ if (!etat.dernierCommit) {
   }
 }
 
+// Refuse d'enregistrer un déploiement si la réponse ne vient pas d'un vrai
+// clavier : sans ce garde-fou, un `printf 'oui' | npm run release` (ou tout
+// autre appel automatisé) marque comme "déployé" quelque chose qui ne l'a
+// jamais été, et le script ment ensuite sur ce qu'il reste à transférer.
+// Arrivé une fois, d'où ce contrôle.
+if (!process.stdin.isTTY) {
+  console.log(
+    "\n(Réponse non interactive : rien n'a été enregistré. Relance `npm run release` dans un vrai terminal " +
+      "et réponds toi-même une fois le transfert fait.)",
+  )
+  process.exit(0)
+}
+
 const rl = createInterface({ input: process.stdin, output: process.stdout })
-const reponse = await rl.question('\nUne fois le transfert fait, tape "oui" pour l\'enregistrer (autre touche pour ignorer) : ')
+const reponse = await rl.question('\nUne fois le transfert VRAIMENT fait, tape "oui" pour l\'enregistrer (autre touche pour ignorer) : ')
 rl.close()
 
 if (reponse.trim().toLowerCase() === 'oui') {
