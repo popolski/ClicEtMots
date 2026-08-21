@@ -52,3 +52,6 @@ public/audio/
 # État local de scripts/release.mjs (dernier commit/migration déployés) -
 # propre à CETTE machine de déploiement, pas au dépôt.
 .deploy-state.json
+
+# Réglages Claude Code propres à chaque machine (launch.json, lui, est partagé).
+.claude/settings.local.json
