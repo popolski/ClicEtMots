@@ -1,0 +1,41 @@
+# Vérification automatique à chaque push et pull request : évite de laisser
+# partir une version qui ne compile plus ou dont les tests échouent
+# (le déploiement étant manuel par FTP, rien d'autre ne le détecterait
+# avant que ça n'arrive sur le site utilisé en classe).
+#
+# Ne déploie rien : ce workflow ne fait que vérifier.
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run test
+
+      - run: npm run build
+
+      # Les fichiers PHP ne passent ni par npm ni par le build : sans ça,
+      # une erreur de syntaxe dans server/api/*.php ne serait découverte
+      # qu'une fois le fichier transféré en production.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Vérifier la syntaxe PHP
+        run: find server -name '*.php' -print0 | xargs -0 -n1 php -l
