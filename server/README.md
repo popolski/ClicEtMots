@@ -11,10 +11,29 @@ dans `/clicmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
    crée une base (ou utilise-en une existante). Note l'hôte, le nom, le
    user et le mot de passe.
 2. **Tables** : ouvre phpMyAdmin/Adminer depuis le manager OVH sur cette
-   base, et exécute le contenu de [`schema.sql`](./schema.sql) (colle-le
-   dans l'onglet SQL, "Exécuter"), puis celui de
-   [`schema-v2.sql`](./schema-v2.sql) (conjugaison générée + relations
-   saisies à la main ; sans risque si relancé).
+   base, et exécute **dans cet ordre** le contenu de chaque fichier (colle-le
+   dans l'onglet SQL, "Exécuter") :
+
+   | Fichier | Ce qu'il ajoute |
+   |---|---|
+   | [`schema.sql`](./schema.sql) | tables de base : comptes enseignant/élèves, mots ajoutés, anti brute-force |
+   | [`schema-v2.sql`](./schema-v2.sql) | conjugaison générée + relations saisies à la main |
+   | [`schema-v3.sql`](./schema-v3.sql) | forme féminine d'un adjectif ajouté |
+   | [`schema-v4.sql`](./schema-v4.sql) | listes de mots de la semaine |
+   | [`schema-v5.sql`](./schema-v5.sql) | recherche directe par orthographe, autorisée par élève |
+   | [`schema-v6.sql`](./schema-v6.sql) | scores de quiz, favoris et historique centralisés par élève |
+   | [`schema-v7.sql`](./schema-v7.sql) | mode confort de lecture (dys), activé par élève |
+
+   Il n'y a pas de fichier "tout-en-un" : ces migrations sont la seule
+   source de vérité du schéma, et en dupliquer le contenu ailleurs
+   finirait par diverger. Une installation neuve les passe donc toutes,
+   une installation existante ne passe que les nouvelles.
+
+   Les `CREATE TABLE` sont sans risque si relancés (`IF NOT EXISTS`), mais
+   les `ALTER TABLE ... ADD COLUMN` des migrations v2 et suivantes ne
+   peuvent l'être qu'une fois : relancer une migration déjà passée affiche
+   une erreur "Duplicate column name" sur cette ligne précise, sans gravité
+   (voir l'en-tête de chaque fichier).
 3. **Config** : copie `api/config.php.example` en `api/config.php`, remplis
    `DB_HOST`/`DB_NAME`/`DB_USER`/`DB_PASS` avec les infos de l'étape 1, et
    choisis un `SETUP_TOKEN` — une longue chaîne aléatoire à toi (par
@@ -45,8 +64,17 @@ dans `/clicmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 ## Sécurité
 
 - Mots de passe jamais stockés en clair (`password_hash`/`password_verify`).
-- Sessions HttpOnly + Secure + SameSite=Lax.
+- Sessions HttpOnly + Secure + SameSite=Lax, avec régénération de
+  l'identifiant de session à chaque connexion réussie (contre la fixation
+  de session).
+- Un compte élève supprimé voit sa session invalidée immédiatement, sans
+  attendre l'expiration du cookie (vérification dans `requireAuth`).
 - Anti brute-force basique : 10 tentatives / 15 min par IP (voir `auth.php`).
+  À surveiller en usage scolaire : tous les postes d'une école sortent
+  souvent avec la même IP publique, donc plusieurs élèves qui se trompent
+  peuvent atteindre le seuil collectivement.
+- Réponses API en `Cache-Control: no-store` : aucune n'a vocation à être
+  mise en cache par le navigateur.
 - Toutes les requêtes SQL intégrant des entrées utilisateur utilisent des
   requêtes préparées PDO afin de prévenir les injections SQL.
 - Le lexique ajouté manuellement valide la catégorie et chaque touche
@@ -60,14 +88,35 @@ dans `/clicmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 | POST | `/api/login.php` | public | `{identifiant, motDePasse}` → session |
 | POST | `/api/logout.php` | connecté | détruit la session |
 | GET | `/api/session.php` | public | état de connexion actuel |
-| GET | `/api/students.php` | enseignant | liste des élèves |
+| GET | `/api/students.php` | enseignant | liste des élèves, avec leurs réglages |
 | POST | `/api/students.php` | enseignant | `{prenom, motDePasse}` → crée un élève |
-| DELETE | `/api/students.php?id=` | enseignant | supprime un élève |
+| PATCH | `/api/students.php?id=` | enseignant | `{rechercheDirecte?, confortLecture?}` → réglages d'un élève |
+| DELETE | `/api/students.php?id=` | enseignant | supprime un élève (et toutes ses données) |
 | GET | `/api/lexicon.php` | connecté | mots ajoutés, avec conjugaison et relations |
 | POST | `/api/lexicon.php` | enseignant | `{mot, categorie, genre?, phonemes}` |
 | DELETE | `/api/lexicon.php?id=` | enseignant | supprime un mot ajouté (et ses relations) |
 | POST | `/api/relations.php` | enseignant | `{wordId, type, targetLemmaId, targetWord, targetCategory}` |
 | DELETE | `/api/relations.php?wordId=&type=&targetLemmaId=` | enseignant | retire une relation |
+| GET | `/api/mots-semaine.php` | connecté | toutes les listes hebdomadaires |
+| POST | `/api/mots-semaine.php` | enseignant | `{nom, mots, id?}` → crée ou modifie une liste |
+| DELETE | `/api/mots-semaine.php?id=` | enseignant | supprime une liste |
+| GET | `/api/quiz-resultats.php` | élève | ses 20 derniers résultats de quiz |
+| POST | `/api/quiz-resultats.php` | élève | `{mode, score, total}` → enregistre une partie |
+| DELETE | `/api/quiz-resultats.php` | élève | efface ses résultats |
+| GET | `/api/favoris.php` | élève | ses mots favoris |
+| POST | `/api/favoris.php` | élève | `{lemmaId, word, category}` → ajoute un favori |
+| DELETE | `/api/favoris.php?lemmaId=` | élève | retire un favori |
+| GET | `/api/historique.php` | élève | ses 30 derniers mots consultés |
+| POST | `/api/historique.php` | élève | `{lemmaId, word, category}` → enregistre une consultation |
+| DELETE | `/api/historique.php` | élève | efface son historique |
+| POST | `/api/reset-donnees.php` | enseignant | `{studentId?}` → efface quiz/favoris/historique d'un élève, ou de toute la classe |
+| POST | `/api/tts.php` | enseignant | génère la prononciation d'un mot ajouté (Google TTS) |
+
+Les données d'élève (quiz, favoris, historique) sont purgées
+automatiquement au changement d'année scolaire, à la connexion de l'élève
+(`purgerSiNouvelleAnneeScolaire` dans `auth.php`), et manuellement via
+`reset-donnees.php`. Supprimer un compte élève efface aussi ses données
+(`ON DELETE CASCADE`) et invalide immédiatement sa session ouverte.
 
 ## Conjugaison des verbes ajoutés
 
