@@ -12,6 +12,13 @@ import { speak, speechSupported } from '../../lib/speech'
 import { api } from '../../lib/api'
 import { useAuth } from '../../lib/authContext'
 import { natureInvariable } from '../../lib/natureInvariable'
+import {
+  CATEGORY_LABEL,
+  CATEGORY_MASCOT_INFINITIF,
+  CATEGORY_STYLES,
+  NATURE_INVARIABLE_LABEL,
+  NATURE_INVARIABLE_MASCOT,
+} from '../../lib/grammaire'
 import { DecompositionSonGraphie } from './DecompositionSonGraphie'
 import wordPictos from '../../data/word-pictos.json'
 import type {
@@ -22,41 +29,15 @@ import type {
   WordRelationMember,
 } from '../../types/phonetics'
 
-const CATEGORY_LABEL: Record<WordCategory, string> = {
-  nom: 'Nom',
-  adjectif: 'Adjectif',
-  verbe: 'Verbe',
-  invariable: 'Mot invariable',
-  adverbe: 'Adverbe',
-}
-
-const categoryStyles: Record<WordCategory, string> = {
-  nom: 'bg-blue-50 text-blue-900 border-blue-200',
-  adjectif: 'bg-violet-50 text-violet-900 border-violet-200',
-  verbe: 'bg-red-200 text-red-900 border-red-400',
-  invariable: 'bg-red-50 text-red-500 border-red-100',
-  adverbe: 'bg-orange-50 text-orange-900 border-orange-200',
-}
-
-// Mascottes issues de la Feuille de route design (une par catégorie
-// grammaticale), utilisées comme repère visuel à côté du titre du mot.
-const CATEGORY_MASCOT: Record<WordCategory, string> = {
-  nom: '/mascottes/nom.png',
-  adjectif: '/mascottes/adjectif.png',
-  // Le titre de la fiche affiche toujours le verbe à l'infinitif : mascotte
-  // dédiée plutôt que le "Verbe" générique (réservé au conjugueur, onglet
-  // Présent — voir ConjugueurTool.TENSE_MASCOT).
-  verbe: '/mascottes/verbe-infinitif.png',
-  invariable: '/mascottes/invariable.png',
-  adverbe: '/mascottes/adverbe.png',
-}
-
-// Nature précise d'un mot invariable, quand on la connaît (voir
-// natureInvariable.ts) - affichée EN PLUS du picto "Mot invariable" (pas à
-// sa place : "invariable" reste vrai, "pronom"/"préposition" est juste plus
-// précis), signalé par l'enseignante.
-const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Préposition' } as const
-const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
+// La fiche mot est le SEUL écran qui affiche la nature précise EN PLUS du
+// picto "Mot invariable" (pas à sa place : "invariable" reste vrai,
+// "pronom"/"préposition" est juste plus précis) - signalé par
+// l'enseignante. Elle compose donc à partir des constantes du référentiel
+// plutôt que d'utiliser affichageCategorie(), qui applique le choix
+// "remplace" des vues compactes.
+// Le titre de la fiche affiche toujours le verbe à l'infinitif : mascotte
+// dédiée plutôt que le "Verbe" générique (réservé au conjugueur, onglet
+// Présent — voir ConjugueurTool.TENSE_MASCOT).
 
 const FORM_ROLE_LABEL: Partial<Record<WordFormRole, string>> = {
   singulier: 'Singulier',
@@ -119,7 +100,7 @@ function WordChip({ member }: { member: WordRelationMember }) {
   return (
     <Link
       to={`/mot/${encodeURIComponent(member.lemmaId)}`}
-      className={`rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${categoryStyles[member.category]}`}
+      className={`rounded-lg border px-4 py-2 shadow-sm transition hover:shadow-md ${CATEGORY_STYLES[member.category]}`}
     >
       <div className="text-xs opacity-70">{CATEGORY_LABEL[member.category]}</div>
       <div className="text-xl font-medium">{member.word}</div>
@@ -214,7 +195,7 @@ export function MotTool() {
 
   const otherForms = forms.filter((f) => f !== primary && !ROLES_HIDDEN_FROM_FICHE.includes(f.formRole))
   const hasBothGenders = forms.some((f) => f.genre === 'm') && forms.some((f) => f.genre === 'f')
-  const style = categoryStyles[primary.category]
+  const style = CATEGORY_STYLES[primary.category]
   const natureInvariablePrimary = primary.category === 'invariable' ? natureInvariable(primary.word) : null
 
   return (
@@ -242,7 +223,7 @@ export function MotTool() {
             </div>
           )}
           <div className="flex flex-col items-center gap-1">
-            {!confort && <img src={assetUrl(CATEGORY_MASCOT[primary.category])} alt="" className="h-20 w-20 object-contain" />}
+            {!confort && <img src={assetUrl(CATEGORY_MASCOT_INFINITIF[primary.category])} alt="" className="h-20 w-20 object-contain" />}
             <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
               {CATEGORY_LABEL[primary.category]}
             </span>
@@ -343,7 +324,7 @@ export function MotTool() {
                   // Mot scolaire (Manulex) mais sous le seuil de fréquence du
                   // lexique principal : pas de fiche à ouvrir, affiché quand
                   // même à titre indicatif (ex. "maisonnette").
-                  <div key={member.lemmaId} className={`rounded-lg border px-4 py-2 opacity-70 ${categoryStyles[member.category]}`}>
+                  <div key={member.lemmaId} className={`rounded-lg border px-4 py-2 opacity-70 ${CATEGORY_STYLES[member.category]}`}>
                     <div className="text-xs opacity-70">{CATEGORY_LABEL[member.category]}</div>
                     <div className="text-xl font-medium">{member.word}</div>
                   </div>

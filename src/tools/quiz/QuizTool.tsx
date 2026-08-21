@@ -20,45 +20,36 @@ import {
   type CategorieGrammaireQuiz,
   type MotCandidat,
 } from './quizLogic'
+import {
+  CATEGORY_LABEL,
+  CATEGORY_MASCOT,
+  NATURE_INVARIABLE_LABEL,
+  NATURE_INVARIABLE_MASCOT,
+} from '../../lib/grammaire'
 import { phonemes } from '../../lib/phonemes'
 import wordPictos from '../../data/word-pictos.json'
-import type { PhonemeId, WordCategory, WordEntry } from '../../types/phonetics'
+import type { PhonemeId, WordEntry } from '../../types/phonetics'
 
-// Libellés et mascottes propres à l'affichage du quiz - la logique de
-// sélection des mots vit dans quizLogic.ts (testable, voir quizLogic.test.ts).
+// Le quiz de grammaire propose des natures que WordCategory ne connaît pas
+// (pronom, préposition) : ses libellés/mascottes reprennent donc ceux du
+// référentiel pour les catégories communes, et ajoutent les deux natures
+// issues de natureInvariable.ts.
 const LABEL_GRAMMAIRE: Record<CategorieGrammaireQuiz, string> = {
-  nom: 'Nom',
-  adjectif: 'Adjectif',
-  verbe: 'Verbe',
-  adverbe: 'Adverbe',
-  pronom: 'Pronom personnel',
-  preposition: 'Préposition',
+  nom: CATEGORY_LABEL.nom,
+  adjectif: CATEGORY_LABEL.adjectif,
+  verbe: CATEGORY_LABEL.verbe,
+  adverbe: CATEGORY_LABEL.adverbe,
+  pronom: NATURE_INVARIABLE_LABEL.pronom,
+  preposition: NATURE_INVARIABLE_LABEL.preposition,
 }
 
 const MASCOTTE_GRAMMAIRE: Record<CategorieGrammaireQuiz, string> = {
-  nom: '/mascottes/nom.png',
-  adjectif: '/mascottes/adjectif.png',
-  verbe: '/mascottes/verbe.png',
-  adverbe: '/mascottes/adverbe.png',
-  pronom: '/mascottes/pronom.png',
-  preposition: '/mascottes/preposition.png',
-}
-
-// Mêmes libellés/mascottes que la fiche mot (MotTool.tsx) - petite
-// duplication assumée, comme ailleurs dans le projet (Historique.tsx).
-const CATEGORY_LABEL: Record<WordCategory, string> = {
-  nom: 'Nom',
-  adjectif: 'Adjectif',
-  verbe: 'Verbe',
-  invariable: 'Mot invariable',
-  adverbe: 'Adverbe',
-}
-const CATEGORY_MASCOT: Record<WordCategory, string> = {
-  nom: '/mascottes/nom.png',
-  adjectif: '/mascottes/adjectif.png',
-  verbe: '/mascottes/verbe.png',
-  invariable: '/mascottes/invariable.png',
-  adverbe: '/mascottes/adverbe.png',
+  nom: CATEGORY_MASCOT.nom,
+  adjectif: CATEGORY_MASCOT.adjectif,
+  verbe: CATEGORY_MASCOT.verbe,
+  adverbe: CATEGORY_MASCOT.adverbe,
+  pronom: NATURE_INVARIABLE_MASCOT.pronom,
+  preposition: NATURE_INVARIABLE_MASCOT.preposition,
 }
 
 const NB_MOTS_SESSION = 10

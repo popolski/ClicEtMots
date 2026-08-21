@@ -17,7 +17,7 @@
 // comme "déployés" des correctifs de sécurité qui ne l'étaient pas, et
 // le script a ensuite sous-estimé ce qu'il restait à faire.
 import { execSync } from 'node:child_process'
-import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs'
+import { readFileSync, existsSync, readdirSync } from 'node:fs'
 
 const ETAT_PATH = new URL('../.deploy-state.json', import.meta.url)
 const ROOT = new URL('../', import.meta.url)

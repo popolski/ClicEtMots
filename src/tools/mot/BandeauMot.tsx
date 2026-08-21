@@ -1,39 +1,19 @@
 import { assetUrl } from '../../lib/assetUrl'
 import wordPictos from '../../data/word-pictos.json'
-import { natureInvariable } from '../../lib/natureInvariable'
-import type { WordCategory } from '../../types/phonetics'
+import { affichageCategorie } from '../../lib/grammaire'
 import type { DonneesFicheMot } from './useFicheMot'
-
-// Mêmes libellés/mascottes que la fiche mot (MotTool.tsx) - petite
-// duplication assumée, comme ailleurs dans le projet (Historique.tsx, QuizTool.tsx).
-const CATEGORY_LABEL: Record<WordCategory, string> = {
-  nom: 'Nom',
-  adjectif: 'Adjectif',
-  verbe: 'Verbe',
-  invariable: 'Mot invariable',
-  adverbe: 'Adverbe',
-}
-const CATEGORY_MASCOT: Record<WordCategory, string> = {
-  nom: '/mascottes/nom.png',
-  adjectif: '/mascottes/adjectif.png',
-  verbe: '/mascottes/verbe-infinitif.png',
-  invariable: '/mascottes/invariable.png',
-  adverbe: '/mascottes/adverbe.png',
-}
-
-// Remplace "Mot invariable" par la nature précise quand on la connaît (même
-// choix que WordCardView.tsx - voir natureInvariable.ts) : le bandeau
-// imprimable n'a la place que pour une seule mascotte.
-const NATURE_INVARIABLE_LABEL = { pronom: 'Pronom personnel', preposition: 'Préposition' } as const
-const NATURE_INVARIABLE_MASCOT = { pronom: '/mascottes/pronom.png', preposition: '/mascottes/preposition.png' } as const
 
 /** Le rectangle imprimable lui-même - un bandeau, pas une carte carrée (voir FicheImprimable.tsx). */
 export function BandeauMot({ primary, groupe, definition, synonyme, contraire, famille }: DonneesFicheMot) {
   if (!primary) return null
   const picto = (wordPictos as Record<string, string>)[primary.word]
-  const nature = primary.category === 'invariable' ? natureInvariable(primary.word) : null
+  // `infinitif` : comme la fiche mot, le bandeau affiche toujours le verbe à
+  // l'infinitif. Une seule mascotte ici (place limitée), donc la nature
+  // précise remplace "Mot invariable" - contrairement à la fiche mot qui
+  // affiche les deux.
+  const { libelle, mascotte } = affichageCategorie(primary, { infinitif: true })
   const sousLigne = [
-    nature ? NATURE_INVARIABLE_LABEL[nature] : CATEGORY_LABEL[primary.category],
+    libelle,
     groupe,
     primary.category === 'nom' && primary.genre ? (primary.genre === 'm' ? 'masculin' : 'féminin') : null,
   ]
@@ -44,7 +24,7 @@ export function BandeauMot({ primary, groupe, definition, synonyme, contraire, f
     <div className="fiche-carte mx-auto flex w-full max-w-[18cm] items-center gap-4 rounded-xl border-2 border-gray-800 p-4">
       <div className="flex shrink-0 items-center gap-1">
         <img
-          src={assetUrl(nature ? NATURE_INVARIABLE_MASCOT[nature] : CATEGORY_MASCOT[primary.category])}
+          src={assetUrl(mascotte)}
           alt=""
           className="h-16 w-16 object-contain"
         />
