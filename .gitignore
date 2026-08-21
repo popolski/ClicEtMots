@@ -48,3 +48,7 @@ server/api/config.php
 # transmis directement par FTP vers le serveur, jamais commités (alourdirait
 # le dépôt à chaque clone). Régénérables à tout moment via le script.
 public/audio/
+
+# État local de scripts/release.mjs (dernier commit/migration déployés) -
+# propre à CETTE machine de déploiement, pas au dépôt.
+.deploy-state.json
