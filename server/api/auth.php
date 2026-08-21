@@ -21,6 +21,13 @@ function jsonResponse(int $status, array $data): never
 {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');
+    // Sans ça, le navigateur peut resservir une ancienne réponse mise en
+    // cache pour un fetch() déclenché par le JS (contrairement au document
+    // principal, un Ctrl+F5 ne force pas forcément ces appels à recontacter
+    // le serveur) - repéré sur session.php : une enseignante qui décochait
+    // "Confort"/"Recherche" ne voyait le changement appliqué ni même après
+    // un rechargement forcé côté élève.
+    header('Cache-Control: no-store');
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
     exit;
 }
