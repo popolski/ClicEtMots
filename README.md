@@ -23,8 +23,13 @@ l'orthographe correspondante apparaît.
   possessifs, démonstratifs), sans intérêt pour l'exercice.
 - **Fiche mot** : autres formes (pluriel, féminin, participe passé), mots de
   la même famille, synonymes et contraires — chacun cliquable pour naviguer
-  de fiche en fiche. Pictogramme illustratif (ARASAAC) pour les noms les
+  de fiche en fiche. Pictogramme illustratif (ARASAAC) pour les mots les
   plus fréquents, à côté de la mascotte de catégorie.
+- **Décomposition son par son** : chaque mot est découpé en montrant quelle
+  graphie fait quel son (« seau » = s + eau), les autres écritures possibles
+  de ce son en rappel, la règle associée s'il y en a une (« M, B, P »...) et
+  les lettres muettes en gris. Rend explicite la correspondance
+  graphème-phonème au lieu de faire apparaître l'orthographe d'un bloc.
 - **Définitions** : recherche automatique chez Vikidia (encyclopédie pour
   les 8-13 ans) puis, si elle n'a rien, chez Wiktionnaire (nettoyé de sa
   syntaxe wiki) — pour couvrir aussi bien les noms concrets que les verbes
@@ -59,12 +64,20 @@ l'orthographe correspondante apparaît.
   semaine (visible et révisable par les élèves dans le quiz, qui cumule
   toutes les semaines enregistrées), imprimable séparément d'une semaine à
   l'autre.
+- **Mode confort de lecture** (dys) : police plus aérée, lettres espacées,
+  mascottes de catégorie masquées, et code couleur des sons repris de
+  [LireCouleur](https://primabord.eduscol.education.fr/lirecouleur) (Éduscol) —
+  rouge pour les voyelles, bleu pour les consonnes, vert pour les graphèmes
+  complexes, gris pour les lettres muettes. Activé élève par élève par
+  l'enseignante. Ni minuteur ni classement, nulle part dans l'application.
 - **Espace enseignant** : gestion des comptes élèves, ajout de mots absents
   du lexique avec prononciation générée automatiquement et conjugaison
   proposée en aperçu (base de ~7000 verbes, tous groupes confondus), saisie
   des relations lexicales (synonymes/contraires/famille), gestion des listes
-  de mots de la semaine, et recherche directe par orthographe (en plus du
-  clavier phonétique, pensé pour l'élève).
+  de mots de la semaine, et deux réglages activables élève par élève : la
+  recherche directe par orthographe (en plus du clavier phonétique, pensé
+  pour l'élève) et le mode confort de lecture. Permet aussi d'effacer les
+  scores, favoris et historique d'un élève ou de toute la classe.
 
 ## Stack technique
 
@@ -74,11 +87,19 @@ Déployé sur un hébergement mutualisé OVH, dans le sous-dossier `/clicmots/` 
 fichier `.htaccess` inclus gère le routage côté client).
 
 **Backend** : PHP 8 + MySQL (voir [`server/README.md`](./server/README.md)),
-pour l'authentification (élèves + enseignant) et l'espace enseignant —
-gestion des comptes élèves, ajout de mots absents du lexique avec
-prononciation (Google Cloud Text-to-Speech) générée automatiquement, et
-relations (synonymes/contraires/famille) saisies à la main. Hébergé à côté
-du site sur le même mutualisé OVH.
+pour l'authentification (élèves + enseignant), l'espace enseignant —
+comptes élèves et leurs réglages, ajout de mots absents du lexique avec
+prononciation (Google Cloud Text-to-Speech) générée automatiquement,
+relations (synonymes/contraires/famille) saisies à la main, listes de mots
+de la semaine — et le suivi par élève (scores de quiz, favoris, historique
+de consultation). Hébergé à côté du site sur le même mutualisé OVH.
+
+**Données des élèves** : minimales et à durée limitée. Prénom seul, jamais
+de nom de famille ni d'email ; les scores, favoris et historique sont
+rattachés au compte et purgés automatiquement au changement d'année
+scolaire, ou à la demande depuis l'espace enseignant. Supprimer un compte
+efface aussi toutes ses données. Pas de classement ni de comparaison entre
+élèves.
 
 **Conjugaison des verbes ajoutés** : générée côté client via
 [`conjugation-fr`](https://www.npmjs.com/package/conjugation-fr) (base
@@ -95,9 +116,12 @@ entre parenthèses (noms scientifiques latins, renvois techniques) retiré à
 l'affichage.
 
 **Pictogrammes de mots** : ARASAAC (mêmes licence et principe que les
-pictogrammes du clavier, voir plus bas), pour les ~2400 noms les plus
-fréquents du lexique — couverture partielle assumée, ARASAAC ciblant le
-vocabulaire concret du quotidien plutôt que tout le vocabulaire scolaire.
+pictogrammes du clavier, voir plus bas), pour ~3300 mots parmi les plus
+fréquents du lexique — noms d'abord, mais aussi verbes, adjectifs et
+adverbes. Couverture partielle assumée, ARASAAC ciblant le vocabulaire
+concret du quotidien plutôt que tout le vocabulaire scolaire ; les
+associations manifestement trompeuses sont retirées à la main quand elles
+sont repérées.
 
 **Audio** : les ~27 000 mots du lexique statique ont leur prononciation
 pré-générée une fois pour toutes (`scripts/generate-word-audio.mjs`, voix
@@ -112,7 +136,12 @@ npm run dev      # serveur de développement
 npm run build    # build de production (tsc + vite)
 npm run lint     # oxlint
 npm run test     # vitest
+npm run release  # lint + tests + build, puis récapitulatif de ce qu'il
+                 # faut transférer (migrations SQL, fichiers PHP, dist/)
 ```
+
+Chaque push déclenche les mêmes vérifications sur GitHub Actions, plus un
+contrôle de syntaxe des fichiers PHP (voir `.github/workflows/ci.yml`).
 
 ## Origine des données
 
@@ -128,6 +157,9 @@ comment relancer la génération.
 
 ## Licence
 
-Projet non commercial à usage pédagogique. Le lexique généré est dérivé de
-plusieurs sources sous licences Creative Commons (voir CREDITS.md) ; toute
-réutilisation doit respecter les termes cumulés de ces licences.
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr) —
+usage non commercial, attribution, partage dans les mêmes conditions. Ce
+choix découle des licences des bases sources dont le lexique est dérivé
+(voir [CREDITS.md](./CREDITS.md)). Quelques éléments ont un régime à part
+(voix de l'enseignante, mascottes, audio Google TTS) : le détail est dans
+[LICENSE](./LICENSE).

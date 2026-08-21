@@ -1,0 +1,51 @@
+Clic & Mots
+Copyright (c) 2026 Hugues Dubois
+
+Ce projet — code source, contenus et lexique généré — est distribué sous
+licence Creative Commons Attribution - Pas d'Utilisation Commerciale -
+Partage dans les Mêmes Conditions 4.0 International (CC BY-NC-SA 4.0).
+
+    https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr
+
+En résumé, vous êtes libre de partager et d'adapter ce travail, à
+condition de :
+
+  - Attribution : créditer Clic & Mots et les sources listées dans
+    CREDITS.md.
+  - Pas d'Utilisation Commerciale : aucun usage commercial.
+  - Partage dans les Mêmes Conditions : toute adaptation doit être
+    diffusée sous cette même licence.
+
+Le texte complet de la licence fait foi ; ce résumé n'a pas de valeur
+juridique.
+
+
+POURQUOI CETTE LICENCE, ET PAS UNE AUTRE
+
+Le lexique de Clic & Mots n'est pas écrit à la main : il est généré en
+croisant plusieurs bases de données lexicales ouvertes (voir CREDITS.md).
+Deux d'entre elles imposent leurs conditions à tout travail dérivé :
+
+  - Manulex — CC BY-NC-SA 3.0 (usage non commercial, partage à l'identique)
+  - Pictogrammes ARASAAC — CC BY-NC-SA (mêmes conditions)
+
+Le lexique généré et les pictogrammes embarqués en héritent donc
+nécessairement. Le code source est placé sous la même licence pour éviter
+toute ambiguïté sur ce qui est réutilisable et à quelles conditions.
+
+
+CE QUI N'EST PAS COUVERT PAR CETTE LICENCE
+
+  - Les bases sources tierces elles-mêmes (dossier third_party/, non
+    versionné) : elles restent sous leurs licences respectives, décrites
+    dans CREDITS.md. Elles ne sont pas redistribuées ici.
+
+  - Les enregistrements audio des 33 sons du clavier (voix de
+    l'enseignante) et les mascottes illustrées, créés spécifiquement pour
+    ce projet : tous droits réservés, réutilisation sur demande.
+
+  - Les fichiers audio de prononciation des mots, générés via Google Cloud
+    Text-to-Speech : soumis aux conditions d'utilisation de ce service.
+
+Pour toute question ou demande de réutilisation hors de ce cadre :
+ouvrir une issue sur https://github.com/popolski/ClicEtMots
