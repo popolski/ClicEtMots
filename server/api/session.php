@@ -21,10 +21,18 @@ if ($user['role'] === 'student') {
     $stmt = getDb()->prepare('SELECT recherche_directe, confort_lecture FROM students WHERE id = ?');
     $stmt->execute([$user['id']]);
     $row = $stmt->fetch();
-    if ($row) {
-        $rechercheDirecte = (bool) $row['recherche_directe'];
-        $confortLecture = (bool) $row['confort_lecture'];
+    if (!$row) {
+        // Compte supprimé entre-temps par l'enseignante (voir DELETE dans
+        // students.php) : jusqu'ici la session restait "authentifiée"
+        // jusqu'à son expiration naturelle (7 jours, voir configureSession)
+        // même si le compte n'existait plus - signalé en revue de code.
+        // Déconnexion immédiate plutôt que de laisser un compte fantôme
+        // accéder au site.
+        session_destroy();
+        jsonResponse(200, ['authenticated' => false]);
     }
+    $rechercheDirecte = (bool) $row['recherche_directe'];
+    $confortLecture = (bool) $row['confort_lecture'];
 }
 
 jsonResponse(200, [

@@ -72,7 +72,24 @@ function requireAuth(): array
     if (empty($_SESSION['user'])) {
         jsonResponse(401, ['error' => 'Non connecté']);
     }
-    return $_SESSION['user'];
+    $user = $_SESSION['user'];
+
+    // Le compte élève peut avoir été supprimé par l'enseignante depuis la
+    // connexion (voir DELETE dans students.php) : sans cette vérification,
+    // la session restait "authentifiée" jusqu'à son expiration naturelle
+    // (7 jours, voir configureSession) même pour un compte qui n'existe
+    // plus - signalé en revue de code. Pas de vérification équivalente pour
+    // 'teacher' : ce compte unique n'a pas de fonctionnalité de suppression.
+    if ($user['role'] === 'student') {
+        $stmt = getDb()->prepare('SELECT 1 FROM students WHERE id = ?');
+        $stmt->execute([$user['id']]);
+        if (!$stmt->fetchColumn()) {
+            session_destroy();
+            jsonResponse(401, ['error' => 'Non connecté']);
+        }
+    }
+
+    return $user;
 }
 
 function requireTeacher(): array
