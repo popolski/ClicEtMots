@@ -24,7 +24,7 @@
 // pour qu'elles s'intègrent proprement au thème du site. Script Python one-off,
 // pas encore intégré à ce pipeline Node - voir l'historique du projet pour
 // l'implémentation de référence.
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs'
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -42,6 +42,7 @@ const existing = existsSync(outputPath) ? JSON.parse(readFileSync(outputPath, 'u
 
 const pictosDir = new URL('../public/pictos-mots/', import.meta.url)
 mkdirSync(pictosDir, { recursive: true })
+
 
 // Noms de fichiers réservés par Windows (périphériques système) : un mot
 // comme "nul" donnerait "nul.png", impossible à créer normalement sur ce
@@ -93,7 +94,32 @@ const HOMOGRAPHES_FANTOMES = new Set([
   // confusion avec "tasse" côté recherche ARASAAC elle-même, pas un problème
   // d'étiquette Lexique383 cette fois, mais même symptôme (image trompeuse).
   'tas',
+  // "panne" (la voiture en panne) : ARASAAC renvoie un panneau de bois, la
+  // "panne" étant aussi une pièce de charpente. Sens technique inconnu d'un
+  // enfant, et l'image n'évoque rien du sens courant. Repéré par Camille
+  // dans l'atelier de graphie.
+  'panne',
+  // "façon" et "cas" : signalés en classe comme illustrés par des images sans
+  // rapport (mots abstraits, ARASAAC renvoie n'importe quoi de vaguement
+  // associé). Ils avaient été retirés du JSON à la main la première fois -
+  // voir la purge juste en dessous, qui existe à cause de ça.
+  'façon', 'cas',
 ])
+
+// Le script est incrémental : il n'ajoute que les mots absents du fichier et
+// ne recalcule jamais l'existant. La liste ci-dessus empêchait donc seulement
+// d'AJOUTER un mot, pas de retirer ceux déjà présents - "façon" et "cas",
+// écartés à la main du JSON lors d'un signalement, sont revenus dès le
+// premier relancement du script. Elle est maintenant autoritaire : on purge à
+// chaque exécution, et retirer un picto trompeur consiste à ajouter le mot
+// ci-dessus, rien d'autre.
+for (const mot of HOMOGRAPHES_FANTOMES) {
+  if (!(mot in existing)) continue
+  delete existing[mot]
+  const fichier = new URL(`${mot}.png`, pictosDir)
+  if (existsSync(fichier)) rmSync(fichier)
+  console.log(`Retiré (liste d'exclusion) : ${mot}`)
+}
 
 // Une catégorie = une forme "de base" ciblée (celle affichée sur la fiche
 // mot, voir BASE_ROLE dans src/lib/wordIndex.ts) : singulier pour un nom,

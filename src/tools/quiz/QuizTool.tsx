@@ -548,6 +548,12 @@ export function QuizTool() {
   }
 
   if (!mode) {
+    // La dictée n'a de sens que s'il y a des mots de la semaine enregistrés :
+    // sans liste, elle n'est pas proposée du tout plutôt que d'afficher un
+    // bouton qui ne mène à rien.
+    const modesProposes = (Object.keys(MODE_LABEL) as ModeQuiz[]).filter(
+      (m) => m !== 'dictee' || (motsSemaineCumules?.length ?? 0) > 0,
+    )
     return (
       <ToolLayout title="Mes exercices" description="Choisis un exercice pour réviser." showBackToKeyboard>
         {motsSemaineCumules && (
@@ -565,17 +571,19 @@ export function QuizTool() {
           </div>
         )}
         <div className="mx-auto grid max-w-2xl gap-3 sm:grid-cols-2">
-          {/* La dictée n'a de sens que s'il y a des mots de la semaine
-              enregistrés : sans liste, elle n'est pas proposée du tout
-              plutôt que d'afficher un bouton qui ne mène à rien. */}
-          {(Object.keys(MODE_LABEL) as ModeQuiz[])
-            .filter((m) => m !== 'dictee' || (motsSemaineCumules?.length ?? 0) > 0)
-            .map((m) => (
+          {modesProposes.map((m, i) => {
+            // Nombre impair de cartes : la dernière se retrouverait seule à
+            // gauche d'une ligne à deux colonnes. On lui fait occuper la ligne
+            // entière puis on la recentre en lui gardant la largeur d'une
+            // colonne (la moitié, moins la moitié de l'écart entre colonnes).
+            const orpheline = modesProposes.length % 2 === 1 && i === modesProposes.length - 1
+            const centrage = orpheline ? 'sm:col-span-2 sm:w-[calc(50%-0.375rem)] sm:justify-self-center' : ''
+            return (
               <button
                 key={m}
                 type="button"
                 onClick={() => setMode(m)}
-                className={`flex items-start gap-3 rounded-xl border border-gray-200 border-l-5 bg-white px-4 py-3 text-left transition hover:shadow-md ${MODE_PRESENTATION[m].couleur}`}
+                className={`flex items-start gap-3 rounded-xl border border-gray-200 border-l-5 bg-white px-4 py-3 text-left transition hover:shadow-md ${MODE_PRESENTATION[m].couleur} ${centrage}`}
               >
                 <span className="text-2xl leading-none">{MODE_PRESENTATION[m].icone}</span>
                 <span>
@@ -583,7 +591,8 @@ export function QuizTool() {
                   <span className="block text-sm text-gray-500">{MODE_PRESENTATION[m].resume}</span>
                 </span>
               </button>
-            ))}
+            )
+          })}
         </div>
       </ToolLayout>
     )
