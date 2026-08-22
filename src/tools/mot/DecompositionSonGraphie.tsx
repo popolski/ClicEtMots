@@ -43,8 +43,8 @@ export function DecompositionSonGraphie({ word, phonemeSeq, confort }: Decomposi
   // Repéré en production sur "hiver", dont le "h" muet initial décalait tout
   // et affichait [i]->h, [v]->i, [é è]->v : on enseignait à un enfant que "h"
   // fait le son [i]. Mieux vaut une fiche sans cette section qu'une fiche qui
-  // ment (~28% des mots, surtout ceux où le son [é è] s'écrit "e" — fer, mer,
-  // sel — graphie absente de phonemes.json).
+  // ment. Ne concerne plus que ~7% des mots depuis que les muettes internes
+  // sont modélisées (voir alignementGraphemes).
   if (!decomposition.fiable) return null
 
   return (
@@ -56,7 +56,17 @@ export function DecompositionSonGraphie({ word, phonemeSeq, confort }: Decomposi
           const autresGraphies = phoneme?.graphemes.filter((g) => g.grapheme !== segment.grapheme) ?? []
           const couleurConfort = confort ? couleurGrapheme(segment.phonemeId, segment.grapheme) : 'bg-brand-100 text-brand-700'
           return (
-            <div key={i} className="flex flex-col items-center gap-1">
+            <div key={i} className="flex items-start gap-3">
+              {/* Muettes internes (le "h" de "hiver", le "p" de "compte") :
+                  même gris que les muettes finales, avec la même étiquette,
+                  pour qu'un enfant les lise comme la même chose. */}
+              {segment.muetteAvant && (
+                <span className="flex flex-col items-center gap-1">
+                  <span className="text-xs font-medium text-gray-400">muet</span>
+                  <span className="px-1 py-1 text-2xl font-semibold text-gray-300">{segment.muetteAvant}</span>
+                </span>
+              )}
+              <span className="flex flex-col items-center gap-1">
               <span className="text-xs font-medium text-gray-400">[{phoneme?.displaySymbol ?? segment.phonemeId}]</span>
               <span className={`rounded-lg px-3 py-1 text-2xl font-semibold ${couleurConfort}`}>{segment.grapheme}</span>
               {autresGraphies.length > 0 && (
@@ -65,6 +75,7 @@ export function DecompositionSonGraphie({ word, phonemeSeq, confort }: Decomposi
                 </span>
               )}
               {phoneme?.note && <span className="max-w-28 text-center text-xs text-gray-400">{phoneme.note}</span>}
+              </span>
             </div>
           )
         })}

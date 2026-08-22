@@ -337,6 +337,14 @@
       {
         "grapheme": "eu",
         "exampleWord": "deux"
+      },
+      {
+        "grapheme": "oeu",
+        "exampleWord": "coeur"
+      },
+      {
+        "grapheme": "oe",
+        "exampleWord": "oeil"
       }
     ]
   },

@@ -170,6 +170,11 @@ export function construireExercice(
   // rattaché à une graphie réellement répertoriée pour lui.
   if (!fiable) return null
 
+  // L'exercice ne propose qu'UNE case muette, à la fin. Un mot à muette
+  // interne ("histoire", "compte") serait donc reconstitué sans son "h" ni
+  // son "p" : l'élève écrirait une orthographe fausse en ayant tout juste.
+  if (segments.some((s) => s.muetteAvant !== '')) return null
+
   const etapes = segments.map((s) => {
     const choix = choixPourSon(s.phonemeId, s.grapheme, classement)
     return {

@@ -6,23 +6,23 @@ describe('decomposerMot', () => {
   it('sépare une lettre muette finale', () => {
     const r = decomposerMot('chat', ['ch', 'a'], phonemes)
     expect(r.segments).toEqual([
-      { phonemeId: 'ch', grapheme: 'ch' },
-      { phonemeId: 'a', grapheme: 'a' },
+      { phonemeId: 'ch', grapheme: 'ch', muetteAvant: '' },
+      { phonemeId: 'a', grapheme: 'a', muetteAvant: '' },
     ])
     expect(r.muettes).toBe('t')
   })
 
   it('choisit la bonne graphie parmi plusieurs possibles pour le son [o]', () => {
-    expect(decomposerMot('beau', ['b', 'o'], phonemes).segments).toContainEqual({ phonemeId: 'o', grapheme: 'eau' })
-    expect(decomposerMot('seau', ['s', 'o'], phonemes).segments).toContainEqual({ phonemeId: 'o', grapheme: 'eau' })
+    expect(decomposerMot('beau', ['b', 'o'], phonemes).segments).toContainEqual({ phonemeId: 'o', grapheme: 'eau', muetteAvant: '' })
+    expect(decomposerMot('seau', ['s', 'o'], phonemes).segments).toContainEqual({ phonemeId: 'o', grapheme: 'eau', muetteAvant: '' })
   })
 
   it('applique la règle du m/b/p sans logique dédiée (juste par correspondance littérale)', () => {
     const r = decomposerMot('jambe', ['j', 'an', 'b'], phonemes)
     expect(r.segments).toEqual([
-      { phonemeId: 'j', grapheme: 'j' },
-      { phonemeId: 'an', grapheme: 'am' },
-      { phonemeId: 'b', grapheme: 'b' },
+      { phonemeId: 'j', grapheme: 'j', muetteAvant: '' },
+      { phonemeId: 'an', grapheme: 'am', muetteAvant: '' },
+      { phonemeId: 'b', grapheme: 'b', muetteAvant: '' },
     ])
     expect(r.muettes).toBe('e')
   })
@@ -30,10 +30,10 @@ describe('decomposerMot', () => {
   it('retrouve une graphie non triviale pour un son ([e] écrit "ai" dans maison)', () => {
     const r = decomposerMot('maison', ['m', 'e', 'z', 'on'], phonemes)
     expect(r.segments).toEqual([
-      { phonemeId: 'm', grapheme: 'm' },
-      { phonemeId: 'e', grapheme: 'ai' },
-      { phonemeId: 'z', grapheme: 's' },
-      { phonemeId: 'on', grapheme: 'on' },
+      { phonemeId: 'm', grapheme: 'm', muetteAvant: '' },
+      { phonemeId: 'e', grapheme: 'ai', muetteAvant: '' },
+      { phonemeId: 'z', grapheme: 's', muetteAvant: '' },
+      { phonemeId: 'on', grapheme: 'on', muetteAvant: '' },
     ])
     expect(r.muettes).toBe('')
   })
@@ -53,12 +53,34 @@ describe('decomposerMot', () => {
     expect(r.fiable).toBe(true)
   })
 
-  it('signale comme NON fiable une découpe où un son n\'a pas de graphie connue', () => {
+  it('reconnaît les lettres muettes en début et en milieu de mot', () => {
     // Bug de production : le "h" muet initial de "hiver" décalait toute la
-    // découpe, et la fiche affichait [i]->h, [v]->i, [é è]->v. Le drapeau
-    // permet à l'affichage de se taire plutôt que de mentir. Aucune graphie
-    // de [i] ne commence par "h", donc aucune découpe complète n'existe.
-    expect(decomposerMot('hiver', ['i', 'v', 'e', 'r'], phonemes).fiable).toBe(false)
+    // découpe, et la fiche affichait [i]->h, [v]->i, [é è]->v. La découpe a
+    // d'abord appris à se taire, puis à modéliser ces muettes-là.
+    const hiver = decomposerMot('hiver', ['i', 'v', 'e', 'r'], phonemes)
+    expect(hiver.fiable).toBe(true)
+    expect(hiver.segments.map((s) => s.muetteAvant + s.grapheme)).toEqual(['hi', 'v', 'e', 'r'])
+    expect(hiver.segments[0].muetteAvant).toBe('h')
+
+    // Muette au milieu, et pas seulement au début.
+    const compte = decomposerMot('compte', ['c', 'on', 't'], phonemes)
+    expect(compte.segments.map((s) => s.muetteAvant + s.grapheme)).toEqual(['c', 'om', 'pt'])
+    expect(compte.segments[2].muetteAvant).toBe('p')
+    expect(compte.muettes).toBe('e')
+  })
+
+  it("n'invente pas de muette là où une graphie manque simplement à la table", () => {
+    // Garde-fou : la recherche de muettes pourrait masquer n'importe quelle
+    // graphie inconnue en la déclarant silencieuse. Les voyelles autres que
+    // "e" et le "l" en sont donc exclues - sans ça, "oeil" devenait
+    // "(o) + e + il", enseignant que le "o" ne se prononce pas.
+    const oeil = decomposerMot('oeil', ['eu', 'ill'], phonemes)
+    expect(oeil.segments[0].muetteAvant).toBe('')
+    expect(oeil.segments[0].grapheme).toBe('oe')
+
+    // "femme" reste non fiable : son "e" fait le son [a], une correspondance
+    // qu'aucune muette ne peut expliquer. On préfère toujours ne rien montrer.
+    expect(decomposerMot('femme', ['f', 'a', 'm'], phonemes).fiable).toBe(false)
   })
 
   it('découpe "fer" correctement grâce au "e" simple et au retour arrière', () => {
@@ -112,7 +134,7 @@ describe('decomposerMot', () => {
 
   it('avance quand même sans planter si un son est absent de la table (mot ajouté avec données inattendues)', () => {
     const r = decomposerMot('xyz', ['inconnu'], phonemes)
-    expect(r.segments).toEqual([{ phonemeId: 'inconnu', grapheme: 'x' }])
+    expect(r.segments).toEqual([{ phonemeId: 'inconnu', grapheme: 'x', muetteAvant: '' }])
     expect(r.muettes).toBe('yz')
   })
 })

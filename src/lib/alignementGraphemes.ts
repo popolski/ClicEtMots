@@ -22,6 +22,12 @@ export interface SegmentGrapheme {
   phonemeId: PhonemeId
   /** Portion du mot réellement utilisée pour ce son (peut différer de displaySymbol). */
   grapheme: string
+  /**
+   * Lettres muettes situées JUSTE AVANT ce son (le "h" de "hiver", le "p" de
+   * "compte"), chaîne vide s'il n'y en a pas. Les muettes de fin de mot sont
+   * à part, dans DecompositionMot.muettes.
+   */
+  muetteAvant: string
 }
 
 export interface DecompositionMot {
@@ -61,6 +67,7 @@ function chercherDecoupe(
   parId: Map<PhonemeId, Phoneme>,
   index: number,
   position: number,
+  budget: number,
 ): SegmentGrapheme[] | null {
   if (index >= phonemeSeq.length) return []
 
@@ -68,26 +75,91 @@ function chercherDecoupe(
   const phoneme = parId.get(phonemeId)
   const candidats = phoneme ? [...phoneme.graphemes].sort((a, b) => b.grapheme.length - a.grapheme.length) : []
 
-  for (const { grapheme } of candidats) {
-    // Les graphies "composées" ("e+consonne double", "t+i") décrivent un
-    // contexte, pas une suite de lettres : elles ne peuvent pas correspondre
-    // littéralement à une portion du mot.
-    if (grapheme.includes('+')) continue
-    if (word.slice(position, position + grapheme.length).toLowerCase() !== grapheme.toLowerCase()) continue
+  // Nombre de lettres muettes sautées avant ce son. On essaie 0 d'abord :
+  // une découpe sans muette interne est toujours préférée à une découpe qui
+  // en invente une.
+  for (let saut = 0; saut <= budget; saut++) {
+    const debut = position + compterSeparateurs(word, position) + saut
+    if (debut > word.length) break
+    if (!muettePlausible(word, position + compterSeparateurs(word, position), debut)) break
+    // Les traits d'union, apostrophes et espaces ("aujourd'hui", "peut-être",
+    // "parce que") ne sont pas des lettres muettes : ils ne coûtent rien et
+    // sont simplement absorbés avec elles.
+    const avant = word.slice(position, debut + compterSeparateurs(word, debut))
+    const depart = debut + compterSeparateurs(word, debut)
 
-    const suite = chercherDecoupe(word, phonemeSeq, parId, index + 1, position + grapheme.length)
-    if (suite) return [{ phonemeId, grapheme: word.slice(position, position + grapheme.length) }, ...suite]
+    for (const { grapheme } of candidats) {
+      // Les graphies "composées" ("e+consonne double", "t+i") décrivent un
+      // contexte, pas une suite de lettres : elles ne peuvent pas correspondre
+      // littéralement à une portion du mot.
+      if (grapheme.includes('+')) continue
+      if (word.slice(depart, depart + grapheme.length).toLowerCase() !== grapheme.toLowerCase()) continue
+
+      const suite = chercherDecoupe(
+        word,
+        phonemeSeq,
+        parId,
+        index + 1,
+        depart + grapheme.length,
+        budget - saut,
+      )
+      if (suite) {
+        return [
+          { phonemeId, grapheme: word.slice(depart, depart + grapheme.length), muetteAvant: avant },
+          ...suite,
+        ]
+      }
+    }
   }
   return null
 }
 
+/**
+ * Une lettre ne peut être déclarée muette que si elle peut réellement l'être
+ * en français : les consonnes (h de "hiver", p de "compte", m de "automne")
+ * et la seule voyelle qui se tait, le "e". Sans cette règle, la recherche
+ * s'autorisait des muettes impossibles pour compenser une graphie absente de
+ * la table - sur "oeil" elle déclarait le "o" muet et rattachait [e] au "e",
+ * enseignant une correspondance fausse au lieu de reconnaître "oe".
+ */
+function muettePlausible(word: string, debut: number, fin: number): boolean {
+  for (let i = debut; i < fin; i++) {
+    // Le "l" est exclu en plus des voyelles : à l'intérieur d'un mot il
+    // n'est pratiquement jamais muet, et l'autoriser faisait passer le "ll"
+    // de "taillis" ou "mitrailleur" pour une lettre silencieuse alors que
+    // c'est justement lui qui produit le son.
+    if (/[aiouyâàîïôûùéèêël]/i.test(word[i])) return false
+  }
+  return true
+}
+
+/** Longueur du groupe de caractères non alphabétiques à partir de `position`. */
+function compterSeparateurs(word: string, position: number): number {
+  let n = 0
+  while (position + n < word.length && /[^a-zà-öø-ÿ]/i.test(word[position + n])) n++
+  return n
+}
+
+/**
+ * Plafond de lettres muettes internes cherchées. Au-delà, on n'a plus affaire
+ * à un mot dont quelques lettres se taisent mais à une découpe inventée de
+ * toutes pièces : mieux vaut alors se déclarer non fiable et ne rien montrer.
+ */
+const MAX_MUETTES_INTERNES = 3
+
 export function decomposerMot(word: string, phonemeSeq: PhonemeId[], table: PhonemeTable): DecompositionMot {
   const parId = phonemeParId(table)
 
-  const decoupe = chercherDecoupe(word, phonemeSeq, parId, 0, 0)
-  if (decoupe) {
-    const consomme = decoupe.reduce((n, s) => n + s.grapheme.length, 0)
-    return { segments: decoupe, muettes: word.slice(consomme), fiable: true }
+  // Approfondissement progressif : on cherche d'abord une découpe SANS
+  // aucune lettre muette interne, puis on en autorise une, puis deux. La
+  // première trouvée est donc celle qui en invente le moins - sans ça, rien
+  // n'empêcherait de déclarer muettes des lettres qui se prononcent.
+  for (let budget = 0; budget <= MAX_MUETTES_INTERNES; budget++) {
+    const decoupe = chercherDecoupe(word, phonemeSeq, parId, 0, 0, budget)
+    if (decoupe) {
+      const consomme = decoupe.reduce((n, s) => n + s.muetteAvant.length + s.grapheme.length, 0)
+      return { segments: decoupe, muettes: word.slice(consomme), fiable: true }
+    }
   }
 
   // Aucune découpe complète : on retombe sur l'ancienne approche gloutonne,
@@ -110,7 +182,7 @@ export function decomposerMot(word: string, phonemeSeq: PhonemeId[], table: Phon
     }
     if (longueur === null) longueur = 1
 
-    segments.push({ phonemeId, grapheme: word.slice(position, position + longueur) })
+    segments.push({ phonemeId, grapheme: word.slice(position, position + longueur), muetteAvant: '' })
     position += longueur
   }
 

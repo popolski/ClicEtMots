@@ -89,12 +89,22 @@ export function QuestionDictee({ entree, entreeCible, aideAutorisee, onReponse }
         {decomposition && (
           <div className="mx-auto mb-4 flex max-w-lg flex-wrap items-start justify-center gap-3 rounded-2xl border-2 border-gray-200 bg-gray-50 p-4">
             {decomposition.segments.map((segment, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <span className="text-xs font-medium text-gray-400">
-                  [{phonemesById.get(segment.phonemeId)?.displaySymbol ?? segment.phonemeId}]
-                </span>
-                <span className="rounded-lg bg-brand-100 px-3 py-1 text-2xl font-semibold text-brand-700">
-                  {segment.grapheme}
+              <div key={i} className="flex items-start gap-3">
+                {/* Muettes internes (le "h" de "histoire") : présentées
+                    exactement comme les muettes finales juste en dessous. */}
+                {segment.muetteAvant && (
+                  <span className="flex flex-col items-center gap-1">
+                    <span className="text-xs font-medium text-gray-400">muet</span>
+                    <span className="px-1 py-1 text-2xl font-semibold text-gray-300">{segment.muetteAvant}</span>
+                  </span>
+                )}
+                <span className="flex flex-col items-center gap-1">
+                  <span className="text-xs font-medium text-gray-400">
+                    [{phonemesById.get(segment.phonemeId)?.displaySymbol ?? segment.phonemeId}]
+                  </span>
+                  <span className="rounded-lg bg-brand-100 px-3 py-1 text-2xl font-semibold text-brand-700">
+                    {segment.grapheme}
+                  </span>
                 </span>
               </div>
             ))}
