@@ -196,3 +196,45 @@ describe('préparation d\'une séance', () => {
     expect(preparerSeance(source, lexique, 99999).length).toBeGreaterThan(1500)
   })
 })
+
+describe('lettres muettes internes', () => {
+  it('rend jouables les mots à muette au début ou au milieu', () => {
+    // Ces mots étaient écartés : l'exercice n'avait qu'une case muette, à la
+    // fin, et l'élève aurait reconstitué "istoire". Sur les 9 mots de la
+    // liste de Camille, "histoire" était l'un des deux derniers rejetés.
+    const histoire = exercicePour('histoire')
+    expect(histoire).not.toBeNull()
+    expect(histoire?.etapes[0].muetteAvant).toBe('h')
+    expect(histoire?.muette).toBe('e')
+
+    const compte = exercicePour('compte')
+    expect(compte?.etapes.find((e) => e.muetteAvant)?.muetteAvant).toBe('p')
+  })
+
+  it('reconstitue le mot exact, muettes comprises', () => {
+    for (const mot of ['histoire', 'compte', 'cahier', 'automne', 'maison', 'petit']) {
+      const ex = exercicePour(mot)
+      if (!ex) continue
+      const reconstitue = ex.etapes.map((e) => e.muetteAvant + e.bonne).join('') + ex.muette
+      expect(reconstitue).toBe(mot)
+    }
+  })
+
+  it('laisse la muette interne vide sur un mot qui n\'en a pas', () => {
+    expect(exercicePour('maison')?.etapes.every((e) => e.muetteAvant === '')).toBe(true)
+  })
+})
+
+describe('locutions', () => {
+  it("écarte les expressions en plusieurs mots", () => {
+    // L'atelier fait épeler UN mot. Avec l'affichage des muettes internes,
+    // l'espace de "la plupart des" s'affichait comme une lettre silencieuse.
+    for (const locution of ['parce que', 'la plupart des', 'peut-être']) {
+      const entree = lexique.find((e) => e.word === locution)
+      if (!entree) continue
+      expect(
+        construireExercice(entree, classementGraphies(lexique), motsHomophones(lexique), graphiesAttestees(lexique)),
+      ).toBeNull()
+    }
+  })
+})

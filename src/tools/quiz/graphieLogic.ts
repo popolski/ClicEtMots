@@ -36,6 +36,16 @@ export interface EtapeSon {
   choix: string[]
   /** Vrai si le son n'a qu'une écriture possible : posé d'office, sans question. */
   automatique: boolean
+  /**
+   * Lettres muettes placées juste AVANT ce son (le "h" de "histoire", le "p"
+   * de "compte"). Affichées en gris, jamais demandées : contrairement aux
+   * muettes finales, qui suivent des règles de français qu'un CE1 apprend
+   * (pluriel, féminin, mot de la même famille), une muette interne ne
+   * s'explique par rien - elle se retient. La demander reviendrait à faire
+   * deviner. Sans elle en revanche, l'élève reconstituait "istoire" en ayant
+   * tout juste, et le mot était donc écarté de l'atelier.
+   */
+  muetteAvant: string
 }
 
 export interface ExerciceGraphie {
@@ -207,8 +217,9 @@ export function motsHomophones(wordIndex: WordEntry[]): Set<string> {
 
 /**
  * Construit l'exercice pour un mot, ou null si le mot n'est pas jouable :
- * décomposition non fiable, aucun son à choisir, trop de sons à choisir, ou
- * homophone sans pictogramme pour lever l'ambiguïté.
+ * décomposition non fiable, aucun son à choisir, trop de sons à choisir,
+ * fin muette absente des propositions, ou homophone sans pictogramme pour
+ * lever l'ambiguïté.
  */
 export function construireExercice(
   entree: { word: string; lemmaId: string; phonemes: PhonemeId[] },
@@ -216,17 +227,19 @@ export function construireExercice(
   homophones: Set<string>,
   attestees?: Map<string, Set<string>[]>,
 ): ExerciceGraphie | null {
+  // Locutions ("la plupart des", "parce que", "peut-être", "aujourd'hui") :
+  // l'atelier fait épeler UN mot. Depuis que les muettes internes sont
+  // affichées, l'espace et le trait d'union passaient pour des lettres
+  // silencieuses - "la plupart des" est apparu dans une séance, avec une
+  // case "muet" contenant une espace. Repéré en jouant en navigateur.
+  if (/[^a-zà-öø-ÿ]/i.test(entree.word)) return null
+
   const { segments, muettes, fiable } = decomposerMot(entree.word, entree.phonemes, phonemes)
 
   // Découpe douteuse : l'exercice demanderait une graphie qui n'est pas la
   // bonne. Le drapeau vient de decomposerMot, qui sait si CHAQUE son a été
   // rattaché à une graphie réellement répertoriée pour lui.
   if (!fiable) return null
-
-  // L'exercice ne propose qu'UNE case muette, à la fin. Un mot à muette
-  // interne ("histoire", "compte") serait donc reconstitué sans son "h" ni
-  // son "p" : l'élève écrirait une orthographe fausse en ayant tout juste.
-  if (segments.some((s) => s.muetteAvant !== '')) return null
 
   const parPosition = attestees?.get(entree.phonemes.join('-'))
   const etapes = segments.map((s, i) => {
@@ -237,6 +250,7 @@ export function construireExercice(
       bonne: s.grapheme,
       choix,
       automatique: choix.length <= 1,
+      muetteAvant: s.muetteAvant,
     }
   })
 

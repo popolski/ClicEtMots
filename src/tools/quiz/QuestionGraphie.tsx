@@ -18,9 +18,10 @@ interface QuestionGraphieProps {
  * en exercice d'encodage.
  *
  * Les sons à écriture unique sont posés d'office en gris : les faire cliquer
- * ne teste rien et allonge l'exercice pour rien. La dernière étape porte
- * toujours sur la lettre muette finale, "rien" compris - une case muette qui
- * n'apparaîtrait que lorsqu'il y en a une trahirait la réponse.
+ * ne teste rien et allonge l'exercice pour rien. Les lettres muettes internes
+ * ("h" de histoire, "p" de compte) le sont aussi. La dernière étape, elle,
+ * porte toujours sur la lettre muette FINALE, "rien" compris - une case
+ * muette qui n'apparaîtrait que lorsqu'il y en a une trahirait la réponse.
  */
 export function QuestionGraphie({ exercice, category, onTermine }: QuestionGraphieProps) {
   // Graphie choisie pour chaque son (null = pas encore répondu). Les sons
@@ -109,7 +110,21 @@ export function QuestionGraphie({ exercice, category, onTermine }: QuestionGraph
           const repondu = reponses[i] !== null
           const actif = i === indexActif
           return (
-            <div key={i} className="flex flex-col items-center gap-1">
+            <div key={i} className="flex items-end gap-2">
+              {/* Muette interne (le "h" de "histoire", le "p" de "compte") :
+                  posée d'office en gris, jamais demandée. Une muette finale
+                  suit des règles qu'un CE1 apprend ; une muette interne ne
+                  s'explique par rien, la demander serait faire deviner. Sans
+                  elle, l'élève reconstituait "istoire" en ayant tout juste. */}
+              {etape.muetteAvant && (
+                <span className="flex flex-col items-center gap-1">
+                  <span className="text-xs font-medium text-gray-400">muet</span>
+                  <span className="rounded-lg bg-gray-100 px-2 py-1 text-2xl font-semibold text-gray-400">
+                    {etape.muetteAvant}
+                  </span>
+                </span>
+              )}
+              <span className="flex flex-col items-center gap-1">
               <span className={`text-xs font-medium ${actif ? 'text-brand-600' : 'text-gray-400'}`}>
                 [{etape.symbole}]
               </span>
@@ -130,6 +145,7 @@ export function QuestionGraphie({ exercice, category, onTermine }: QuestionGraph
                   ?
                 </span>
               )}
+              </span>
             </div>
           )
         })}
