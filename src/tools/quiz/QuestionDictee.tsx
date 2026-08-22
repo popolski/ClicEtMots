@@ -11,8 +11,6 @@ interface QuestionDicteeProps {
   entree: MotCandidat
   /** Entrée complète du lexique, pour la suite de sons du mot (aide + décomposition). */
   entreeCible: WordEntry | undefined
-  /** Filet de secours autorisé par l'enseignante pour CET élève (voir schema-v8.sql). */
-  aideAutorisee: boolean
   onReponse: (correct: boolean) => void
 }
 
@@ -25,8 +23,13 @@ interface QuestionDicteeProps {
  * Après validation, la correction montre la décomposition son par son du mot
  * attendu (même rendu que la fiche mot), pour que l'élève voie POURQUOI ça
  * s'écrit comme ça et pas seulement que c'était faux.
+ *
+ * Le filet de secours "Je ne sais pas l'écrire" (ouvre le clavier phonétique
+ * sans remplir le champ) est offert à TOUS les élèves : il était réglable
+ * élève par élève, mais l'enseignante a tranché pour l'ouvrir à la classe
+ * entière plutôt que d'avoir à décider a priori qui en a besoin.
  */
-export function QuestionDictee({ entree, entreeCible, aideAutorisee, onReponse }: QuestionDicteeProps) {
+export function QuestionDictee({ entree, entreeCible, onReponse }: QuestionDicteeProps) {
   const [saisie, setSaisie] = useState('')
   const [erreur, setErreur] = useState<string | null>(null)
   const [valide, setValide] = useState<boolean | null>(null)
@@ -161,7 +164,7 @@ export function QuestionDictee({ entree, entreeCible, aideAutorisee, onReponse }
         >
           Valider
         </button>
-        {aideAutorisee && !aideOuverte && (
+        {!aideOuverte && (
           <button
             type="button"
             onClick={() => setAideOuverte(true)}

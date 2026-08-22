@@ -9,8 +9,7 @@ import { genererDistracteurs } from '../../lib/quizErreurs'
 import { badgePour, BADGE_EMOJI, BADGE_LABEL, type Badge } from '../../lib/quizBadges'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { api } from '../../lib/api'
-import { useAuth } from '../../lib/authContext'
-import type { MotDeListe, ModeQuiz, ResultatQuiz } from '../../lib/api'
+import type { MotDeListe, MotRateDictee, ModeQuiz, ResultatQuiz } from '../../lib/api'
 import {
   CATEGORIES_GRAMMAIRE,
   equilibrerParNature,
@@ -371,12 +370,23 @@ export function QuizTool() {
   // de séance. `totalSeance` fige le nombre de mots du PREMIER tour, sinon
   // le score final serait rapporté au nombre de mots du rattrapage.
   const [aRattraper, setARattraper] = useState<Question[]>([])
+  // Mots ratés lors des séances PRÉCÉDENTES (schema-v10.sql), replacés en tête
+  // du tirage. null = pas encore chargés.
+  const [motsRates, setMotsRates] = useState<MotRateDictee[] | null>(null)
   const [enRattrapage, setEnRattrapage] = useState(false)
   const [totalSeance, setTotalSeance] = useState(0)
-  const { session } = useAuth()
 
   useEffect(() => {
     loadWordIndex().then(setWordIndex)
+  }, [])
+
+  // Best-effort : hors ligne ou API en panne, la dictée se contente d'un
+  // tirage aléatoire comme avant plutôt que de ne pas démarrer.
+  useEffect(() => {
+    api
+      .listMotsRatesDictee()
+      .then((r) => setMotsRates(Array.isArray(r.mots) ? r.mots : []))
+      .catch(() => setMotsRates([]))
   }, [])
 
   useEffect(() => {
@@ -406,12 +416,30 @@ export function QuizTool() {
     // enregistrée, l'exercice n'est simplement pas proposé (voir l'écran de
     // choix, qui le masque dans ce cas).
     if (mode === 'dictee') {
-      if (!motsSemaineCumules) return
+      if (!motsSemaineCumules || !motsRates) return
       // Pas de filtre motsAmbigus ici : on dicte des mots choisis à la main
       // par l'enseignante, et écrire "bonne" reste un exercice d'orthographe
       // parfaitement valable - l'ambiguïté ne gênait que l'étiquette de
       // catégorie affichée, absente de la dictée.
-      const tirage = melanger(motsSemaineCumules).slice(0, NB_MOTS_SESSION)
+      //
+      // Les mots ratés aux séances précédentes ouvrent la dictée, les plus
+      // ratés en premier (l'API les trie déjà). Un mot resté dans cette liste
+      // alors qu'il a disparu de la liste hebdomadaire est ignoré : on ne
+      // dicte que des mots que l'enseignante a effectivement donnés.
+      const parCle = new Map(motsSemaineCumules.map((m) => [`${m.lemmaId}|${m.word}`, m]))
+      const revisions: MotCandidat[] = []
+      for (const rate of motsRates) {
+        const mot = parCle.get(`${rate.lemmaId}|${rate.word}`)
+        if (mot) revisions.push(mot)
+      }
+      const dejaPris = new Set(revisions.map((m) => `${m.lemmaId}|${m.word}`))
+      const nouveaux = melanger(motsSemaineCumules.filter((m) => !dejaPris.has(`${m.lemmaId}|${m.word}`)))
+      // Les révisions ne mangent pas toute la séance : la moitié au plus,
+      // sinon un élève en difficulté ne verrait plus jamais de mot nouveau.
+      const tirage = [
+        ...revisions.slice(0, Math.ceil(NB_MOTS_SESSION / 2)),
+        ...nouveaux,
+      ].slice(0, NB_MOTS_SESSION)
       setQuestions(tirage.map((entree) => ({ entree })))
       setTotalSeance(tirage.length)
       return
@@ -479,18 +507,22 @@ export function QuizTool() {
       }
     }
     setQuestions(construire(sansAmbigus(motsFrequentsPourQuiz(wordIndex))))
-  }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules])
+  }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules, motsRates])
 
   function handleReponse(correct: boolean) {
     if (aRepondu) return
     setARepondu(true)
     if (correct) setScore((s) => s + 1)
-    // Dictée : on garde les mots ratés pour les representer en fin de
-    // séance. Seulement pendant la séance en cours - rien n'est encore
-    // conservé d'une séance à l'autre (à voir après un vrai usage en
-    // classe, voir la discussion produit).
-    if (!correct && mode === 'dictee' && questions && !enRattrapage) {
-      setARattraper((prec) => [...prec, questions[index]])
+    // Dictée : les mots ratés sont repassés en fin de séance ET retenus
+    // pour les séances suivantes (schema-v10.sql). Seul le PREMIER tour
+    // compte : un mot réussi au rattrapage reste à réviser, il a bien été
+    // raté quand il a été dicté.
+    if (mode === 'dictee' && questions && !enRattrapage) {
+      const { lemmaId, word } = questions[index].entree
+      if (!correct) setARattraper((prec) => [...prec, questions[index]])
+      // Best-effort, comme l'enregistrement des scores : une dictée doit
+      // pouvoir se dérouler même si le serveur ne répond pas.
+      api.marquerMotDictee(lemmaId, word, correct).catch(() => {})
     }
   }
 
@@ -739,7 +771,6 @@ export function QuizTool() {
           key={index}
           entree={question.entree}
           entreeCible={entreeCible}
-          aideAutorisee={session?.aideDictee === true}
           onReponse={handleReponse}
         />
       ) : mode === 'graphie' && question.graphie ? (

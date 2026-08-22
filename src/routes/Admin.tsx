@@ -82,16 +82,6 @@ function SectionEleves() {
     }
   }
 
-  async function basculerAideDictee(student: Student) {
-    const valeur = !student.aide_dictee
-    setStudents((prev) => prev?.map((s) => (s.id === student.id ? { ...s, aide_dictee: valeur } : s)) ?? null)
-    try {
-      await api.setAideDictee(student.id, valeur)
-    } catch {
-      setStudents((prev) => prev?.map((s) => (s.id === student.id ? { ...s, aide_dictee: !valeur } : s)) ?? null)
-    }
-  }
-
   // Réinitialisation manuelle des scores de quiz/favoris/historique - en
   // complément de la purge automatique par année scolaire (voir
   // purgerSiNouvelleAnneeScolaire dans server/api/auth.php).
@@ -174,13 +164,6 @@ function SectionEleves() {
                   onChange={() => basculerConfortLecture(s)}
                 />
                 👓 Confort
-              </label>
-              <label
-                className="flex items-center gap-1 text-xs text-blue-800"
-                title="Autoriser le clavier phonétique en secours pendant la dictée"
-              >
-                <input type="checkbox" checked={s.aide_dictee} onChange={() => basculerAideDictee(s)} />
-                ✏️ Aide dictée
               </label>
               <button
                 type="button"

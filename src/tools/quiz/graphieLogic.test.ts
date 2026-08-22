@@ -7,6 +7,7 @@ import {
   choixPourSon,
   classementGraphies,
   construireExercice,
+  graphiesAttestees,
   MAX_CHOIX,
   motsHomophones,
   preparerSeance,
@@ -26,7 +27,10 @@ function motDuLexique(mot: string): WordEntry {
 
 function exercicePour(mot: string) {
   const entree = motDuLexique(mot)
-  return construireExercice(entree, classementGraphies(lexique), motsHomophones(lexique))
+  // Les attestations sont passées comme en production : sans elles, les
+  // consonnes doubles seraient proposées partout et les exercices seraient
+  // plus longs qu'ils ne le sont réellement.
+  return construireExercice(entree, classementGraphies(lexique), motsHomophones(lexique), graphiesAttestees(lexique))
 }
 
 describe('choix proposés pour un son', () => {
@@ -103,12 +107,28 @@ describe('décomposition en étapes', () => {
   it('marque comme automatiques les sons à écriture unique', () => {
     const exercice = exercicePour('maison')
     expect(exercice?.etapes.map((e) => e.bonne)).toEqual(['m', 'ai', 's', 'on'])
-    // [m] n'est PLUS automatique depuis l'ajout des consonnes doubles :
-    // m/mm est une vraie difficulté orthographique, pas une écriture unique.
-    // [v] en revanche n'a qu'une seule écriture possible.
-    const avecV = exercicePour('avion')
-    expect(avecV?.etapes.find((e) => e.bonne === 'v')?.automatique).toBe(true)
-    expect(exercice?.etapes.find((e) => e.bonne === 'm')?.automatique).toBe(false)
+    // [m] est posé d'office : aucun mot qui se prononce comme "maison" ne
+    // l'écrit "mm", la question "m ou mm ?" ne se pose donc pas ici.
+    expect(exercice?.etapes.find((e) => e.bonne === 'm')?.automatique).toBe(true)
+    // [v] n'a de toute façon qu'une seule écriture possible.
+    expect(exercicePour('avion')?.etapes.find((e) => e.bonne === 'v')?.automatique).toBe(true)
+  })
+
+  it('ne pose la question de la consonne double que si elle se pose vraiment', () => {
+    // Corrigé après mesure : 93% des mots demandaient "n ou nn ?", y compris
+    // ceux où personne n'hésite. Un enfant y apprenait à répondre "simple"
+    // par réflexe, l'inverse du but. La question n'est gardée que si le mot
+    // double lui-même la consonne, ou si un mot qui sonne pareil la double
+    // (cane/canne).
+    const bonne = exercicePour('bonne')
+    expect(bonne?.etapes.find((e) => e.bonne === 'nn')?.choix).toEqual(['n', 'nn'])
+
+    const canne = exercicePour('canne')
+    expect(canne?.etapes.find((e) => e.bonne === 'nn')?.choix).toEqual(['n', 'nn'])
+
+    // "avion" : aucun homophone ne double le [n], la question disparaît.
+    const avion = exercicePour('avion')
+    expect(avion?.etapes.flatMap((e) => e.choix)).not.toContain('nn')
   })
 
   it('remonte les lettres muettes finales', () => {

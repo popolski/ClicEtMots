@@ -27,7 +27,6 @@ export interface SessionState {
   /** Élève uniquement - mode confort de lecture (dys) activé par l'enseignante (voir students.php). */
   confortLecture?: boolean | null
   /** Élève uniquement - filet de secours de la dictée (clavier phonétique) autorisé par l'enseignante. */
-  aideDictee?: boolean | null
 }
 
 export interface Student {
@@ -36,7 +35,6 @@ export interface Student {
   created_at: string
   recherche_directe: boolean
   confort_lecture: boolean
-  aide_dictee: boolean
 }
 
 export type RelationType = 'synonyme' | 'antonyme' | 'famille'
@@ -84,6 +82,13 @@ export interface ListeMotsSemaine {
   updatedAt: string
 }
 
+export interface MotRateDictee {
+  lemmaId: string
+  word: string
+  /** Nombre de fois raté : les plus difficiles reviennent en premier. */
+  ratages: number
+}
+
 export type ModeQuiz = 'qcm' | 'reconstitution' | 'grammaire' | 'dictee' | 'graphie'
 
 export interface ResultatQuiz {
@@ -116,7 +121,6 @@ export const api = {
       label: string
       rechercheDirecte?: boolean
       confortLecture?: boolean
-      aideDictee?: boolean
     }>(
       'login.php',
       { method: 'POST', body: JSON.stringify({ identifiant, motDePasse }) },
@@ -142,12 +146,6 @@ export const api = {
     request<{ ok: true }>(`students.php?id=${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ confortLecture }),
-    }),
-
-  setAideDictee: (id: number, aideDictee: boolean) =>
-    request<{ ok: true }>(`students.php?id=${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ aideDictee }),
     }),
 
   deleteStudent: (id: number) => request<{ ok: true }>(`students.php?id=${id}`, { method: 'DELETE' }),
@@ -206,6 +204,16 @@ export const api = {
     }),
 
   viderResultatsQuiz: () => request<{ ok: true }>('quiz-resultats.php', { method: 'DELETE' }),
+
+  /** Mots ratés en dictée, replacés en tête de la séance suivante (schema-v10.sql). */
+  listMotsRatesDictee: () => request<{ mots: MotRateDictee[] }>('dictee-rates.php'),
+
+  /** `reussi` retire le mot de la liste ; sinon il y entre ou voit son compteur monter. */
+  marquerMotDictee: (lemmaId: string, word: string, reussi: boolean) =>
+    request<{ ok: true }>('dictee-rates.php', {
+      method: 'POST',
+      body: JSON.stringify({ lemmaId, word, reussi }),
+    }),
 
   listFavoris: () => request<{ favoris: FavoriServeur[] }>('favoris.php'),
 

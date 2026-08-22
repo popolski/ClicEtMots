@@ -7,7 +7,7 @@ $db = getDb();
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    $stmt = $db->query('SELECT id, prenom, created_at, recherche_directe, confort_lecture, aide_dictee FROM students ORDER BY prenom');
+    $stmt = $db->query('SELECT id, prenom, created_at, recherche_directe, confort_lecture FROM students ORDER BY prenom');
     $rows = $stmt->fetchAll();
     $students = array_map(fn($row) => [
         'id' => (int) $row['id'],
@@ -15,7 +15,6 @@ if ($method === 'GET') {
         'created_at' => $row['created_at'],
         'recherche_directe' => (bool) $row['recherche_directe'],
         'confort_lecture' => (bool) $row['confort_lecture'],
-        'aide_dictee' => (bool) $row['aide_dictee'],
     ], $rows);
     jsonResponse(200, ['students' => $students]);
 }
@@ -70,7 +69,6 @@ if ($method === 'PATCH') {
     $reglages = [
         'rechercheDirecte' => 'recherche_directe',
         'confortLecture' => 'confort_lecture',
-        'aideDictee' => 'aide_dictee',
     ];
     $modifies = 0;
     foreach ($reglages as $cleJson => $colonne) {
@@ -85,7 +83,7 @@ if ($method === 'PATCH') {
     }
 
     if ($modifies === 0) {
-        jsonResponse(400, ['error' => 'rechercheDirecte, confortLecture ou aideDictee requis']);
+        jsonResponse(400, ['error' => 'rechercheDirecte ou confortLecture requis']);
     }
 
     jsonResponse(200, ['ok' => true]);

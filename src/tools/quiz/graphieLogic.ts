@@ -94,6 +94,45 @@ export function classementGraphies(wordIndex: WordEntry[]): Map<PhonemeId, strin
 /** Réinitialise le cache — utilisé par les tests, jamais par l'application. */
 export function reinitialiserClassement(): void {
   classementMemo = null
+  attestationsMemo = null
+}
+
+/**
+ * Consonnes doubles. Elles ont été ajoutées à la table des sons pour que la
+ * découpe de "bonne" ou "tyrannosaure" soit juste, mais en devenir des
+ * propositions systématiques a rendu l'exercice absurde : 93% des mots
+ * demandaient "n ou nn ?", y compris "avion" où personne n'hésite. Un enfant
+ * y apprend à répondre "simple" par réflexe, l'inverse du but recherché.
+ */
+const DOUBLES = new Set(['bb', 'cc', 'dd', 'ff', 'gg', 'll', 'mm', 'nn', 'pp', 'rr', 'ss', 'tt'])
+
+/**
+ * Pour chaque suite de sons, les graphies réellement employées à chaque
+ * position par les mots du lexique qui se prononcent ainsi. Sert à ne poser
+ * la question de la consonne double que lorsqu'elle se pose vraiment : soit
+ * le mot lui-même la double, soit un mot qui sonne pareil la double
+ * (cane/canne, date/datte, balade/ballade). Mémorisé, comme le classement.
+ */
+let attestationsMemo: Map<string, Set<string>[]> | null = null
+
+export function graphiesAttestees(wordIndex: WordEntry[]): Map<string, Set<string>[]> {
+  if (attestationsMemo) return attestationsMemo
+  const table = new Map<string, Set<string>[]>()
+  for (const entree of wordIndex) {
+    const { segments, fiable } = decomposerMot(entree.word, entree.phonemes, phonemes)
+    if (!fiable) continue
+    const cle = entree.phonemes.join('-')
+    let parPosition = table.get(cle)
+    if (!parPosition) {
+      parPosition = segments.map(() => new Set<string>())
+      table.set(cle, parPosition)
+    }
+    // Une découpe plus courte que la première vue (muettes internes) ne doit
+    // pas déborder du tableau déjà dimensionné.
+    segments.forEach((s, i) => parPosition[i]?.add(s.grapheme.toLowerCase()))
+  }
+  attestationsMemo = table
+  return attestationsMemo
 }
 
 /**
@@ -102,8 +141,21 @@ export function reinitialiserClassement(): void {
  * fréquentes de ce son, jusqu'à MAX_CHOIX. Ordre stable (celui du clavier)
  * pour que la bonne réponse ne se repère pas à sa position.
  */
-export function choixPourSon(phonemeId: PhonemeId, bonne: string, classement: Map<PhonemeId, string[]>): string[] {
-  const toutes = graphiesUtilisables.get(phonemeId) ?? []
+export function choixPourSon(
+  phonemeId: PhonemeId,
+  bonne: string,
+  classement: Map<PhonemeId, string[]>,
+  /**
+   * Graphies attestées pour ce son dans un mot qui se prononce pareil. Sert
+   * uniquement à filtrer les consonnes doubles (voir DOUBLES) : proposer
+   * "n ou nn ?" sur "avion" n'apprend rien, la question n'a de sens que si
+   * la double existe vraiment quelque part.
+   */
+  attestees?: Set<string>,
+): string[] {
+  const toutes = (graphiesUtilisables.get(phonemeId) ?? []).filter(
+    (g) => !DOUBLES.has(g.toLowerCase()) || g.toLowerCase() === bonne.toLowerCase() || (attestees?.has(g.toLowerCase()) ?? true),
+  )
   if (toutes.length <= 1) return [bonne]
 
   const parFrequence = classement.get(phonemeId) ?? []
@@ -162,6 +214,7 @@ export function construireExercice(
   entree: { word: string; lemmaId: string; phonemes: PhonemeId[] },
   classement: Map<PhonemeId, string[]>,
   homophones: Set<string>,
+  attestees?: Map<string, Set<string>[]>,
 ): ExerciceGraphie | null {
   const { segments, muettes, fiable } = decomposerMot(entree.word, entree.phonemes, phonemes)
 
@@ -175,8 +228,9 @@ export function construireExercice(
   // son "p" : l'élève écrirait une orthographe fausse en ayant tout juste.
   if (segments.some((s) => s.muetteAvant !== '')) return null
 
-  const etapes = segments.map((s) => {
-    const choix = choixPourSon(s.phonemeId, s.grapheme, classement)
+  const parPosition = attestees?.get(entree.phonemes.join('-'))
+  const etapes = segments.map((s, i) => {
+    const choix = choixPourSon(s.phonemeId, s.grapheme, classement, parPosition?.[i])
     return {
       phonemeId: s.phonemeId,
       symbole: symboleParId.get(s.phonemeId) ?? s.phonemeId,
@@ -226,6 +280,7 @@ export function preparerSeance(
 ): ExerciceGraphie[] {
   const classement = classementGraphies(wordIndex)
   const homophones = motsHomophones(wordIndex)
+  const attestees = graphiesAttestees(wordIndex)
   const parMot = new Map(wordIndex.map((e) => [`${e.lemmaId}|${e.word}`, e]))
 
   const exercices: ExerciceGraphie[] = []
@@ -237,6 +292,7 @@ export function preparerSeance(
       { word: entree.word, lemmaId: entree.lemmaId, phonemes: entree.phonemes },
       classement,
       homophones,
+      attestees,
     )
     if (exercice) exercices.push(exercice)
   }
