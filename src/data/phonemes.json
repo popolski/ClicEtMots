@@ -65,6 +65,10 @@
         "exampleWord": "elle"
       },
       {
+        "grapheme": "e",
+        "exampleWord": "mer"
+      },
+      {
         "grapheme": "ai",
         "exampleWord": "maison"
       },

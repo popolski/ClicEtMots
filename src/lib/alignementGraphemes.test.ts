@@ -44,6 +44,48 @@ describe('decomposerMot', () => {
     expect(r.segments.map((s) => s.grapheme).join('')).toBe('oiseau')
   })
 
+  it('revient en arrière quand un premier choix condamne la suite', () => {
+    // Sur "beau", prendre "e" pour [b]... non : le vrai cas est "seau", où le
+    // son [o] doit prendre "eau" et non "o", sinon il reste "au" en trop.
+    const r = decomposerMot('seau', ['s', 'o'], phonemes)
+    expect(r.segments.map((s) => s.grapheme)).toEqual(['s', 'eau'])
+    expect(r.muettes).toBe('')
+    expect(r.fiable).toBe(true)
+  })
+
+  it('signale comme NON fiable une découpe où un son n\'a pas de graphie connue', () => {
+    // Bug de production : le "h" muet initial de "hiver" décalait toute la
+    // découpe, et la fiche affichait [i]->h, [v]->i, [é è]->v. Le drapeau
+    // permet à l'affichage de se taire plutôt que de mentir. Aucune graphie
+    // de [i] ne commence par "h", donc aucune découpe complète n'existe.
+    expect(decomposerMot('hiver', ['i', 'v', 'e', 'r'], phonemes).fiable).toBe(false)
+  })
+
+  it('découpe "fer" correctement grâce au "e" simple et au retour arrière', () => {
+    // Double correctif : "e" a été ajouté aux graphies de [é è] (il y manquait,
+    // alors qu'il fait ce son dans fer/mer/sel/bec), et le retour arrière
+    // empêche "er" d'avaler le [r] qui suit.
+    const r = decomposerMot('fer', ['f', 'e', 'r'], phonemes)
+    expect(r.segments.map((s) => s.grapheme)).toEqual(['f', 'e', 'r'])
+    expect(r.fiable).toBe(true)
+  })
+
+  it('préfère toujours la graphie la plus longue quand elle permet une découpe complète', () => {
+    // Le "e" simple ne doit pas voler la place de "ai"/"ei"/"et"/"er".
+    expect(decomposerMot('maison', ['m', 'e', 'z', 'on'], phonemes).segments[1].grapheme).toBe('ai')
+    expect(decomposerMot('nez', ['n', 'e'], phonemes).segments[1].grapheme).toBe('ez')
+  })
+
+  it('marque comme fiables les découpes correctes', () => {
+    for (const [mot, sons] of [
+      ['chat', ['ch', 'a']],
+      ['maison', ['m', 'e', 'z', 'on']],
+      ['jambe', ['j', 'an', 'b']],
+    ] as [string, string[]][]) {
+      expect(decomposerMot(mot, sons, phonemes).fiable).toBe(true)
+    }
+  })
+
   it('avance quand même sans planter si un son est absent de la table (mot ajouté avec données inattendues)', () => {
     const r = decomposerMot('xyz', ['inconnu'], phonemes)
     expect(r.segments).toEqual([{ phonemeId: 'inconnu', grapheme: 'x' }])

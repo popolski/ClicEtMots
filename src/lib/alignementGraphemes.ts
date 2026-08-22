@@ -28,17 +28,74 @@ export interface DecompositionMot {
   segments: SegmentGrapheme[]
   /** Lettres finales non rattachées à un son (ex. le "t" muet de "chat"). Vide si aucune. */
   muettes: string
+  /**
+   * Vrai si CHAQUE son a été rattaché à une graphie réellement répertoriée
+   * pour lui. Faux quand la découpe a dû improviser : le résultat est alors
+   * probablement décalé et ne doit pas être montré à un enfant.
+   *
+   * Repéré en production sur "hiver", dont le "h" initial (muet, non
+   * répertorié) décalait tout : la fiche affichait [i]->h, [v]->i, [é è]->v,
+   * [r]->e. L'appelant DOIT vérifier ce drapeau avant d'afficher.
+   */
+  fiable: boolean
 }
 
 function phonemeParId(table: PhonemeTable): Map<PhonemeId, Phoneme> {
   return new Map(table.map((p) => [p.id, p]))
 }
 
+/**
+ * Cherche une découpe où chaque son correspond à une de ses graphies connues,
+ * avec retour arrière : un premier choix glouton peut condamner la suite.
+ * Sur "fer", prendre "er" pour [é è] ne laisse rien pour [r] — il faut
+ * revenir en arrière et prendre "e". Les graphies les plus longues restent
+ * essayées d'abord ("eau" avant "e"), le retour arrière ne sert qu'en cas
+ * d'impasse.
+ *
+ * Renvoie null si aucune découpe complète n'existe (graphie absente de
+ * phonemes.json, lettre muette en début de mot...).
+ */
+function chercherDecoupe(
+  word: string,
+  phonemeSeq: PhonemeId[],
+  parId: Map<PhonemeId, Phoneme>,
+  index: number,
+  position: number,
+): SegmentGrapheme[] | null {
+  if (index >= phonemeSeq.length) return []
+
+  const phonemeId = phonemeSeq[index]
+  const phoneme = parId.get(phonemeId)
+  const candidats = phoneme ? [...phoneme.graphemes].sort((a, b) => b.grapheme.length - a.grapheme.length) : []
+
+  for (const { grapheme } of candidats) {
+    // Les graphies "composées" ("e+consonne double", "t+i") décrivent un
+    // contexte, pas une suite de lettres : elles ne peuvent pas correspondre
+    // littéralement à une portion du mot.
+    if (grapheme.includes('+')) continue
+    if (word.slice(position, position + grapheme.length).toLowerCase() !== grapheme.toLowerCase()) continue
+
+    const suite = chercherDecoupe(word, phonemeSeq, parId, index + 1, position + grapheme.length)
+    if (suite) return [{ phonemeId, grapheme: word.slice(position, position + grapheme.length) }, ...suite]
+  }
+  return null
+}
+
 export function decomposerMot(word: string, phonemeSeq: PhonemeId[], table: PhonemeTable): DecompositionMot {
   const parId = phonemeParId(table)
+
+  const decoupe = chercherDecoupe(word, phonemeSeq, parId, 0, 0)
+  if (decoupe) {
+    const consomme = decoupe.reduce((n, s) => n + s.grapheme.length, 0)
+    return { segments: decoupe, muettes: word.slice(consomme), fiable: true }
+  }
+
+  // Aucune découpe complète : on retombe sur l'ancienne approche gloutonne,
+  // qui avance d'une lettre quand rien ne correspond. Le résultat est marqué
+  // non fiable — il sert encore à des usages tolérants (repérage approximatif)
+  // mais ne doit pas être affiché tel quel.
   let position = 0
   const segments: SegmentGrapheme[] = []
-
   for (const phonemeId of phonemeSeq) {
     const phoneme = parId.get(phonemeId)
     const candidats = phoneme ? [...phoneme.graphemes].sort((a, b) => b.grapheme.length - a.grapheme.length) : []
@@ -51,14 +108,11 @@ export function decomposerMot(word: string, phonemeSeq: PhonemeId[], table: Phon
         break
       }
     }
-    // Aucune graphie connue ne correspond (mot ajouté par l'enseignante avec
-    // une graphie non répertoriée, erreur de données...) : on avance d'une
-    // lettre plutôt que de bloquer toute la décomposition.
     if (longueur === null) longueur = 1
 
     segments.push({ phonemeId, grapheme: word.slice(position, position + longueur) })
     position += longueur
   }
 
-  return { segments, muettes: word.slice(position) }
+  return { segments, muettes: word.slice(position), fiable: false }
 }

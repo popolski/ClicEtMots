@@ -39,6 +39,14 @@ function couleurGrapheme(phonemeId: PhonemeId, grapheme: string): string {
 export function DecompositionSonGraphie({ word, phonemeSeq, confort }: DecompositionSonGraphieProps) {
   const decomposition = useMemo(() => decomposerMot(word, phonemeSeq, phonemes), [word, phonemeSeq])
 
+  // Découpe douteuse : on n'affiche RIEN plutôt qu'une correspondance fausse.
+  // Repéré en production sur "hiver", dont le "h" muet initial décalait tout
+  // et affichait [i]->h, [v]->i, [é è]->v : on enseignait à un enfant que "h"
+  // fait le son [i]. Mieux vaut une fiche sans cette section qu'une fiche qui
+  // ment (~28% des mots, surtout ceux où le son [é è] s'écrit "e" — fer, mer,
+  // sel — graphie absente de phonemes.json).
+  if (!decomposition.fiable) return null
+
   return (
     <div className="mb-8 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
       <h2 className="mb-3 text-sm font-semibold tracking-wide text-gray-500 uppercase">Son par son</h2>
