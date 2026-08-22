@@ -38,7 +38,7 @@ if ($teacher && password_verify($motDePasse, $teacher['password_hash'])) {
     jsonResponse(200, ['role' => 'teacher', 'label' => $teacher['label']]);
 }
 
-$stmt = $db->prepare('SELECT id, prenom AS label, password_hash, recherche_directe, confort_lecture FROM students WHERE prenom = ?');
+$stmt = $db->prepare('SELECT id, prenom AS label, password_hash, recherche_directe, confort_lecture, aide_dictee FROM students WHERE prenom = ?');
 $stmt->execute([$identifiant]);
 $student = $stmt->fetch();
 
@@ -47,18 +47,21 @@ if ($student && password_verify($motDePasse, $student['password_hash'])) {
     purgerSiNouvelleAnneeScolaire((int) $student['id']);
     $rechercheDirecte = (bool) $student['recherche_directe'];
     $confortLecture = (bool) $student['confort_lecture'];
+    $aideDictee = (bool) $student['aide_dictee'];
     $_SESSION['user'] = [
         'id' => $student['id'],
         'role' => 'student',
         'label' => $student['label'],
         'rechercheDirecte' => $rechercheDirecte,
         'confortLecture' => $confortLecture,
+        'aideDictee' => $aideDictee,
     ];
     jsonResponse(200, [
         'role' => 'student',
         'label' => $student['label'],
         'rechercheDirecte' => $rechercheDirecte,
         'confortLecture' => $confortLecture,
+        'aideDictee' => $aideDictee,
     ]);
 }
 

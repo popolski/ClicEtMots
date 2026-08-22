@@ -9,6 +9,7 @@ if (empty($_SESSION['user'])) {
 $user = $_SESSION['user'];
 $rechercheDirecte = $user['rechercheDirecte'] ?? null;
 $confortLecture = $user['confortLecture'] ?? null;
+$aideDictee = $user['aideDictee'] ?? null;
 
 // Relit ces deux réglages en base à chaque appel plutôt que de se fier au
 // cache de session (rempli une seule fois à la connexion, voir login.php) :
@@ -18,7 +19,7 @@ $confortLecture = $user['confortLecture'] ?? null;
 // chargement de l'app (voir auth.tsx), donc ce n'est jamais plus vieux que
 // la page en cours.
 if ($user['role'] === 'student') {
-    $stmt = getDb()->prepare('SELECT recherche_directe, confort_lecture FROM students WHERE id = ?');
+    $stmt = getDb()->prepare('SELECT recherche_directe, confort_lecture, aide_dictee FROM students WHERE id = ?');
     $stmt->execute([$user['id']]);
     $row = $stmt->fetch();
     if (!$row) {
@@ -33,6 +34,7 @@ if ($user['role'] === 'student') {
     }
     $rechercheDirecte = (bool) $row['recherche_directe'];
     $confortLecture = (bool) $row['confort_lecture'];
+    $aideDictee = (bool) $row['aide_dictee'];
 }
 
 jsonResponse(200, [
@@ -42,4 +44,5 @@ jsonResponse(200, [
     // Absents pour un enseignant - seuls les élèves ont ces champs (voir login.php).
     'rechercheDirecte' => $rechercheDirecte,
     'confortLecture' => $confortLecture,
+    'aideDictee' => $aideDictee,
 ]);

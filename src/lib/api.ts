@@ -26,6 +26,8 @@ export interface SessionState {
   rechercheDirecte?: boolean | null
   /** Élève uniquement - mode confort de lecture (dys) activé par l'enseignante (voir students.php). */
   confortLecture?: boolean | null
+  /** Élève uniquement - filet de secours de la dictée (clavier phonétique) autorisé par l'enseignante. */
+  aideDictee?: boolean | null
 }
 
 export interface Student {
@@ -34,6 +36,7 @@ export interface Student {
   created_at: string
   recherche_directe: boolean
   confort_lecture: boolean
+  aide_dictee: boolean
 }
 
 export type RelationType = 'synonyme' | 'antonyme' | 'famille'
@@ -81,7 +84,7 @@ export interface ListeMotsSemaine {
   updatedAt: string
 }
 
-export type ModeQuiz = 'qcm' | 'reconstitution' | 'grammaire'
+export type ModeQuiz = 'qcm' | 'reconstitution' | 'grammaire' | 'dictee'
 
 export interface ResultatQuiz {
   mode: ModeQuiz
@@ -108,7 +111,13 @@ export const api = {
   session: () => request<SessionState>('session.php'),
 
   login: (identifiant: string, motDePasse: string) =>
-    request<{ role: 'teacher' | 'student'; label: string; rechercheDirecte?: boolean; confortLecture?: boolean }>(
+    request<{
+      role: 'teacher' | 'student'
+      label: string
+      rechercheDirecte?: boolean
+      confortLecture?: boolean
+      aideDictee?: boolean
+    }>(
       'login.php',
       { method: 'POST', body: JSON.stringify({ identifiant, motDePasse }) },
     ),
@@ -133,6 +142,12 @@ export const api = {
     request<{ ok: true }>(`students.php?id=${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ confortLecture }),
+    }),
+
+  setAideDictee: (id: number, aideDictee: boolean) =>
+    request<{ ok: true }>(`students.php?id=${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ aideDictee }),
     }),
 
   deleteStudent: (id: number) => request<{ ok: true }>(`students.php?id=${id}`, { method: 'DELETE' }),

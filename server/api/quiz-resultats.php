@@ -39,7 +39,7 @@ if ($method === 'POST') {
     $score = (int) ($body['score'] ?? -1);
     $total = (int) ($body['total'] ?? -1);
 
-    if (!in_array($mode, ['qcm', 'reconstitution', 'grammaire'], true) || $score < 0 || $total <= 0 || $score > $total) {
+    if (!in_array($mode, ['qcm', 'reconstitution', 'grammaire', 'dictee'], true) || $score < 0 || $total <= 0 || $score > $total) {
         jsonResponse(400, ['error' => 'Résultat de quiz invalide']);
     }
 

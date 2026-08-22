@@ -23,6 +23,7 @@ dans `/clicmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
    | [`schema-v5.sql`](./schema-v5.sql) | recherche directe par orthographe, autorisée par élève |
    | [`schema-v6.sql`](./schema-v6.sql) | scores de quiz, favoris et historique centralisés par élève |
    | [`schema-v7.sql`](./schema-v7.sql) | mode confort de lecture (dys), activé par élève |
+   | [`schema-v8.sql`](./schema-v8.sql) | dictée des mots de la semaine (nouveau mode + filet de secours par élève) |
 
    Il n'y a pas de fichier "tout-en-un" : ces migrations sont la seule
    source de vérité du schéma, et en dupliquer le contenu ailleurs
@@ -90,7 +91,7 @@ dans `/clicmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 | GET | `/api/session.php` | public | état de connexion actuel |
 | GET | `/api/students.php` | enseignant | liste des élèves, avec leurs réglages |
 | POST | `/api/students.php` | enseignant | `{prenom, motDePasse}` → crée un élève |
-| PATCH | `/api/students.php?id=` | enseignant | `{rechercheDirecte?, confortLecture?}` → réglages d'un élève |
+| PATCH | `/api/students.php?id=` | enseignant | `{rechercheDirecte?, confortLecture?, aideDictee?}` → réglages d'un élève |
 | DELETE | `/api/students.php?id=` | enseignant | supprime un élève (et toutes ses données) |
 | GET | `/api/lexicon.php` | connecté | mots ajoutés, avec conjugaison et relations |
 | POST | `/api/lexicon.php` | enseignant | `{mot, categorie, genre?, phonemes}` |

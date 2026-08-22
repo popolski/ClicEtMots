@@ -7,7 +7,7 @@ $db = getDb();
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    $stmt = $db->query('SELECT id, prenom, created_at, recherche_directe, confort_lecture FROM students ORDER BY prenom');
+    $stmt = $db->query('SELECT id, prenom, created_at, recherche_directe, confort_lecture, aide_dictee FROM students ORDER BY prenom');
     $rows = $stmt->fetchAll();
     $students = array_map(fn($row) => [
         'id' => (int) $row['id'],
@@ -15,6 +15,7 @@ if ($method === 'GET') {
         'created_at' => $row['created_at'],
         'recherche_directe' => (bool) $row['recherche_directe'],
         'confort_lecture' => (bool) $row['confort_lecture'],
+        'aide_dictee' => (bool) $row['aide_dictee'],
     ], $rows);
     jsonResponse(200, ['students' => $students]);
 }
@@ -53,26 +54,38 @@ if ($method === 'POST') {
 }
 
 // Réglages décidés au cas par cas par l'enseignante pour un élève :
-// recherche directe par orthographe (schema-v5.sql) et mode confort de
-// lecture / dys (schema-v6.sql, choisi par l'enseignante plutôt que
-// laissé en auto-activation côté élève après un premier essai).
+// recherche directe par orthographe (schema-v5.sql), mode confort de
+// lecture / dys (schema-v7.sql) et filet de secours de la dictée
+// (schema-v8.sql). Tous choisis par elle plutôt que laissés en
+// auto-activation côté élève.
 if ($method === 'PATCH') {
     $id = (int) ($_GET['id'] ?? 0);
     if ($id <= 0) {
         jsonResponse(400, ['error' => 'id manquant']);
     }
     $body = jsonBody();
-    if (!array_key_exists('rechercheDirecte', $body) && !array_key_exists('confortLecture', $body)) {
-        jsonResponse(400, ['error' => 'rechercheDirecte ou confortLecture requis']);
+
+    // Un seul endpoint pour les trois réglages, chacun optionnel : le
+    // front n'envoie que celui qui a changé.
+    $reglages = [
+        'rechercheDirecte' => 'recherche_directe',
+        'confortLecture' => 'confort_lecture',
+        'aideDictee' => 'aide_dictee',
+    ];
+    $modifies = 0;
+    foreach ($reglages as $cleJson => $colonne) {
+        if (!array_key_exists($cleJson, $body)) {
+            continue;
+        }
+        // Nom de colonne issu de la liste fermée ci-dessus, jamais du corps
+        // de la requête - pas d'interpolation d'entrée utilisateur en SQL.
+        $stmt = $db->prepare("UPDATE students SET $colonne = ? WHERE id = ?");
+        $stmt->execute([$body[$cleJson] ? 1 : 0, $id]);
+        $modifies++;
     }
 
-    if (array_key_exists('rechercheDirecte', $body)) {
-        $stmt = $db->prepare('UPDATE students SET recherche_directe = ? WHERE id = ?');
-        $stmt->execute([$body['rechercheDirecte'] ? 1 : 0, $id]);
-    }
-    if (array_key_exists('confortLecture', $body)) {
-        $stmt = $db->prepare('UPDATE students SET confort_lecture = ? WHERE id = ?');
-        $stmt->execute([$body['confortLecture'] ? 1 : 0, $id]);
+    if ($modifies === 0) {
+        jsonResponse(400, ['error' => 'rechercheDirecte, confortLecture ou aideDictee requis']);
     }
 
     jsonResponse(200, ['ok' => true]);

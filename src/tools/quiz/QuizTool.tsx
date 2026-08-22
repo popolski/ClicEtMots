@@ -9,6 +9,7 @@ import { genererDistracteurs } from '../../lib/quizErreurs'
 import { badgePour, BADGE_EMOJI, BADGE_LABEL, type Badge } from '../../lib/quizBadges'
 import { loadWordIndex } from '../../lib/wordIndex'
 import { api } from '../../lib/api'
+import { useAuth } from '../../lib/authContext'
 import type { MotDeListe, ModeQuiz, ResultatQuiz } from '../../lib/api'
 import {
   CATEGORIES_GRAMMAIRE,
@@ -26,6 +27,7 @@ import {
   NATURE_INVARIABLE_LABEL,
   NATURE_INVARIABLE_MASCOT,
 } from '../../lib/grammaire'
+import { QuestionDictee } from './QuestionDictee'
 import { phonemes } from '../../lib/phonemes'
 import wordPictos from '../../data/word-pictos.json'
 import type { PhonemeId, WordEntry } from '../../types/phonetics'
@@ -58,7 +60,13 @@ const MODE_LABEL: Record<ModeQuiz, string> = {
   qcm: 'Choix multiple',
   reconstitution: 'Recomposer le mot',
   grammaire: 'Catégorie grammaticale',
+  dictee: 'Dictée des mots de la semaine',
 }
+
+// La dictée est un exercice de classe évalué, pas un jeu : pas de médaille
+// dessus (une médaille de bronze sur une dictée à 4/10 enverrait un signal
+// contradictoire). Les trois autres modes les gardent.
+const MODES_AVEC_BADGE: ModeQuiz[] = ['qcm', 'reconstitution', 'grammaire']
 
 interface Question {
   entree: MotCandidat
@@ -334,6 +342,13 @@ export function QuizTool() {
   // le vocabulaire réellement vu en classe depuis la rentrée.
   const [motsSemaineCumules, setMotsSemaineCumules] = useState<MotDeListe[] | null>(null)
   const [utiliserListeSemaine, setUtiliserListeSemaine] = useState(true)
+  // Dictée uniquement : mots ratés au premier tour, repassés une fois en fin
+  // de séance. `totalSeance` fige le nombre de mots du PREMIER tour, sinon
+  // le score final serait rapporté au nombre de mots du rattrapage.
+  const [aRattraper, setARattraper] = useState<Question[]>([])
+  const [enRattrapage, setEnRattrapage] = useState(false)
+  const [totalSeance, setTotalSeance] = useState(0)
+  const { session } = useAuth()
 
   useEffect(() => {
     loadWordIndex().then(setWordIndex)
@@ -360,6 +375,22 @@ export function QuizTool() {
 
     const ambigus = motsAmbigus(wordIndex)
     const sansAmbigus = (source: MotCandidat[]) => source.filter((e) => !ambigus.has(e.word.toLowerCase()))
+
+    // La dictée porte PAR NATURE sur les mots vus en classe : pas de repli
+    // sur le vivier général, contrairement aux autres modes. Sans liste
+    // enregistrée, l'exercice n'est simplement pas proposé (voir l'écran de
+    // choix, qui le masque dans ce cas).
+    if (mode === 'dictee') {
+      if (!motsSemaineCumules) return
+      // Pas de filtre motsAmbigus ici : on dicte des mots choisis à la main
+      // par l'enseignante, et écrire "bonne" reste un exercice d'orthographe
+      // parfaitement valable - l'ambiguïté ne gênait que l'étiquette de
+      // catégorie affichée, absente de la dictée.
+      const tirage = melanger(motsSemaineCumules).slice(0, NB_MOTS_SESSION)
+      setQuestions(tirage.map((entree) => ({ entree })))
+      setTotalSeance(tirage.length)
+      return
+    }
 
     if (mode === 'grammaire') {
       const depuisListe =
@@ -409,6 +440,13 @@ export function QuizTool() {
     if (aRepondu) return
     setARepondu(true)
     if (correct) setScore((s) => s + 1)
+    // Dictée : on garde les mots ratés pour les representer en fin de
+    // séance. Seulement pendant la séance en cours - rien n'est encore
+    // conservé d'une séance à l'autre (à voir après un vrai usage en
+    // classe, voir la discussion produit).
+    if (!correct && mode === 'dictee' && questions && !enRattrapage) {
+      setARattraper((prec) => [...prec, questions[index]])
+    }
   }
 
   // Une fois un mode choisi, l'historique du navigateur ne connaît que
@@ -423,16 +461,31 @@ export function QuizTool() {
     setScore(0)
     setARepondu(false)
     setTermine(false)
+    setARattraper([])
+    setEnRattrapage(false)
+    setTotalSeance(0)
   }
 
   function motSuivant() {
     if (!questions || !mode) return
     if (index + 1 >= questions.length) {
+      // Dictée : avant de terminer, on repasse une fois sur les mots ratés.
+      // Le score de la séance reste celui du premier tour - un mot réussi
+      // au rattrapage n'efface pas l'erreur initiale, l'enseignante doit
+      // voir ce qui a vraiment posé problème.
+      if (mode === 'dictee' && aRattraper.length > 0 && !enRattrapage) {
+        setQuestions(aRattraper)
+        setARattraper([])
+        setEnRattrapage(true)
+        setIndex(0)
+        setARepondu(false)
+        return
+      }
       // Best-effort : le score s'affiche même si l'enregistrement échoue
       // (hors ligne) - on retente juste de recharger la liste ensuite,
       // qu'il ait réussi ou non.
       api
-        .ajouterResultatQuiz(mode, score, questions.length)
+        .ajouterResultatQuiz(mode, score, totalSeance)
         .catch(() => {})
         .then(() => api.listResultatsQuiz())
         .then((r) => setResultats(Array.isArray(r.resultats) ? r.resultats : []))
@@ -457,18 +510,23 @@ export function QuizTool() {
             📋 Réviser les mots vus en classe ({motsSemaineCumules.length} mots)
           </label>
         )}
-        <p className="mb-4 text-center text-gray-500">Choisis comment tu veux jouer :</p>
+        <p className="mb-4 text-center text-gray-500">Choisis ton exercice :</p>
         <div className="mx-auto flex max-w-sm flex-col gap-3">
-          {(Object.keys(MODE_LABEL) as ModeQuiz[]).map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => setMode(m)}
-              className="rounded-lg border-2 border-gray-200 px-4 py-3 text-lg font-medium hover:bg-gray-50"
-            >
-              {MODE_LABEL[m]}
-            </button>
-          ))}
+          {/* La dictée n'a de sens que s'il y a des mots de la semaine
+              enregistrés : sans liste, elle n'est pas proposée du tout
+              plutôt que d'afficher un bouton qui ne mène à rien. */}
+          {(Object.keys(MODE_LABEL) as ModeQuiz[])
+            .filter((m) => m !== 'dictee' || (motsSemaineCumules?.length ?? 0) > 0)
+            .map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => setMode(m)}
+                className="rounded-lg border-2 border-gray-200 px-4 py-3 text-lg font-medium hover:bg-gray-50"
+              >
+                {MODE_LABEL[m]}
+              </button>
+            ))}
         </div>
       </ToolLayout>
     )
@@ -487,13 +545,33 @@ export function QuizTool() {
     )
   }
 
-  const question = questions[index]
+  // Garde-fou : un double-clic rapide sur "Mot suivant" (fréquent chez un
+  // enfant) peut faire passer l'index au-delà de la liste avant que React
+  // n'ait re-rendu, notamment au basculement vers le rattrapage de la
+  // dictée, qui remplace `questions` et remet l'index à 0 en même temps.
+  const question = questions[index] as Question | undefined
+  if (!question) {
+    return (
+      <ToolLayout
+        title="Mes exercices"
+        description="Choisis un exercice pour réviser."
+        showBackToKeyboard
+        onBack={revenirAuChoixDuMode}
+      >
+        <p className="py-10 text-center text-gray-400">Préparation du quiz…</p>
+      </ToolLayout>
+    )
+  }
+
   const entreeCible = wordIndex?.find(
     (e) => e.lemmaId === question.entree.lemmaId && e.word === question.entree.word,
   )
 
   if (termine) {
-    const badge = badgePour(score, questions.length)
+    // En dictée, le total est celui du PREMIER tour (voir motSuivant) - le
+    // rattrapage change questions.length mais pas le nombre de mots dictés.
+    const total = mode === 'dictee' ? totalSeance : questions.length
+    const badge = MODES_AVEC_BADGE.includes(mode) ? badgePour(score, total) : null
     // Décompte des médailles déjà gagnées (collection, pas un classement -
     // ne compare jamais à d'autres élèves, voir quizBadges.ts).
     const collection = resultats.reduce(
@@ -515,7 +593,7 @@ export function QuizTool() {
         <div className="py-6 text-center">
           {badge && <p className="mb-2 text-6xl">{BADGE_EMOJI[badge]}</p>}
           <p className="mb-1 text-2xl font-semibold text-gray-800">
-            Score : {score} / {questions.length}
+            Score : {score} / {total}
           </p>
           {badge && <p className="mb-4 text-gray-500">{BADGE_LABEL[badge]} !</p>}
           <button
@@ -581,7 +659,7 @@ export function QuizTool() {
     >
       <div className="mb-6 flex items-center justify-between">
         <span className="text-sm text-gray-500">
-          Mot {index + 1} sur {questions.length}
+          {enRattrapage ? 'On refait les mots ratés — ' : ''}Mot {index + 1} sur {questions.length}
         </span>
         <span className="text-sm font-medium text-brand-600">Score : {score}</span>
       </div>
@@ -590,6 +668,14 @@ export function QuizTool() {
         <QuestionQCM key={index} question={question} onReponse={handleReponse} />
       ) : mode === 'reconstitution' ? (
         <QuestionReconstitution key={index} question={question} entreeCible={entreeCible} onReponse={handleReponse} />
+      ) : mode === 'dictee' ? (
+        <QuestionDictee
+          key={index}
+          entree={question.entree}
+          entreeCible={entreeCible}
+          aideAutorisee={session?.aideDictee === true}
+          onReponse={handleReponse}
+        />
       ) : (
         <QuestionGrammaire key={index} question={question} onReponse={handleReponse} />
       )}
