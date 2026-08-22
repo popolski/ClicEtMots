@@ -63,6 +63,24 @@ const MODE_LABEL: Record<ModeQuiz, string> = {
   dictee: 'Dictée des mots de la semaine',
 }
 
+// Écran de choix : chaque exercice a son icône, sa couleur et une phrase qui
+// dit ce qu'on va faire. Quatre boutons identiques empilés se lisaient comme
+// une liste administrative, et "Recomposer le mot" ne disait pas à un CP ce
+// qu'on attendait de lui.
+const MODE_PRESENTATION: Record<ModeQuiz, { icone: string; resume: string; couleur: string }> = {
+  qcm: { icone: '🔤', resume: 'Trouve la bonne orthographe parmi trois', couleur: 'border-l-brand-500' },
+  reconstitution: { icone: '🧩', resume: 'Clique les sons que tu entends', couleur: 'border-l-accent-500' },
+  grammaire: { icone: '🎭', resume: 'Nom, verbe, adjectif ?', couleur: 'border-l-violet-400' },
+  dictee: { icone: '✏️', resume: 'Écoute le mot et écris-le', couleur: 'border-l-orange-400' },
+}
+
+// Titre court sur la carte : "Dictée des mots de la semaine" tient dans le
+// bouton d'origine mais déborde d'une carte, et le résumé juste en dessous
+// dit déjà de quoi il s'agit.
+const MODE_TITRE_COURT: Partial<Record<ModeQuiz, string>> = {
+  dictee: 'Dictée',
+}
+
 // La dictée est un exercice de classe évalué, pas un jeu : pas de médaille
 // dessus (une médaille de bronze sur une dictée à 4/10 enverrait un signal
 // contradictoire). Les trois autres modes les gardent.
@@ -501,17 +519,20 @@ export function QuizTool() {
     return (
       <ToolLayout title="Mes exercices" description="Choisis un exercice pour réviser." showBackToKeyboard>
         {motsSemaineCumules && (
-          <label className="mx-auto mb-4 flex max-w-sm items-center justify-center gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              checked={utiliserListeSemaine}
-              onChange={(e) => setUtiliserListeSemaine(e.target.checked)}
-            />
-            📋 Réviser les mots vus en classe ({motsSemaineCumules.length} mots)
-          </label>
+          <div className="mb-5 flex justify-center">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-brand-100 bg-white px-4 py-2 text-sm text-brand-700">
+              <input
+                type="checkbox"
+                checked={utiliserListeSemaine}
+                onChange={(e) => setUtiliserListeSemaine(e.target.checked)}
+                className="accent-brand-600"
+              />
+              📋 Réviser les mots vus en classe
+              <span className="rounded-full bg-brand-100 px-2 text-xs">{motsSemaineCumules.length}</span>
+            </label>
+          </div>
         )}
-        <p className="mb-4 text-center text-gray-500">Choisis ton exercice :</p>
-        <div className="mx-auto flex max-w-sm flex-col gap-3">
+        <div className="mx-auto grid max-w-2xl gap-3 sm:grid-cols-2">
           {/* La dictée n'a de sens que s'il y a des mots de la semaine
               enregistrés : sans liste, elle n'est pas proposée du tout
               plutôt que d'afficher un bouton qui ne mène à rien. */}
@@ -522,9 +543,13 @@ export function QuizTool() {
                 key={m}
                 type="button"
                 onClick={() => setMode(m)}
-                className="rounded-lg border-2 border-gray-200 px-4 py-3 text-lg font-medium hover:bg-gray-50"
+                className={`flex items-start gap-3 rounded-xl border border-gray-200 border-l-5 bg-white px-4 py-3 text-left transition hover:shadow-md ${MODE_PRESENTATION[m].couleur}`}
               >
-                {MODE_LABEL[m]}
+                <span className="text-2xl leading-none">{MODE_PRESENTATION[m].icone}</span>
+                <span>
+                  <span className="block font-medium text-gray-900">{MODE_TITRE_COURT[m] ?? MODE_LABEL[m]}</span>
+                  <span className="block text-sm text-gray-500">{MODE_PRESENTATION[m].resume}</span>
+                </span>
               </button>
             ))}
         </div>
