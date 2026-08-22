@@ -513,7 +513,13 @@ export function QuizTool() {
     setQuestions(completer(depuisListe, () => construire(sansAmbigus(motsFrequentsPourQuiz(wordIndex)))))
   }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules, motsRates])
 
-  function handleReponse(correct: boolean) {
+  /**
+   * `duPremierCoup` n'a de sens qu'en dictée, où l'élève a trois essais : il
+   * vaut `correct` partout ailleurs. Le score récompense le mot finalement
+   * écrit juste, mais la révision ne retient que ce qui a été su d'emblée -
+   * trouver au troisième essai, ce n'est pas encore savoir.
+   */
+  function handleReponse(correct: boolean, duPremierCoup: boolean = correct) {
     if (aRepondu) return
     setARepondu(true)
     if (correct) setScore((s) => s + 1)
@@ -523,10 +529,10 @@ export function QuizTool() {
     // raté quand il a été dicté.
     if (mode === 'dictee' && questions && !enRattrapage) {
       const { lemmaId, word } = questions[index].entree
-      if (!correct) setARattraper((prec) => [...prec, questions[index]])
+      if (!duPremierCoup) setARattraper((prec) => [...prec, questions[index]])
       // Best-effort, comme l'enregistrement des scores : une dictée doit
       // pouvoir se dérouler même si le serveur ne répond pas.
-      api.marquerMotDictee(lemmaId, word, correct).catch(() => {})
+      api.marquerMotDictee(lemmaId, word, duPremierCoup).catch(() => {})
     }
   }
 

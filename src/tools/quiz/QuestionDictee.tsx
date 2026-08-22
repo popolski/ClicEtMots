@@ -11,8 +11,21 @@ interface QuestionDicteeProps {
   entree: MotCandidat
   /** Entrée complète du lexique, pour la suite de sons du mot (aide + décomposition). */
   entreeCible: WordEntry | undefined
-  onReponse: (correct: boolean) => void
+  /**
+   * `correct` = mot finalement écrit juste (à n'importe quel essai), c'est ce
+   * qui compte pour le score. `duPremierCoup` distingue l'élève qui savait de
+   * celui qui a trouvé au 3e essai : c'est lui qui décide si le mot revient
+   * à la séance suivante.
+   */
+  onReponse: (correct: boolean, duPremierCoup: boolean) => void
 }
+
+/**
+ * Trois essais avant de révéler l'orthographe, comme le mode "recomposer".
+ * Révéler dès la première erreur court-circuite l'exercice : l'élève lit la
+ * réponse au lieu de la chercher.
+ */
+const ESSAIS_MAX = 3
 
 /**
  * Dictée : le mot est prononcé, jamais montré, et l'élève l'écrit au clavier
@@ -34,6 +47,10 @@ export function QuestionDictee({ entree, entreeCible, onReponse }: QuestionDicte
   const [erreur, setErreur] = useState<string | null>(null)
   const [valide, setValide] = useState<boolean | null>(null)
   const [aideOuverte, setAideOuverte] = useState(false)
+  const [essais, setEssais] = useState(0)
+  // Dernière proposition fausse, gardée pour la correction : la saisie est
+  // effacée entre deux essais.
+  const [dernierEssai, setDernierEssai] = useState('')
   const [sequence, setSequence] = useState<PhonemeId[]>([])
   const champRef = useRef<HTMLInputElement>(null)
   const phonemesById = useMemo(() => new Map(phonemes.map((p) => [p.id, p])), [])
@@ -43,6 +60,8 @@ export function QuestionDictee({ entree, entreeCible, onReponse }: QuestionDicte
     setErreur(null)
     setValide(null)
     setAideOuverte(false)
+    setEssais(0)
+    setDernierEssai('')
     setSequence([])
     champRef.current?.focus()
   }, [entree])
@@ -71,9 +90,25 @@ export function QuestionDictee({ entree, entreeCible, onReponse }: QuestionDicte
       return
     }
     setErreur(null)
-    const correct = propose === entree.word.toLowerCase()
-    setValide(correct)
-    onReponse(correct)
+
+    if (propose === entree.word.toLowerCase()) {
+      setValide(true)
+      onReponse(true, essais === 0)
+      return
+    }
+
+    const essaisSuivant = essais + 1
+    setEssais(essaisSuivant)
+    if (essaisSuivant >= ESSAIS_MAX) {
+      setDernierEssai(saisie.trim())
+      setValide(false)
+      onReponse(false, false)
+      return
+    }
+    // On efface la saisie pour que l'élève réécrive le mot en entier plutôt
+    // que de corriger une lettre au hasard.
+    setSaisie('')
+    champRef.current?.focus()
   }
 
   if (valide !== null) {
@@ -84,7 +119,7 @@ export function QuestionDictee({ entree, entreeCible, onReponse }: QuestionDicte
         </p>
         {!valide && (
           <p className="mb-4 text-gray-500">
-            Tu as écrit <span className="font-medium text-gray-700">{saisie.trim()}</span>, on écrit{' '}
+            Tu as écrit <span className="font-medium text-gray-700">{dernierEssai}</span>, on écrit{' '}
             <span className="font-medium text-gray-900">{entree.word}</span>
           </p>
         )}
@@ -153,7 +188,9 @@ export function QuestionDictee({ entree, entreeCible, onReponse }: QuestionDicte
           spellCheck={false}
           className="w-64 rounded-lg border-2 border-gray-200 px-4 py-3 text-center text-2xl focus:border-brand-400 focus:outline-none"
         />
-        <p className="mt-2 min-h-5 text-sm text-red-600">{erreur}</p>
+        <p className="mt-2 min-h-5 text-sm text-red-600">
+          {erreur ?? (essais > 0 ? `Pas tout à fait, réessaie ! (essai ${essais}/${ESSAIS_MAX})` : '')}
+        </p>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
