@@ -91,7 +91,7 @@ export function ClavierTool() {
           {session?.role !== 'teacher' && (
             <div className="mb-4 flex justify-end gap-4">
               <Link to="/quiz" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
-                🎯 Petit quiz
+                🎯 Mes exercices
               </Link>
               <Link
                 to="/mots-semaine"

@@ -446,7 +446,7 @@ export function QuizTool() {
 
   if (!mode) {
     return (
-      <ToolLayout title="Petit quiz" description="Révise l'orthographe des mots les plus courants." showBackToKeyboard>
+      <ToolLayout title="Mes exercices" description="Choisis un exercice pour réviser." showBackToKeyboard>
         {motsSemaineCumules && (
           <label className="mx-auto mb-4 flex max-w-sm items-center justify-center gap-2 text-sm text-gray-600">
             <input
@@ -477,8 +477,8 @@ export function QuizTool() {
   if (!questions) {
     return (
       <ToolLayout
-        title="Petit quiz"
-        description="Révise l'orthographe des mots les plus courants."
+        title="Mes exercices"
+        description="Choisis un exercice pour réviser."
         showBackToKeyboard
         onBack={revenirAuChoixDuMode}
       >
@@ -507,8 +507,8 @@ export function QuizTool() {
 
     return (
       <ToolLayout
-        title="Petit quiz"
-        description="Révise l'orthographe des mots les plus courants."
+        title="Mes exercices"
+        description="Choisis un exercice pour réviser."
         showBackToKeyboard
         onBack={revenirAuChoixDuMode}
       >
@@ -574,8 +574,8 @@ export function QuizTool() {
 
   return (
     <ToolLayout
-      title="Petit quiz"
-      description="Révise l'orthographe des mots les plus courants."
+      title="Mes exercices"
+      description="Choisis un exercice pour réviser."
       showBackToKeyboard
       onBack={revenirAuChoixDuMode}
     >
