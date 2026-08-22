@@ -76,6 +76,30 @@ describe('decomposerMot', () => {
     expect(decomposerMot('nez', ['n', 'e'], phonemes).segments[1].grapheme).toBe('ez')
   })
 
+  it('reconnaît les consonnes doubles', () => {
+    // Elles manquaient à la table : sur "bonne", [n] prenait un seul "n" et
+    // laissait "ne" en muet, alors que seul le "e" l'est. Sur un mot long
+    // comme "tyrannosaure" (ajouté à la main par l'enseignante), le décalage
+    // se propageait et affichait [o]->n, [z]->o, [o]->s, [r]->a.
+    const bonne = decomposerMot('bonne', ['b', 'o', 'n'], phonemes)
+    expect(bonne.segments.map((s) => s.grapheme)).toEqual(['b', 'o', 'nn'])
+    expect(bonne.muettes).toBe('e')
+
+    const tyranno = decomposerMot('tyrannosaure', ['t', 'i', 'r', 'a', 'n', 'o', 'z', 'o', 'r'], phonemes)
+    expect(tyranno.segments.map((s) => s.grapheme)).toEqual(['t', 'y', 'r', 'a', 'nn', 'o', 's', 'au', 'r'])
+    expect(tyranno.muettes).toBe('e')
+    expect(tyranno.fiable).toBe(true)
+
+    for (const [mot, sons] of [
+      ['pomme', ['p', 'o', 'm']],
+      ['belle', ['b', 'e', 'l']],
+      ['patte', ['p', 'a', 't']],
+      ['panne', ['p', 'a', 'n']],
+    ] as [string, string[]][]) {
+      expect(decomposerMot(mot, sons, phonemes).muettes).toBe('e')
+    }
+  })
+
   it('marque comme fiables les découpes correctes', () => {
     for (const [mot, sons] of [
       ['chat', ['ch', 'a']],

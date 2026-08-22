@@ -52,8 +52,12 @@ describe('choix proposés pour un son', () => {
   })
 
   it("ne propose qu'une réponse pour un son à écriture unique (posé d'office)", () => {
-    expect(choixPourSon('b', 'b', classementGraphies(lexique))).toEqual(['b'])
-    expect(choixPourSon('r', 'r', classementGraphies(lexique))).toEqual(['r'])
+    // [v], [gn] et [x] sont les rares sons qui ne s'écrivent que d'une façon.
+    // [b] et [r] ne sont plus dans ce cas depuis l'ajout des consonnes
+    // doubles (b/bb, r/rr).
+    expect(choixPourSon('v', 'v', classementGraphies(lexique))).toEqual(['v'])
+    expect(choixPourSon('gn', 'gn', classementGraphies(lexique))).toEqual(['gn'])
+    expect(choixPourSon('b', 'b', classementGraphies(lexique))).toEqual(['b', 'bb'])
   })
 })
 
@@ -97,10 +101,14 @@ describe('homophones (18% du lexique)', () => {
 
 describe('décomposition en étapes', () => {
   it('marque comme automatiques les sons à écriture unique', () => {
-    // maison = m + ai + s + on : seuls [é è] et [z] demandent un choix.
     const exercice = exercicePour('maison')
     expect(exercice?.etapes.map((e) => e.bonne)).toEqual(['m', 'ai', 's', 'on'])
-    expect(exercice?.etapes.filter((e) => e.automatique).map((e) => e.bonne)).toEqual(['m'])
+    // [m] n'est PLUS automatique depuis l'ajout des consonnes doubles :
+    // m/mm est une vraie difficulté orthographique, pas une écriture unique.
+    // [v] en revanche n'a qu'une seule écriture possible.
+    const avecV = exercicePour('avion')
+    expect(avecV?.etapes.find((e) => e.bonne === 'v')?.automatique).toBe(true)
+    expect(exercice?.etapes.find((e) => e.bonne === 'm')?.automatique).toBe(false)
   })
 
   it('remonte les lettres muettes finales', () => {

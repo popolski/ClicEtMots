@@ -353,6 +353,10 @@
         "grapheme": "b",
         "exampleWord": "bonbon",
         "exampleImage": "/pictos/b.png"
+      },
+      {
+        "grapheme": "bb",
+        "exampleWord": "abbé"
       }
     ]
   },
@@ -389,6 +393,10 @@
         "grapheme": "d",
         "exampleWord": "dauphin",
         "exampleImage": "/pictos/d.png"
+      },
+      {
+        "grapheme": "dd",
+        "exampleWord": "addition"
       }
     ]
   },
@@ -409,6 +417,10 @@
       {
         "grapheme": "ph",
         "exampleWord": "phare"
+      },
+      {
+        "grapheme": "ff",
+        "exampleWord": "effort"
       }
     ]
   },
@@ -429,6 +441,10 @@
       {
         "grapheme": "gu",
         "exampleWord": "guitare"
+      },
+      {
+        "grapheme": "gg",
+        "exampleWord": "aggraver"
       }
     ]
   },
@@ -505,6 +521,10 @@
         "grapheme": "l",
         "exampleWord": "lapin",
         "exampleImage": "/pictos/l.png"
+      },
+      {
+        "grapheme": "ll",
+        "exampleWord": "belle"
       }
     ]
   },
@@ -521,6 +541,10 @@
         "grapheme": "m",
         "exampleWord": "maison",
         "exampleImage": "/pictos/m.png"
+      },
+      {
+        "grapheme": "mm",
+        "exampleWord": "pomme"
       }
     ]
   },
@@ -537,6 +561,10 @@
         "grapheme": "n",
         "exampleWord": "nuage",
         "exampleImage": "/pictos/n.png"
+      },
+      {
+        "grapheme": "nn",
+        "exampleWord": "bonne"
       }
     ]
   },
@@ -573,6 +601,10 @@
         "grapheme": "r",
         "exampleWord": "renard",
         "exampleImage": "/pictos/r.png"
+      },
+      {
+        "grapheme": "rr",
+        "exampleWord": "terre"
       }
     ]
   },
@@ -621,6 +653,10 @@
         "grapheme": "t",
         "exampleWord": "tortue",
         "exampleImage": "/pictos/t.png"
+      },
+      {
+        "grapheme": "tt",
+        "exampleWord": "patte"
       }
     ]
   },

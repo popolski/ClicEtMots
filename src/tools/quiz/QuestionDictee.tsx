@@ -50,10 +50,16 @@ export function QuestionDictee({ entree, entreeCible, aideAutorisee, onReponse }
     if (speechSupported()) speak(entree.word, { category: entree.category, lemmaId: entree.lemmaId })
   }, [entree])
 
-  const decomposition = useMemo(
-    () => (entreeCible ? decomposerMot(entree.word, entreeCible.phonemes, phonemes) : null),
-    [entree.word, entreeCible],
-  )
+  // Même précaution que sur la fiche mot : une découpe non fiable est
+  // décalée et enseignerait de fausses correspondances. Sur "histoire", le
+  // "h" muet initial décalait tout et la correction affichait [i]->h,
+  // [s]->i, [t]->t, [oi]->o, en laissant "ire" en muet alors que seul le
+  // "e" l'est. Mieux vaut pas de découpe qu'une découpe fausse.
+  const decomposition = useMemo(() => {
+    if (!entreeCible) return null
+    const d = decomposerMot(entree.word, entreeCible.phonemes, phonemes)
+    return d.fiable ? d : null
+  }, [entree.word, entreeCible])
 
   function valider() {
     const propose = saisie.trim().toLowerCase()
