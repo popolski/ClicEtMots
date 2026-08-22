@@ -28,6 +28,8 @@ import {
   NATURE_INVARIABLE_MASCOT,
 } from '../../lib/grammaire'
 import { QuestionDictee } from './QuestionDictee'
+import { QuestionGraphie } from './QuestionGraphie'
+import { preparerSeance, type ExerciceGraphie } from './graphieLogic'
 import { phonemes } from '../../lib/phonemes'
 import wordPictos from '../../data/word-pictos.json'
 import type { PhonemeId, WordEntry } from '../../types/phonetics'
@@ -61,6 +63,7 @@ const MODE_LABEL: Record<ModeQuiz, string> = {
   reconstitution: 'Recomposer le mot',
   grammaire: 'Catégorie grammaticale',
   dictee: 'Dictée des mots de la semaine',
+  graphie: 'Choisis la bonne graphie',
 }
 
 // Écran de choix : chaque exercice a son icône, sa couleur et une phrase qui
@@ -72,6 +75,7 @@ const MODE_PRESENTATION: Record<ModeQuiz, { icone: string; resume: string; coule
   reconstitution: { icone: '🧩', resume: 'Clique les sons que tu entends', couleur: 'border-l-accent-500' },
   grammaire: { icone: '🎭', resume: 'Nom, verbe, adjectif ?', couleur: 'border-l-violet-400' },
   dictee: { icone: '✏️', resume: 'Écoute le mot et écris-le', couleur: 'border-l-orange-400' },
+  graphie: { icone: '🔡', resume: 'Le son [o] : o, au ou eau ?', couleur: 'border-l-emerald-400' },
 }
 
 // Titre court sur la carte : "Dictée des mots de la semaine" tient dans le
@@ -79,12 +83,13 @@ const MODE_PRESENTATION: Record<ModeQuiz, { icone: string; resume: string; coule
 // dit déjà de quoi il s'agit.
 const MODE_TITRE_COURT: Partial<Record<ModeQuiz, string>> = {
   dictee: 'Dictée',
+  graphie: 'La bonne graphie',
 }
 
 // La dictée est un exercice de classe évalué, pas un jeu : pas de médaille
 // dessus (une médaille de bronze sur une dictée à 4/10 enverrait un signal
 // contradictoire). Les trois autres modes les gardent.
-const MODES_AVEC_BADGE: ModeQuiz[] = ['qcm', 'reconstitution', 'grammaire']
+const MODES_AVEC_BADGE: ModeQuiz[] = ['qcm', 'reconstitution', 'grammaire', 'graphie']
 
 interface Question {
   entree: MotCandidat
@@ -92,6 +97,8 @@ interface Question {
   options?: string[]
   /** Uniquement en mode grammaire : nature attendue (peut différer de entree.category - voir natureGrammaireDe). */
   nature?: CategorieGrammaireQuiz
+  /** Uniquement en mode graphie : étapes son par son, préparées par graphieLogic. */
+  graphie?: ExerciceGraphie
 }
 
 function QuestionCarte({ entree }: { entree: MotCandidat }) {
@@ -410,6 +417,26 @@ export function QuizTool() {
       return
     }
 
+    // Beaucoup de mots ne sont pas jouables en graphie (découpe non fiable,
+    // aucun son à choisir, plus de 4, homophone sans picto) : on soumet donc
+    // un vivier volontairement large à preparerSeance, qui écarte au fil de
+    // l'eau et s'arrête dès qu'il a ses NB_MOTS_SESSION exercices.
+    if (mode === 'graphie') {
+      const depuis = (source: MotCandidat[]): Question[] => {
+        const parMot = new Map(source.map((m) => [`${m.lemmaId}|${m.word}`, m]))
+        return preparerSeance(melanger(source), wordIndex, NB_MOTS_SESSION).flatMap((g) => {
+          const entree = parMot.get(`${g.lemmaId}|${g.mot}`)
+          return entree ? [{ entree, graphie: g }] : []
+        })
+      }
+      const depuisListe =
+        utiliserListeSemaine && motsSemaineCumules ? depuis(sansAmbigus(motsSemaineCumules)) : []
+      // Une liste hebdomadaire courte peut ne contenir aucun mot jouable :
+      // plutôt que de bloquer l'exercice, on retombe sur le vivier général.
+      setQuestions(depuisListe.length > 0 ? depuisListe : depuis(sansAmbigus(motsFrequentsPourQuiz(wordIndex))))
+      return
+    }
+
     if (mode === 'grammaire') {
       const depuisListe =
         utiliserListeSemaine && motsSemaineCumules
@@ -502,8 +529,13 @@ export function QuizTool() {
       // Best-effort : le score s'affiche même si l'enregistrement échoue
       // (hors ligne) - on retente juste de recharger la liste ensuite,
       // qu'il ait réussi ou non.
+      // Seule la dictée a un total qui diffère de questions.length, parce
+      // que le rattrapage remplace la liste en cours de route. Envoyer
+      // totalSeance pour tous les modes envoyait 0 (il n'est renseigné qu'en
+      // dictée) et le serveur rejetait le résultat : les scores des autres
+      // exercices n'étaient plus enregistrés du tout.
       api
-        .ajouterResultatQuiz(mode, score, totalSeance)
+        .ajouterResultatQuiz(mode, score, mode === 'dictee' ? totalSeance : questions.length)
         .catch(() => {})
         .then(() => api.listResultatsQuiz())
         .then((r) => setResultats(Array.isArray(r.resultats) ? r.resultats : []))
@@ -700,6 +732,13 @@ export function QuizTool() {
           entreeCible={entreeCible}
           aideAutorisee={session?.aideDictee === true}
           onReponse={handleReponse}
+        />
+      ) : mode === 'graphie' && question.graphie ? (
+        <QuestionGraphie
+          key={index}
+          exercice={question.graphie}
+          category={question.entree.category}
+          onTermine={handleReponse}
         />
       ) : (
         <QuestionGrammaire key={index} question={question} onReponse={handleReponse} />

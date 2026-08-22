@@ -84,7 +84,7 @@ export interface ListeMotsSemaine {
   updatedAt: string
 }
 
-export type ModeQuiz = 'qcm' | 'reconstitution' | 'grammaire' | 'dictee'
+export type ModeQuiz = 'qcm' | 'reconstitution' | 'grammaire' | 'dictee' | 'graphie'
 
 export interface ResultatQuiz {
   mode: ModeQuiz
