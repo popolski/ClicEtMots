@@ -8,8 +8,8 @@
 // vocale du navigateur côté client (voir src/lib/speech.ts).
 //
 // Même schéma de nom que le script de génération en masse :
-// {mot}_{categorie}_{lemme}.mp3, dans /clicmots/audio/mots/ (racine du site
-// statique, un niveau au-dessus de /clicmots/api/ où vit ce fichier).
+// {mot}_{categorie}_{lemme}.mp3, dans /clicetmots/audio/mots/ (racine du site
+// statique, un niveau au-dessus de /clicetmots/api/ où vit ce fichier).
 
 /**
  * @return bool true si le fichier a été généré, false sinon (jamais d'exception).

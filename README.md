@@ -6,7 +6,7 @@ sons, puis d'en explorer la prononciation, les formes grammaticales, la
 conjugaison et les relations lexicales. Gratuit, conçu pour une classe du CP
 au CM2.
 
-**En ligne : [www.cours-vandewalle.fr/clicmots](https://www.cours-vandewalle.fr/clicmots/)**
+**En ligne : [www.cours-vandewalle.fr/clicetmots](https://www.cours-vandewalle.fr/clicetmots/)**
 
 ## Fonctionnement
 
@@ -82,7 +82,7 @@ l'orthographe correspondante apparaît.
 ## Stack technique
 
 **Site** : React 19 + TypeScript + Vite + Tailwind CSS 4 + react-router-dom.
-Déployé sur un hébergement mutualisé OVH, dans le sous-dossier `/clicmots/` —
+Déployé sur un hébergement mutualisé OVH, dans le sous-dossier `/clicetmots/` —
 `npm run build` produit le dossier `dist/` à uploader tel quel en FTP (le
 fichier `.htaccess` inclus gère le routage côté client).
 

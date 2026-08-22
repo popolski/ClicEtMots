@@ -9,7 +9,7 @@ function configureSession(): void
 {
     session_set_cookie_params([
         'lifetime' => 60 * 60 * 24 * 7, // 7 jours
-        'path' => '/clicmots/',
+        'path' => '/clicetmots/',
         'httponly' => true,
         'secure' => true,
         'samesite' => 'Lax',

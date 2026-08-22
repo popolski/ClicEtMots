@@ -1,7 +1,7 @@
-// Le backend PHP vit à côté du site déployé, dans /clicmots/api/ (voir
+// Le backend PHP vit à côté du site déployé, dans /clicetmots/api/ (voir
 // server/README.md). En dev, vite proxie ce même chemin vers le serveur OVH
 // réel (voir vite.config.ts) — donc le chemin est identique des deux côtés.
-const API_BASE = '/clicmots/api'
+const API_BASE = '/clicetmots/api'
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}/${path}`, {

@@ -1,9 +1,9 @@
 # Renvoie toute URL qui ne correspond pas à un fichier/dossier réel vers
 # index.html : nécessaire pour le routage côté client (react-router-dom) —
-# sans ça, un lien direct ou un rechargement sur /clicmots/mot/... renvoie
+# sans ça, un lien direct ou un rechargement sur /clicetmots/mot/... renvoie
 # une 404 Apache au lieu de laisser React gérer la route.
 RewriteEngine On
-RewriteBase /clicmots/
+RewriteBase /clicetmots/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /clicmots/index.html [L]
+RewriteRule . /clicetmots/index.html [L]

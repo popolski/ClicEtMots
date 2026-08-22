@@ -2,7 +2,7 @@
 
 API pour l'authentification (élèves + enseignant), la gestion des comptes
 élèves, et l'ajout de mots au lexique — hébergée à côté du site statique,
-dans `/clicmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
+dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 (`password_hash`) et une base MySQL.
 
 ## Installation (à faire toi-même, une seule fois)
@@ -49,13 +49,13 @@ dans `/clicmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
    vide, l'ajout de mot fonctionne quand même — seule la prononciation
    retombe sur la synthèse vocale du navigateur (voir `api/tts.php`).
 4. **Upload FTP** : envoie tout le dossier `server/` sur OVH, dans
-   `/clicmots/api-src/` par exemple, PUIS place le contenu du sous-dossier
-   `api/` dans `/clicmots/api/` (à la racine de `/clicmots/`, à côté du site
-   déployé) — c'est ce chemin `/clicmots/api/...` que le frontend appelle.
-   `setup.html` peut rester où tu veux (ex. directement dans `/clicmots/`),
+   `/clicetmots/api-src/` par exemple, PUIS place le contenu du sous-dossier
+   `api/` dans `/clicetmots/api/` (à la racine de `/clicetmots/`, à côté du site
+   déployé) — c'est ce chemin `/clicetmots/api/...` que le frontend appelle.
+   `setup.html` peut rester où tu veux (ex. directement dans `/clicetmots/`),
    tu n'en as besoin qu'une fois.
 5. **Créer le compte enseignant** : ouvre `setup.html` dans ton navigateur
-   (ex. `https://www.cours-vandewalle.fr/clicmots/setup.html`), remplis le
+   (ex. `https://www.cours-vandewalle.fr/clicetmots/setup.html`), remplis le
    jeton (celui mis dans `config.php`), un identifiant et un mot de passe
    pour ta compagne. Une fois le compte créé, **supprime** `setup.html` et
    `api/setup.php` du serveur (sécurité : empêche quiconque de retenter la

@@ -1,0 +1,16 @@
+# Redirection de l'ancienne URL /clicmots/ vers /clicetmots/.
+#
+# À déposer sur le serveur dans l'ANCIEN dossier /clicmots/, sous le nom
+# ".htaccess" (le nom de ce fichier est différent uniquement pour qu'il ne
+# soit pas confondu avec celui du site dans le dépôt).
+#
+# Une fois en place, /clicmots/ et tout ce qu'il contenait renvoient vers
+# le même chemin sous /clicetmots/ : les favoris des élèves, le lien noté
+# dans un cahier ou envoyé aux familles continuent de fonctionner.
+#
+# Le reste de l'ancien dossier peut alors être vidé - garde juste ce
+# fichier. Redirection permanente (301) : les navigateurs la retiennent,
+# donc l'ancienne adresse cesse vite d'être sollicitée.
+
+RewriteEngine On
+RewriteRule ^(.*)$ /clicetmots/$1 [R=301,L]

@@ -5,7 +5,7 @@
 // fichier (ne consomme pas de crédit API pour rien si relancé plusieurs
 // fois) — sûr à appeler autant de fois que nécessaire.
 //
-// Usage : ouvrir /clicmots/api/backfill-audio.php dans le navigateur une
+// Usage : ouvrir /clicetmots/api/backfill-audio.php dans le navigateur une
 // fois connectée en tant qu'enseignante (le login classique suffit, pas
 // besoin du SETUP_TOKEN). Peut être supprimé du serveur une fois n'importe
 // quand — se relance à la main si de nouveaux mots restent orphelins.

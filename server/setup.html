@@ -25,7 +25,7 @@
       document.getElementById('f').addEventListener('submit', async (e) => {
         e.preventDefault()
         const body = Object.fromEntries(new FormData(e.target))
-        const res = await fetch('/clicmots/api/setup.php', {
+        const res = await fetch('/clicetmots/api/setup.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
