@@ -411,6 +411,19 @@ export function QuizTool() {
     const ambigus = motsAmbigus(wordIndex)
     const sansAmbigus = (source: MotCandidat[]) => source.filter((e) => !ambigus.has(e.word.toLowerCase()))
 
+    // Complète une séance trop courte avec le vivier général. La liste de la
+    // semaine ne fournit pas toujours NB_MOTS_SESSION questions valables :
+    // Camille a eu une séance de graphie à 2 questions sur une liste de 9
+    // mots. On ne remplaçait la liste que si elle ne donnait RIEN, alors
+    // qu'il fallait la compléter. La dictée est volontairement exclue de ce
+    // mécanisme : elle ne porte que sur les mots donnés en classe.
+    const completer = (base: Question[], reste: () => Question[]): Question[] => {
+      if (base.length >= NB_MOTS_SESSION) return base.slice(0, NB_MOTS_SESSION)
+      const pris = new Set(base.map((q) => `${q.entree.lemmaId}|${q.entree.word}`))
+      const complement = reste().filter((q) => !pris.has(`${q.entree.lemmaId}|${q.entree.word}`))
+      return [...base, ...complement].slice(0, NB_MOTS_SESSION)
+    }
+
     // La dictée porte PAR NATURE sur les mots vus en classe : pas de repli
     // sur le vivier général, contrairement aux autres modes. Sans liste
     // enregistrée, l'exercice n'est simplement pas proposé (voir l'écran de
@@ -459,9 +472,7 @@ export function QuizTool() {
       }
       const depuisListe =
         utiliserListeSemaine && motsSemaineCumules ? depuis(sansAmbigus(motsSemaineCumules)) : []
-      // Une liste hebdomadaire courte peut ne contenir aucun mot jouable :
-      // plutôt que de bloquer l'exercice, on retombe sur le vivier général.
-      setQuestions(depuisListe.length > 0 ? depuisListe : depuis(sansAmbigus(motsFrequentsPourQuiz(wordIndex))))
+      setQuestions(completer(depuisListe, () => depuis(sansAmbigus(motsFrequentsPourQuiz(wordIndex)))))
       return
     }
 
@@ -470,10 +481,11 @@ export function QuizTool() {
         utiliserListeSemaine && motsSemaineCumules
           ? equilibrerParNature(sansAmbigus(motsSemaineCumules), NB_MOTS_SESSION)
           : []
-      // Liste trop courte/peu variée pour fournir des questions équilibrées : on retombe sur le vivier général.
-      const choisis =
-        depuisListe.length > 0 ? depuisListe : equilibrerParNature(sansAmbigus(motsFrequentsPourGrammaire(wordIndex)), NB_MOTS_SESSION)
-      setQuestions(choisis)
+      setQuestions(
+        completer(depuisListe, () =>
+          equilibrerParNature(sansAmbigus(motsFrequentsPourGrammaire(wordIndex)), NB_MOTS_SESSION),
+        ),
+      )
       return
     }
 
@@ -496,17 +508,9 @@ export function QuizTool() {
       return choisis
     }
 
-    if (utiliserListeSemaine && motsSemaineCumules) {
-      const depuisListe = construire(sansAmbigus(motsSemaineCumules))
-      // Liste trop courte ou trop d'homographes/confusions manquantes pour
-      // fournir des questions valables : on retombe sur le vivier général
-      // plutôt que de bloquer le quiz.
-      if (depuisListe.length > 0) {
-        setQuestions(depuisListe)
-        return
-      }
-    }
-    setQuestions(construire(sansAmbigus(motsFrequentsPourQuiz(wordIndex))))
+    const depuisListe =
+      utiliserListeSemaine && motsSemaineCumules ? construire(sansAmbigus(motsSemaineCumules)) : []
+    setQuestions(completer(depuisListe, () => construire(sansAmbigus(motsFrequentsPourQuiz(wordIndex)))))
   }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules, motsRates])
 
   function handleReponse(correct: boolean) {

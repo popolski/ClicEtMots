@@ -16,9 +16,17 @@ export const BADGE_LABEL: Record<Badge, string> = {
   bronze: 'Médaille de bronze',
 }
 
+/**
+ * Nombre minimum de questions pour qu'une médaille veuille dire quelque
+ * chose. Une séance écourtée (peu de mots jouables dans la liste de la
+ * semaine) donnait une médaille de bronze pour 1 bonne réponse sur 2, ce qui
+ * récompense surtout le hasard. Signalé par Camille sur une séance à 2 mots.
+ */
+export const MIN_QUESTIONS_POUR_MEDAILLE = 5
+
 /** null si le score ne suffit pas pour une médaille (moins de la moitié de bon). */
 export function badgePour(score: number, total: number): Badge | null {
-  if (total <= 0) return null
+  if (total < MIN_QUESTIONS_POUR_MEDAILLE) return null
   const taux = score / total
   if (taux === 1) return 'or'
   if (taux >= 0.7) return 'argent'
