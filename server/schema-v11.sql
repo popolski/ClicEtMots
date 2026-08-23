@@ -2,8 +2,7 @@
 -- premier coup de celles réussies après un ou plusieurs essais.
 -- À exécuter dans phpMyAdmin APRÈS schema-v10.sql.
 --
--- L'ALTER TABLE ne peut être exécuté qu'UNE FOIS - si tu le relances après
--- un premier passage réussi, ignore l'erreur "Duplicate column name".
+-- Sans risque à rejouer (IF NOT EXISTS).
 
 -- "Recomposer le mot" et la dictée laissent 3 essais par mot : jusqu'ici,
 -- réussir au 3e essai comptait un point plein, exactement comme réussir du
@@ -16,4 +15,4 @@
 -- elle - à distinguer de 0, qui voudrait dire "aucune réponse du premier
 -- coup" mais serait une vraie mesure.
 ALTER TABLE quiz_resultats
-  ADD COLUMN premier_coup INT NULL DEFAULT NULL;
+  ADD COLUMN IF NOT EXISTS premier_coup INT NULL DEFAULT NULL;

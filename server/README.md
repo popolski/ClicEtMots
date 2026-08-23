@@ -57,6 +57,7 @@ aller-retour PHP/MySQL au moment de la consultation.
    | [`schema-v12.sql`](./schema-v12.sql) | usage du filet de secours de la dictée ("Je ne sais pas l'écrire") |
    | [`schema-v13.sql`](./schema-v13.sql) | durée d'une séance de quiz (bilan enseignant uniquement) |
    | [`schema-v14.sql`](./schema-v14.sql) | 3 catégories de réussite en dictée : premier coup, reprise de fin de séance, avec aide |
+   | [`schema-v15.sql`](./schema-v15.sql) | anti brute-force par identifiant, en plus de l'IP (évite qu'une classe entière soit bloquée pour l'erreur d'un seul élève) |
 
    Il n'y a pas de fichier "tout-en-un" : ces migrations sont la seule
    source de vérité du schéma, et en dupliquer le contenu ailleurs
@@ -103,10 +104,13 @@ aller-retour PHP/MySQL au moment de la consultation.
   de session).
 - Un compte élève supprimé voit sa session invalidée immédiatement, sans
   attendre l'expiration du cookie (vérification dans `requireAuth`).
-- Anti brute-force basique : 10 tentatives / 15 min par IP (voir `auth.php`).
-  À surveiller en usage scolaire : tous les postes d'une école sortent
-  souvent avec la même IP publique, donc plusieurs élèves qui se trompent
-  peuvent atteindre le seuil collectivement.
+- Anti brute-force à deux niveaux (schema-v15.sql, voir `auth.php`) : 10
+  tentatives / 15 min par identifiant (le vrai frein contre un compte
+  ciblé), et 30 / 15 min par IP en filet de sécurité (attaque distribuée
+  sur plusieurs comptes depuis un même poste). Corrige un défaut de la
+  version précédente (limite par IP seule) : en école, tous les postes
+  sortent souvent avec la même IP publique, donc quelques élèves qui se
+  trompaient de mot de passe pouvaient bloquer toute la classe.
 - Réponses API en `Cache-Control: no-store` : aucune n'a vocation à être
   mise en cache par le navigateur.
 - Toutes les requêtes SQL intégrant des entrées utilisateur utilisent des

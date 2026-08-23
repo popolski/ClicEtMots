@@ -4,9 +4,7 @@
 -- premier essai en auto-activation côté élève).
 -- À exécuter dans phpMyAdmin APRÈS schema-v6.sql.
 --
--- Comme pour les migrations précédentes, ADD COLUMN ne peut être exécuté
--- qu'UNE FOIS - si tu le relances après un premier passage réussi, ignore
--- l'erreur "Duplicate column name".
+-- Comme les migrations précédentes, sans risque à rejouer (IF NOT EXISTS).
 
 ALTER TABLE students
-  ADD COLUMN confort_lecture TINYINT(1) NOT NULL DEFAULT 0;
+  ADD COLUMN IF NOT EXISTS confort_lecture TINYINT(1) NOT NULL DEFAULT 0;

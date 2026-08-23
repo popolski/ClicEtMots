@@ -6,17 +6,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(405, ['error' => 'Méthode non autorisée']);
 }
 
-$ip = clientIp();
-if (tooManyAttempts($ip)) {
-    jsonResponse(429, ['error' => 'Trop de tentatives, réessaie dans quelques minutes']);
-}
-
 $body = jsonBody();
 $identifiant = trim((string) ($body['identifiant'] ?? ''));
 $motDePasse = (string) ($body['motDePasse'] ?? '');
 
 if ($identifiant === '' || $motDePasse === '') {
     jsonResponse(400, ['error' => 'Identifiant et mot de passe requis']);
+}
+
+$ip = clientIp();
+if (tooManyAttempts($ip, $identifiant)) {
+    jsonResponse(429, ['error' => 'Trop de tentatives, réessaie dans quelques minutes']);
 }
 
 $db = getDb();
@@ -62,5 +62,5 @@ if ($student && password_verify($motDePasse, $student['password_hash'])) {
     ]);
 }
 
-recordFailedAttempt($ip);
+recordFailedAttempt($ip, $identifiant);
 jsonResponse(401, ['error' => 'Identifiant ou mot de passe incorrect']);

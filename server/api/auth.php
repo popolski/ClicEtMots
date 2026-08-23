@@ -40,25 +40,42 @@ function jsonBody(): array
 }
 
 // --- Anti brute-force -------------------------------------------------------
-// Les mots de passe élèves sont probablement courts (âge CP-CM2) : on limite
-// les tentatives par IP plutôt que par compte, pour ne pas révéler quels
-// identifiants existent.
-const MAX_ATTEMPTS = 10;
+// Deux limites combinées (schema-v15.sql) :
+// - par IDENTIFIANT (seuil bas) : cible le compte réellement attaqué, sans
+//   bloquer le reste de la classe - important en école, où tous les postes
+//   sortent souvent avec la même IP publique. C'est la limite qui protège
+//   vraiment les mots de passe élèves, probablement courts (âge CP-CM2).
+// - par IP (seuil plus haut, filet de sécurité) : couvre une attaque
+//   distribuée sur plusieurs comptes depuis un même poste, que la limite par
+//   identifiant seule ne verrait pas (chaque compte resterait sous son
+//   propre seuil).
+const MAX_ATTEMPTS_IDENTIFIANT = 10;
+const MAX_ATTEMPTS_IP = 30;
 const ATTEMPT_WINDOW_MINUTES = 15;
 
-function tooManyAttempts(string $ip): bool
+function tooManyAttempts(string $ip, string $identifiant): bool
 {
-    $stmt = getDb()->prepare(
+    $db = getDb();
+
+    $stmt = $db->prepare(
+        'SELECT COUNT(*) FROM login_attempts WHERE identifiant = ? AND attempted_at > (NOW() - INTERVAL ? MINUTE)',
+    );
+    $stmt->execute([$identifiant, ATTEMPT_WINDOW_MINUTES]);
+    if ((int) $stmt->fetchColumn() >= MAX_ATTEMPTS_IDENTIFIANT) {
+        return true;
+    }
+
+    $stmt = $db->prepare(
         'SELECT COUNT(*) FROM login_attempts WHERE ip_address = ? AND attempted_at > (NOW() - INTERVAL ? MINUTE)',
     );
     $stmt->execute([$ip, ATTEMPT_WINDOW_MINUTES]);
-    return (int) $stmt->fetchColumn() >= MAX_ATTEMPTS;
+    return (int) $stmt->fetchColumn() >= MAX_ATTEMPTS_IP;
 }
 
-function recordFailedAttempt(string $ip): void
+function recordFailedAttempt(string $ip, string $identifiant): void
 {
-    $stmt = getDb()->prepare('INSERT INTO login_attempts (ip_address) VALUES (?)');
-    $stmt->execute([$ip]);
+    $stmt = getDb()->prepare('INSERT INTO login_attempts (ip_address, identifiant) VALUES (?, ?)');
+    $stmt->execute([$ip, $identifiant]);
 }
 
 function clientIp(): string

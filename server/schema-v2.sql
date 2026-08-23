@@ -1,17 +1,15 @@
 -- Migration v2 : conjugaison générée + relations saisies à la main.
 -- À exécuter dans phpMyAdmin APRÈS schema.sql (qui, lui, a déjà été passé).
 --
--- La ligne ALTER TABLE ne peut être exécutée qu'UNE FOIS (pas de clause
--- "IF NOT EXISTS" ici, mal supportée selon les versions) : si tu la relances
--- après un premier passage réussi, phpMyAdmin affichera une erreur "Duplicate
--- column name" sur cette ligne précise — sans gravité, ignore-la et continue
--- (la table lexicon_relations, elle, peut être relancée sans risque).
+-- Grâce à IF NOT EXISTS (MySQL 8.0.29+/MariaDB), relancer cette migration
+-- après un premier passage réussi ne produit plus d'erreur "Duplicate
+-- column name" - elle est sans risque à rejouer.
 
 -- Conjugaison générée à l'ajout d'un verbe régulier (voir api/conjugaison.php).
 -- NULL pour les verbes irréguliers (non générables sans risque d'erreur) et
 -- pour toutes les autres catégories.
 ALTER TABLE lexicon_additions
-  ADD COLUMN conjugaison JSON DEFAULT NULL;
+  ADD COLUMN IF NOT EXISTS conjugaison JSON DEFAULT NULL;
 
 -- Relations saisies par l'enseignant pour un mot ajouté : elles ne peuvent
 -- pas être déduites (Démonette/JeuxDeMots ne connaissent pas ces mots, et ces

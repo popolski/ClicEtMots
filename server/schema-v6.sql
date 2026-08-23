@@ -7,15 +7,13 @@
 -- côté serveur) + un bouton de réinitialisation manuelle dans Espace enseignant.
 -- À exécuter dans phpMyAdmin APRÈS schema-v5.sql.
 --
--- Comme pour les migrations précédentes, ADD COLUMN ne peut être exécuté
--- qu'UNE FOIS - si tu le relances après un premier passage réussi, ignore
--- l'erreur "Duplicate column name".
+-- Comme les migrations précédentes, sans risque à rejouer (IF NOT EXISTS).
 
 -- Dernière année scolaire vue par CET élève (pas par appareil, contrairement
 -- à la version locale) : comparée à l'année scolaire actuelle à chaque
 -- connexion pour déclencher la purge de ses 3 tables ci-dessous si besoin.
 ALTER TABLE students
-  ADD COLUMN derniere_annee_scolaire VARCHAR(9) DEFAULT NULL;
+  ADD COLUMN IF NOT EXISTS derniere_annee_scolaire VARCHAR(9) DEFAULT NULL;
 
 CREATE TABLE IF NOT EXISTS quiz_resultats (
   id INT AUTO_INCREMENT PRIMARY KEY,
