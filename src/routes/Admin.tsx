@@ -139,11 +139,14 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                   <th className="py-1 pr-2">Date</th>
                   <th className="py-1 pr-2">Exercice (niveau)</th>
                   <th className="py-1 pr-2">Score</th>
-                  <th className="py-1 pr-2" title="Bonnes réponses trouvées sans avoir besoin de réessayer">
+                  <th className="py-1 pr-2" title="Mots réussis sans avoir besoin de réessayer ni d'aide">
                     Du 1er coup
                   </th>
-                  <th className="py-1 pr-2" title="Mots où l'élève a cliqué « Je ne sais pas l'écrire »">
-                    Aide demandée
+                  <th className="py-1 pr-2" title="Mots ratés au 1er essai, réussis à la reprise de fin de séance">
+                    Avec reprise
+                  </th>
+                  <th className="py-1 pr-2" title="Mots réussis grâce au filet de secours « Je ne sais pas l'écrire »">
+                    Avec aide
                   </th>
                   <th className="py-1 pr-2" title="Durée de la séance">
                     Temps
@@ -173,7 +176,10 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                           : ''}
                       </td>
                       <td className="py-1 pr-2 text-gray-500">
-                        {r.mode === 'dictee' ? (r.aideUtilisee !== null ? `${r.aideUtilisee}/${r.total}` : '—') : ''}
+                        {r.mode === 'dictee' ? (r.rattrapageReussi !== null ? `${r.rattrapageReussi}/${r.score}` : '—') : ''}
+                      </td>
+                      <td className="py-1 pr-2 text-gray-500">
+                        {r.mode === 'dictee' ? (r.aideReussi !== null ? `${r.aideReussi}/${r.score}` : '—') : ''}
                       </td>
                       <td className="py-1 pr-2 text-gray-500">{formaterDuree(r.dureeSecondes)}</td>
                       <td className="py-1">{badge && BADGE_EMOJI[badge]}</td>

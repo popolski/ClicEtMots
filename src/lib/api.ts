@@ -110,6 +110,22 @@ export interface ResultatQuiz {
    */
   aideUtilisee: number | null
   /**
+   * Dictée uniquement (schema-v14.sql) : mots réussis à la REPRISE de fin de
+   * séance (1 seul essai, sans aide) - le tour principal ne laisse lui aussi
+   * qu'un seul essai avant de renvoyer le mot en reprise. Sous-ensemble de
+   * `score`, distinct de `premierCoup`. null pour les séances d'avant la
+   * migration.
+   */
+  rattrapageReussi: number | null
+  /**
+   * Dictée uniquement (schema-v14.sql) : mots finalement écrits juste MAIS
+   * où le filet de secours a servi à un moment (tour principal ou reprise) -
+   * sous-ensemble de `score`, PAS de `aideUtilisee` (qui compte aussi les
+   * mots aidés mais ratés quand même). null pour les séances d'avant la
+   * migration.
+   */
+  aideReussi: number | null
+  /**
    * Durée de la séance en secondes, chronométrée côté client entre la 1re
    * question et la fin (schema-v13.sql). Réservé au bilan enseignant -
    * jamais montré à l'élève ni dans le bilan imprimable pour les parents.
@@ -225,10 +241,21 @@ export const api = {
     premierCoup: number,
     aideUtilisee: number,
     dureeSecondes: number,
+    rattrapageReussi: number,
+    aideReussi: number,
   ) =>
     request<{ ok: true }>('quiz-resultats.php', {
       method: 'POST',
-      body: JSON.stringify({ mode, score, total, premierCoup, aideUtilisee, dureeSecondes }),
+      body: JSON.stringify({
+        mode,
+        score,
+        total,
+        premierCoup,
+        aideUtilisee,
+        dureeSecondes,
+        rattrapageReussi,
+        aideReussi,
+      }),
     }),
 
   viderResultatsQuiz: () => request<{ ok: true }>('quiz-resultats.php', { method: 'DELETE' }),

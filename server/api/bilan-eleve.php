@@ -22,7 +22,7 @@ $db = getDb();
 // Même fenêtre que côté élève (quiz-resultats.php) : assez large pour
 // couvrir une année scolaire entière, nécessaire pour un bilan par période.
 $stmt = $db->prepare(
-    'SELECT mode, score, total, premier_coup, aide_utilisee, duree_secondes, termine_le FROM quiz_resultats WHERE student_id = ? ORDER BY termine_le DESC LIMIT 500',
+    'SELECT mode, score, total, premier_coup, aide_utilisee, rattrapage_reussi, aide_reussi, duree_secondes, termine_le FROM quiz_resultats WHERE student_id = ? ORDER BY termine_le DESC LIMIT 500',
 );
 $stmt->execute([$studentId]);
 $resultats = array_map(fn($r) => [
@@ -31,6 +31,8 @@ $resultats = array_map(fn($r) => [
     'total' => (int) $r['total'],
     'premierCoup' => $r['premier_coup'] !== null ? (int) $r['premier_coup'] : null,
     'aideUtilisee' => $r['aide_utilisee'] !== null ? (int) $r['aide_utilisee'] : null,
+    'rattrapageReussi' => $r['rattrapage_reussi'] !== null ? (int) $r['rattrapage_reussi'] : null,
+    'aideReussi' => $r['aide_reussi'] !== null ? (int) $r['aide_reussi'] : null,
     'dureeSecondes' => $r['duree_secondes'] !== null ? (int) $r['duree_secondes'] : null,
     'termineLe' => $r['termine_le'],
 ], $stmt->fetchAll());

@@ -9,8 +9,20 @@ function resultat(
   premierCoup: number | null = score,
   aideUtilisee: number | null = 0,
   dureeSecondes: number | null = null,
+  rattrapageReussi: number | null = null,
+  aideReussi: number | null = null,
 ): ResultatQuiz {
-  return { mode, score, total, premierCoup, aideUtilisee, dureeSecondes, termineLe: '2026-08-23T10:00:00Z' }
+  return {
+    mode,
+    score,
+    total,
+    premierCoup,
+    aideUtilisee,
+    dureeSecondes,
+    rattrapageReussi,
+    aideReussi,
+    termineLe: '2026-08-23T10:00:00Z',
+  }
 }
 
 describe('agregerParMode', () => {
@@ -139,6 +151,29 @@ describe('agregerParMode', () => {
       // l'absence de mesure (séance d'avant la migration).
       const bilan = agregerParMode([resultat('dictee', 10, 10, 10, 0)])
       expect(bilan[0].aideUtilisee).toEqual({ obtenu: 0, sur: 10 })
+    })
+  })
+
+  describe('réussite avec reprise / avec aide (schema-v14.sql)', () => {
+    it('calcule les mots réussis à la reprise, en effectif brut sur le score', () => {
+      // 8 mots réussis sur 10, dont 2 grâce à la reprise de fin de séance.
+      const bilan = agregerParMode([resultat('dictee', 8, 10, 5, 0, null, 2)])
+      expect(bilan[0].rattrapageReussi).toEqual({ obtenu: 2, sur: 8 })
+    })
+
+    it('vaut null pour une séance enregistrée avant la migration', () => {
+      const bilan = agregerParMode([resultat('dictee', 8, 10, 5, 0, null, null)])
+      expect(bilan[0].rattrapageReussi).toBeNull()
+    })
+
+    it('calcule les mots réussis avec aide, en effectif brut sur le score', () => {
+      const bilan = agregerParMode([resultat('dictee', 8, 10, 5, 3, null, 0, 1)])
+      expect(bilan[0].aideReussi).toEqual({ obtenu: 1, sur: 8 })
+    })
+
+    it('vaut null pour une séance enregistrée avant la migration', () => {
+      const bilan = agregerParMode([resultat('dictee', 8, 10, 5, 3, null, 0, null)])
+      expect(bilan[0].aideReussi).toBeNull()
     })
   })
 

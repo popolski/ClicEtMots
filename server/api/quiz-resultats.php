@@ -23,7 +23,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
     $stmt = $db->prepare(
-        'SELECT mode, score, total, premier_coup, aide_utilisee, duree_secondes, termine_le FROM quiz_resultats WHERE student_id = ? ORDER BY termine_le DESC LIMIT ' . TAILLE_MAX,
+        'SELECT mode, score, total, premier_coup, aide_utilisee, rattrapage_reussi, aide_reussi, duree_secondes, termine_le FROM quiz_resultats WHERE student_id = ? ORDER BY termine_le DESC LIMIT ' . TAILLE_MAX,
     );
     $stmt->execute([$user['id']]);
     $resultats = array_map(fn($r) => [
@@ -32,6 +32,8 @@ if ($method === 'GET') {
         'total' => (int) $r['total'],
         'premierCoup' => $r['premier_coup'] !== null ? (int) $r['premier_coup'] : null,
         'aideUtilisee' => $r['aide_utilisee'] !== null ? (int) $r['aide_utilisee'] : null,
+        'rattrapageReussi' => $r['rattrapage_reussi'] !== null ? (int) $r['rattrapage_reussi'] : null,
+        'aideReussi' => $r['aide_reussi'] !== null ? (int) $r['aide_reussi'] : null,
         'dureeSecondes' => $r['duree_secondes'] !== null ? (int) $r['duree_secondes'] : null,
         'termineLe' => $r['termine_le'],
     ], $stmt->fetchAll());
@@ -47,6 +49,8 @@ if ($method === 'POST') {
     // -> NULL, comme les séances enregistrées avant schema-v11.sql/v12.sql.
     $premierCoup = isset($body['premierCoup']) ? (int) $body['premierCoup'] : null;
     $aideUtilisee = isset($body['aideUtilisee']) ? (int) $body['aideUtilisee'] : null;
+    $rattrapageReussi = isset($body['rattrapageReussi']) ? (int) $body['rattrapageReussi'] : null;
+    $aideReussi = isset($body['aideReussi']) ? (int) $body['aideReussi'] : null;
     $dureeSecondes = isset($body['dureeSecondes']) ? (int) $body['dureeSecondes'] : null;
 
     if (!in_array($mode, ['qcm', 'reconstitution', 'grammaire', 'dictee', 'graphie'], true) || $score < 0 || $total <= 0 || $score > $total) {
@@ -66,9 +70,17 @@ if ($method === 'POST') {
     if ($aideUtilisee !== null && ($aideUtilisee < 0 || $aideUtilisee > $total)) {
         jsonResponse(400, ['error' => 'aideUtilisee invalide']);
     }
+    // rattrapageReussi et aideReussi sont deux sous-ensembles de score
+    // (schema-v14.sql) : ni l'un ni l'autre ne peut dépasser le score total.
+    if ($rattrapageReussi !== null && ($rattrapageReussi < 0 || $rattrapageReussi > $score)) {
+        jsonResponse(400, ['error' => 'rattrapageReussi invalide']);
+    }
+    if ($aideReussi !== null && ($aideReussi < 0 || $aideReussi > $score)) {
+        jsonResponse(400, ['error' => 'aideReussi invalide']);
+    }
 
-    $stmt = $db->prepare('INSERT INTO quiz_resultats (student_id, mode, score, total, premier_coup, aide_utilisee, duree_secondes) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    $stmt->execute([$user['id'], $mode, $score, $total, $premierCoup, $aideUtilisee, $dureeSecondes]);
+    $stmt = $db->prepare('INSERT INTO quiz_resultats (student_id, mode, score, total, premier_coup, aide_utilisee, rattrapage_reussi, aide_reussi, duree_secondes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $stmt->execute([$user['id'], $mode, $score, $total, $premierCoup, $aideUtilisee, $rattrapageReussi, $aideReussi, $dureeSecondes]);
 
     // Ne garde que les TAILLE_MAX plus récents (même principe que
     // l'ancienne version locale) - évite une table qui grossit sans fin.

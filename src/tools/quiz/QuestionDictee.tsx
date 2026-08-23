@@ -31,11 +31,13 @@ interface QuestionDicteeProps {
 }
 
 /**
- * Trois essais avant de révéler l'orthographe, comme le mode "recomposer".
- * Révéler dès la première erreur court-circuite l'exercice : l'élève lit la
- * réponse au lieu de la chercher.
+ * Un seul essai par mot avant de révéler l'orthographe (schema-v14.sql) -
+ * pédagogie bienveillante demandée par Camille : un mot raté n'est pas
+ * encore un échec, il repasse une fois en fin de séance (voir QuizTool.tsx,
+ * `enRattrapage`) avec là aussi un seul essai. Un échec réel ne survient
+ * qu'après ces DEUX chances, jamais dès la première erreur.
  */
-const ESSAIS_MAX = 3
+const ESSAIS_MAX = 1
 
 /**
  * Dictée : le mot est prononcé, jamais montré, et l'élève l'écrit au clavier
@@ -230,9 +232,7 @@ export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUti
           spellCheck={false}
           className="w-64 rounded-lg border-2 border-gray-200 px-4 py-3 text-center text-2xl focus:border-brand-400 focus:outline-none"
         />
-        <p className="mt-2 min-h-5 text-sm text-red-600">
-          {erreur ?? (essais > 0 ? `Pas tout à fait, réessaie ! (essai ${essais}/${ESSAIS_MAX})` : '')}
-        </p>
+        <p className="mt-2 min-h-5 text-sm text-red-600">{erreur ?? ''}</p>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3">

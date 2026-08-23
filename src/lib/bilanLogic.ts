@@ -33,8 +33,23 @@ export interface BilanMode {
    * (schema-v12.sql), en effectif brut (pas en pourcentage) - null si aucune
    * séance de ce groupe ne porte cette donnée. Sans objet hors dictée
    * (toujours null ailleurs, le filet n'existant pas dans les autres modes).
+   * Compte TOUS les mots aidés, réussis ou non (contrairement à `aideReussi`).
    */
   aideUtilisee: { obtenu: number; sur: number } | null
+  /**
+   * Dictée uniquement (schema-v14.sql) : mots réussis à la REPRISE de fin de
+   * séance (raté au tour principal, 1 seul essai chacun) - `sur` = total de
+   * mots réussis (score), pas le total de la séance. null si aucune séance
+   * de ce groupe ne porte cette donnée (avant la migration).
+   */
+  rattrapageReussi: { obtenu: number; sur: number } | null
+  /**
+   * Dictée uniquement (schema-v14.sql) : mots finalement écrits juste MAIS
+   * où l'aide a servi à un moment - sous-ensemble des mots réussis (`score`),
+   * PAS de `aideUtilisee` (qui compte aussi les mots aidés mais ratés quand
+   * même). null si aucune séance de ce groupe ne porte cette donnée.
+   */
+  aideReussi: { obtenu: number; sur: number } | null
   /**
    * Durée moyenne d'une séance en secondes (schema-v13.sql), arrondie - null
    * si aucune séance de ce groupe ne porte cette donnée. Réservé au bilan
@@ -97,6 +112,12 @@ function calculerStats(seances: ResultatQuiz[]) {
   // ensuite réussi ou raté, sa fréquence d'usage ne dépend pas de ça.
   let sommeTotalMesureAide = 0
   let sommeAideUtilisee = 0
+  // Même principe que premierCoup : dénominateur = score (mots réussis) des
+  // seules séances qui portent la donnée (schema-v14.sql).
+  let sommeScoreMesureRattrapage = 0
+  let sommeRattrapageReussi = 0
+  let sommeScoreMesureAideReussi = 0
+  let sommeAideReussi = 0
   let nbSeancesMesureesDuree = 0
   let sommeDuree = 0
   for (const r of seances) {
@@ -111,6 +132,14 @@ function calculerStats(seances: ResultatQuiz[]) {
       sommeTotalMesureAide += r.total
       sommeAideUtilisee += r.aideUtilisee
     }
+    if (r.rattrapageReussi !== null) {
+      sommeScoreMesureRattrapage += r.score
+      sommeRattrapageReussi += r.rattrapageReussi
+    }
+    if (r.aideReussi !== null) {
+      sommeScoreMesureAideReussi += r.score
+      sommeAideReussi += r.aideReussi
+    }
     if (r.dureeSecondes !== null) {
       nbSeancesMesureesDuree++
       sommeDuree += r.dureeSecondes
@@ -122,6 +151,9 @@ function calculerStats(seances: ResultatQuiz[]) {
     medailles,
     premierCoup: sommeScoreMesure > 0 ? { obtenu: sommePremierCoup, sur: sommeScoreMesure } : null,
     aideUtilisee: sommeTotalMesureAide > 0 ? { obtenu: sommeAideUtilisee, sur: sommeTotalMesureAide } : null,
+    rattrapageReussi:
+      sommeScoreMesureRattrapage > 0 ? { obtenu: sommeRattrapageReussi, sur: sommeScoreMesureRattrapage } : null,
+    aideReussi: sommeScoreMesureAideReussi > 0 ? { obtenu: sommeAideReussi, sur: sommeScoreMesureAideReussi } : null,
     dureeMoyenneSec: nbSeancesMesureesDuree > 0 ? Math.round(sommeDuree / nbSeancesMesureesDuree) : null,
   }
 }

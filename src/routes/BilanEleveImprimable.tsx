@@ -2,14 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { api } from '../lib/api'
 import type { ResultatQuiz } from '../lib/api'
-import {
-  agregerParModeGlobal,
-  MODE_DESCRIPTION,
-  MODE_LABEL,
-  MODES_AVEC_AIDE,
-  MODES_AVEC_ESSAIS,
-  resultatsDeLaPeriode,
-} from '../lib/bilanLogic'
+import { agregerParModeGlobal, MODE_DESCRIPTION, MODE_LABEL, MODES_AVEC_ESSAIS, resultatsDeLaPeriode } from '../lib/bilanLogic'
 import { BADGE_EMOJI } from '../lib/quizBadges'
 import { anneesDisponibles, periodesDe } from '../lib/periodesPedagogiques'
 import type { Zone } from '../lib/periodesPedagogiques'
@@ -142,21 +135,43 @@ export function BilanEleveImprimable() {
                       <dt className="text-gray-500">Score moyen</dt>
                       <dd className="font-semibold text-gray-900">{b.scoreMoyenPct}%</dd>
                     </div>
-                    {MODES_AVEC_ESSAIS.has(b.mode) && b.premierCoup !== null && (
-                      <div>
-                        <dt className="text-gray-500">Réussi du 1er coup</dt>
-                        <dd className="font-semibold text-gray-900">
-                          {b.premierCoup.obtenu}/{b.premierCoup.sur}
-                        </dd>
-                      </div>
-                    )}
-                    {MODES_AVEC_AIDE.has(b.mode) && b.aideUtilisee !== null && (
-                      <div>
-                        <dt className="text-gray-500">Aide demandée</dt>
-                        <dd className="font-semibold text-gray-900">
-                          {b.aideUtilisee.obtenu}/{b.aideUtilisee.sur}
-                        </dd>
-                      </div>
+                    {b.mode === 'dictee' ? (
+                      <>
+                        {b.premierCoup !== null && (
+                          <div>
+                            <dt className="text-gray-500">Du premier coup</dt>
+                            <dd className="font-semibold text-gray-900">
+                              {b.premierCoup.obtenu}/{b.premierCoup.sur}
+                            </dd>
+                          </div>
+                        )}
+                        {b.rattrapageReussi !== null && b.rattrapageReussi.obtenu > 0 && (
+                          <div>
+                            <dt className="text-gray-500">Avec un peu d'entraînement en plus</dt>
+                            <dd className="font-semibold text-gray-900">
+                              {b.rattrapageReussi.obtenu}/{b.rattrapageReussi.sur}
+                            </dd>
+                          </div>
+                        )}
+                        {b.aideReussi !== null && b.aideReussi.obtenu > 0 && (
+                          <div>
+                            <dt className="text-gray-500">Avec l'aide du clavier</dt>
+                            <dd className="font-semibold text-gray-900">
+                              {b.aideReussi.obtenu}/{b.aideReussi.sur}
+                            </dd>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      MODES_AVEC_ESSAIS.has(b.mode) &&
+                      b.premierCoup !== null && (
+                        <div>
+                          <dt className="text-gray-500">Réussi du 1er coup</dt>
+                          <dd className="font-semibold text-gray-900">
+                            {b.premierCoup.obtenu}/{b.premierCoup.sur}
+                          </dd>
+                        </div>
+                      )
                     )}
                     {(b.medailles.or > 0 || b.medailles.argent > 0 || b.medailles.bronze > 0) && (
                       <div>
