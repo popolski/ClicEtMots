@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ToolLayout } from '../../components/ToolLayout'
 import { PhonemeKeyboard } from '../../components/PhonemeKeyboard'
 import { SequenceBar } from '../../components/SequenceBar'
@@ -406,10 +406,19 @@ export function QuizTool() {
   // Mode cliqué mais dont la longueur reste à choisir (voir NIVEAUX_SEANCE) -
   // écran intermédiaire entre le menu et le lancement de la séance.
   const [modeEnChoixTaille, setModeEnChoixTaille] = useState<ModeQuiz | null>(null)
+  // Chrono de la séance (schema-v13.sql) - jamais affiché, réservé au bilan
+  // enseignant. Démarré dès que les questions sont prêtes plutôt qu'au choix
+  // du mode, pour ne pas compter le temps de préparation (chargement du
+  // lexique, tirage des mots) comme si l'élève réfléchissait déjà.
+  const debutSeanceRef = useRef<number | null>(null)
 
   useEffect(() => {
     loadWordIndex().then(setWordIndex)
   }, [])
+
+  useEffect(() => {
+    if (questions && debutSeanceRef.current === null) debutSeanceRef.current = Date.now()
+  }, [questions])
 
   // Best-effort : hors ligne ou API en panne, la dictée se contente d'un
   // tirage aléatoire comme avant plutôt que de ne pas démarrer.
@@ -599,6 +608,7 @@ export function QuizTool() {
     setTotalSeance(0)
     setPremierCoupCount(0)
     setAideUtiliseeCount(0)
+    debutSeanceRef.current = null
   }
 
   /** Lance directement un mode sans écran de choix de longueur. */
@@ -630,6 +640,7 @@ export function QuizTool() {
       // totalSeance pour tous les modes envoyait 0 (il n'est renseigné qu'en
       // dictée) et le serveur rejetait le résultat : les scores des autres
       // exercices n'étaient plus enregistrés du tout.
+      const dureeSecondes = debutSeanceRef.current !== null ? Math.round((Date.now() - debutSeanceRef.current) / 1000) : 0
       api
         .ajouterResultatQuiz(
           mode,
@@ -637,6 +648,7 @@ export function QuizTool() {
           mode === 'dictee' ? totalSeance : questions.length,
           premierCoupCount,
           aideUtiliseeCount,
+          dureeSecondes,
         )
         .catch(() => {})
         .then(() => api.listResultatsQuiz())

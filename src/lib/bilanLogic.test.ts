@@ -8,8 +8,9 @@ function resultat(
   total: number,
   premierCoup: number | null = score,
   aideUtilisee: number | null = 0,
+  dureeSecondes: number | null = null,
 ): ResultatQuiz {
-  return { mode, score, total, premierCoup, aideUtilisee, termineLe: '2026-08-23T10:00:00Z' }
+  return { mode, score, total, premierCoup, aideUtilisee, dureeSecondes, termineLe: '2026-08-23T10:00:00Z' }
 }
 
 describe('agregerParMode', () => {
@@ -138,6 +139,26 @@ describe('agregerParMode', () => {
       // l'absence de mesure (séance d'avant la migration).
       const bilan = agregerParMode([resultat('dictee', 10, 10, 10, 0)])
       expect(bilan[0].aideUtiliseePct).toBe(0)
+    })
+  })
+
+  describe('durée moyenne (schema-v13.sql)', () => {
+    it("calcule la durée moyenne des séances mesurées", () => {
+      const bilan = agregerParMode([
+        resultat('qcm', 10, 10, 10, 0, 120),
+        resultat('qcm', 8, 10, 8, 0, 180),
+      ])
+      expect(bilan[0].dureeMoyenneSec).toBe(150)
+    })
+
+    it('vaut null quand aucune séance de ce groupe ne porte cette donnée', () => {
+      const bilan = agregerParMode([resultat('qcm', 10, 10, 10, 0, null)])
+      expect(bilan[0].dureeMoyenneSec).toBeNull()
+    })
+
+    it('ignore les séances non mesurées plutôt que de fausser la moyenne', () => {
+      const bilan = agregerParMode([resultat('qcm', 10, 10, 10, 0, null), resultat('qcm', 10, 10, 10, 0, 100)])
+      expect(bilan[0].dureeMoyenneSec).toBe(100)
     })
   })
 })

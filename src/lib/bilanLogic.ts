@@ -34,6 +34,13 @@ export interface BilanMode {
    * le filet n'existant pas dans les autres modes).
    */
   aideUtiliseePct: number | null
+  /**
+   * Durée moyenne d'une séance en secondes (schema-v13.sql), arrondie - null
+   * si aucune séance de ce groupe ne porte cette donnée. Réservé au bilan
+   * enseignant (Admin.tsx) : absent du bilan imprimable pour les parents,
+   * sans intérêt pédagogique pour eux.
+   */
+  dureeMoyenneSec: number | null
 }
 
 const TOUS_LES_MODES: ModeQuiz[] = ['qcm', 'reconstitution', 'grammaire', 'dictee', 'graphie']
@@ -57,6 +64,22 @@ export const MODE_LABEL: Record<ModeQuiz, string> = {
   grammaire: 'Catégorie grammaticale',
   dictee: 'Dictée',
   graphie: 'La bonne graphie',
+}
+
+/**
+ * Une phrase par mode pour le bilan imprimable destiné aux parents, en
+ * référence aux compétences du programme officiel de français cycle 2
+ * (projet de programme CSP, français cycle 2) : correspondances
+ * grapho-phonémiques (CGP), conscience phonologique, nature des mots,
+ * écriture sous dictée, régularités orthographiques lexicales.
+ */
+export const MODE_DESCRIPTION: Record<ModeQuiz, string> = {
+  qcm: "Reconnaître la bonne écriture d'un son parmi plusieurs, pour automatiser les correspondances entre les sons et les lettres (correspondances grapho-phonémiques).",
+  reconstitution:
+    "Reconstituer un mot son par son, pour travailler la conscience phonologique et l'encodage à l'écrit.",
+  grammaire: 'Identifier la nature des mots (nom, verbe, adjectif...), une compétence clé du vocabulaire et de la grammaire.',
+  dictee: "Écrire un mot sous la dictée, pour mémoriser son orthographe et vérifier l'acquisition des correspondances grapho-phonémiques déjà étudiées.",
+  graphie: "Choisir la bonne orthographe entre plusieurs graphies possibles pour un même son, pour travailler les régularités de l'orthographe lexicale.",
 }
 
 /**
@@ -93,6 +116,8 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
         // ensuite réussi ou raté, sa fréquence d'usage ne dépend pas de ça.
         let sommeTotalMesureAide = 0
         let sommeAideUtilisee = 0
+        let nbSeancesMesureesDuree = 0
+        let sommeDuree = 0
         for (const r of seances) {
           sommePct += r.total > 0 ? (100 * r.score) / r.total : 0
           const badge = badgePour(r.score, r.total)
@@ -105,6 +130,10 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
             sommeTotalMesureAide += r.total
             sommeAideUtilisee += r.aideUtilisee
           }
+          if (r.dureeSecondes !== null) {
+            nbSeancesMesureesDuree++
+            sommeDuree += r.dureeSecondes
+          }
         }
         return {
           mode,
@@ -114,6 +143,7 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
           medailles,
           premierCoupPct: sommeScoreMesure > 0 ? Math.round((100 * sommePremierCoup) / sommeScoreMesure) : null,
           aideUtiliseePct: sommeTotalMesureAide > 0 ? Math.round((100 * sommeAideUtilisee) / sommeTotalMesureAide) : null,
+          dureeMoyenneSec: nbSeancesMesureesDuree > 0 ? Math.round(sommeDuree / nbSeancesMesureesDuree) : null,
         }
       })
   })

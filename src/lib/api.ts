@@ -109,6 +109,13 @@ export interface ResultatQuiz {
    * schema-v12.sql.
    */
   aideUtilisee: number | null
+  /**
+   * Durée de la séance en secondes, chronométrée côté client entre la 1re
+   * question et la fin (schema-v13.sql). Réservé au bilan enseignant -
+   * jamais montré à l'élève ni dans le bilan imprimable pour les parents.
+   * null pour les séances enregistrées avant la migration.
+   */
+  dureeSecondes: number | null
   termineLe: string
 }
 
@@ -211,10 +218,17 @@ export const api = {
 
   listResultatsQuiz: () => request<{ resultats: ResultatQuiz[] }>('quiz-resultats.php'),
 
-  ajouterResultatQuiz: (mode: ModeQuiz, score: number, total: number, premierCoup: number, aideUtilisee: number) =>
+  ajouterResultatQuiz: (
+    mode: ModeQuiz,
+    score: number,
+    total: number,
+    premierCoup: number,
+    aideUtilisee: number,
+    dureeSecondes: number,
+  ) =>
     request<{ ok: true }>('quiz-resultats.php', {
       method: 'POST',
-      body: JSON.stringify({ mode, score, total, premierCoup, aideUtilisee }),
+      body: JSON.stringify({ mode, score, total, premierCoup, aideUtilisee, dureeSecondes }),
     }),
 
   viderResultatsQuiz: () => request<{ ok: true }>('quiz-resultats.php', { method: 'DELETE' }),

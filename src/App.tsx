@@ -22,6 +22,9 @@ const DefinitionTool = lazy(() =>
 )
 const Admin = lazy(() => import('./routes/Admin').then((m) => ({ default: m.Admin })))
 const BilanLexique = lazy(() => import('./routes/BilanLexique').then((m) => ({ default: m.BilanLexique })))
+const BilanEleveImprimable = lazy(() =>
+  import('./routes/BilanEleveImprimable').then((m) => ({ default: m.BilanEleveImprimable })),
+)
 const Historique = lazy(() => import('./routes/Historique').then((m) => ({ default: m.Historique })))
 const Favoris = lazy(() => import('./routes/Favoris').then((m) => ({ default: m.Favoris })))
 const MotsSemaine = lazy(() => import('./routes/MotsSemaine').then((m) => ({ default: m.MotsSemaine })))
@@ -142,6 +145,14 @@ function App() {
                   element={
                     <RequireAuth teacherOnly>
                       <BilanLexique />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="/bilan-eleve"
+                  element={
+                    <RequireAuth teacherOnly>
+                      <BilanEleveImprimable />
                     </RequireAuth>
                   }
                 />

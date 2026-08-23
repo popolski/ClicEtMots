@@ -28,6 +28,15 @@ const CATEGORIES: { value: Categorie; label: string }[] = [
  * aucun endpoint enseignant ne pouvait les lire avant bilan-eleve.php.
  * Chargé à la demande (un clic par élève), pas au chargement de la page.
  */
+/** "45 s" en dessous de la minute, "3 min 20" au-delà - plus parlant qu'un nombre de secondes brut. */
+function formaterDuree(secondes: number | null): string {
+  if (secondes === null) return '—'
+  if (secondes < 60) return `${secondes} s`
+  const min = Math.floor(secondes / 60)
+  const reste = secondes % 60
+  return reste > 0 ? `${min} min ${reste}` : `${min} min`
+}
+
 function BilanEleve({ student, onClose }: { student: Student | null; onClose: () => void }) {
   const [donnees, setDonnees] = useState<{ resultats: ResultatQuiz[]; motsRates: MotRateDictee[] } | null>(null)
   const [erreur, setErreur] = useState(false)
@@ -50,9 +59,18 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
     <div className="mt-4 rounded-xl border-2 border-brand-100 bg-white p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-lg font-bold text-gray-800">Bilan de {student.prenom}</h3>
-        <button type="button" onClick={onClose} className="text-sm text-gray-400 hover:text-gray-600">
-          ✕ Fermer
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            to={`/bilan-eleve?studentId=${student.id}&prenom=${encodeURIComponent(student.prenom)}`}
+            target="_blank"
+            className="text-sm text-brand-600 hover:text-brand-700"
+          >
+            🖨️ Version imprimable pour les parents
+          </Link>
+          <button type="button" onClick={onClose} className="text-sm text-gray-400 hover:text-gray-600">
+            ✕ Fermer
+          </button>
+        </div>
       </div>
 
       {erreur && <p className="text-sm text-red-600">Impossible de charger le bilan pour l'instant.</p>}
@@ -76,6 +94,9 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                   <th className="py-1 pr-2" title="Part des mots où le filet « Je ne sais pas l'écrire » a été ouvert">
                     Filet utilisé
                   </th>
+                  <th className="py-1 pr-2" title="Durée moyenne d'une séance">
+                    Temps moyen
+                  </th>
                   <th className="py-1">Médailles</th>
                 </tr>
               </thead>
@@ -93,6 +114,7 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                     <td className="py-1 pr-2 text-gray-500">
                       {MODES_AVEC_AIDE.has(b.mode) ? (b.aideUtiliseePct !== null ? `${b.aideUtiliseePct}%` : '—') : ''}
                     </td>
+                    <td className="py-1 pr-2 text-gray-500">{formaterDuree(b.dureeMoyenneSec)}</td>
                     <td className="py-1">
                       {b.medailles.or > 0 && `${BADGE_EMOJI.or}×${b.medailles.or} `}
                       {b.medailles.argent > 0 && `${BADGE_EMOJI.argent}×${b.medailles.argent} `}

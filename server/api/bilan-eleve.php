@@ -19,11 +19,10 @@ if ($studentId <= 0) {
 
 $db = getDb();
 
-// Plus large que la limite de 20 utilisée côté élève (quiz-resultats.php) :
-// ici on calcule des moyennes sur la durée, pas une liste à afficher telle
-// quelle, une fenêtre plus large donne une image plus juste.
+// Même fenêtre que côté élève (quiz-resultats.php) : assez large pour
+// couvrir une année scolaire entière, nécessaire pour un bilan par période.
 $stmt = $db->prepare(
-    'SELECT mode, score, total, premier_coup, aide_utilisee, termine_le FROM quiz_resultats WHERE student_id = ? ORDER BY termine_le DESC LIMIT 200',
+    'SELECT mode, score, total, premier_coup, aide_utilisee, duree_secondes, termine_le FROM quiz_resultats WHERE student_id = ? ORDER BY termine_le DESC LIMIT 500',
 );
 $stmt->execute([$studentId]);
 $resultats = array_map(fn($r) => [
@@ -32,6 +31,7 @@ $resultats = array_map(fn($r) => [
     'total' => (int) $r['total'],
     'premierCoup' => $r['premier_coup'] !== null ? (int) $r['premier_coup'] : null,
     'aideUtilisee' => $r['aide_utilisee'] !== null ? (int) $r['aide_utilisee'] : null,
+    'dureeSecondes' => $r['duree_secondes'] !== null ? (int) $r['duree_secondes'] : null,
     'termineLe' => $r['termine_le'],
 ], $stmt->fetchAll());
 
