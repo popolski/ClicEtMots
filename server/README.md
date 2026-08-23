@@ -167,6 +167,38 @@ Un verbe dont la conjugaison n'est pas déterministe (irrégulier, -yer,
 -eler/-eter) ne reçoit **aucun** tableau, volontairement : mieux vaut pas
 de conjugaison qu'une orthographe inventée montrée à un enfant.
 
+## Sauvegardes
+
+L'hébergement mutualisé OVH ne sauvegarde pas la base de données
+automatiquement (contrairement aux fichiers, sauvegardés côté FTP). `server/backup-db.php`
+comble ce manque : `mysqldump` -> compression gzip -> envoi vers
+[Backblaze B2](https://www.backblaze.com/cloud-storage) (10 Go gratuits),
+avec rotation automatique (30 jours de rétention par défaut, réglable en
+tête du fichier).
+
+Ce script vit dans `server/`, **pas** `server/api/` : il n'est donc jamais
+copié dans `/clicetmots/api/` (voir "Upload FTP" plus haut), et reste
+inaccessible depuis un navigateur - seule une tâche planifiée peut
+l'exécuter.
+
+**Mise en place (une seule fois)** :
+
+1. Remplis `B2_KEY_ID` / `B2_APPLICATION_KEY` / `B2_BUCKET_NAME` dans
+   `config.php` (voir `config.php.example`) - un compte Backblaze B2 gratuit
+   et un bucket **privé** suffisent.
+2. Vérifie que le fichier a bien été transféré à sa place (`/clicetmots/api-src/backup-db.php`
+   ou équivalent selon ton organisation FTP - l'important est qu'il ne soit
+   PAS dans `/clicetmots/api/`).
+3. Dans le manager OVH -> ton hébergement -> "Tâches planifiées - Cron" ->
+   "Ajouter une planification" : commande = chemin complet vers
+   `backup-db.php` sur le serveur, fréquence quotidienne (ex. tôt le matin),
+   langage = la version PHP du site. Une adresse e-mail peut être renseignée
+   pour être prévenu en cas d'échec.
+
+Le script confirmé fonctionnel sur cet hébergement : `exec()`, `shell_exec()`
+et `mysqldump` (`/usr/bin/mysqldump`) sont disponibles, `cURL` aussi (utilisé
+pour parler à l'API B2, sans dépendance Composer).
+
 ## Relations (synonymes / contraires / famille)
 
 Elles ne sont pas déductibles pour un mot ajouté : Démonette et JeuxDeMots

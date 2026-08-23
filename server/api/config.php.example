@@ -28,3 +28,12 @@ define('SETUP_TOKEN', 'xxxxxx');
 // reste ajoutable, seule la prononciation retombera sur la synthèse du
 // navigateur (comportement déjà prévu côté client).
 define('GOOGLE_TTS_API_KEY', '');
+
+// Sauvegarde automatique quotidienne de la base (voir server/backup-db.php
+// et server/README.md "Sauvegardes") vers Backblaze B2 (10 Go gratuits,
+// largement suffisant ici). Crée un compte sur backblaze.com, un bucket
+// PRIVÉ, puis "App Keys" -> "Add a New Application Key" (restreinte à ce
+// bucket si possible) pour obtenir keyID et applicationKey.
+define('B2_KEY_ID', 'xxxxxx');
+define('B2_APPLICATION_KEY', 'xxxxxx');
+define('B2_BUCKET_NAME', 'xxxxxx'); // le nom exact du bucket créé sur B2
