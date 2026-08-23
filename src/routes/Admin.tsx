@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ToolLayout } from '../components/ToolLayout'
 import { api } from '../lib/api'
-import type { LexiconWord, ListeMotsSemaine, MotDeListe, MotRateDictee, ResultatQuiz, Student } from '../lib/api'
+import type { LexiconWord, ListeMotsSemaine, MotDeListe, MotRateClasse, MotRateDictee, ResultatQuiz, Student } from '../lib/api'
 import { phonemes } from '../lib/phonemes'
 import { MODE_LABEL, resultatsDeLaPeriode } from '../lib/bilanLogic'
 import { BADGE_EMOJI, badgePour } from '../lib/quizBadges'
@@ -205,6 +205,62 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
         </>
       )}
     </div>
+  )
+}
+
+/**
+ * Bilan de la classe pour la dictée : mots que PLUSIEURS élèves ratent, pas
+ * juste un seul (contrairement au bilan par élève, à la demande, ce
+ * bilan-ci est visible d'emblée - il sert à repérer d'un coup d'œil s'il
+ * faut retravailler un mot collectivement). Basé sur dictee_mots_rates :
+ * un mot n'y figure que tant qu'au moins un élève ne l'a pas encore
+ * réussi (voir marquerMotDictee dans QuizTool.tsx).
+ */
+function BilanClasse() {
+  const [donnees, setDonnees] = useState<{ nbEleves: number; motsRates: MotRateClasse[] } | null>(null)
+  const [erreur, setErreur] = useState(false)
+
+  useEffect(() => {
+    api
+      .bilanClasse()
+      .then(setDonnees)
+      .catch(() => setErreur(true))
+  }, [])
+
+  if (erreur) return null
+  if (!donnees || donnees.motsRates.length === 0 || donnees.nbEleves === 0) return null
+
+  return (
+    <section className="mb-10 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
+      <div className="mb-1 flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-800">Bilan de la classe — dictée</h2>
+        <span className="text-sm text-gray-400">{donnees.nbEleves} élève(s) suivi(s)</span>
+      </div>
+      <p className="mb-4 text-sm text-gray-500">Mots les plus ratés, tous élèves confondus</p>
+
+      <div className="flex flex-col">
+        {donnees.motsRates.map((m) => {
+          const part = m.nbElevesConcernes / donnees.nbEleves
+          const couleurBarre = part >= 0.5 ? 'bg-red-500' : part >= 0.25 ? 'bg-amber-500' : 'bg-gray-400'
+          const couleurTexte = part >= 0.5 ? 'text-red-600' : part >= 0.25 ? 'text-amber-600' : 'text-gray-500'
+          return (
+            <div key={m.lemmaId + m.word} className="flex items-center gap-3 border-t border-gray-200 py-2">
+              <span className="w-24 shrink-0 truncate font-medium text-gray-800">{m.word}</span>
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-200">
+                <div className={`h-full ${couleurBarre}`} style={{ width: `${Math.round(part * 100)}%` }} />
+              </div>
+              <span className={`w-28 shrink-0 text-right text-sm ${couleurTexte}`}>
+                {m.nbElevesConcernes} / {donnees.nbEleves} élèves
+              </span>
+            </div>
+          )
+        })}
+      </div>
+
+      <p className="mt-3 text-xs text-gray-400">
+        Basé sur les mots encore dans la liste de reprise d'au moins un élève.
+      </p>
+    </section>
   )
 }
 
@@ -999,6 +1055,7 @@ export function Admin() {
   return (
     <ToolLayout title="Espace enseignant" description="Gérer les comptes élèves et enrichir le lexique.">
       <SectionEleves />
+      <BilanClasse />
       <SectionMots />
       <SectionMotsSemaine />
     </ToolLayout>

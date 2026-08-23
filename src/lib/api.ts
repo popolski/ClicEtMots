@@ -89,6 +89,14 @@ export interface MotRateDictee {
   ratages: number
 }
 
+/** Mot raté en dictée, vu à l'échelle de la classe (bilan-classe.php) - pas d'un seul élève. */
+export interface MotRateClasse {
+  lemmaId: string
+  word: string
+  /** Nombre d'élèves DISTINCTS qui ont encore ce mot dans leur liste de reprise. */
+  nbElevesConcernes: number
+}
+
 export type ModeQuiz = 'qcm' | 'reconstitution' | 'grammaire' | 'dictee' | 'graphie'
 
 export interface ResultatQuiz {
@@ -263,6 +271,9 @@ export const api = {
   /** Bilan d'un élève pour l'enseignante : ses résultats et ses mots les plus ratés en dictée. */
   bilanEleve: (studentId: number) =>
     request<{ resultats: ResultatQuiz[]; motsRates: MotRateDictee[] }>(`bilan-eleve.php?studentId=${studentId}`),
+
+  /** Bilan de la classe entière pour l'enseignante : mots ratés par plusieurs élèves en dictée. */
+  bilanClasse: () => request<{ nbEleves: number; motsRates: MotRateClasse[] }>('bilan-classe.php'),
 
   /** Mots ratés en dictée, replacés en tête de la séance suivante (schema-v10.sql). */
   listMotsRatesDictee: () => request<{ mots: MotRateDictee[] }>('dictee-rates.php'),
