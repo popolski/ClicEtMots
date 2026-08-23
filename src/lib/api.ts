@@ -205,6 +205,10 @@ export const api = {
 
   viderResultatsQuiz: () => request<{ ok: true }>('quiz-resultats.php', { method: 'DELETE' }),
 
+  /** Bilan d'un élève pour l'enseignante : ses résultats et ses mots les plus ratés en dictée. */
+  bilanEleve: (studentId: number) =>
+    request<{ resultats: ResultatQuiz[]; motsRates: MotRateDictee[] }>(`bilan-eleve.php?studentId=${studentId}`),
+
   /** Mots ratés en dictée, replacés en tête de la séance suivante (schema-v10.sql). */
   listMotsRatesDictee: () => request<{ mots: MotRateDictee[] }>('dictee-rates.php'),
 

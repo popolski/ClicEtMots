@@ -108,6 +108,7 @@ dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 | DELETE | `/api/quiz-resultats.php` | élève | efface ses résultats |
 | GET | `/api/dictee-rates.php` | élève | ses mots ratés en dictée, les plus ratés d'abord |
 | POST | `/api/dictee-rates.php` | élève | `{lemmaId, word, reussi}` → incrémente le compteur, ou retire le mot si réussi |
+| GET | `/api/bilan-eleve.php?studentId=` | enseignant | résultats et mots les plus ratés en dictée d'un élève |
 | GET | `/api/favoris.php` | élève | ses mots favoris |
 | POST | `/api/favoris.php` | élève | `{lemmaId, word, category}` → ajoute un favori |
 | DELETE | `/api/favoris.php?lemmaId=` | élève | retire un favori |

@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ToolLayout } from '../components/ToolLayout'
 import { api } from '../lib/api'
-import type { LexiconWord, ListeMotsSemaine, MotDeListe, Student } from '../lib/api'
+import type { LexiconWord, ListeMotsSemaine, MotDeListe, MotRateDictee, ResultatQuiz, Student } from '../lib/api'
 import { phonemes } from '../lib/phonemes'
+import { agregerParMode, MODE_LABEL } from '../lib/bilanLogic'
+import { BADGE_EMOJI } from '../lib/quizBadges'
 import { RelationsEditor } from './RelationsEditor'
 import type { VerbConjugation } from '../lib/conjugations'
 import { PERSONNES_SINGULIER, PERSONNES_PLURIEL, pronomAfficheTexte } from '../tools/conjugueur/conjugueurLogic'
@@ -20,12 +22,99 @@ const CATEGORIES: { value: Categorie; label: string }[] = [
   { value: 'invariable', label: 'Mot invariable' },
 ]
 
+/**
+ * Bilan d'un élève pour l'enseignante : agrège des données déjà collectées
+ * (quiz_resultats, dictee_mots_rates) mais jusqu'ici invisibles pour elle -
+ * aucun endpoint enseignant ne pouvait les lire avant bilan-eleve.php.
+ * Chargé à la demande (un clic par élève), pas au chargement de la page.
+ */
+function BilanEleve({ student, onClose }: { student: Student | null; onClose: () => void }) {
+  const [donnees, setDonnees] = useState<{ resultats: ResultatQuiz[]; motsRates: MotRateDictee[] } | null>(null)
+  const [erreur, setErreur] = useState(false)
+
+  useEffect(() => {
+    if (!student) return
+    setDonnees(null)
+    setErreur(false)
+    api
+      .bilanEleve(student.id)
+      .then(setDonnees)
+      .catch(() => setErreur(true))
+  }, [student])
+
+  if (!student) return null
+
+  const bilan = donnees ? agregerParMode(donnees.resultats) : null
+
+  return (
+    <div className="mt-4 rounded-xl border-2 border-brand-100 bg-white p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-lg font-bold text-gray-800">Bilan de {student.prenom}</h3>
+        <button type="button" onClick={onClose} className="text-sm text-gray-400 hover:text-gray-600">
+          ✕ Fermer
+        </button>
+      </div>
+
+      {erreur && <p className="text-sm text-red-600">Impossible de charger le bilan pour l'instant.</p>}
+
+      {!erreur && !donnees && <p className="text-gray-400">Chargement…</p>}
+
+      {bilan && (
+        <>
+          {bilan.length === 0 ? (
+            <p className="text-gray-400">Aucun exercice fait pour l'instant.</p>
+          ) : (
+            <table className="mb-4 w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200 text-left text-gray-500">
+                  <th className="py-1 pr-2">Exercice</th>
+                  <th className="py-1 pr-2">Séances</th>
+                  <th className="py-1 pr-2">Score moyen</th>
+                  <th className="py-1">Médailles</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bilan.map((b) => (
+                  <tr key={b.mode} className="border-b border-gray-100">
+                    <td className="py-1 pr-2 font-medium text-gray-800">{MODE_LABEL[b.mode]}</td>
+                    <td className="py-1 pr-2">{b.nbSeances}</td>
+                    <td className="py-1 pr-2">{b.scoreMoyenPct}%</td>
+                    <td className="py-1">
+                      {b.medailles.or > 0 && `${BADGE_EMOJI.or}×${b.medailles.or} `}
+                      {b.medailles.argent > 0 && `${BADGE_EMOJI.argent}×${b.medailles.argent} `}
+                      {b.medailles.bronze > 0 && `${BADGE_EMOJI.bronze}×${b.medailles.bronze}`}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {donnees && donnees.motsRates.length > 0 && (
+            <div>
+              <h4 className="mb-1 text-sm font-semibold text-gray-600">Mots les plus ratés en dictée</h4>
+              <ul className="flex flex-wrap gap-2">
+                {donnees.motsRates.map((m) => (
+                  <li key={m.lemmaId + m.word} className="rounded-full bg-orange-50 px-3 py-1 text-sm text-orange-800">
+                    {m.word} <span className="text-orange-500">×{m.ratages}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
 function SectionEleves() {
   const [students, setStudents] = useState<Student[] | null>(null)
   const [prenom, setPrenom] = useState('')
   const [motDePasse, setMotDePasse] = useState('')
   const [erreur, setErreur] = useState<string | null>(null)
   const [enCours, setEnCours] = useState(false)
+  const [bilanOuvertPour, setBilanOuvertPour] = useState<number | null>(null)
 
   useEffect(() => {
     api
@@ -167,6 +256,15 @@ function SectionEleves() {
               </label>
               <button
                 type="button"
+                onClick={() => setBilanOuvertPour((prec) => (prec === s.id ? null : s.id))}
+                aria-label={`Voir le bilan de ${s.prenom}`}
+                title="Voir ses résultats et ses mots les plus ratés"
+                className="text-sm text-gray-400 hover:text-brand-600"
+              >
+                📊
+              </button>
+              <button
+                type="button"
                 onClick={() => reinitialiserUnEleve(s)}
                 aria-label={`Réinitialiser les données de ${s.prenom}`}
                 title="Effacer ses scores de quiz, favoris et historique"
@@ -185,6 +283,13 @@ function SectionEleves() {
             </li>
           ))}
         </ul>
+      )}
+
+      {bilanOuvertPour !== null && (
+        <BilanEleve
+          student={students?.find((s) => s.id === bilanOuvertPour) ?? null}
+          onClose={() => setBilanOuvertPour(null)}
+        />
       )}
 
       {students !== null && students.length > 0 && (
