@@ -67,7 +67,7 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
             <table className="mb-4 w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 text-left text-gray-500">
-                  <th className="py-1 pr-2">Exercice</th>
+                  <th className="py-1 pr-2">Exercice (niveau)</th>
                   <th className="py-1 pr-2">Séances</th>
                   <th className="py-1 pr-2">Score moyen</th>
                   <th className="py-1">Médailles</th>
@@ -75,8 +75,10 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
               </thead>
               <tbody>
                 {bilan.map((b) => (
-                  <tr key={b.mode} className="border-b border-gray-100">
-                    <td className="py-1 pr-2 font-medium text-gray-800">{MODE_LABEL[b.mode]}</td>
+                  <tr key={`${b.mode}-${b.niveau}`} className="border-b border-gray-100">
+                    <td className="py-1 pr-2 font-medium text-gray-800">
+                      {MODE_LABEL[b.mode]} <span className="font-normal text-gray-400">({b.niveau} mots)</span>
+                    </td>
                     <td className="py-1 pr-2">{b.nbSeances}</td>
                     <td className="py-1 pr-2">{b.scoreMoyenPct}%</td>
                     <td className="py-1">

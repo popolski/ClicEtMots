@@ -7,9 +7,17 @@ import type { ModeQuiz, ResultatQuiz } from './api'
 
 export interface BilanMode {
   mode: ModeQuiz
+  /**
+   * Nombre de mots de la séance (= `total` de ResultatQuiz). Fixe à 10 pour
+   * QCM/grammaire/graphie, mais choisi au lancement pour dictée (5/10/15/20)
+   * et recomposition (5/10) - voir NIVEAUX_SEANCE dans QuizTool. Une ligne
+   * par niveau réellement joué : moyenner un 5/5 avec un 18/20 masquerait
+   * que ce n'est pas le même exercice.
+   */
+  niveau: number
   nbSeances: number
-  /** Moyenne des scores en pourcentage, arrondie - null si aucune séance. */
-  scoreMoyenPct: number | null
+  /** Moyenne des scores en pourcentage, arrondie. */
+  scoreMoyenPct: number
   medailles: Record<Badge, number>
 }
 
@@ -28,30 +36,41 @@ export const MODE_LABEL: Record<ModeQuiz, string> = {
 }
 
 /**
- * Regroupe les résultats par mode. Ne renvoie que les modes avec au moins
- * une séance - un mode jamais joué n'a rien d'utile à montrer dans le
- * bilan, autant ne pas afficher une ligne à zéro partout.
+ * Regroupe les résultats par mode PUIS par niveau (nombre de mots de la
+ * séance). Ne renvoie que les combinaisons réellement jouées - un mode ou
+ * un niveau jamais essayé n'a rien d'utile à montrer dans le bilan, autant
+ * ne pas afficher une ligne à zéro partout. Les niveaux sont triés du plus
+ * petit au plus grand au sein d'un même mode.
  */
 export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
   return TOUS_LES_MODES.flatMap((mode) => {
     const deCeMode = resultats.filter((r) => r.mode === mode)
     if (deCeMode.length === 0) return []
 
-    const medailles: Record<Badge, number> = { or: 0, argent: 0, bronze: 0 }
-    let sommePct = 0
+    const parNiveau = new Map<number, ResultatQuiz[]>()
     for (const r of deCeMode) {
-      sommePct += r.total > 0 ? (100 * r.score) / r.total : 0
-      const badge = badgePour(r.score, r.total)
-      if (badge) medailles[badge]++
+      const groupe = parNiveau.get(r.total) ?? []
+      groupe.push(r)
+      parNiveau.set(r.total, groupe)
     }
 
-    return [
-      {
-        mode,
-        nbSeances: deCeMode.length,
-        scoreMoyenPct: Math.round(sommePct / deCeMode.length),
-        medailles,
-      },
-    ]
+    return [...parNiveau.entries()]
+      .sort(([a], [b]) => a - b)
+      .map(([niveau, seances]) => {
+        const medailles: Record<Badge, number> = { or: 0, argent: 0, bronze: 0 }
+        let sommePct = 0
+        for (const r of seances) {
+          sommePct += r.total > 0 ? (100 * r.score) / r.total : 0
+          const badge = badgePour(r.score, r.total)
+          if (badge) medailles[badge]++
+        }
+        return {
+          mode,
+          niveau,
+          nbSeances: seances.length,
+          scoreMoyenPct: Math.round(sommePct / seances.length),
+          medailles,
+        }
+      })
   })
 }
