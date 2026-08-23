@@ -4,8 +4,8 @@ import { ToolLayout } from '../components/ToolLayout'
 import { api } from '../lib/api'
 import type { LexiconWord, ListeMotsSemaine, MotDeListe, MotRateDictee, ResultatQuiz, Student } from '../lib/api'
 import { phonemes } from '../lib/phonemes'
-import { agregerParMode, MODE_LABEL, MODES_AVEC_AIDE, MODES_AVEC_ESSAIS, resultatsDeLaPeriode } from '../lib/bilanLogic'
-import { BADGE_EMOJI } from '../lib/quizBadges'
+import { MODE_LABEL, resultatsDeLaPeriode } from '../lib/bilanLogic'
+import { BADGE_EMOJI, badgePour } from '../lib/quizBadges'
 import { RelationsEditor } from './RelationsEditor'
 import type { VerbConjugation } from '../lib/conjugations'
 import { PERSONNES_SINGULIER, PERSONNES_PLURIEL, pronomAfficheTexte } from '../tools/conjugueur/conjugueurLogic'
@@ -68,7 +68,13 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
     donnees && periodeChoisie
       ? resultatsDeLaPeriode(donnees.resultats, periodeChoisie.debut, periodeChoisie.fin)
       : (donnees?.resultats ?? null)
-  const bilan = resultatsFiltres ? agregerParMode(resultatsFiltres) : null
+  // Contrairement au bilan imprimable (agregerParMode/Global, qui regroupe
+  // pour rester lisible pour un parent), l'enseignante voit ici chaque
+  // séance individuellement avec sa date - demandé par Hugues, elle a besoin
+  // du détail quiz par quiz, pas d'une moyenne.
+  const resultatsTries = resultatsFiltres
+    ? [...resultatsFiltres].sort((a, b) => (a.termineLe < b.termineLe ? 1 : -1))
+    : null
 
   return (
     <div className="mt-4 rounded-xl border-2 border-brand-100 bg-white p-4">
@@ -122,59 +128,58 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
 
       {!erreur && !donnees && <p className="text-gray-400">Chargement…</p>}
 
-      {bilan && (
+      {resultatsTries && (
         <>
-          {bilan.length === 0 ? (
+          {resultatsTries.length === 0 ? (
             <p className="text-gray-400">Aucun exercice fait pour l'instant.</p>
           ) : (
             <table className="mb-4 w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 text-left text-gray-500">
+                  <th className="py-1 pr-2">Date</th>
                   <th className="py-1 pr-2">Exercice (niveau)</th>
-                  <th className="py-1 pr-2">Séances</th>
-                  <th className="py-1 pr-2">Score moyen</th>
-                  <th className="py-1 pr-2" title="Part des bonnes réponses trouvées sans avoir besoin de réessayer">
+                  <th className="py-1 pr-2">Score</th>
+                  <th className="py-1 pr-2" title="Bonnes réponses trouvées sans avoir besoin de réessayer">
                     Du 1er coup
                   </th>
-                  <th className="py-1 pr-2" title="Part des mots où l'élève a cliqué « Je ne sais pas l'écrire »">
+                  <th className="py-1 pr-2" title="Mots où l'élève a cliqué « Je ne sais pas l'écrire »">
                     Aide demandée
                   </th>
-                  <th className="py-1 pr-2" title="Durée moyenne d'une séance">
-                    Temps moyen
+                  <th className="py-1 pr-2" title="Durée de la séance">
+                    Temps
                   </th>
-                  <th className="py-1">Médailles</th>
+                  <th className="py-1">Médaille</th>
                 </tr>
               </thead>
               <tbody>
-                {bilan.map((b) => (
-                  <tr key={`${b.mode}-${b.niveau}`} className="border-b border-gray-100">
-                    <td className="py-1 pr-2 font-medium text-gray-800">
-                      {MODE_LABEL[b.mode]} <span className="font-normal text-gray-400">({b.niveau} mots)</span>
-                    </td>
-                    <td className="py-1 pr-2">{b.nbSeances}</td>
-                    <td className="py-1 pr-2">{b.scoreMoyenPct}%</td>
-                    <td className="py-1 pr-2 text-gray-500">
-                      {MODES_AVEC_ESSAIS.has(b.mode)
-                        ? b.premierCoup !== null
-                          ? `${b.premierCoup.obtenu}/${b.premierCoup.sur}`
-                          : '—'
-                        : ''}
-                    </td>
-                    <td className="py-1 pr-2 text-gray-500">
-                      {MODES_AVEC_AIDE.has(b.mode)
-                        ? b.aideUtilisee !== null
-                          ? `${b.aideUtilisee.obtenu}/${b.aideUtilisee.sur}`
-                          : '—'
-                        : ''}
-                    </td>
-                    <td className="py-1 pr-2 text-gray-500">{formaterDuree(b.dureeMoyenneSec)}</td>
-                    <td className="py-1">
-                      {b.medailles.or > 0 && `${BADGE_EMOJI.or}×${b.medailles.or} `}
-                      {b.medailles.argent > 0 && `${BADGE_EMOJI.argent}×${b.medailles.argent} `}
-                      {b.medailles.bronze > 0 && `${BADGE_EMOJI.bronze}×${b.medailles.bronze}`}
-                    </td>
-                  </tr>
-                ))}
+                {resultatsTries.map((r, i) => {
+                  const badge = badgePour(r.score, r.total)
+                  return (
+                    <tr key={`${r.termineLe}-${i}`} className="border-b border-gray-100">
+                      <td className="py-1 pr-2 whitespace-nowrap text-gray-500">
+                        {new Date(r.termineLe).toLocaleDateString('fr-FR')}
+                      </td>
+                      <td className="py-1 pr-2 font-medium text-gray-800">
+                        {MODE_LABEL[r.mode]} <span className="font-normal text-gray-400">({r.total} mots)</span>
+                      </td>
+                      <td className="py-1 pr-2">
+                        {r.score}/{r.total}
+                      </td>
+                      <td className="py-1 pr-2 text-gray-500">
+                        {r.mode === 'dictee' || r.mode === 'reconstitution'
+                          ? r.premierCoup !== null
+                            ? `${r.premierCoup}/${r.score}`
+                            : '—'
+                          : ''}
+                      </td>
+                      <td className="py-1 pr-2 text-gray-500">
+                        {r.mode === 'dictee' ? (r.aideUtilisee !== null ? `${r.aideUtilisee}/${r.total}` : '—') : ''}
+                      </td>
+                      <td className="py-1 pr-2 text-gray-500">{formaterDuree(r.dureeSecondes)}</td>
+                      <td className="py-1">{badge && BADGE_EMOJI[badge]}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           )}

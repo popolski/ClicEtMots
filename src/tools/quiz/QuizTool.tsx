@@ -398,8 +398,20 @@ export function QuizTool() {
   // 3e (voir dictée/recomposition), mais le bilan enseignant, lui, le peut.
   const [premierCoupCount, setPremierCoupCount] = useState(0)
   // Nombre de mots où le filet de secours de la dictée a été ouvert
-  // (schema-v12.sql) - jamais incrémenté hors dictée.
+  // (schema-v12.sql) - jamais incrémenté hors dictée. Compte les mots
+  // DISTINCTS (voir motsAvecAide) : un même mot peut repasser en rattrapage,
+  // ça ne doit pas compter deux fois côté enseignante.
   const [aideUtiliseeCount, setAideUtiliseeCount] = useState(0)
+  // Mots (clé lemmaId|word) où le filet a été ouvert AU MOINS UNE FOIS dans
+  // la séance - persiste du tour principal au rattrapage. Demandé par
+  // Hugues : sans ça, un mot aidé au tour principal puis retapé sans aide en
+  // rattrapage récupérait son point (score remonté à 5/5 alors qu'une aide a
+  // été nécessaire) - l'aide doit peser sur le score de façon définitive.
+  const [motsAvecAide, setMotsAvecAide] = useState<Set<string>>(new Set())
+  // Mots finalement écrits juste MAIS où l'aide a servi à un moment de la
+  // séance - juste pour l'afficher clairement sur l'écran de résultat
+  // ("réussi avec aide"), distinct d'un mot vraiment raté.
+  const [motsReussisAvecAide, setMotsReussisAvecAide] = useState<Set<string>>(new Set())
   // Longueur de la séance en cours - NB_MOTS_SESSION par défaut, ou choisie
   // au lancement pour les modes listés dans NIVEAUX_SEANCE.
   const [tailleSeance, setTailleSeance] = useState(NB_MOTS_SESSION)
@@ -561,16 +573,29 @@ export function QuizTool() {
    * `aideUtiliseeSurCeMot` (dictée uniquement, sinon toujours `false`) :
    * demandé par Hugues, ouvrir le filet de secours retire au mot son statut
    * de réussite, même s'il est finalement écrit juste - sinon l'aide
-   * donnerait un sans-faute gratuit. `effectiveCorrect` est donc la vraie
-   * mesure de réussite utilisée pour le score, le 1er coup ET le
-   * rattrapage : un mot aidé est traité exactement comme un mot raté.
+   * donnerait un sans-faute gratuit. Cette pénalité doit tenir même si le mot
+   * revient juste sans aide au rattrapage - sinon le score remontait
+   * (5/5 au lieu de 4/5 constaté par Hugues) et l'aide devenait gratuite dès
+   * qu'on retapait le mot une 2e fois. `aideSurCeMot` regarde donc aussi
+   * `motsAvecAide`, qui persiste du tour principal au rattrapage - pas
+   * seulement l'argument de CET appel. `effectiveCorrect` est la vraie
+   * mesure de réussite utilisée pour le score, le 1er coup ET le rattrapage :
+   * un mot aidé (à un moment ou un autre) est traité comme un mot raté.
    */
   function handleReponse(correct: boolean, duPremierCoup: boolean = correct, aideUtiliseeSurCeMot: boolean = false) {
     if (aRepondu) return
     setARepondu(true)
-    const effectiveCorrect = correct && !aideUtiliseeSurCeMot
+    const cleMot = mode === 'dictee' && questions ? `${questions[index].entree.lemmaId}|${questions[index].entree.word}` : null
+    const aideSurCeMot = aideUtiliseeSurCeMot || (cleMot !== null && motsAvecAide.has(cleMot))
+    const effectiveCorrect = correct && !aideSurCeMot
     if (effectiveCorrect) setScore((s) => s + 1)
-    if (duPremierCoup && !aideUtiliseeSurCeMot) setPremierCoupCount((c) => c + 1)
+    // Écrit juste mais aide nécessaire à un moment : compté à part pour
+    // l'écran de résultat ("réussi avec aide"), une seule fois par mot même
+    // s'il repasse par le rattrapage (Set = dédupliqué par clé).
+    if (correct && aideSurCeMot && cleMot !== null) {
+      setMotsReussisAvecAide((s) => (s.has(cleMot) ? s : new Set(s).add(cleMot)))
+    }
+    if (duPremierCoup && !aideSurCeMot) setPremierCoupCount((c) => c + 1)
     // Dictée : les mots ratés (ou aidés, donc pas vraiment su) sont repassés
     // en fin de séance ET retenus pour les séances suivantes (schema-v10.sql).
     // Seul le PREMIER tour compte : un mot réussi au rattrapage reste à
@@ -589,7 +614,7 @@ export function QuizTool() {
       if (!effectiveCorrect) setARattraper((prec) => [...prec, questions[index]])
       // Best-effort, comme l'enregistrement des scores : une dictée doit
       // pouvoir se dérouler même si le serveur ne répond pas.
-      api.marquerMotDictee(lemmaId, word, duPremierCoup && !aideUtiliseeSurCeMot).catch(() => {})
+      api.marquerMotDictee(lemmaId, word, duPremierCoup && !aideSurCeMot).catch(() => {})
     }
   }
 
@@ -612,6 +637,8 @@ export function QuizTool() {
     setTotalSeance(0)
     setPremierCoupCount(0)
     setAideUtiliseeCount(0)
+    setMotsAvecAide(new Set())
+    setMotsReussisAvecAide(new Set())
     debutSeanceRef.current = null
   }
 
@@ -810,6 +837,13 @@ export function QuizTool() {
           <p className="mb-1 text-2xl font-semibold text-gray-800">
             Score : {score} / {total}
           </p>
+          {mode === 'dictee' && motsReussisAvecAide.size > 0 && (
+            <p className="mb-1 text-sm text-gray-500">
+              dont {motsReussisAvecAide.size} mot{motsReussisAvecAide.size > 1 ? 's' : ''} réussi
+              {motsReussisAvecAide.size > 1 ? 's' : ''} avec l'aide (non comptabilisé
+              {motsReussisAvecAide.size > 1 ? 's' : ''} dans le score)
+            </p>
+          )}
           {badge && <p className="mb-4 text-gray-500">{BADGE_LABEL[badge]} !</p>}
           <button
             type="button"
@@ -905,7 +939,12 @@ export function QuizTool() {
           entreeCible={entreeCible}
           trie={trieDictee}
           onReponse={handleReponse}
-          onAideUtilisee={() => setAideUtiliseeCount((c) => c + 1)}
+          onAideUtilisee={() => {
+            const cle = `${question.entree.lemmaId}|${question.entree.word}`
+            if (motsAvecAide.has(cle)) return
+            setMotsAvecAide((s) => new Set(s).add(cle))
+            setAideUtiliseeCount((c) => c + 1)
+          }}
         />
       ) : mode === 'graphie' && question.graphie ? (
         <QuestionGraphie
