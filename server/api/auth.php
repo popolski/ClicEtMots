@@ -135,12 +135,15 @@ function purgerSiNouvelleAnneeScolaire(int $studentId): void
     $stmt->execute([$actuelle, $studentId]);
 }
 
-// Vide les 3 tables de données d'un élève - réutilisé par la purge
-// automatique ci-dessus ET par le bouton de réinitialisation manuelle de
-// l'enseignante (voir reset-donnees.php).
+// Vide les tables de données d'un élève - réutilisé par la purge automatique
+// ci-dessus ET par le bouton de réinitialisation manuelle de l'enseignante
+// (voir reset-donnees.php). dictee_mots_rates (schema-v10.sql) manquait ici :
+// un élève réinitialisé gardait ses mots ratés en dictée, qui revenaient
+// donc en tête de sa prochaine dictée malgré la remise à zéro demandée par
+// l'enseignante.
 function reinitialiserDonneesEleve(PDO $db, int $studentId): void
 {
-    foreach (['quiz_resultats', 'favoris', 'historique_consultation'] as $table) {
+    foreach (['quiz_resultats', 'favoris', 'historique_consultation', 'dictee_mots_rates'] as $table) {
         $stmt = $db->prepare("DELETE FROM $table WHERE student_id = ?");
         $stmt->execute([$studentId]);
     }

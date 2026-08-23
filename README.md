@@ -49,21 +49,28 @@ l'orthographe correspondante apparaît.
   possibilité de marquer volontairement des mots à retrouver plus tard (⭐) —
   liés au compte élève, purgés automatiquement à chaque changement d'année
   scolaire.
-- **Petit quiz de révision**, trois modes au choix : choix multiple (mauvaises
-  réponses générées à partir de vraies confusions de son du français — jamais
-  une orthographe inventée), recomposition au clavier phonétique (3 essais
-  avant de révéler la solution, sons corrects mis en surbrillance), et
-  reconnaissance de la catégorie grammaticale (tirage équilibré entre les
-  natures de mots). Petites médailles bronze/argent/or selon le score d'une
-  partie, sans classement ni comparaison entre élèves.
+- **Mes exercices**, cinq modes au choix : choix multiple (mauvaises réponses
+  générées à partir de vraies confusions de son du français — jamais une
+  orthographe inventée), recomposition au clavier phonétique, reconnaissance
+  de la catégorie grammaticale (tirage équilibré entre les natures de mots),
+  dictée des mots de la semaine (écrite au clavier normal, filet de secours
+  ouvert à toute la classe, mots ratés retenus d'une semaine à l'autre), et
+  choisis la bonne graphie (choisir, son par son, comment le mot s'écrit —
+  quatre propositions maximum, complétées par les graphies les plus
+  fréquentes du lexique). Trois essais avant de révéler la solution sur les
+  modes qui s'y prêtent, sons corrects mis en surbrillance. Petites médailles
+  bronze/argent/or à partir de 5 questions selon le score d'une partie, sans
+  classement ni comparaison entre élèves. Chaque séance complète toujours à
+  10 questions, la liste de mots de la semaine étant prioritaire sur le
+  vivier général.
 - **Fiches imprimables** : une fiche compacte par mot (mot, catégorie,
   définition, synonyme/contraire, famille) au format bandeau, pensée pour
   être découpée et collée dans un cahier — un seul mot ou une liste composée
   à la main.
 - **Mots de la semaine** : l'enseignante compose une liste de mots par
-  semaine (visible et révisable par les élèves dans le quiz, qui cumule
-  toutes les semaines enregistrées), imprimable séparément d'une semaine à
-  l'autre.
+  semaine (visible et révisable par les élèves dans Mes exercices, qui
+  cumule toutes les semaines enregistrées), imprimable séparément d'une
+  semaine à l'autre.
 - **Mode confort de lecture** (dys) : police plus aérée, lettres espacées,
   mascottes de catégorie masquées, et code couleur des sons repris de
   [LireCouleur](https://primabord.eduscol.education.fr/lirecouleur) (Éduscol) —

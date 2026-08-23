@@ -24,6 +24,8 @@ dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
    | [`schema-v6.sql`](./schema-v6.sql) | scores de quiz, favoris et historique centralisés par élève |
    | [`schema-v7.sql`](./schema-v7.sql) | mode confort de lecture (dys), activé par élève |
    | [`schema-v8.sql`](./schema-v8.sql) | dictée des mots de la semaine (nouveau mode + filet de secours par élève) |
+   | [`schema-v9.sql`](./schema-v9.sql) | atelier "choisis la bonne graphie" (nouveau mode) |
+   | [`schema-v10.sql`](./schema-v10.sql) | mots ratés en dictée, retenus d'une semaine à l'autre |
 
    Il n'y a pas de fichier "tout-en-un" : ces migrations sont la seule
    source de vérité du schéma, et en dupliquer le contenu ailleurs
@@ -91,7 +93,7 @@ dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 | GET | `/api/session.php` | public | état de connexion actuel |
 | GET | `/api/students.php` | enseignant | liste des élèves, avec leurs réglages |
 | POST | `/api/students.php` | enseignant | `{prenom, motDePasse}` → crée un élève |
-| PATCH | `/api/students.php?id=` | enseignant | `{rechercheDirecte?, confortLecture?, aideDictee?}` → réglages d'un élève |
+| PATCH | `/api/students.php?id=` | enseignant | `{rechercheDirecte?, confortLecture?}` → réglages d'un élève |
 | DELETE | `/api/students.php?id=` | enseignant | supprime un élève (et toutes ses données) |
 | GET | `/api/lexicon.php` | connecté | mots ajoutés, avec conjugaison et relations |
 | POST | `/api/lexicon.php` | enseignant | `{mot, categorie, genre?, phonemes}` |
@@ -104,6 +106,8 @@ dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 | GET | `/api/quiz-resultats.php` | élève | ses 20 derniers résultats de quiz |
 | POST | `/api/quiz-resultats.php` | élève | `{mode, score, total}` → enregistre une partie |
 | DELETE | `/api/quiz-resultats.php` | élève | efface ses résultats |
+| GET | `/api/dictee-rates.php` | élève | ses mots ratés en dictée, les plus ratés d'abord |
+| POST | `/api/dictee-rates.php` | élève | `{lemmaId, word, reussi}` → incrémente le compteur, ou retire le mot si réussi |
 | GET | `/api/favoris.php` | élève | ses mots favoris |
 | POST | `/api/favoris.php` | élève | `{lemmaId, word, category}` → ajoute un favori |
 | DELETE | `/api/favoris.php?lemmaId=` | élève | retire un favori |
@@ -113,9 +117,9 @@ dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 | POST | `/api/reset-donnees.php` | enseignant | `{studentId?}` → efface quiz/favoris/historique d'un élève, ou de toute la classe |
 | POST | `/api/tts.php` | enseignant | génère la prononciation d'un mot ajouté (Google TTS) |
 
-Les données d'élève (quiz, favoris, historique) sont purgées
-automatiquement au changement d'année scolaire, à la connexion de l'élève
-(`purgerSiNouvelleAnneeScolaire` dans `auth.php`), et manuellement via
+Les données d'élève (quiz, favoris, historique, mots ratés en dictée) sont
+purgées automatiquement au changement d'année scolaire, à la connexion de
+l'élève (`purgerSiNouvelleAnneeScolaire` dans `auth.php`), et manuellement via
 `reset-donnees.php`. Supprimer un compte élève efface aussi ses données
 (`ON DELETE CASCADE`) et invalide immédiatement sa session ouverte.
 
