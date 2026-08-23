@@ -2,8 +2,13 @@ import { describe, expect, it } from 'vitest'
 import { agregerParMode } from './bilanLogic'
 import type { ResultatQuiz } from './api'
 
-function resultat(mode: ResultatQuiz['mode'], score: number, total: number): ResultatQuiz {
-  return { mode, score, total, termineLe: '2026-08-23T10:00:00Z' }
+function resultat(
+  mode: ResultatQuiz['mode'],
+  score: number,
+  total: number,
+  premierCoup: number | null = score,
+): ResultatQuiz {
+  return { mode, score, total, premierCoup, termineLe: '2026-08-23T10:00:00Z' }
 }
 
 describe('agregerParMode', () => {
@@ -76,6 +81,34 @@ describe('agregerParMode', () => {
       const bilan = agregerParMode([resultat('qcm', 8, 10), resultat('qcm', 6, 10), resultat('qcm', 9, 10)])
       expect(bilan).toHaveLength(1)
       expect(bilan[0].niveau).toBe(10)
+    })
+  })
+
+  describe('réussi du premier coup (schema-v11.sql)', () => {
+    // Le score ne distingue pas un mot réussi au 1er essai d'un mot réussi
+    // au 3e (dictée, recomposition) : c'est précisément ce que premierCoup
+    // vient éclairer séparément, sans changer le score lui-même.
+    it('calcule la part des bonnes réponses obtenues du premier coup', () => {
+      // 8 bonnes réponses sur 10, dont seulement 5 du premier coup.
+      const bilan = agregerParMode([resultat('dictee', 8, 10, 5)])
+      expect(bilan[0].premierCoupPct).toBe(63) // 5/8, arrondi
+    })
+
+    it('vaut null pour une séance enregistrée avant la migration (premierCoup absent)', () => {
+      const bilan = agregerParMode([resultat('dictee', 8, 10, null)])
+      expect(bilan[0].premierCoupPct).toBeNull()
+    })
+
+    it('ignore les séances non mesurées plutôt que de fausser la moyenne', () => {
+      // Une séance d'avant la migration (null) mélangée à une séance mesurée :
+      // seule la seconde doit compter dans le calcul.
+      const bilan = agregerParMode([resultat('dictee', 10, 10, null), resultat('dictee', 10, 10, 10)])
+      expect(bilan[0].premierCoupPct).toBe(100)
+    })
+
+    it("vaut toujours 100% pour un mode à essai unique (QCM)", () => {
+      const bilan = agregerParMode([resultat('qcm', 8, 10)])
+      expect(bilan[0].premierCoupPct).toBe(100)
     })
   })
 })

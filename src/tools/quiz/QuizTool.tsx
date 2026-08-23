@@ -256,7 +256,8 @@ function QuestionReconstitution({
 }: {
   question: Question
   entreeCible: WordEntry | undefined
-  onReponse: (correct: boolean) => void
+  /** `duPremierCoup` : vrai si réussi dès le 1er essai (voir bilan élève, schema-v11.sql). */
+  onReponse: (correct: boolean, duPremierCoup: boolean) => void
 }) {
   const [sequence, setSequence] = useState<PhonemeId[]>([])
   // undefined = pas encore validé pour de bon (peut encore réessayer).
@@ -281,14 +282,14 @@ function QuestionReconstitution({
     const correct = JSON.stringify(sequence) === JSON.stringify(entreeCible.phonemes)
     if (correct) {
       setSuccesFinal(true)
-      onReponse(true)
+      onReponse(true, essais === 0)
       return
     }
     const essaisSuivant = essais + 1
     setEssais(essaisSuivant)
     if (essaisSuivant >= ESSAIS_MAX) {
       setSuccesFinal(false)
-      onReponse(false)
+      onReponse(false, false)
     } else {
       setDernierEssaiFaux(true)
       setSequence([])
@@ -386,6 +387,10 @@ export function QuizTool() {
   const [motsRates, setMotsRates] = useState<MotRateDictee[] | null>(null)
   const [enRattrapage, setEnRattrapage] = useState(false)
   const [totalSeance, setTotalSeance] = useState(0)
+  // Nombre de bonnes réponses obtenues DU PREMIER COUP (schema-v11.sql) :
+  // le score ne distingue pas un mot réussi au 1er essai d'un mot réussi au
+  // 3e (voir dictée/recomposition), mais le bilan enseignant, lui, le peut.
+  const [premierCoupCount, setPremierCoupCount] = useState(0)
   // Longueur de la séance en cours - NB_MOTS_SESSION par défaut, ou choisie
   // au lancement pour les modes listés dans NIVEAUX_SEANCE.
   const [tailleSeance, setTailleSeance] = useState(NB_MOTS_SESSION)
@@ -531,15 +536,19 @@ export function QuizTool() {
   }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules, motsRates, tailleSeance])
 
   /**
-   * `duPremierCoup` n'a de sens qu'en dictée, où l'élève a trois essais : il
-   * vaut `correct` partout ailleurs. Le score récompense le mot finalement
-   * écrit juste, mais la révision ne retient que ce qui a été su d'emblée -
-   * trouver au troisième essai, ce n'est pas encore savoir.
+   * `duPremierCoup` compte pour la dictée et la recomposition, qui laissent
+   * 3 essais : il vaut `correct` partout ailleurs (un seul essai possible,
+   * donc "du premier coup" ou pas du tout). Le score récompense le mot
+   * finalement juste, quel que soit l'essai - mais la révision de la dictée
+   * d'une semaine à l'autre, et le bilan enseignant (premierCoupCount,
+   * schema-v11.sql), distinguent un mot su d'emblée d'un mot trouvé à
+   * tâtons.
    */
   function handleReponse(correct: boolean, duPremierCoup: boolean = correct) {
     if (aRepondu) return
     setARepondu(true)
     if (correct) setScore((s) => s + 1)
+    if (duPremierCoup) setPremierCoupCount((c) => c + 1)
     // Dictée : les mots ratés sont repassés en fin de séance ET retenus
     // pour les séances suivantes (schema-v10.sql). Seul le PREMIER tour
     // compte : un mot réussi au rattrapage reste à réviser, il a bien été
@@ -579,6 +588,7 @@ export function QuizTool() {
     setARattraper([])
     setEnRattrapage(false)
     setTotalSeance(0)
+    setPremierCoupCount(0)
   }
 
   /** Lance directement un mode sans écran de choix de longueur. */
@@ -611,7 +621,7 @@ export function QuizTool() {
       // dictée) et le serveur rejetait le résultat : les scores des autres
       // exercices n'étaient plus enregistrés du tout.
       api
-        .ajouterResultatQuiz(mode, score, mode === 'dictee' ? totalSeance : questions.length)
+        .ajouterResultatQuiz(mode, score, mode === 'dictee' ? totalSeance : questions.length, premierCoupCount)
         .catch(() => {})
         .then(() => api.listResultatsQuiz())
         .then((r) => setResultats(Array.isArray(r.resultats) ? r.resultats : []))

@@ -19,9 +19,23 @@ export interface BilanMode {
   /** Moyenne des scores en pourcentage, arrondie. */
   scoreMoyenPct: number
   medailles: Record<Badge, number>
+  /**
+   * Part des bonnes réponses obtenues DU PREMIER COUP (schema-v11.sql),
+   * arrondie - null si aucune séance de ce groupe ne porte cette donnée
+   * (enregistrée avant la migration) ou si aucune réponse n'était correcte.
+   * Seuls la dictée et "Recomposer le mot" laissent plusieurs essais : pour
+   * les autres modes ce chiffre vaut toujours 100%, sans intérêt à afficher.
+   */
+  premierCoupPct: number | null
 }
 
 const TOUS_LES_MODES: ModeQuiz[] = ['qcm', 'reconstitution', 'grammaire', 'dictee', 'graphie']
+
+/**
+ * Modes où `premierCoupPct` a un sens (plusieurs essais possibles par mot).
+ * Sur les autres, il vaut toujours 100% - vrai mais sans intérêt à afficher.
+ */
+export const MODES_AVEC_ESSAIS: ReadonlySet<ModeQuiz> = new Set(['dictee', 'reconstitution'])
 
 // Dupliqué à dessein depuis QuizTool.tsx plutôt qu'importé : ce module est
 // aussi chargé par l'espace enseignant (Admin.tsx), et QuizTool.tsx est un
@@ -59,10 +73,19 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
       .map(([niveau, seances]) => {
         const medailles: Record<Badge, number> = { or: 0, argent: 0, bronze: 0 }
         let sommePct = 0
+        // Sommés séparément : seules les séances enregistrées après
+        // schema-v11.sql portent premierCoup (sinon null), on ne peut
+        // calculer une part fiable que sur celles-là.
+        let sommeScoreMesure = 0
+        let sommePremierCoup = 0
         for (const r of seances) {
           sommePct += r.total > 0 ? (100 * r.score) / r.total : 0
           const badge = badgePour(r.score, r.total)
           if (badge) medailles[badge]++
+          if (r.premierCoup !== null) {
+            sommeScoreMesure += r.score
+            sommePremierCoup += r.premierCoup
+          }
         }
         return {
           mode,
@@ -70,6 +93,7 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
           nbSeances: seances.length,
           scoreMoyenPct: Math.round(sommePct / seances.length),
           medailles,
+          premierCoupPct: sommeScoreMesure > 0 ? Math.round((100 * sommePremierCoup) / sommeScoreMesure) : null,
         }
       })
   })

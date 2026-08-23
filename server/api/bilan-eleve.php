@@ -23,13 +23,14 @@ $db = getDb();
 // ici on calcule des moyennes sur la durée, pas une liste à afficher telle
 // quelle, une fenêtre plus large donne une image plus juste.
 $stmt = $db->prepare(
-    'SELECT mode, score, total, termine_le FROM quiz_resultats WHERE student_id = ? ORDER BY termine_le DESC LIMIT 200',
+    'SELECT mode, score, total, premier_coup, termine_le FROM quiz_resultats WHERE student_id = ? ORDER BY termine_le DESC LIMIT 200',
 );
 $stmt->execute([$studentId]);
 $resultats = array_map(fn($r) => [
     'mode' => $r['mode'],
     'score' => (int) $r['score'],
     'total' => (int) $r['total'],
+    'premierCoup' => $r['premier_coup'] !== null ? (int) $r['premier_coup'] : null,
     'termineLe' => $r['termine_le'],
 ], $stmt->fetchAll());
 

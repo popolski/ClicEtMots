@@ -95,6 +95,13 @@ export interface ResultatQuiz {
   mode: ModeQuiz
   score: number
   total: number
+  /**
+   * Réponses correctes obtenues DU PREMIER COUP, sur les modes qui laissent
+   * plusieurs essais (dictée, recomposition) - toujours <= score. null pour
+   * les séances enregistrées avant schema-v11.sql, ou si l'appelant ne l'a
+   * pas envoyé.
+   */
+  premierCoup: number | null
   termineLe: string
 }
 
@@ -197,10 +204,10 @@ export const api = {
 
   listResultatsQuiz: () => request<{ resultats: ResultatQuiz[] }>('quiz-resultats.php'),
 
-  ajouterResultatQuiz: (mode: ModeQuiz, score: number, total: number) =>
+  ajouterResultatQuiz: (mode: ModeQuiz, score: number, total: number, premierCoup: number) =>
     request<{ ok: true }>('quiz-resultats.php', {
       method: 'POST',
-      body: JSON.stringify({ mode, score, total }),
+      body: JSON.stringify({ mode, score, total, premierCoup }),
     }),
 
   viderResultatsQuiz: () => request<{ ok: true }>('quiz-resultats.php', { method: 'DELETE' }),

@@ -4,7 +4,7 @@ import { ToolLayout } from '../components/ToolLayout'
 import { api } from '../lib/api'
 import type { LexiconWord, ListeMotsSemaine, MotDeListe, MotRateDictee, ResultatQuiz, Student } from '../lib/api'
 import { phonemes } from '../lib/phonemes'
-import { agregerParMode, MODE_LABEL } from '../lib/bilanLogic'
+import { agregerParMode, MODE_LABEL, MODES_AVEC_ESSAIS } from '../lib/bilanLogic'
 import { BADGE_EMOJI } from '../lib/quizBadges'
 import { RelationsEditor } from './RelationsEditor'
 import type { VerbConjugation } from '../lib/conjugations'
@@ -70,6 +70,9 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                   <th className="py-1 pr-2">Exercice (niveau)</th>
                   <th className="py-1 pr-2">Séances</th>
                   <th className="py-1 pr-2">Score moyen</th>
+                  <th className="py-1 pr-2" title="Part des bonnes réponses trouvées sans avoir besoin de réessayer">
+                    Du 1er coup
+                  </th>
                   <th className="py-1">Médailles</th>
                 </tr>
               </thead>
@@ -81,6 +84,9 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                     </td>
                     <td className="py-1 pr-2">{b.nbSeances}</td>
                     <td className="py-1 pr-2">{b.scoreMoyenPct}%</td>
+                    <td className="py-1 pr-2 text-gray-500">
+                      {MODES_AVEC_ESSAIS.has(b.mode) ? (b.premierCoupPct !== null ? `${b.premierCoupPct}%` : '—') : ''}
+                    </td>
                     <td className="py-1">
                       {b.medailles.or > 0 && `${BADGE_EMOJI.or}×${b.medailles.or} `}
                       {b.medailles.argent > 0 && `${BADGE_EMOJI.argent}×${b.medailles.argent} `}
