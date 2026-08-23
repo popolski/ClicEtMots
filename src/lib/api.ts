@@ -102,6 +102,13 @@ export interface ResultatQuiz {
    * pas envoyé.
    */
   premierCoup: number | null
+  /**
+   * Nombre de mots où le filet de secours de la dictée ("Je ne sais pas
+   * l'écrire") a été ouvert, indépendamment de la réussite du mot ensuite.
+   * Sans objet hors dictée. null pour les séances enregistrées avant
+   * schema-v12.sql.
+   */
+  aideUtilisee: number | null
   termineLe: string
 }
 
@@ -204,10 +211,10 @@ export const api = {
 
   listResultatsQuiz: () => request<{ resultats: ResultatQuiz[] }>('quiz-resultats.php'),
 
-  ajouterResultatQuiz: (mode: ModeQuiz, score: number, total: number, premierCoup: number) =>
+  ajouterResultatQuiz: (mode: ModeQuiz, score: number, total: number, premierCoup: number, aideUtilisee: number) =>
     request<{ ok: true }>('quiz-resultats.php', {
       method: 'POST',
-      body: JSON.stringify({ mode, score, total, premierCoup }),
+      body: JSON.stringify({ mode, score, total, premierCoup, aideUtilisee }),
     }),
 
   viderResultatsQuiz: () => request<{ ok: true }>('quiz-resultats.php', { method: 'DELETE' }),

@@ -391,6 +391,9 @@ export function QuizTool() {
   // le score ne distingue pas un mot réussi au 1er essai d'un mot réussi au
   // 3e (voir dictée/recomposition), mais le bilan enseignant, lui, le peut.
   const [premierCoupCount, setPremierCoupCount] = useState(0)
+  // Nombre de mots où le filet de secours de la dictée a été ouvert
+  // (schema-v12.sql) - jamais incrémenté hors dictée.
+  const [aideUtiliseeCount, setAideUtiliseeCount] = useState(0)
   // Longueur de la séance en cours - NB_MOTS_SESSION par défaut, ou choisie
   // au lancement pour les modes listés dans NIVEAUX_SEANCE.
   const [tailleSeance, setTailleSeance] = useState(NB_MOTS_SESSION)
@@ -589,6 +592,7 @@ export function QuizTool() {
     setEnRattrapage(false)
     setTotalSeance(0)
     setPremierCoupCount(0)
+    setAideUtiliseeCount(0)
   }
 
   /** Lance directement un mode sans écran de choix de longueur. */
@@ -621,7 +625,13 @@ export function QuizTool() {
       // dictée) et le serveur rejetait le résultat : les scores des autres
       // exercices n'étaient plus enregistrés du tout.
       api
-        .ajouterResultatQuiz(mode, score, mode === 'dictee' ? totalSeance : questions.length, premierCoupCount)
+        .ajouterResultatQuiz(
+          mode,
+          score,
+          mode === 'dictee' ? totalSeance : questions.length,
+          premierCoupCount,
+          aideUtiliseeCount,
+        )
         .catch(() => {})
         .then(() => api.listResultatsQuiz())
         .then((r) => setResultats(Array.isArray(r.resultats) ? r.resultats : []))
@@ -854,6 +864,7 @@ export function QuizTool() {
           entree={question.entree}
           entreeCible={entreeCible}
           onReponse={handleReponse}
+          onAideUtilisee={() => setAideUtiliseeCount((c) => c + 1)}
         />
       ) : mode === 'graphie' && question.graphie ? (
         <QuestionGraphie

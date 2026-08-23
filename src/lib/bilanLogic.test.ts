@@ -7,8 +7,9 @@ function resultat(
   score: number,
   total: number,
   premierCoup: number | null = score,
+  aideUtilisee: number | null = 0,
 ): ResultatQuiz {
-  return { mode, score, total, premierCoup, termineLe: '2026-08-23T10:00:00Z' }
+  return { mode, score, total, premierCoup, aideUtilisee, termineLe: '2026-08-23T10:00:00Z' }
 }
 
 describe('agregerParMode', () => {
@@ -109,6 +110,34 @@ describe('agregerParMode', () => {
     it("vaut toujours 100% pour un mode à essai unique (QCM)", () => {
       const bilan = agregerParMode([resultat('qcm', 8, 10)])
       expect(bilan[0].premierCoupPct).toBe(100)
+    })
+  })
+
+  describe('filet de secours de la dictée (schema-v12.sql)', () => {
+    // Le filet peut être ouvert sur un mot ensuite réussi ou raté : sa
+    // fréquence se rapporte au nombre total de mots de la séance, pas au
+    // score (contrairement à premierCoupPct).
+    it("calcule la part des mots où le filet a été ouvert", () => {
+      // Ouvert sur 3 des 10 mots de la séance.
+      const bilan = agregerParMode([resultat('dictee', 8, 10, 5, 3)])
+      expect(bilan[0].aideUtiliseePct).toBe(30)
+    })
+
+    it('vaut null pour une séance enregistrée avant la migration (aideUtilisee absent)', () => {
+      const bilan = agregerParMode([resultat('dictee', 8, 10, 5, null)])
+      expect(bilan[0].aideUtiliseePct).toBeNull()
+    })
+
+    it('ignore les séances non mesurées plutôt que de fausser la moyenne', () => {
+      const bilan = agregerParMode([resultat('dictee', 10, 10, 10, null), resultat('dictee', 10, 10, 10, 2)])
+      expect(bilan[0].aideUtiliseePct).toBe(20)
+    })
+
+    it("vaut 0% quand le filet n'a jamais été ouvert plutôt que null", () => {
+      // 0 est une vraie mesure ("jamais utilisé"), à ne pas confondre avec
+      // l'absence de mesure (séance d'avant la migration).
+      const bilan = agregerParMode([resultat('dictee', 10, 10, 10, 0)])
+      expect(bilan[0].aideUtiliseePct).toBe(0)
     })
   })
 })

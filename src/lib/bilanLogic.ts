@@ -27,6 +27,13 @@ export interface BilanMode {
    * les autres modes ce chiffre vaut toujours 100%, sans intérêt à afficher.
    */
   premierCoupPct: number | null
+  /**
+   * Part des mots de la séance où le filet de secours de la dictée a été
+   * ouvert (schema-v12.sql), arrondie - null si aucune séance de ce groupe
+   * ne porte cette donnée. Sans objet hors dictée (toujours null ailleurs,
+   * le filet n'existant pas dans les autres modes).
+   */
+  aideUtiliseePct: number | null
 }
 
 const TOUS_LES_MODES: ModeQuiz[] = ['qcm', 'reconstitution', 'grammaire', 'dictee', 'graphie']
@@ -36,6 +43,9 @@ const TOUS_LES_MODES: ModeQuiz[] = ['qcm', 'reconstitution', 'grammaire', 'dicte
  * Sur les autres, il vaut toujours 100% - vrai mais sans intérêt à afficher.
  */
 export const MODES_AVEC_ESSAIS: ReadonlySet<ModeQuiz> = new Set(['dictee', 'reconstitution'])
+
+/** Seul mode où le filet de secours existe. */
+export const MODES_AVEC_AIDE: ReadonlySet<ModeQuiz> = new Set(['dictee'])
 
 // Dupliqué à dessein depuis QuizTool.tsx plutôt qu'importé : ce module est
 // aussi chargé par l'espace enseignant (Admin.tsx), et QuizTool.tsx est un
@@ -78,6 +88,11 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
         // calculer une part fiable que sur celles-là.
         let sommeScoreMesure = 0
         let sommePremierCoup = 0
+        // Même logique que premierCoup, mais rapportée au TOTAL de mots de
+        // la séance (pas au score) : le filet peut être ouvert sur un mot
+        // ensuite réussi ou raté, sa fréquence d'usage ne dépend pas de ça.
+        let sommeTotalMesureAide = 0
+        let sommeAideUtilisee = 0
         for (const r of seances) {
           sommePct += r.total > 0 ? (100 * r.score) / r.total : 0
           const badge = badgePour(r.score, r.total)
@@ -85,6 +100,10 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
           if (r.premierCoup !== null) {
             sommeScoreMesure += r.score
             sommePremierCoup += r.premierCoup
+          }
+          if (r.aideUtilisee !== null) {
+            sommeTotalMesureAide += r.total
+            sommeAideUtilisee += r.aideUtilisee
           }
         }
         return {
@@ -94,6 +113,7 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
           scoreMoyenPct: Math.round(sommePct / seances.length),
           medailles,
           premierCoupPct: sommeScoreMesure > 0 ? Math.round((100 * sommePremierCoup) / sommeScoreMesure) : null,
+          aideUtiliseePct: sommeTotalMesureAide > 0 ? Math.round((100 * sommeAideUtilisee) / sommeTotalMesureAide) : null,
         }
       })
   })

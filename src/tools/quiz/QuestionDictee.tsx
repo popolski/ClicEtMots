@@ -18,6 +18,8 @@ interface QuestionDicteeProps {
    * à la séance suivante.
    */
   onReponse: (correct: boolean, duPremierCoup: boolean) => void
+  /** Appelé une fois si l'élève ouvre le filet de secours sur ce mot (schema-v12.sql). */
+  onAideUtilisee: () => void
 }
 
 /**
@@ -42,7 +44,7 @@ const ESSAIS_MAX = 3
  * élève par élève, mais l'enseignante a tranché pour l'ouvrir à la classe
  * entière plutôt que d'avoir à décider a priori qui en a besoin.
  */
-export function QuestionDictee({ entree, entreeCible, onReponse }: QuestionDicteeProps) {
+export function QuestionDictee({ entree, entreeCible, onReponse, onAideUtilisee }: QuestionDicteeProps) {
   const [saisie, setSaisie] = useState('')
   const [erreur, setErreur] = useState<string | null>(null)
   const [valide, setValide] = useState<boolean | null>(null)
@@ -204,7 +206,10 @@ export function QuestionDictee({ entree, entreeCible, onReponse }: QuestionDicte
         {!aideOuverte && (
           <button
             type="button"
-            onClick={() => setAideOuverte(true)}
+            onClick={() => {
+              setAideOuverte(true)
+              onAideUtilisee()
+            }}
             className="text-sm text-gray-500 hover:text-brand-600"
           >
             Je ne sais pas l'écrire
