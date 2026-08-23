@@ -142,8 +142,8 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                   <th className="py-1 pr-2" title="Mots réussis sans avoir besoin de réessayer ni d'aide">
                     Du 1er coup
                   </th>
-                  <th className="py-1 pr-2" title="Mots ratés au 1er essai, réussis à la reprise de fin de séance">
-                    Avec reprise
+                  <th className="py-1 pr-2" title="Mots ratés au 1er essai, réussis au rattrapage de fin de séance">
+                    Avec rattrapage
                   </th>
                   <th className="py-1 pr-2" title="Mots réussis grâce au filet de secours « Je ne sais pas l'écrire »">
                     Avec aide
