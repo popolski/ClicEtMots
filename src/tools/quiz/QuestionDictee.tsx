@@ -4,13 +4,20 @@ import { SequenceBar } from '../../components/SequenceBar'
 import { decomposerMot } from '../../lib/alignementGraphemes'
 import { phonemes } from '../../lib/phonemes'
 import { speak, speechSupported } from '../../lib/speech'
+import { getMatches, getViableNextPhonemes } from '../clavier/clavierLogic'
+import type { PhonemeTrieNode } from '../clavier/clavierLogic'
 import type { MotCandidat } from './quizLogic'
 import type { PhonemeId, WordEntry } from '../../types/phonetics'
+
+/** Nombre de mots proposés dans l'aide - assez pour dépanner, pas assez pour noyer l'élève sous des choix. */
+const MAX_SUGGESTIONS = 6
 
 interface QuestionDicteeProps {
   entree: MotCandidat
   /** Entrée complète du lexique, pour la suite de sons du mot (aide + décomposition). */
   entreeCible: WordEntry | undefined
+  /** Pour la liste de mots suggérés dans le filet de secours (voir plus bas) - null tant que le lexique n'est pas chargé. */
+  trie: PhonemeTrieNode | null
   /**
    * `correct` = mot finalement écrit juste (à n'importe quel essai), c'est ce
    * qui compte pour le score. `duPremierCoup` distingue l'élève qui savait de
@@ -39,12 +46,13 @@ const ESSAIS_MAX = 3
  * attendu (même rendu que la fiche mot), pour que l'élève voie POURQUOI ça
  * s'écrit comme ça et pas seulement que c'était faux.
  *
- * Le filet de secours "Je ne sais pas l'écrire" (ouvre le clavier phonétique
- * sans remplir le champ) est offert à TOUS les élèves : il était réglable
+ * Le filet de secours "Je ne sais pas l'écrire" (ouvre le clavier phonétique,
+ * avec les mots correspondants suggérés au fur et à mesure - comme le
+ * clavier principal) est offert à TOUS les élèves : il était réglable
  * élève par élève, mais l'enseignante a tranché pour l'ouvrir à la classe
  * entière plutôt que d'avoir à décider a priori qui en a besoin.
  */
-export function QuestionDictee({ entree, entreeCible, onReponse, onAideUtilisee }: QuestionDicteeProps) {
+export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUtilisee }: QuestionDicteeProps) {
   const [saisie, setSaisie] = useState('')
   const [erreur, setErreur] = useState<string | null>(null)
   const [valide, setValide] = useState<boolean | null>(null)
@@ -84,6 +92,30 @@ export function QuestionDictee({ entree, entreeCible, onReponse, onAideUtilisee 
     const d = decomposerMot(entree.word, entreeCible.phonemes, phonemes)
     return d.fiable ? d : null
   }, [entree.word, entreeCible])
+
+  // Mots dont la suite de sons commence par ceux déjà cliqués - comme le
+  // clavier principal, qui affiche ses résultats au fur et à mesure plutôt
+  // que d'attendre la fin. Sans ça, l'aide se limitait à un clavier muet :
+  // l'élève pouvait cliquer des sons sans jamais voir à quoi ça menait,
+  // repéré en la comparant au clavier principal, qui les affiche déjà.
+  const suggestions = useMemo(() => {
+    if (!trie || sequence.length === 0) return []
+    const vus = new Set<string>()
+    const mots: string[] = []
+    for (const candidat of getMatches(trie, sequence)) {
+      const mot = candidat.word.toLowerCase()
+      if (vus.has(mot)) continue
+      vus.add(mot)
+      mots.push(candidat.word)
+      if (mots.length >= MAX_SUGGESTIONS) break
+    }
+    return mots
+  }, [trie, sequence])
+
+  const viableNext = useMemo(
+    () => (trie ? getViableNextPhonemes(trie, sequence) : null),
+    [trie, sequence],
+  )
 
   function valider() {
     const propose = saisie.trim().toLowerCase()
@@ -218,21 +250,42 @@ export function QuestionDictee({ entree, entreeCible, onReponse, onAideUtilisee 
       </div>
 
       {/* Filet de secours : le clavier phonétique aide à retrouver
-          l'orthographe, mais ne remplit PAS le champ - l'élève doit toujours
-          écrire le mot lui-même, sinon la dictée ne vérifie plus rien. */}
+          l'orthographe. Cliquer un mot suggéré REMPLIT le champ, mais ne
+          valide pas à la place de l'élève - il doit encore cliquer
+          "Valider" lui-même, sinon la dictée ne vérifie plus rien. */}
       {aideOuverte && (
         <div className="mt-6">
-          <p className="mb-2 text-sm text-gray-500">Clique les sons que tu entends, puis écris le mot toi-même.</p>
+          <p className="mb-2 text-sm text-gray-500">Clique les sons que tu entends.</p>
           <SequenceBar
             sequence={sequence}
             phonemesById={phonemesById}
             onBackspace={() => setSequence((s) => s.slice(0, -1))}
             onClear={() => setSequence([])}
           />
+
+          {suggestions.length > 0 && (
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {suggestions.map((mot) => (
+                <button
+                  key={mot}
+                  type="button"
+                  onClick={() => {
+                    setSaisie(mot)
+                    if (erreur) setErreur(null)
+                    champRef.current?.focus()
+                  }}
+                  className="rounded-full border-2 border-brand-200 bg-brand-50 px-4 py-1 text-lg text-brand-700 hover:border-brand-400"
+                >
+                  {mot}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="mt-4">
             <PhonemeKeyboard
               phonemes={phonemes}
-              viableNext={null}
+              viableNext={viableNext}
               onSelect={(id) => setSequence((s) => [...s, id])}
               onShowInfo={() => {}}
             />

@@ -8,6 +8,7 @@ import { speak, speechSupported } from '../../lib/speech'
 import { genererDistracteurs } from '../../lib/quizErreurs'
 import { badgePour, BADGE_EMOJI, BADGE_LABEL, type Badge } from '../../lib/quizBadges'
 import { loadWordIndex } from '../../lib/wordIndex'
+import { buildPhonemeTrie } from '../clavier/clavierLogic'
 import { api } from '../../lib/api'
 import type { MotDeListe, MotRateDictee, ModeQuiz, ResultatQuiz } from '../../lib/api'
 import {
@@ -366,6 +367,11 @@ export function QuizTool() {
   // changer de mode en cours de route mélangerait une question déjà
   // comptabilisée avec une nouvelle tentative dans l'autre mode.
   const [mode, setMode] = useState<ModeQuiz | null>(null)
+  // Uniquement pour le filet de secours de la dictée (liste de mots
+  // cliquables pendant la saisie phonétique) - construit à la demande, pas à
+  // chaque partie : ~32 000 mots, inutile de payer ce coût pour les 4 autres
+  // modes qui n'en ont pas besoin.
+  const trieDictee = useMemo(() => (mode === 'dictee' && wordIndex ? buildPhonemeTrie(wordIndex) : null), [mode, wordIndex])
   const [questions, setQuestions] = useState<Question[] | null>(null)
   const [index, setIndex] = useState(0)
   const [score, setScore] = useState(0)
@@ -863,6 +869,7 @@ export function QuizTool() {
           key={index}
           entree={question.entree}
           entreeCible={entreeCible}
+          trie={trieDictee}
           onReponse={handleReponse}
           onAideUtilisee={() => setAideUtiliseeCount((c) => c + 1)}
         />
