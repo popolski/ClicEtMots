@@ -784,7 +784,12 @@ function SectionMotsSemaine() {
 
   return (
     <section className="mb-10 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
-      <h2 className="mb-1 text-xl font-bold text-gray-800">Mots de la semaine</h2>
+      <div className="mb-1 flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-800">Mots de la semaine</h2>
+        <Link to="/bilan-lexique" className="text-sm text-brand-600 hover:underline">
+          📊 Bilan du vocabulaire par période
+        </Link>
+      </div>
       <p className="mb-4 text-sm text-gray-500">
         Une liste par semaine, imprimable séparément. Dans le quiz, les élèves peuvent réviser l'ensemble des mots de
         toutes les semaines enregistrées, à la place des mots les plus fréquents du lexique.
