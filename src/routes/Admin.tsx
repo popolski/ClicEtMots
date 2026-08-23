@@ -80,7 +80,7 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
             target="_blank"
             className="text-sm text-brand-600 hover:text-brand-700"
           >
-            🖨️ Version imprimable pour les parents
+            🖨️ Version imprimable
           </Link>
           <button type="button" onClick={onClose} className="text-sm text-gray-400 hover:text-gray-600">
             ✕ Fermer
@@ -154,10 +154,18 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                     <td className="py-1 pr-2">{b.nbSeances}</td>
                     <td className="py-1 pr-2">{b.scoreMoyenPct}%</td>
                     <td className="py-1 pr-2 text-gray-500">
-                      {MODES_AVEC_ESSAIS.has(b.mode) ? (b.premierCoupPct !== null ? `${b.premierCoupPct}%` : '—') : ''}
+                      {MODES_AVEC_ESSAIS.has(b.mode)
+                        ? b.premierCoup !== null
+                          ? `${b.premierCoup.obtenu}/${b.premierCoup.sur}`
+                          : '—'
+                        : ''}
                     </td>
                     <td className="py-1 pr-2 text-gray-500">
-                      {MODES_AVEC_AIDE.has(b.mode) ? (b.aideUtiliseePct !== null ? `${b.aideUtiliseePct}%` : '—') : ''}
+                      {MODES_AVEC_AIDE.has(b.mode)
+                        ? b.aideUtilisee !== null
+                          ? `${b.aideUtilisee.obtenu}/${b.aideUtilisee.sur}`
+                          : '—'
+                        : ''}
                     </td>
                     <td className="py-1 pr-2 text-gray-500">{formaterDuree(b.dureeMoyenneSec)}</td>
                     <td className="py-1">

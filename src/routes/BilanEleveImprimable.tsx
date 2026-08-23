@@ -142,16 +142,20 @@ export function BilanEleveImprimable() {
                       <dt className="text-gray-500">Score moyen</dt>
                       <dd className="font-semibold text-gray-900">{b.scoreMoyenPct}%</dd>
                     </div>
-                    {MODES_AVEC_ESSAIS.has(b.mode) && b.premierCoupPct !== null && (
+                    {MODES_AVEC_ESSAIS.has(b.mode) && b.premierCoup !== null && (
                       <div>
                         <dt className="text-gray-500">Réussi du 1er coup</dt>
-                        <dd className="font-semibold text-gray-900">{b.premierCoupPct}%</dd>
+                        <dd className="font-semibold text-gray-900">
+                          {b.premierCoup.obtenu}/{b.premierCoup.sur}
+                        </dd>
                       </div>
                     )}
-                    {MODES_AVEC_AIDE.has(b.mode) && b.aideUtiliseePct !== null && (
+                    {MODES_AVEC_AIDE.has(b.mode) && b.aideUtilisee !== null && (
                       <div>
                         <dt className="text-gray-500">Aide demandée</dt>
-                        <dd className="font-semibold text-gray-900">{b.aideUtiliseePct}%</dd>
+                        <dd className="font-semibold text-gray-900">
+                          {b.aideUtilisee.obtenu}/{b.aideUtilisee.sur}
+                        </dd>
                       </div>
                     )}
                     {(b.medailles.or > 0 || b.medailles.argent > 0 || b.medailles.bronze > 0) && (

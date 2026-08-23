@@ -19,12 +19,13 @@ interface QuestionDicteeProps {
   /** Pour la liste de mots suggérés dans le filet de secours (voir plus bas) - null tant que le lexique n'est pas chargé. */
   trie: PhonemeTrieNode | null
   /**
-   * `correct` = mot finalement écrit juste (à n'importe quel essai), c'est ce
-   * qui compte pour le score. `duPremierCoup` distingue l'élève qui savait de
-   * celui qui a trouvé au 3e essai : c'est lui qui décide si le mot revient
-   * à la séance suivante.
+   * `correct` = mot finalement écrit juste (à n'importe quel essai). `duPremierCoup`
+   * distingue l'élève qui savait de celui qui a trouvé au 3e essai. `aideUtilisee`
+   * = le filet de secours a été ouvert sur CE mot : dans ce cas, même écrit juste,
+   * le mot ne compte plus comme réussi côté score (voir handleReponse dans
+   * QuizTool.tsx) - demandé par Hugues, l'aide ne doit pas donner un sans-faute.
    */
-  onReponse: (correct: boolean, duPremierCoup: boolean) => void
+  onReponse: (correct: boolean, duPremierCoup: boolean, aideUtilisee: boolean) => void
   /** Appelé une fois si l'élève ouvre le filet de secours sur ce mot (schema-v12.sql). */
   onAideUtilisee: () => void
 }
@@ -51,6 +52,13 @@ const ESSAIS_MAX = 3
  * clavier principal) est offert à TOUS les élèves : il était réglable
  * élève par élève, mais l'enseignante a tranché pour l'ouvrir à la classe
  * entière plutôt que d'avoir à décider a priori qui en a besoin.
+ *
+ * Les mots suggérés sont affichés à titre indicatif SEULEMENT - cliquer
+ * dessus ne remplit plus le champ de saisie (revenu en arrière sur un choix
+ * antérieur, à la demande de Hugues) : l'élève doit recopier le mot
+ * lui-même, sinon l'aide à la mémorisation disparaît. Utiliser l'aide sur un
+ * mot lui retire aussi son statut de réussite dans le score (voir
+ * QuizTool.tsx, handleReponse) - la dictée doit rester un exercice honnête.
  */
 export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUtilisee }: QuestionDicteeProps) {
   const [saisie, setSaisie] = useState('')
@@ -127,7 +135,7 @@ export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUti
 
     if (propose === entree.word.toLowerCase()) {
       setValide(true)
-      onReponse(true, essais === 0)
+      onReponse(true, essais === 0, aideOuverte)
       return
     }
 
@@ -136,7 +144,7 @@ export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUti
     if (essaisSuivant >= ESSAIS_MAX) {
       setDernierEssai(saisie.trim())
       setValide(false)
-      onReponse(false, false)
+      onReponse(false, false, aideOuverte)
       return
     }
     // On efface la saisie pour que l'élève réécrive le mot en entier plutôt
@@ -250,9 +258,9 @@ export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUti
       </div>
 
       {/* Filet de secours : le clavier phonétique aide à retrouver
-          l'orthographe. Cliquer un mot suggéré REMPLIT le champ, mais ne
-          valide pas à la place de l'élève - il doit encore cliquer
-          "Valider" lui-même, sinon la dictée ne vérifie plus rien. */}
+          l'orthographe. Les mots suggérés sont affichés à titre indicatif
+          SEULEMENT (pas des boutons) - l'élève doit recopier lui-même le mot
+          dans le champ, sinon l'aide à la mémorisation disparaît. */}
       {aideOuverte && (
         <div className="mt-6">
           <p className="mb-2 text-sm text-gray-500">Clique les sons que tu entends.</p>
@@ -266,18 +274,12 @@ export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUti
           {suggestions.length > 0 && (
             <div className="mt-4 flex flex-wrap justify-center gap-2">
               {suggestions.map((mot) => (
-                <button
+                <span
                   key={mot}
-                  type="button"
-                  onClick={() => {
-                    setSaisie(mot)
-                    if (erreur) setErreur(null)
-                    champRef.current?.focus()
-                  }}
-                  className="rounded-full border-2 border-brand-200 bg-brand-50 px-4 py-1 text-lg text-brand-700 hover:border-brand-400"
+                  className="rounded-full border-2 border-brand-200 bg-brand-50 px-4 py-1 text-lg text-brand-700"
                 >
                   {mot}
-                </button>
+                </span>
               ))}
             </div>
           )}

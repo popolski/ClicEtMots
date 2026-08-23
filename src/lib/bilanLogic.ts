@@ -20,20 +20,21 @@ export interface BilanMode {
   scoreMoyenPct: number
   medailles: Record<Badge, number>
   /**
-   * Part des bonnes réponses obtenues DU PREMIER COUP (schema-v11.sql),
-   * arrondie - null si aucune séance de ce groupe ne porte cette donnée
-   * (enregistrée avant la migration) ou si aucune réponse n'était correcte.
-   * Seuls la dictée et "Recomposer le mot" laissent plusieurs essais : pour
-   * les autres modes ce chiffre vaut toujours 100%, sans intérêt à afficher.
+   * Bonnes réponses obtenues DU PREMIER COUP (schema-v11.sql), en effectif
+   * brut (pas en pourcentage - jugé peu parlant, demandé par Hugues) - null
+   * si aucune séance de ce groupe ne porte cette donnée (enregistrée avant
+   * la migration) ou si aucune réponse n'était correcte. Seuls la dictée et
+   * "Recomposer le mot" laissent plusieurs essais : pour les autres modes
+   * `obtenu` vaut toujours `sur`, sans intérêt à afficher.
    */
-  premierCoupPct: number | null
+  premierCoup: { obtenu: number; sur: number } | null
   /**
-   * Part des mots de la séance où le filet de secours de la dictée a été
-   * ouvert (schema-v12.sql), arrondie - null si aucune séance de ce groupe
-   * ne porte cette donnée. Sans objet hors dictée (toujours null ailleurs,
-   * le filet n'existant pas dans les autres modes).
+   * Mots de la séance où le filet de secours de la dictée a été ouvert
+   * (schema-v12.sql), en effectif brut (pas en pourcentage) - null si aucune
+   * séance de ce groupe ne porte cette donnée. Sans objet hors dictée
+   * (toujours null ailleurs, le filet n'existant pas dans les autres modes).
    */
-  aideUtiliseePct: number | null
+  aideUtilisee: { obtenu: number; sur: number } | null
   /**
    * Durée moyenne d'une séance en secondes (schema-v13.sql), arrondie - null
    * si aucune séance de ce groupe ne porte cette donnée. Réservé au bilan
@@ -46,8 +47,8 @@ export interface BilanMode {
 const TOUS_LES_MODES: ModeQuiz[] = ['qcm', 'reconstitution', 'grammaire', 'dictee', 'graphie']
 
 /**
- * Modes où `premierCoupPct` a un sens (plusieurs essais possibles par mot).
- * Sur les autres, il vaut toujours 100% - vrai mais sans intérêt à afficher.
+ * Modes où `premierCoup` a un sens (plusieurs essais possibles par mot).
+ * Sur les autres, `obtenu` vaut toujours `sur` - vrai mais sans intérêt à afficher.
  */
 export const MODES_AVEC_ESSAIS: ReadonlySet<ModeQuiz> = new Set(['dictee', 'reconstitution'])
 
@@ -119,8 +120,8 @@ function calculerStats(seances: ResultatQuiz[]) {
     nbSeances: seances.length,
     scoreMoyenPct: Math.round(sommePct / seances.length),
     medailles,
-    premierCoupPct: sommeScoreMesure > 0 ? Math.round((100 * sommePremierCoup) / sommeScoreMesure) : null,
-    aideUtiliseePct: sommeTotalMesureAide > 0 ? Math.round((100 * sommeAideUtilisee) / sommeTotalMesureAide) : null,
+    premierCoup: sommeScoreMesure > 0 ? { obtenu: sommePremierCoup, sur: sommeScoreMesure } : null,
+    aideUtilisee: sommeTotalMesureAide > 0 ? { obtenu: sommeAideUtilisee, sur: sommeTotalMesureAide } : null,
     dureeMoyenneSec: nbSeancesMesureesDuree > 0 ? Math.round(sommeDuree / nbSeancesMesureesDuree) : null,
   }
 }

@@ -556,36 +556,40 @@ export function QuizTool() {
   /**
    * `duPremierCoup` compte pour la dictée et la recomposition, qui laissent
    * 3 essais : il vaut `correct` partout ailleurs (un seul essai possible,
-   * donc "du premier coup" ou pas du tout). Le score récompense le mot
-   * finalement juste, quel que soit l'essai - mais la révision de la dictée
-   * d'une semaine à l'autre, et le bilan enseignant (premierCoupCount,
-   * schema-v11.sql), distinguent un mot su d'emblée d'un mot trouvé à
-   * tâtons.
+   * donc "du premier coup" ou pas du tout).
+   *
+   * `aideUtiliseeSurCeMot` (dictée uniquement, sinon toujours `false`) :
+   * demandé par Hugues, ouvrir le filet de secours retire au mot son statut
+   * de réussite, même s'il est finalement écrit juste - sinon l'aide
+   * donnerait un sans-faute gratuit. `effectiveCorrect` est donc la vraie
+   * mesure de réussite utilisée pour le score, le 1er coup ET le
+   * rattrapage : un mot aidé est traité exactement comme un mot raté.
    */
-  function handleReponse(correct: boolean, duPremierCoup: boolean = correct) {
+  function handleReponse(correct: boolean, duPremierCoup: boolean = correct, aideUtiliseeSurCeMot: boolean = false) {
     if (aRepondu) return
     setARepondu(true)
-    if (correct) setScore((s) => s + 1)
-    if (duPremierCoup) setPremierCoupCount((c) => c + 1)
-    // Dictée : les mots ratés sont repassés en fin de séance ET retenus
-    // pour les séances suivantes (schema-v10.sql). Seul le PREMIER tour
-    // compte : un mot réussi au rattrapage reste à réviser, il a bien été
-    // raté quand il a été dicté.
+    const effectiveCorrect = correct && !aideUtiliseeSurCeMot
+    if (effectiveCorrect) setScore((s) => s + 1)
+    if (duPremierCoup && !aideUtiliseeSurCeMot) setPremierCoupCount((c) => c + 1)
+    // Dictée : les mots ratés (ou aidés, donc pas vraiment su) sont repassés
+    // en fin de séance ET retenus pour les séances suivantes (schema-v10.sql).
+    // Seul le PREMIER tour compte : un mot réussi au rattrapage reste à
+    // réviser, il a bien été raté/aidé quand il a été dicté.
     //
     // Bug corrigé (repéré par Camille sur un score du genre "13/10") : le
     // rattrapage se déclenchait sur `!duPremierCoup`, pas sur `!correct`. Un
     // mot réussi au 2e ou 3e essai est CORRECT (score déjà incrémenté juste
     // au-dessus) mais pas "du premier coup" - il repassait donc quand même
     // en rattrapage, et un succès là-bas comptait un DEUXIÈME point pour le
-    // même mot. Le rattrapage ne doit revoir que les mots vraiment ratés
-    // (`!correct`), sinon son effectif dépasse le nombre de mots manquants
-    // et le score final peut dépasser le total affiché.
+    // même mot. Le rattrapage ne doit revoir que les mots vraiment non
+    // maîtrisés (`!effectiveCorrect`), sinon son effectif dépasse le nombre
+    // de mots manquants et le score final peut dépasser le total affiché.
     if (mode === 'dictee' && questions && !enRattrapage) {
       const { lemmaId, word } = questions[index].entree
-      if (!correct) setARattraper((prec) => [...prec, questions[index]])
+      if (!effectiveCorrect) setARattraper((prec) => [...prec, questions[index]])
       // Best-effort, comme l'enregistrement des scores : une dictée doit
       // pouvoir se dérouler même si le serveur ne répond pas.
-      api.marquerMotDictee(lemmaId, word, duPremierCoup).catch(() => {})
+      api.marquerMotDictee(lemmaId, word, duPremierCoup && !aideUtiliseeSurCeMot).catch(() => {})
     }
   }
 
@@ -774,6 +778,9 @@ export function QuizTool() {
   const entreeCible = wordIndex?.find(
     (e) => e.lemmaId === question.entree.lemmaId && e.word === question.entree.word,
   )
+  // Voir le commentaire au-dessus du rendu des composants Question* : inclut
+  // le tour (principal/rattrapage) pour forcer un remount à la transition.
+  const cleQuestion = `${enRattrapage}-${index}`
 
   if (termine) {
     // En dictée, le total est celui du PREMIER tour (voir motSuivant) - le
@@ -872,13 +879,28 @@ export function QuizTool() {
         <span className="text-sm font-medium text-brand-600">Score : {score}</span>
       </div>
 
+      {/* `key` doit changer au passage en rattrapage même si l'index reste le
+          même (dictée) : le rattrapage réutilise le MÊME objet Question que
+          le tour principal pour un mot raté/aidé. Avec `key={index}` seul,
+          si ce mot était déjà à l'index 0 du tour principal, React ne
+          remonte pas le composant en passant à l'index 0 du rattrapage - son
+          `useEffect(..., [entree])` ne se redéclenche pas (même référence
+          d'objet) et l'écran de correction du tour précédent reste affiché
+          au lieu du champ de saisie. Repéré en testant le nouveau blocage du
+          score sur mot aidé (une séance à 1 mot le reproduit à coup sûr),
+          mais existait déjà avant pour un mot vraiment raté en 1re position. */}
       {mode === 'qcm' ? (
-        <QuestionQCM key={index} question={question} onReponse={handleReponse} />
+        <QuestionQCM key={cleQuestion} question={question} onReponse={handleReponse} />
       ) : mode === 'reconstitution' ? (
-        <QuestionReconstitution key={index} question={question} entreeCible={entreeCible} onReponse={handleReponse} />
+        <QuestionReconstitution
+          key={cleQuestion}
+          question={question}
+          entreeCible={entreeCible}
+          onReponse={handleReponse}
+        />
       ) : mode === 'dictee' ? (
         <QuestionDictee
-          key={index}
+          key={cleQuestion}
           entree={question.entree}
           entreeCible={entreeCible}
           trie={trieDictee}
@@ -887,13 +909,13 @@ export function QuizTool() {
         />
       ) : mode === 'graphie' && question.graphie ? (
         <QuestionGraphie
-          key={index}
+          key={cleQuestion}
           exercice={question.graphie}
           category={question.entree.category}
           onTermine={handleReponse}
         />
       ) : (
-        <QuestionGrammaire key={index} question={question} onReponse={handleReponse} />
+        <QuestionGrammaire key={cleQuestion} question={question} onReponse={handleReponse} />
       )}
 
       {aRepondu && (

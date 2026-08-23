@@ -90,55 +90,55 @@ describe('agregerParMode', () => {
     // Le score ne distingue pas un mot réussi au 1er essai d'un mot réussi
     // au 3e (dictée, recomposition) : c'est précisément ce que premierCoup
     // vient éclairer séparément, sans changer le score lui-même.
-    it('calcule la part des bonnes réponses obtenues du premier coup', () => {
+    it('calcule les bonnes réponses obtenues du premier coup, en effectif brut', () => {
       // 8 bonnes réponses sur 10, dont seulement 5 du premier coup.
       const bilan = agregerParMode([resultat('dictee', 8, 10, 5)])
-      expect(bilan[0].premierCoupPct).toBe(63) // 5/8, arrondi
+      expect(bilan[0].premierCoup).toEqual({ obtenu: 5, sur: 8 })
     })
 
     it('vaut null pour une séance enregistrée avant la migration (premierCoup absent)', () => {
       const bilan = agregerParMode([resultat('dictee', 8, 10, null)])
-      expect(bilan[0].premierCoupPct).toBeNull()
+      expect(bilan[0].premierCoup).toBeNull()
     })
 
-    it('ignore les séances non mesurées plutôt que de fausser la moyenne', () => {
+    it('ignore les séances non mesurées plutôt que de fausser le total', () => {
       // Une séance d'avant la migration (null) mélangée à une séance mesurée :
       // seule la seconde doit compter dans le calcul.
       const bilan = agregerParMode([resultat('dictee', 10, 10, null), resultat('dictee', 10, 10, 10)])
-      expect(bilan[0].premierCoupPct).toBe(100)
+      expect(bilan[0].premierCoup).toEqual({ obtenu: 10, sur: 10 })
     })
 
-    it("vaut toujours 100% pour un mode à essai unique (QCM)", () => {
+    it("vaut obtenu = sur pour un mode à essai unique (QCM)", () => {
       const bilan = agregerParMode([resultat('qcm', 8, 10)])
-      expect(bilan[0].premierCoupPct).toBe(100)
+      expect(bilan[0].premierCoup).toEqual({ obtenu: 8, sur: 8 })
     })
   })
 
   describe('filet de secours de la dictée (schema-v12.sql)', () => {
-    // Le filet peut être ouvert sur un mot ensuite réussi ou raté : sa
-    // fréquence se rapporte au nombre total de mots de la séance, pas au
-    // score (contrairement à premierCoupPct).
-    it("calcule la part des mots où le filet a été ouvert", () => {
+    // Le filet peut être ouvert sur un mot ensuite réussi ou raté : son
+    // effectif se rapporte au nombre total de mots de la séance, pas au
+    // score (contrairement à premierCoup).
+    it("compte les mots où le filet a été ouvert, en effectif brut", () => {
       // Ouvert sur 3 des 10 mots de la séance.
       const bilan = agregerParMode([resultat('dictee', 8, 10, 5, 3)])
-      expect(bilan[0].aideUtiliseePct).toBe(30)
+      expect(bilan[0].aideUtilisee).toEqual({ obtenu: 3, sur: 10 })
     })
 
     it('vaut null pour une séance enregistrée avant la migration (aideUtilisee absent)', () => {
       const bilan = agregerParMode([resultat('dictee', 8, 10, 5, null)])
-      expect(bilan[0].aideUtiliseePct).toBeNull()
+      expect(bilan[0].aideUtilisee).toBeNull()
     })
 
-    it('ignore les séances non mesurées plutôt que de fausser la moyenne', () => {
+    it('ignore les séances non mesurées plutôt que de fausser le total', () => {
       const bilan = agregerParMode([resultat('dictee', 10, 10, 10, null), resultat('dictee', 10, 10, 10, 2)])
-      expect(bilan[0].aideUtiliseePct).toBe(20)
+      expect(bilan[0].aideUtilisee).toEqual({ obtenu: 2, sur: 10 })
     })
 
-    it("vaut 0% quand le filet n'a jamais été ouvert plutôt que null", () => {
+    it("vaut 0 quand le filet n'a jamais été ouvert plutôt que null", () => {
       // 0 est une vraie mesure ("jamais utilisé"), à ne pas confondre avec
       // l'absence de mesure (séance d'avant la migration).
       const bilan = agregerParMode([resultat('dictee', 10, 10, 10, 0)])
-      expect(bilan[0].aideUtiliseePct).toBe(0)
+      expect(bilan[0].aideUtilisee).toEqual({ obtenu: 0, sur: 10 })
     })
   })
 
