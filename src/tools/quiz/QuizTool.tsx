@@ -527,9 +527,18 @@ export function QuizTool() {
     // pour les séances suivantes (schema-v10.sql). Seul le PREMIER tour
     // compte : un mot réussi au rattrapage reste à réviser, il a bien été
     // raté quand il a été dicté.
+    //
+    // Bug corrigé (repéré par Camille sur un score du genre "13/10") : le
+    // rattrapage se déclenchait sur `!duPremierCoup`, pas sur `!correct`. Un
+    // mot réussi au 2e ou 3e essai est CORRECT (score déjà incrémenté juste
+    // au-dessus) mais pas "du premier coup" - il repassait donc quand même
+    // en rattrapage, et un succès là-bas comptait un DEUXIÈME point pour le
+    // même mot. Le rattrapage ne doit revoir que les mots vraiment ratés
+    // (`!correct`), sinon son effectif dépasse le nombre de mots manquants
+    // et le score final peut dépasser le total affiché.
     if (mode === 'dictee' && questions && !enRattrapage) {
       const { lemmaId, word } = questions[index].entree
-      if (!duPremierCoup) setARattraper((prec) => [...prec, questions[index]])
+      if (!correct) setARattraper((prec) => [...prec, questions[index]])
       // Best-effort, comme l'enregistrement des scores : une dictée doit
       // pouvoir se dérouler même si le serveur ne répond pas.
       api.marquerMotDictee(lemmaId, word, duPremierCoup).catch(() => {})
