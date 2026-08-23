@@ -18,7 +18,12 @@ if (PHP_SAPI !== 'cli') {
     exit("Réservé à l'exécution en ligne de commande (tâche planifiée).\n");
 }
 
-require_once __DIR__ . '/api/config.php';
+// config.php n'est PAS dupliqué à côté de ce script : il vit une seule fois,
+// dans le dossier /clicetmots/api/ réellement servi par le site (voir
+// server/README.md "Upload FTP") - ce fichier-ci, lui, est déployé en
+// dehors de ce dossier (ex. /clicetmots/api-src/), donc SIBLING de api/, pas
+// à l'intérieur. D'où le "../api/" et non "/api/".
+require_once __DIR__ . '/../api/config.php';
 
 const BACKUP_RETENTION_JOURS = 30;
 

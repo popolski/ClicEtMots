@@ -192,7 +192,9 @@ l'exécuter.
    et un bucket **privé** suffisent.
 2. Vérifie que le fichier a bien été transféré à sa place (`/clicetmots/api-src/backup-db.php`
    ou équivalent selon ton organisation FTP - l'important est qu'il ne soit
-   PAS dans `/clicetmots/api/`).
+   PAS dans `/clicetmots/api/`, mais bien un dossier VOISIN de `/clicetmots/api/`
+   - le script référence `config.php` via `../api/config.php`, un chemin
+   relatif qui suppose cette organisation précise).
 3. Dans le manager OVH -> ton hébergement -> "Tâches planifiées - Cron" ->
    "Ajouter une planification" : commande = chemin complet vers
    `backup-db.php` sur le serveur, fréquence quotidienne (ex. tôt le matin),
