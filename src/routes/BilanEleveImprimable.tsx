@@ -150,7 +150,7 @@ export function BilanEleveImprimable() {
                     )}
                     {MODES_AVEC_AIDE.has(b.mode) && b.aideUtiliseePct !== null && (
                       <div>
-                        <dt className="text-gray-500">Filet de secours utilisé</dt>
+                        <dt className="text-gray-500">Aide demandée</dt>
                         <dd className="font-semibold text-gray-900">{b.aideUtiliseePct}%</dd>
                       </div>
                     )}

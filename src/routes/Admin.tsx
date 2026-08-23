@@ -136,8 +136,8 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
                   <th className="py-1 pr-2" title="Part des bonnes réponses trouvées sans avoir besoin de réessayer">
                     Du 1er coup
                   </th>
-                  <th className="py-1 pr-2" title="Part des mots où le filet « Je ne sais pas l'écrire » a été ouvert">
-                    Filet utilisé
+                  <th className="py-1 pr-2" title="Part des mots où l'élève a cliqué « Je ne sais pas l'écrire »">
+                    Aide demandée
                   </th>
                   <th className="py-1 pr-2" title="Durée moyenne d'une séance">
                     Temps moyen
