@@ -4,12 +4,14 @@ import { ToolLayout } from '../components/ToolLayout'
 import { api } from '../lib/api'
 import type { LexiconWord, ListeMotsSemaine, MotDeListe, MotRateDictee, ResultatQuiz, Student } from '../lib/api'
 import { phonemes } from '../lib/phonemes'
-import { agregerParMode, MODE_LABEL, MODES_AVEC_AIDE, MODES_AVEC_ESSAIS } from '../lib/bilanLogic'
+import { agregerParMode, MODE_LABEL, MODES_AVEC_AIDE, MODES_AVEC_ESSAIS, resultatsDeLaPeriode } from '../lib/bilanLogic'
 import { BADGE_EMOJI } from '../lib/quizBadges'
 import { RelationsEditor } from './RelationsEditor'
 import type { VerbConjugation } from '../lib/conjugations'
 import { PERSONNES_SINGULIER, PERSONNES_PLURIEL, pronomAfficheTexte } from '../tools/conjugueur/conjugueurLogic'
 import { loadWordIndex } from '../lib/wordIndex'
+import { anneesDisponibles, periodesDe } from '../lib/periodesPedagogiques'
+import type { Zone } from '../lib/periodesPedagogiques'
 import type { WordCategory, WordEntry } from '../types/phonetics'
 
 type Categorie = LexiconWord['categorie']
@@ -40,6 +42,11 @@ function formaterDuree(secondes: number | null): string {
 function BilanEleve({ student, onClose }: { student: Student | null; onClose: () => void }) {
   const [donnees, setDonnees] = useState<{ resultats: ResultatQuiz[]; motsRates: MotRateDictee[] } | null>(null)
   const [erreur, setErreur] = useState(false)
+  // Même sélecteur période/zone que le bilan imprimable (BilanEleveImprimable.tsx) -
+  // pour que l'enseignante puisse vérifier ce que verront les parents avant de
+  // l'imprimer, sans avoir à ouvrir cette 2e page.
+  const [zone, setZone] = useState<Zone>('B')
+  const [periodeId, setPeriodeId] = useState<string>('toutes')
 
   useEffect(() => {
     if (!student) return
@@ -51,9 +58,17 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
       .catch(() => setErreur(true))
   }, [student])
 
+  const annee = anneesDisponibles()[0]
+  const periodes = useMemo(() => periodesDe(annee, zone), [annee, zone])
+  const periodeChoisie = periodes.find((p) => p.id === periodeId) ?? null
+
   if (!student) return null
 
-  const bilan = donnees ? agregerParMode(donnees.resultats) : null
+  const resultatsFiltres =
+    donnees && periodeChoisie
+      ? resultatsDeLaPeriode(donnees.resultats, periodeChoisie.debut, periodeChoisie.fin)
+      : (donnees?.resultats ?? null)
+  const bilan = resultatsFiltres ? agregerParMode(resultatsFiltres) : null
 
   return (
     <div className="mt-4 rounded-xl border-2 border-brand-100 bg-white p-4">
@@ -61,7 +76,7 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
         <h3 className="text-lg font-bold text-gray-800">Bilan de {student.prenom}</h3>
         <div className="flex items-center gap-3">
           <Link
-            to={`/bilan-eleve?studentId=${student.id}&prenom=${encodeURIComponent(student.prenom)}`}
+            to={`/bilan-eleve?studentId=${student.id}&prenom=${encodeURIComponent(student.prenom)}&zone=${zone}&periode=${periodeId}`}
             target="_blank"
             className="text-sm text-brand-600 hover:text-brand-700"
           >
@@ -71,6 +86,36 @@ function BilanEleve({ student, onClose }: { student: Student | null; onClose: ()
             ✕ Fermer
           </button>
         </div>
+      </div>
+
+      <div className="mb-3 flex flex-wrap items-end gap-3">
+        <label>
+          <span className="block text-xs font-semibold text-gray-500">Zone</span>
+          <select
+            value={zone}
+            onChange={(e) => setZone(e.target.value as Zone)}
+            className="mt-0.5 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm focus:border-brand-500 focus:outline-none"
+          >
+            <option value="A">Zone A</option>
+            <option value="B">Zone B</option>
+            <option value="C">Zone C</option>
+          </select>
+        </label>
+        <label>
+          <span className="block text-xs font-semibold text-gray-500">Période</span>
+          <select
+            value={periodeId}
+            onChange={(e) => setPeriodeId(e.target.value)}
+            className="mt-0.5 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm focus:border-brand-500 focus:outline-none"
+          >
+            <option value="toutes">Toute l'année</option>
+            {periodes.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       {erreur && <p className="text-sm text-red-600">Impossible de charger le bilan pour l'instant.</p>}

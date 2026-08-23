@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { api } from '../lib/api'
 import type { ListeMotsSemaine } from '../lib/api'
 import { agregerVocabulaire, listesDeLaPeriode } from '../lib/bilanLexiqueLogic'
+import { anneesDisponibles, periodesDe } from '../lib/periodesPedagogiques'
+import type { Zone } from '../lib/periodesPedagogiques'
 
 function aujourdhui(): string {
   return new Date().toISOString().slice(0, 10)
@@ -26,6 +28,12 @@ export function BilanLexique() {
   const [listes, setListes] = useState<ListeMotsSemaine[] | null>(null)
   const [debut, setDebut] = useState('')
   const [fin, setFin] = useState(aujourdhui())
+  // Sélecteur de période pédagogique (P1-P5), en plus des dates libres déjà
+  // existantes - choisir une période remplit juste debut/fin, qui restent
+  // modifiables ensuite à la main (pas de mode exclusif entre les deux).
+  const [zone, setZone] = useState<Zone>('B')
+  const annee = anneesDisponibles()[0]
+  const periodes = useMemo(() => periodesDe(annee, zone), [annee, zone])
 
   useEffect(() => {
     api
@@ -71,6 +79,41 @@ export function BilanLexique() {
       </div>
 
       <div className="no-print mb-8 flex flex-wrap items-end gap-4 rounded-2xl border-2 border-gray-200 bg-gray-50 p-4">
+        <label>
+          <span className="text-sm font-semibold text-gray-700">Zone</span>
+          <select
+            value={zone}
+            onChange={(e) => setZone(e.target.value as Zone)}
+            className="mt-1 block rounded-lg border-2 border-gray-200 bg-white px-3 py-2 focus:border-brand-500 focus:outline-none"
+          >
+            <option value="A">Zone A</option>
+            <option value="B">Zone B</option>
+            <option value="C">Zone C</option>
+          </select>
+        </label>
+        <label>
+          <span className="text-sm font-semibold text-gray-700">Période</span>
+          <select
+            value=""
+            onChange={(e) => {
+              const periode = periodes.find((p) => p.id === e.target.value)
+              if (periode) {
+                setDebut(periode.debut)
+                setFin(periode.fin)
+              }
+            }}
+            className="mt-1 block rounded-lg border-2 border-gray-200 bg-white px-3 py-2 focus:border-brand-500 focus:outline-none"
+          >
+            <option value="" disabled>
+              Choisir une période...
+            </option>
+            {periodes.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+        </label>
         <label>
           <span className="text-sm font-semibold text-gray-700">Du</span>
           <input

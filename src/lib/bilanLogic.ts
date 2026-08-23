@@ -82,6 +82,61 @@ export const MODE_DESCRIPTION: Record<ModeQuiz, string> = {
   graphie: "Choisir la bonne orthographe entre plusieurs graphies possibles pour un même son, pour travailler les régularités de l'orthographe lexicale.",
 }
 
+/** Statistiques communes à agregerParMode et agregerParModeGlobal - factorisées pour ne calculer qu'une fois. */
+function calculerStats(seances: ResultatQuiz[]) {
+  const medailles: Record<Badge, number> = { or: 0, argent: 0, bronze: 0 }
+  let sommePct = 0
+  // Sommés séparément : seules les séances enregistrées après
+  // schema-v11.sql portent premierCoup (sinon null), on ne peut
+  // calculer une part fiable que sur celles-là.
+  let sommeScoreMesure = 0
+  let sommePremierCoup = 0
+  // Même logique que premierCoup, mais rapportée au TOTAL de mots de
+  // la séance (pas au score) : le filet peut être ouvert sur un mot
+  // ensuite réussi ou raté, sa fréquence d'usage ne dépend pas de ça.
+  let sommeTotalMesureAide = 0
+  let sommeAideUtilisee = 0
+  let nbSeancesMesureesDuree = 0
+  let sommeDuree = 0
+  for (const r of seances) {
+    sommePct += r.total > 0 ? (100 * r.score) / r.total : 0
+    const badge = badgePour(r.score, r.total)
+    if (badge) medailles[badge]++
+    if (r.premierCoup !== null) {
+      sommeScoreMesure += r.score
+      sommePremierCoup += r.premierCoup
+    }
+    if (r.aideUtilisee !== null) {
+      sommeTotalMesureAide += r.total
+      sommeAideUtilisee += r.aideUtilisee
+    }
+    if (r.dureeSecondes !== null) {
+      nbSeancesMesureesDuree++
+      sommeDuree += r.dureeSecondes
+    }
+  }
+  return {
+    nbSeances: seances.length,
+    scoreMoyenPct: Math.round(sommePct / seances.length),
+    medailles,
+    premierCoupPct: sommeScoreMesure > 0 ? Math.round((100 * sommePremierCoup) / sommeScoreMesure) : null,
+    aideUtiliseePct: sommeTotalMesureAide > 0 ? Math.round((100 * sommeAideUtilisee) / sommeTotalMesureAide) : null,
+    dureeMoyenneSec: nbSeancesMesureesDuree > 0 ? Math.round(sommeDuree / nbSeancesMesureesDuree) : null,
+  }
+}
+
+/**
+ * Ne garde que les résultats terminés dans l'intervalle [debut, fin]
+ * (dates ISO "AAAA-MM-JJ"), bornes incluses - fin de journée comprise pour
+ * que le jour choisi comme borne de fin compte. Partagé entre le bilan
+ * enseignant (Admin.tsx) et le bilan imprimable pour les parents
+ * (BilanEleveImprimable.tsx), tous deux filtrables par période pédagogique.
+ */
+export function resultatsDeLaPeriode(resultats: ResultatQuiz[], debut: string, fin: string): ResultatQuiz[] {
+  const finJournee = `${fin}T23:59:59`
+  return resultats.filter((r) => r.termineLe >= `${debut}T00:00:00` && r.termineLe <= finJournee)
+}
+
 /**
  * Regroupe les résultats par mode PUIS par niveau (nombre de mots de la
  * séance). Ne renvoie que les combinaisons réellement jouées - un mode ou
@@ -103,48 +158,26 @@ export function agregerParMode(resultats: ResultatQuiz[]): BilanMode[] {
 
     return [...parNiveau.entries()]
       .sort(([a], [b]) => a - b)
-      .map(([niveau, seances]) => {
-        const medailles: Record<Badge, number> = { or: 0, argent: 0, bronze: 0 }
-        let sommePct = 0
-        // Sommés séparément : seules les séances enregistrées après
-        // schema-v11.sql portent premierCoup (sinon null), on ne peut
-        // calculer une part fiable que sur celles-là.
-        let sommeScoreMesure = 0
-        let sommePremierCoup = 0
-        // Même logique que premierCoup, mais rapportée au TOTAL de mots de
-        // la séance (pas au score) : le filet peut être ouvert sur un mot
-        // ensuite réussi ou raté, sa fréquence d'usage ne dépend pas de ça.
-        let sommeTotalMesureAide = 0
-        let sommeAideUtilisee = 0
-        let nbSeancesMesureesDuree = 0
-        let sommeDuree = 0
-        for (const r of seances) {
-          sommePct += r.total > 0 ? (100 * r.score) / r.total : 0
-          const badge = badgePour(r.score, r.total)
-          if (badge) medailles[badge]++
-          if (r.premierCoup !== null) {
-            sommeScoreMesure += r.score
-            sommePremierCoup += r.premierCoup
-          }
-          if (r.aideUtilisee !== null) {
-            sommeTotalMesureAide += r.total
-            sommeAideUtilisee += r.aideUtilisee
-          }
-          if (r.dureeSecondes !== null) {
-            nbSeancesMesureesDuree++
-            sommeDuree += r.dureeSecondes
-          }
-        }
-        return {
-          mode,
-          niveau,
-          nbSeances: seances.length,
-          scoreMoyenPct: Math.round(sommePct / seances.length),
-          medailles,
-          premierCoupPct: sommeScoreMesure > 0 ? Math.round((100 * sommePremierCoup) / sommeScoreMesure) : null,
-          aideUtiliseePct: sommeTotalMesureAide > 0 ? Math.round((100 * sommeAideUtilisee) / sommeTotalMesureAide) : null,
-          dureeMoyenneSec: nbSeancesMesureesDuree > 0 ? Math.round(sommeDuree / nbSeancesMesureesDuree) : null,
-        }
-      })
+      .map(([niveau, seances]) => ({ mode, niveau, ...calculerStats(seances) }))
+  })
+}
+
+/**
+ * Même chose que agregerParMode, mais TOUS niveaux confondus pour un même
+ * mode - demandé par Hugues pour le bilan imprimable des parents : sur une
+ * période ou une année entière, une dictée à 9 mots et une à 10 mots (la
+ * liste de la semaine ne fournit pas toujours le même nombre de mots
+ * valables) affichaient deux lignes quasi identiques, illisible pour un
+ * parent. Contrairement au bilan enseignant (agregerParMode), qui garde
+ * les niveaux séparés à dessein pour ne pas moyenner un 5/5 avec un
+ * 10/20 - ici on assume la perte de cette distinction au profit de la
+ * lisibilité, le parent n'ayant pas besoin de savoir combien de mots
+ * faisait chaque séance.
+ */
+export function agregerParModeGlobal(resultats: ResultatQuiz[]): Omit<BilanMode, 'niveau'>[] {
+  return TOUS_LES_MODES.flatMap((mode) => {
+    const deCeMode = resultats.filter((r) => r.mode === mode)
+    if (deCeMode.length === 0) return []
+    return [{ mode, ...calculerStats(deCeMode) }]
   })
 }

@@ -2,15 +2,17 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { api } from '../lib/api'
 import type { ResultatQuiz } from '../lib/api'
-import { agregerParMode, MODE_DESCRIPTION, MODE_LABEL, MODES_AVEC_AIDE, MODES_AVEC_ESSAIS } from '../lib/bilanLogic'
+import {
+  agregerParModeGlobal,
+  MODE_DESCRIPTION,
+  MODE_LABEL,
+  MODES_AVEC_AIDE,
+  MODES_AVEC_ESSAIS,
+  resultatsDeLaPeriode,
+} from '../lib/bilanLogic'
 import { BADGE_EMOJI } from '../lib/quizBadges'
 import { anneesDisponibles, periodesDe } from '../lib/periodesPedagogiques'
 import type { Zone } from '../lib/periodesPedagogiques'
-
-function resultatsDeLaPeriode(resultats: ResultatQuiz[], debut: string, fin: string): ResultatQuiz[] {
-  const finJournee = `${fin}T23:59:59`
-  return resultats.filter((r) => r.termineLe >= `${debut}T00:00:00` && r.termineLe <= finJournee)
-}
 
 /**
  * Version imprimable du bilan élève (Admin.tsx, panneau "Bilan de..."),
@@ -28,8 +30,10 @@ export function BilanEleveImprimable() {
 
   const [resultats, setResultats] = useState<ResultatQuiz[] | null>(null)
   const [erreur, setErreur] = useState(false)
-  const [zone, setZone] = useState<Zone>('B')
-  const [periodeId, setPeriodeId] = useState<string>('toutes')
+  // Reprend le choix déjà fait par l'enseignante dans Admin.tsx (même
+  // sélecteur) si le lien les transporte - sinon valeurs par défaut.
+  const [zone, setZone] = useState<Zone>((params.get('zone') as Zone | null) ?? 'B')
+  const [periodeId, setPeriodeId] = useState<string>(params.get('periode') ?? 'toutes')
 
   useEffect(() => {
     if (!studentId) return
@@ -49,7 +53,7 @@ export function BilanEleveImprimable() {
     return resultatsDeLaPeriode(resultats, periodeChoisie.debut, periodeChoisie.fin)
   }, [resultats, periodeChoisie])
 
-  const bilan = resultatsFiltres ? agregerParMode(resultatsFiltres) : null
+  const bilan = resultatsFiltres ? agregerParModeGlobal(resultatsFiltres) : null
 
   if (!studentId) {
     return <p className="p-8 text-center text-gray-400">Élève manquant.</p>
@@ -126,10 +130,8 @@ export function BilanEleveImprimable() {
           ) : (
             <div className="space-y-6">
               {bilan.map((b) => (
-                <div key={`${b.mode}-${b.niveau}`} className="border-b border-gray-300 pb-4 last:border-0">
-                  <h2 className="text-base font-bold text-gray-900">
-                    {MODE_LABEL[b.mode]} <span className="font-normal text-gray-400">({b.niveau} mots)</span>
-                  </h2>
+                <div key={b.mode} className="border-b border-gray-300 pb-4 last:border-0">
+                  <h2 className="text-base font-bold text-gray-900">{MODE_LABEL[b.mode]}</h2>
                   <p className="mt-1 text-sm text-gray-600 italic">{MODE_DESCRIPTION[b.mode]}</p>
                   <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-4">
                     <div>
