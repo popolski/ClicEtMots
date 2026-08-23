@@ -1,9 +1,36 @@
 # Backend "espace enseignant" (PHP + MySQL, OVH)
 
 API pour l'authentification (élèves + enseignant), la gestion des comptes
-élèves, et l'ajout de mots au lexique — hébergée à côté du site statique,
-dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
-(`password_hash`) et une base MySQL.
+élèves, l'ajout de mots au lexique, les listes de mots de la semaine, et le
+suivi pédagogique (résultats de quiz, bilans, mots ratés en dictée) —
+hébergée à côté du site statique, dans `/clicetmots/api/` sur le même
+hébergement OVH. Nécessite PHP 8.x (`password_hash`) et une base MySQL.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Navigateur
+        A[React SPA<br/>src/]
+    end
+    subgraph "OVH mutualisé"
+        B["API PHP<br/>/clicetmots/api/*.php"]
+        C[(MySQL<br/>quiz_resultats, students,<br/>lexicon_words, mots_semaine...)]
+        D["Fichiers statiques<br/>dist/, audio mp3 pré-généré"]
+    end
+    E[Google Cloud TTS]
+
+    A -- "fetch JSON<br/>credentials: include" --> B
+    A -- "GET direct" --> D
+    B -- "PDO, requêtes préparées" --> C
+    B -- "mot ajouté par l'enseignant<br/>uniquement" --> E
+```
+
+Le frontend est une SPA statique : aucune donnée n'est rendue côté serveur.
+Le backend PHP n'est appelé que pour ce qui nécessite un état côté serveur
+(comptes, scores, listes) — tout le lexique, l'audio pré-généré et les
+pictogrammes sont servis comme de simples fichiers statiques, sans aucun
+aller-retour PHP/MySQL au moment de la consultation.
 
 ## Installation (à faire toi-même, une seule fois)
 
@@ -26,6 +53,10 @@ dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
    | [`schema-v8.sql`](./schema-v8.sql) | dictée des mots de la semaine (nouveau mode + filet de secours par élève) |
    | [`schema-v9.sql`](./schema-v9.sql) | atelier "choisis la bonne graphie" (nouveau mode) |
    | [`schema-v10.sql`](./schema-v10.sql) | mots ratés en dictée, retenus d'une semaine à l'autre |
+   | [`schema-v11.sql`](./schema-v11.sql) | réponses réussies du premier coup, distinguées de celles réussies après plusieurs essais |
+   | [`schema-v12.sql`](./schema-v12.sql) | usage du filet de secours de la dictée ("Je ne sais pas l'écrire") |
+   | [`schema-v13.sql`](./schema-v13.sql) | durée d'une séance de quiz (bilan enseignant uniquement) |
+   | [`schema-v14.sql`](./schema-v14.sql) | 3 catégories de réussite en dictée : premier coup, reprise de fin de séance, avec aide |
 
    Il n'y a pas de fichier "tout-en-un" : ces migrations sont la seule
    source de vérité du schéma, et en dupliquer le contenu ailleurs
@@ -103,12 +134,12 @@ dans `/clicetmots/api/` sur le même hébergement OVH. Nécessite PHP 8.x
 | GET | `/api/mots-semaine.php` | connecté | toutes les listes hebdomadaires |
 | POST | `/api/mots-semaine.php` | enseignant | `{nom, mots, id?}` → crée ou modifie une liste |
 | DELETE | `/api/mots-semaine.php?id=` | enseignant | supprime une liste |
-| GET | `/api/quiz-resultats.php` | élève | ses 20 derniers résultats de quiz |
-| POST | `/api/quiz-resultats.php` | élève | `{mode, score, total}` → enregistre une partie |
+| GET | `/api/quiz-resultats.php` | élève | ses 500 derniers résultats de quiz (fenêtre large pour permettre un bilan par période sur une année complète) |
+| POST | `/api/quiz-resultats.php` | élève | `{mode, score, total, premierCoup?, aideUtilisee?, dureeSecondes?, rattrapageReussi?, aideReussi?}` → enregistre une partie (les champs optionnels sont nullables, absents sur les séances d'avant leur migration respective) |
 | DELETE | `/api/quiz-resultats.php` | élève | efface ses résultats |
 | GET | `/api/dictee-rates.php` | élève | ses mots ratés en dictée, les plus ratés d'abord |
 | POST | `/api/dictee-rates.php` | élève | `{lemmaId, word, reussi}` → incrémente le compteur, ou retire le mot si réussi |
-| GET | `/api/bilan-eleve.php?studentId=` | enseignant | résultats et mots les plus ratés en dictée d'un élève |
+| GET | `/api/bilan-eleve.php?studentId=` | enseignant | résultats (mêmes champs que `quiz-resultats.php`, 500 derniers) et mots les plus ratés en dictée d'un élève |
 | GET | `/api/favoris.php` | élève | ses mots favoris |
 | POST | `/api/favoris.php` | élève | `{lemmaId, word, category}` → ajoute un favori |
 | DELETE | `/api/favoris.php?lemmaId=` | élève | retire un favori |
