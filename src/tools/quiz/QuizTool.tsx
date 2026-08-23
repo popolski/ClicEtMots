@@ -57,6 +57,17 @@ const MASCOTTE_GRAMMAIRE: Record<CategorieGrammaireQuiz, string> = {
 
 const NB_MOTS_SESSION = 10
 
+/**
+ * Modes où la longueur de la séance se choisit au lancement, avec les
+ * niveaux proposés. Demandé par Camille : "5, 10, 15, 20" pour la dictée,
+ * "5 ou 10" pour la recomposition. Les autres modes gardent NB_MOTS_SESSION
+ * fixe, sans écran de choix.
+ */
+const NIVEAUX_SEANCE: Partial<Record<ModeQuiz, number[]>> = {
+  dictee: [5, 10, 15, 20],
+  reconstitution: [5, 10],
+}
+
 const MODE_LABEL: Record<ModeQuiz, string> = {
   qcm: 'Choix multiple',
   reconstitution: 'Recomposer le mot',
@@ -375,6 +386,12 @@ export function QuizTool() {
   const [motsRates, setMotsRates] = useState<MotRateDictee[] | null>(null)
   const [enRattrapage, setEnRattrapage] = useState(false)
   const [totalSeance, setTotalSeance] = useState(0)
+  // Longueur de la séance en cours - NB_MOTS_SESSION par défaut, ou choisie
+  // au lancement pour les modes listés dans NIVEAUX_SEANCE.
+  const [tailleSeance, setTailleSeance] = useState(NB_MOTS_SESSION)
+  // Mode cliqué mais dont la longueur reste à choisir (voir NIVEAUX_SEANCE) -
+  // écran intermédiaire entre le menu et le lancement de la séance.
+  const [modeEnChoixTaille, setModeEnChoixTaille] = useState<ModeQuiz | null>(null)
 
   useEffect(() => {
     loadWordIndex().then(setWordIndex)
@@ -418,10 +435,10 @@ export function QuizTool() {
     // qu'il fallait la compléter. La dictée est volontairement exclue de ce
     // mécanisme : elle ne porte que sur les mots donnés en classe.
     const completer = (base: Question[], reste: () => Question[]): Question[] => {
-      if (base.length >= NB_MOTS_SESSION) return base.slice(0, NB_MOTS_SESSION)
+      if (base.length >= tailleSeance) return base.slice(0, tailleSeance)
       const pris = new Set(base.map((q) => `${q.entree.lemmaId}|${q.entree.word}`))
       const complement = reste().filter((q) => !pris.has(`${q.entree.lemmaId}|${q.entree.word}`))
-      return [...base, ...complement].slice(0, NB_MOTS_SESSION)
+      return [...base, ...complement].slice(0, tailleSeance)
     }
 
     // La dictée porte PAR NATURE sur les mots vus en classe : pas de repli
@@ -450,9 +467,9 @@ export function QuizTool() {
       // Les révisions ne mangent pas toute la séance : la moitié au plus,
       // sinon un élève en difficulté ne verrait plus jamais de mot nouveau.
       const tirage = [
-        ...revisions.slice(0, Math.ceil(NB_MOTS_SESSION / 2)),
+        ...revisions.slice(0, Math.ceil(tailleSeance / 2)),
         ...nouveaux,
-      ].slice(0, NB_MOTS_SESSION)
+      ].slice(0, tailleSeance)
       setQuestions(tirage.map((entree) => ({ entree })))
       setTotalSeance(tirage.length)
       return
@@ -465,7 +482,7 @@ export function QuizTool() {
     if (mode === 'graphie') {
       const depuis = (source: MotCandidat[]): Question[] => {
         const parMot = new Map(source.map((m) => [`${m.lemmaId}|${m.word}`, m]))
-        return preparerSeance(melanger(source), wordIndex, NB_MOTS_SESSION).flatMap((g) => {
+        return preparerSeance(melanger(source), wordIndex, tailleSeance).flatMap((g) => {
           const entree = parMot.get(`${g.lemmaId}|${g.mot}`)
           return entree ? [{ entree, graphie: g }] : []
         })
@@ -479,11 +496,11 @@ export function QuizTool() {
     if (mode === 'grammaire') {
       const depuisListe =
         utiliserListeSemaine && motsSemaineCumules
-          ? equilibrerParNature(sansAmbigus(motsSemaineCumules), NB_MOTS_SESSION)
+          ? equilibrerParNature(sansAmbigus(motsSemaineCumules), tailleSeance)
           : []
       setQuestions(
         completer(depuisListe, () =>
-          equilibrerParNature(sansAmbigus(motsFrequentsPourGrammaire(wordIndex)), NB_MOTS_SESSION),
+          equilibrerParNature(sansAmbigus(motsFrequentsPourGrammaire(wordIndex)), tailleSeance),
         ),
       )
       return
@@ -492,7 +509,7 @@ export function QuizTool() {
     function construire(source: MotCandidat[]): Question[] {
       const choisis: Question[] = []
       for (const entree of melanger(source)) {
-        if (choisis.length >= NB_MOTS_SESSION) break
+        if (choisis.length >= tailleSeance) break
         if (mode !== 'qcm') {
           choisis.push({ entree })
           continue
@@ -511,7 +528,7 @@ export function QuizTool() {
     const depuisListe =
       utiliserListeSemaine && motsSemaineCumules ? construire(sansAmbigus(motsSemaineCumules)) : []
     setQuestions(completer(depuisListe, () => construire(sansAmbigus(motsFrequentsPourQuiz(wordIndex)))))
-  }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules, motsRates])
+  }, [wordIndex, mode, questions, utiliserListeSemaine, motsSemaineCumules, motsRates, tailleSeance])
 
   /**
    * `duPremierCoup` n'a de sens qu'en dictée, où l'élève a trois essais : il
@@ -552,6 +569,8 @@ export function QuizTool() {
   // partie. Signalé à l'usage.
   function revenirAuChoixDuMode() {
     setMode(null)
+    setModeEnChoixTaille(null)
+    setTailleSeance(NB_MOTS_SESSION)
     setQuestions(null)
     setIndex(0)
     setScore(0)
@@ -560,6 +579,12 @@ export function QuizTool() {
     setARattraper([])
     setEnRattrapage(false)
     setTotalSeance(0)
+  }
+
+  /** Lance directement un mode sans écran de choix de longueur. */
+  function choisirMode(m: ModeQuiz) {
+    setTailleSeance(NB_MOTS_SESSION)
+    setMode(m)
   }
 
   function motSuivant() {
@@ -598,6 +623,34 @@ export function QuizTool() {
     setARepondu(false)
   }
 
+  if (!mode && modeEnChoixTaille) {
+    const niveaux = NIVEAUX_SEANCE[modeEnChoixTaille] ?? []
+    return (
+      <ToolLayout
+        title="Mes exercices"
+        description="Combien de mots pour cette séance ?"
+        showBackToKeyboard
+        onBack={() => setModeEnChoixTaille(null)}
+      >
+        <div className="mx-auto flex max-w-sm flex-wrap justify-center gap-3">
+          {niveaux.map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => {
+                setTailleSeance(n)
+                setMode(modeEnChoixTaille)
+              }}
+              className="rounded-xl border-2 border-gray-200 bg-white px-6 py-4 text-2xl font-semibold text-gray-800 hover:border-brand-400 hover:bg-brand-50"
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      </ToolLayout>
+    )
+  }
+
   if (!mode) {
     // La dictée n'a de sens que s'il y a des mots de la semaine enregistrés :
     // sans liste, elle n'est pas proposée du tout plutôt que d'afficher un
@@ -633,7 +686,7 @@ export function QuizTool() {
               <button
                 key={m}
                 type="button"
-                onClick={() => setMode(m)}
+                onClick={() => (NIVEAUX_SEANCE[m] ? setModeEnChoixTaille(m) : choisirMode(m))}
                 className={`flex items-start gap-3 rounded-xl border border-gray-200 border-l-5 bg-white px-4 py-3 text-left transition hover:shadow-md ${MODE_PRESENTATION[m].couleur} ${centrage}`}
               >
                 <span className="text-2xl leading-none">{MODE_PRESENTATION[m].icone}</span>
