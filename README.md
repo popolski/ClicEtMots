@@ -162,6 +162,17 @@ Ces sources tierces (`third_party/`) ne sont pas versionnées — voir les
 en-têtes de chaque script `build-*.mjs` pour savoir où les récupérer et
 comment relancer la génération.
 
+## Pistes d'amélioration
+
+- **Accessibilité (RGAA)** : l'unique fenêtre modale de l'application (fiche
+  détaillée d'un son, `PhonemeInfoModal.tsx`) ne respecte pas encore les
+  critères P0 du RGAA — rôle/`aria-modal` absents, titre non relié par
+  `aria-labelledby`, aucune gestion du focus clavier (pas de piège de focus
+  ni de retour au clic d'origine à la fermeture), pas de fermeture via
+  Échap. Comme il n'existe qu'une seule modale dans toute l'application
+  (pas de composant générique réutilisable), la corriger est un chantier
+  ciblé — un seul fichier, de l'ordre de quelques dizaines de lignes.
+
 ## Licence
 
 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr) —
