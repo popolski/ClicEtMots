@@ -2,7 +2,8 @@
 -- uniquement (jamais affiché à l'élève ni aux parents).
 -- À exécuter dans phpMyAdmin APRÈS schema-v12.sql.
 --
--- Sans risque à rejouer (IF NOT EXISTS).
+-- L'ALTER TABLE ne peut être exécuté qu'UNE FOIS - si tu le relances après
+-- un premier passage réussi, ignore l'erreur "Duplicate column name".
 
 -- Chronométré côté client entre l'affichage de la 1re question et la fin de
 -- la séance (voir QuizTool.tsx). NULL = séance enregistrée avant cette
@@ -10,4 +11,4 @@
 -- raison - en pratique n'arrive pas, mais même principe que premier_coup et
 -- aide_utilisee).
 ALTER TABLE quiz_resultats
-  ADD COLUMN IF NOT EXISTS duree_secondes INT NULL DEFAULT NULL;
+  ADD COLUMN duree_secondes INT NULL DEFAULT NULL;

@@ -2,7 +2,8 @@
 -- ("Je ne sais pas l'écrire").
 -- À exécuter dans phpMyAdmin APRÈS schema-v11.sql.
 --
--- Sans risque à rejouer (IF NOT EXISTS).
+-- L'ALTER TABLE ne peut être exécuté qu'UNE FOIS - si tu le relances après
+-- un premier passage réussi, ignore l'erreur "Duplicate column name".
 
 -- Jusqu'ici, cliquer sur "Je ne sais pas l'écrire" pendant une dictée
 -- n'était enregistré nulle part : impossible pour l'enseignante de savoir
@@ -15,4 +16,4 @@
 -- elle - à distinguer de 0, qui voudrait dire "jamais utilisé" mais serait
 -- une vraie mesure. Même principe que premier_coup (schema-v11.sql).
 ALTER TABLE quiz_resultats
-  ADD COLUMN IF NOT EXISTS aide_utilisee INT NULL DEFAULT NULL;
+  ADD COLUMN aide_utilisee INT NULL DEFAULT NULL;

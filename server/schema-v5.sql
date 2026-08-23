@@ -5,7 +5,9 @@
 -- le cœur pédagogique de l'outil.
 -- À exécuter dans phpMyAdmin APRÈS schema-v4.sql.
 --
--- Comme les migrations précédentes, sans risque à rejouer (IF NOT EXISTS).
+-- Comme pour les migrations précédentes, ADD COLUMN ne peut être exécuté
+-- qu'UNE FOIS - si tu le relances après un premier passage réussi, ignore
+-- l'erreur "Duplicate column name".
 
 ALTER TABLE students
-  ADD COLUMN IF NOT EXISTS recherche_directe TINYINT(1) NOT NULL DEFAULT 0;
+  ADD COLUMN recherche_directe TINYINT(1) NOT NULL DEFAULT 0;
