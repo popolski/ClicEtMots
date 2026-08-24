@@ -13,6 +13,17 @@
 // Configuration requise dans api/config.php (voir api/config.php.example) :
 // B2_KEY_ID, B2_APPLICATION_KEY, B2_BUCKET_NAME.
 
+// Trace TEMPORAIRE de débogage : écrit dans un fichier à côté de ce script
+// (visible directement en FTP), pour vérifier si la tâche planifiée
+// exécute vraiment ce script - indépendamment des logs OVH, dont on n'est
+// plus certains qu'ils capturent tout de façon fiable. À retirer une fois
+// la sauvegarde confirmée fonctionnelle.
+function trace(string $message): void {
+    @file_put_contents(__DIR__ . '/last-run-debug.log', date('c') . " - $message\n", FILE_APPEND);
+}
+
+trace('script démarré, SAPI=' . PHP_SAPI);
+
 if (PHP_SAPI !== 'cli') {
     http_response_code(403);
     exit("Réservé à l'exécution en ligne de commande (tâche planifiée).\n");
@@ -23,11 +34,15 @@ if (PHP_SAPI !== 'cli') {
 // server/README.md "Upload FTP") - ce fichier-ci, lui, est déployé en
 // dehors de ce dossier (ex. /clicetmots/api-src/), donc SIBLING de api/, pas
 // à l'intérieur. D'où le "../api/" et non "/api/".
-require_once __DIR__ . '/../api/config.php';
+$cheminConfig = __DIR__ . '/../api/config.php';
+trace('chargement config depuis ' . $cheminConfig . ' (existe: ' . (file_exists($cheminConfig) ? 'oui' : 'NON') . ')');
+require_once $cheminConfig;
+trace('config chargée avec succès');
 
 const BACKUP_RETENTION_JOURS = 30;
 
 function echec(string $message): never {
+    trace("ÉCHEC : $message");
     fwrite(STDERR, "[clicetmots-backup] ÉCHEC : $message\n");
     exit(1);
 }
@@ -69,11 +84,13 @@ $commande = sprintf(
     escapeshellarg($cheminLocal),
 );
 exec($commande, $sortie, $codeRetour);
+trace("mysqldump exécuté, code retour $codeRetour");
 
 if ($codeRetour !== 0 || !file_exists($cheminLocal) || filesize($cheminLocal) === 0) {
     $erreur = @file_get_contents('/tmp/clicetmots_backup_err.log') ?: '(pas de détail)';
     echec("mysqldump a échoué (code $codeRetour) : $erreur");
 }
+trace('dump créé : ' . filesize($cheminLocal) . ' octets');
 
 // 2. Autorisation B2 ----------------------------------------------------------
 
@@ -128,6 +145,7 @@ if ($codeEnvoi >= 300) {
 }
 
 unlink($cheminLocal);
+trace("envoyé vers B2 avec succès : $nomFichier");
 echo "[clicetmots-backup] OK : $nomFichier envoyé vers B2 (" . strlen($contenu) . " octets)\n";
 
 // 4. Rotation : supprime les sauvegardes plus vieilles que la rétention ------
