@@ -173,37 +173,58 @@ de conjugaison qu'une orthographe inventée montrée à un enfant.
 
 ## Sauvegardes
 
-L'hébergement mutualisé OVH ne sauvegarde pas la base de données
-automatiquement (contrairement aux fichiers, sauvegardés côté FTP). `server/backup-db.php`
-comble ce manque : `mysqldump` -> compression gzip -> envoi vers
-[Backblaze B2](https://www.backblaze.com/cloud-storage) (10 Go gratuits),
-avec rotation automatique (30 jours de rétention par défaut, réglable en
-tête du fichier).
+L'hébergement mutualisé OVH ne sauvegarde pas automatiquement (ni la base de
+données, ni les fichiers). Deux scripts comblent ce manque, tous deux vers
+[Backblaze B2](https://www.backblaze.com/cloud-storage) (10 Go gratuits,
+largement suffisant ici) via son API native en cURL (pas de dépendance
+Composer) - la logique commune (auth B2, envoi, rotation) est factorisée
+dans `backup-common.php`.
 
-Ce script vit dans `server/`, **pas** `server/api/` : il n'est donc jamais
-copié dans `/clicetmots/api/` (voir "Upload FTP" plus haut), et reste
-inaccessible depuis un navigateur - seule une tâche planifiée peut
-l'exécuter.
+| Script | Fréquence | Contenu | Rétention |
+|---|---|---|---|
+| `backup-db.php` | Quotidienne | `mysqldump` de la base, compressé | 30 jours |
+| `backup-files.php` | Hebdomadaire | Tout `/clicetmots/` sauf `api-src/` (dist déployé : audio, pictos, mascottes, assets, **et** `api/config.php`) | 8 semaines |
+
+`backup-files.php` est volontairement moins fréquent : ces fichiers pèsent
+~250 Mo (dont ~230 Mo d'audio pré-généré) et changent bien moins souvent que
+la base - inutile de les retransférer chaque nuit.
+
+Les trois fichiers (`backup-common.php`, `backup-db.php`, `backup-files.php`)
+vivent dans `server/`, **pas** `server/api/` : ils ne sont donc jamais
+copiés dans `/clicetmots/api/` (voir "Upload FTP" plus haut), et restent
+inaccessibles depuis un navigateur - seule une tâche planifiée peut les
+exécuter.
 
 **Mise en place (une seule fois)** :
 
 1. Remplis `B2_KEY_ID` / `B2_APPLICATION_KEY` / `B2_BUCKET_NAME` dans
    `config.php` (voir `config.php.example`) - un compte Backblaze B2 gratuit
-   et un bucket **privé** suffisent.
-2. Vérifie que le fichier a bien été transféré à sa place (`/clicetmots/api-src/backup-db.php`
-   ou équivalent selon ton organisation FTP - l'important est qu'il ne soit
-   PAS dans `/clicetmots/api/`, mais bien un dossier VOISIN de `/clicetmots/api/`
-   - le script référence `config.php` via `../api/config.php`, un chemin
-   relatif qui suppose cette organisation précise).
+   et un bucket **privé** suffisent, partagé entre les deux scripts.
+2. Transfère les trois fichiers ensemble, dans un dossier VOISIN de
+   `/clicetmots/api/` (ex. `/clicetmots/api-src/`, jamais à l'intérieur de
+   `/clicetmots/api/`) - `backup-db.php`/`backup-files.php` référencent
+   `config.php` via `../api/config.php`, un chemin relatif qui suppose cette
+   organisation précise.
 3. Dans le manager OVH -> ton hébergement -> "Tâches planifiées - Cron" ->
-   "Ajouter une planification" : commande = chemin complet vers
-   `backup-db.php` sur le serveur, fréquence quotidienne (ex. tôt le matin),
-   langage = la version PHP du site. Une adresse e-mail peut être renseignée
-   pour être prévenu en cas d'échec.
+   "Ajouter une planification" : **une tâche par script**, commande = chemin
+   complet vers le fichier sur le serveur, fréquence quotidienne pour
+   `backup-db.php` / hebdomadaire pour `backup-files.php` (ex. tôt le matin
+   un jour calme), langage = la version PHP du site. Une adresse e-mail peut
+   être renseignée pour être prévenu en cas d'échec.
 
-Le script confirmé fonctionnel sur cet hébergement : `exec()`, `shell_exec()`
-et `mysqldump` (`/usr/bin/mysqldump`) sont disponibles, `cURL` aussi (utilisé
-pour parler à l'API B2, sans dépendance Composer).
+Les deux scripts confirmés fonctionnels sur cet hébergement : `exec()`,
+`shell_exec()`, `mysqldump` (`/usr/bin/mysqldump`) et `cURL` sont
+disponibles. `tar` (utilisé par `backup-files.php` pour l'archive) n'a pas
+encore été vérifié explicitement, mais est quasi-systématiquement présent
+sur ce type d'hébergement - la trace de débogage (voir ci-dessous) le dira
+sinon.
+
+**Débogage** : chaque script écrit une trace horodatée dans un fichier à
+côté de lui (`last-run-debug.log` pour la base, `last-run-debug-files.log`
+pour les fichiers), lisible directement en FTP - indépendamment des logs
+Cron d'OVH, qui se sont avérés être un flux EN DIRECT (pas un historique) et
+peu pratiques à surveiller au bon moment. À retirer une fois les deux
+sauvegardes confirmées fonctionnelles en continu.
 
 ## Relations (synonymes / contraires / famille)
 

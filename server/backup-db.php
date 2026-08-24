@@ -1,5 +1,5 @@
 <?php
-// Sauvegarde quotidienne de la base MySQL, déclenchée par une tâche
+// Sauvegarde QUOTIDIENNE de la base MySQL, déclenchée par une tâche
 // planifiée OVH (Cron) qui exécute ce fichier directement - jamais appelé
 // depuis le navigateur : ce fichier vit dans server/, PAS server/api/, donc
 // il n'est jamais copié dans /clicetmots/api/ (le seul dossier web-accessible,
@@ -7,22 +7,23 @@
 // ligne de commande sur le serveur.
 //
 // Étapes : mysqldump -> gzip -> envoi vers Backblaze B2 (API native, pas de
-// dépendance Composer) -> suppression des sauvegardes B2 plus vieilles que
-// BACKUP_RETENTION_JOURS -> suppression du fichier temporaire local.
+// dépendance Composer, voir backup-common.php) -> suppression des
+// sauvegardes B2 plus vieilles que BACKUP_RETENTION_JOURS -> suppression du
+// fichier temporaire local.
 //
 // Configuration requise dans api/config.php (voir api/config.php.example) :
 // B2_KEY_ID, B2_APPLICATION_KEY, B2_BUCKET_NAME.
+//
+// Sauvegarde SÉPARÉE des fichiers du site (dist/, audio, pictos, config.php) :
+// voir backup-files.php, en tâche hebdomadaire distincte - ces fichiers
+// pèsent bien plus lourd (~250 Mo) et changent bien moins souvent que la
+// base, inutile de les retransférer chaque nuit.
 
-// Trace TEMPORAIRE de débogage : écrit dans un fichier à côté de ce script
-// (visible directement en FTP), pour vérifier si la tâche planifiée
-// exécute vraiment ce script - indépendamment des logs OVH, dont on n'est
-// plus certains qu'ils capturent tout de façon fiable. À retirer une fois
-// la sauvegarde confirmée fonctionnelle.
-function trace(string $message): void {
-    @file_put_contents(__DIR__ . '/last-run-debug.log', date('c') . " - $message\n", FILE_APPEND);
-}
+const NOM_LOG = 'last-run-debug.log';
 
-trace('script démarré, SAPI=' . PHP_SAPI);
+require_once __DIR__ . '/backup-common.php';
+
+trace(NOM_LOG, 'script démarré, SAPI=' . PHP_SAPI);
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(403);
@@ -35,46 +36,11 @@ if (PHP_SAPI !== 'cli') {
 // dehors de ce dossier (ex. /clicetmots/api-src/), donc SIBLING de api/, pas
 // à l'intérieur. D'où le "../api/" et non "/api/".
 $cheminConfig = __DIR__ . '/../api/config.php';
-trace('chargement config depuis ' . $cheminConfig . ' (existe: ' . (file_exists($cheminConfig) ? 'oui' : 'NON') . ')');
+trace(NOM_LOG, 'chargement config depuis ' . $cheminConfig . ' (existe: ' . (file_exists($cheminConfig) ? 'oui' : 'NON') . ')');
 require_once $cheminConfig;
-trace('config chargée avec succès');
+trace(NOM_LOG, 'config chargée avec succès');
 
 const BACKUP_RETENTION_JOURS = 30;
-
-function echec(string $message): never {
-    trace("ÉCHEC : $message");
-    fwrite(STDERR, "[clicetmots-backup] ÉCHEC : $message\n");
-    exit(1);
-}
-
-function b2Appel(string $url, array $headers, ?string $body = null): array {
-    $ch = curl_init($url);
-    $options = [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => $headers,
-        CURLOPT_TIMEOUT => 120,
-    ];
-    // Ne définir CURLOPT_POSTFIELDS que si on a vraiment un corps à envoyer :
-    // le fixer à null bascule quand même la requête en POST côté cURL (même
-    // vide), alors que b2_authorize_account attend un GET simple avec juste
-    // l'en-tête d'autorisation - d'où l'échec "object should start with brace".
-    if ($body !== null) {
-        $options[CURLOPT_POST] = true;
-        $options[CURLOPT_POSTFIELDS] = $body;
-    }
-    curl_setopt_array($ch, $options);
-    $reponse = curl_exec($ch);
-    if ($reponse === false) {
-        echec('cURL - ' . curl_error($ch));
-    }
-    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    $donnees = json_decode($reponse, true);
-    if ($code >= 300 || !is_array($donnees)) {
-        echec("appel B2 $url a échoué (HTTP $code) : " . substr((string) $reponse, 0, 500));
-    }
-    return $donnees;
-}
 
 // 1. Dump + compression -----------------------------------------------------
 
@@ -91,91 +57,22 @@ $commande = sprintf(
     escapeshellarg($cheminLocal),
 );
 exec($commande, $sortie, $codeRetour);
-trace("mysqldump exécuté, code retour $codeRetour");
+trace(NOM_LOG, "mysqldump exécuté, code retour $codeRetour");
 
 if ($codeRetour !== 0 || !file_exists($cheminLocal) || filesize($cheminLocal) === 0) {
     $erreur = @file_get_contents('/tmp/clicetmots_backup_err.log') ?: '(pas de détail)';
-    echec("mysqldump a échoué (code $codeRetour) : $erreur");
+    echec(NOM_LOG, "mysqldump a échoué (code $codeRetour) : $erreur");
 }
-trace('dump créé : ' . filesize($cheminLocal) . ' octets');
+trace(NOM_LOG, 'dump créé : ' . filesize($cheminLocal) . ' octets');
 
-// 2. Autorisation B2 ----------------------------------------------------------
+// 2. Envoi vers B2 ------------------------------------------------------------
 
-$auth = b2Appel(
-    'https://api.backblazeb2.com/b2api/v2/b2_authorize_account',
-    ['Authorization: Basic ' . base64_encode(B2_KEY_ID . ':' . B2_APPLICATION_KEY)],
-);
-$apiUrl = $auth['apiUrl'];
-$jetonAuth = $auth['authorizationToken'];
-trace("autorisé auprès de B2, apiUrl=$apiUrl");
-
-// Le bucket doit exister au préalable (créé une fois à la main sur
-// backblaze.com) - on retrouve juste son bucketId à partir de son nom.
-$buckets = b2Appel(
-    "$apiUrl/b2api/v2/b2_list_buckets",
-    ["Authorization: $jetonAuth", 'Content-Type: application/json'],
-    json_encode(['accountId' => $auth['accountId'], 'bucketName' => B2_BUCKET_NAME]),
-);
-if (empty($buckets['buckets'])) {
-    echec('bucket "' . B2_BUCKET_NAME . '" introuvable sur ce compte B2.');
-}
-$bucketId = $buckets['buckets'][0]['bucketId'];
-trace("bucket trouvé : $bucketId");
-
-// 3. Envoi du fichier ---------------------------------------------------------
-
-$urlEnvoi = b2Appel(
-    "$apiUrl/b2api/v2/b2_get_upload_url",
-    ["Authorization: $jetonAuth", 'Content-Type: application/json'],
-    json_encode(['bucketId' => $bucketId]),
-);
-
-$contenu = file_get_contents($cheminLocal);
-$ch = curl_init($urlEnvoi['uploadUrl']);
-curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => $contenu,
-    CURLOPT_HTTPHEADER => [
-        'Authorization: ' . $urlEnvoi['uploadAuthToken'],
-        'X-Bz-File-Name: ' . rawurlencode($nomFichier),
-        'Content-Type: application/gzip',
-        'Content-Length: ' . strlen($contenu),
-        'X-Bz-Content-Sha1: ' . sha1($contenu),
-    ],
-    CURLOPT_TIMEOUT => 300,
-]);
-$reponseEnvoi = curl_exec($ch);
-$codeEnvoi = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
-
-if ($codeEnvoi >= 300) {
-    echec("envoi vers B2 a échoué (HTTP $codeEnvoi) : " . substr((string) $reponseEnvoi, 0, 500));
-}
-
+$connexion = b2Connexion(NOM_LOG);
+b2Envoyer(NOM_LOG, $connexion, $cheminLocal, $nomFichier);
 unlink($cheminLocal);
-trace("envoyé vers B2 avec succès : $nomFichier");
-echo "[clicetmots-backup] OK : $nomFichier envoyé vers B2 (" . strlen($contenu) . " octets)\n";
+echo "[clicetmots-backup] OK : $nomFichier envoyé vers B2.\n";
 
-// 4. Rotation : supprime les sauvegardes plus vieilles que la rétention ------
+// 3. Rotation -------------------------------------------------------------
 
-$seuil = time() - BACKUP_RETENTION_JOURS * 86400;
-$liste = b2Appel(
-    "$apiUrl/b2api/v2/b2_list_file_names",
-    ["Authorization: $jetonAuth", 'Content-Type: application/json'],
-    json_encode(['bucketId' => $bucketId, 'prefix' => 'clicetmots_', 'maxFileCount' => 1000]),
-);
-
-$supprimes = 0;
-foreach ($liste['files'] ?? [] as $fichier) {
-    if (($fichier['uploadTimestamp'] / 1000) < $seuil) {
-        b2Appel(
-            "$apiUrl/b2api/v2/b2_delete_file_version",
-            ["Authorization: $jetonAuth", 'Content-Type: application/json'],
-            json_encode(['fileName' => $fichier['fileName'], 'fileId' => $fichier['fileId']]),
-        );
-        $supprimes++;
-    }
-}
-
+$supprimes = b2Rotation(NOM_LOG, $connexion, 'clicetmots_', BACKUP_RETENTION_JOURS);
 echo "[clicetmots-backup] Rotation : $supprimes ancienne(s) sauvegarde(s) supprimée(s) (rétention " . BACKUP_RETENTION_JOURS . " jours).\n";

@@ -1,0 +1,79 @@
+<?php
+// Sauvegarde HEBDOMADAIRE des fichiers du site (contenu de dist/ déployé -
+// audio pré-généré, pictogrammes, mascottes, assets - PLUS api/config.php),
+// distincte de backup-db.php (quotidien, base de données uniquement). Ces
+// fichiers pèsent nettement plus lourd (~250 Mo, dont ~230 Mo d'audio) et
+// changent bien moins souvent que la base : inutile de les retransférer
+// chaque nuit, une fois par semaine suffit largement.
+//
+// Comme backup-db.php : vit dans server/, jamais copié dans /clicetmots/api/,
+// exécuté uniquement par une tâche planifiée OVH (Cron), jamais depuis le
+// navigateur.
+//
+// tar l'intégralité de /clicetmots/ (racine du site déployé, un niveau
+// au-dessus de ce script) SAUF api-src/ (ce dossier de scripts de
+// sauvegarde lui-même, sans intérêt à sauvegarder) -> gzip -> envoi vers
+// Backblaze B2 -> rotation. Inclut donc automatiquement tout nouveau
+// dossier ajouté au build sans qu'il faille mettre ce script à jour.
+
+const NOM_LOG = 'last-run-debug-files.log';
+
+require_once __DIR__ . '/backup-common.php';
+
+trace(NOM_LOG, 'script démarré, SAPI=' . PHP_SAPI);
+
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit("Réservé à l'exécution en ligne de commande (tâche planifiée).\n");
+}
+
+$cheminConfig = __DIR__ . '/../api/config.php';
+trace(NOM_LOG, 'chargement config depuis ' . $cheminConfig . ' (existe: ' . (file_exists($cheminConfig) ? 'oui' : 'NON') . ')');
+require_once $cheminConfig;
+trace(NOM_LOG, 'config chargée avec succès');
+
+const BACKUP_RETENTION_SEMAINES = 8;
+
+// 1. Archive + compression ----------------------------------------------------
+
+$racineSite = realpath(__DIR__ . '/..');
+if ($racineSite === false) {
+    echec(NOM_LOG, "racine du site introuvable à partir de __DIR__/..");
+}
+trace(NOM_LOG, "racine du site : $racineSite");
+
+$horodatage = date('Y-m-d_His');
+$nomFichier = "clicetmots-fichiers_{$horodatage}.tar.gz";
+$cheminLocal = sys_get_temp_dir() . '/' . $nomFichier;
+
+// --exclude porte sur le nom relatif à -C, donc juste "api-src" (pas le
+// chemin complet) suffit à exclure ce dossier-ci de l'archive.
+$commande = sprintf(
+    'tar -czf %s --exclude=api-src -C %s . 2>/tmp/clicetmots_backup_files_err.log',
+    escapeshellarg($cheminLocal),
+    escapeshellarg($racineSite),
+);
+exec($commande, $sortie, $codeRetour);
+trace(NOM_LOG, "tar exécuté, code retour $codeRetour");
+
+// tar renvoie parfois 1 pour un avertissement mineur (fichier modifié
+// pendant l'archivage) sans que l'archive soit invalide - on ne bloque que
+// sur une absence totale de fichier ou un fichier vide, pas sur le code
+// retour seul.
+if (!file_exists($cheminLocal) || filesize($cheminLocal) === 0) {
+    $erreur = @file_get_contents('/tmp/clicetmots_backup_files_err.log') ?: '(pas de détail)';
+    echec(NOM_LOG, "tar a échoué (code $codeRetour) : $erreur");
+}
+trace(NOM_LOG, 'archive créée : ' . filesize($cheminLocal) . ' octets');
+
+// 2. Envoi vers B2 (même bucket que la base, préfixe différent) ---------------
+
+$connexion = b2Connexion(NOM_LOG);
+b2Envoyer(NOM_LOG, $connexion, $cheminLocal, $nomFichier);
+unlink($cheminLocal);
+echo "[clicetmots-backup-files] OK : $nomFichier envoyé vers B2.\n";
+
+// 3. Rotation (en semaines, pas en jours - fréquence hebdomadaire) -----------
+
+$supprimes = b2Rotation(NOM_LOG, $connexion, 'clicetmots-fichiers_', BACKUP_RETENTION_SEMAINES * 7);
+echo "[clicetmots-backup-files] Rotation : $supprimes ancienne(s) sauvegarde(s) supprimée(s) (rétention " . BACKUP_RETENTION_SEMAINES . " semaines).\n";
