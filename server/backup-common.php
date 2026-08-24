@@ -91,7 +91,7 @@ function b2Envoyer(string $nomLog, array $connexion, string $cheminLocal, string
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => $contenu,
         CURLOPT_HTTPHEADER => [
-            'Authorization: ' . $urlEnvoi['uploadAuthToken'],
+            'Authorization: ' . $urlEnvoi['authorizationToken'],
             'X-Bz-File-Name: ' . rawurlencode($nomDistant),
             'Content-Type: b2/x-auto',
             'Content-Length: ' . strlen($contenu),
