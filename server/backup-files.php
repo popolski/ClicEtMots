@@ -16,27 +16,20 @@
 // Backblaze B2 -> rotation. Inclut donc automatiquement tout nouveau
 // dossier ajouté au build sans qu'il faille mettre ce script à jour.
 
-const NOM_LOG = 'last-run-debug-files.log';
-
 require_once __DIR__ . '/backup-common.php';
 
-// ~250 Mo à archiver : plus long qu'une limite CLI par défaut sur certains
-// hébergements (repéré ici - le script s'arrêtait net en plein milieu du
-// tar, sans la moindre trace d'erreur, signe d'un kill plutôt que d'un vrai
-// échec applicatif).
+// ~250 Mo à archiver : le tar seul prend une bonne minute, plus long qu'une
+// limite CLI par défaut sur cet hébergement (constaté : le script s'arrêtait
+// net en plein milieu du tar, sans la moindre trace d'erreur - signe d'un
+// kill plutôt que d'un vrai échec applicatif).
 set_time_limit(0);
-
-trace(NOM_LOG, 'script démarré, SAPI=' . PHP_SAPI . ', max_execution_time=' . ini_get('max_execution_time'));
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(403);
     exit("Réservé à l'exécution en ligne de commande (tâche planifiée).\n");
 }
 
-$cheminConfig = __DIR__ . '/../api/config.php';
-trace(NOM_LOG, 'chargement config depuis ' . $cheminConfig . ' (existe: ' . (file_exists($cheminConfig) ? 'oui' : 'NON') . ')');
-require_once $cheminConfig;
-trace(NOM_LOG, 'config chargée avec succès');
+require_once __DIR__ . '/../api/config.php';
 
 const BACKUP_RETENTION_SEMAINES = 8;
 
@@ -44,9 +37,8 @@ const BACKUP_RETENTION_SEMAINES = 8;
 
 $racineSite = realpath(__DIR__ . '/..');
 if ($racineSite === false) {
-    echec(NOM_LOG, "racine du site introuvable à partir de __DIR__/..");
+    echec('racine du site introuvable à partir de __DIR__/..');
 }
-trace(NOM_LOG, "racine du site : $racineSite");
 
 $horodatage = date('Y-m-d_His');
 $nomFichier = "clicetmots-fichiers_{$horodatage}.tar.gz";
@@ -60,7 +52,6 @@ $commande = sprintf(
     escapeshellarg($racineSite),
 );
 exec($commande, $sortie, $codeRetour);
-trace(NOM_LOG, "tar exécuté, code retour $codeRetour");
 
 // tar renvoie parfois 1 pour un avertissement mineur (fichier modifié
 // pendant l'archivage) sans que l'archive soit invalide - on ne bloque que
@@ -68,18 +59,17 @@ trace(NOM_LOG, "tar exécuté, code retour $codeRetour");
 // retour seul.
 if (!file_exists($cheminLocal) || filesize($cheminLocal) === 0) {
     $erreur = @file_get_contents('/tmp/clicetmots_backup_files_err.log') ?: '(pas de détail)';
-    echec(NOM_LOG, "tar a échoué (code $codeRetour) : $erreur");
+    echec("tar a échoué (code $codeRetour) : $erreur");
 }
-trace(NOM_LOG, 'archive créée : ' . filesize($cheminLocal) . ' octets');
 
 // 2. Envoi vers B2 (même bucket que la base, préfixe différent) ---------------
 
-$connexion = b2Connexion(NOM_LOG);
-b2Envoyer(NOM_LOG, $connexion, $cheminLocal, $nomFichier);
+$connexion = b2Connexion();
+b2Envoyer($connexion, $cheminLocal, $nomFichier);
 unlink($cheminLocal);
 echo "[clicetmots-backup-files] OK : $nomFichier envoyé vers B2.\n";
 
 // 3. Rotation (en semaines, pas en jours - fréquence hebdomadaire) -----------
 
-$supprimes = b2Rotation(NOM_LOG, $connexion, 'clicetmots-fichiers_', BACKUP_RETENTION_SEMAINES * 7);
+$supprimes = b2Rotation($connexion, 'clicetmots-fichiers_', BACKUP_RETENTION_SEMAINES * 7);
 echo "[clicetmots-backup-files] Rotation : $supprimes ancienne(s) sauvegarde(s) supprimée(s) (rétention " . BACKUP_RETENTION_SEMAINES . " semaines).\n";

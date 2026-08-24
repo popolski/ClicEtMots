@@ -212,19 +212,21 @@ exécuter.
    un jour calme), langage = la version PHP du site. Une adresse e-mail peut
    être renseignée pour être prévenu en cas d'échec.
 
-Les deux scripts confirmés fonctionnels sur cet hébergement : `exec()`,
-`shell_exec()`, `mysqldump` (`/usr/bin/mysqldump`) et `cURL` sont
-disponibles. `tar` (utilisé par `backup-files.php` pour l'archive) n'a pas
-encore été vérifié explicitement, mais est quasi-systématiquement présent
-sur ce type d'hébergement - la trace de débogage (voir ci-dessous) le dira
-sinon.
+Les deux scripts sont **confirmés fonctionnels en production** sur cet
+hébergement (testés de bout en bout fin août 2026, base et fichiers) :
+`exec()`, `shell_exec()`, `mysqldump`, `tar` et `cURL` sont tous disponibles.
+Point d'attention repéré au passage : `set_time_limit(0)` est nécessaire en
+tête de chaque script - la limite CLI par défaut de cet hébergement a
+interrompu net un premier essai de `backup-files.php` en plein milieu du
+`tar` (~250 Mo), sans la moindre erreur visible.
 
-**Débogage** : chaque script écrit une trace horodatée dans un fichier à
-côté de lui (`last-run-debug.log` pour la base, `last-run-debug-files.log`
-pour les fichiers), lisible directement en FTP - indépendamment des logs
-Cron d'OVH, qui se sont avérés être un flux EN DIRECT (pas un historique) et
-peu pratiques à surveiller au bon moment. À retirer une fois les deux
-sauvegardes confirmées fonctionnelles en continu.
+En cas de souci à déboguer un jour, les logs Cron d'OVH ("Logs" dans le
+manager, type "Cron logs") sont un flux EN DIRECT, pas un historique - il
+faut être sur la page au moment exact du déclenchement pour voir quoi que ce
+soit. Une astuce fiable pour forcer un déclenchement de test : modifier
+temporairement l'heure de la tâche sur l'heure qui vient (`backup-files.php`
+n'a qu'un seul jour de la semaine à ajuster aussi si besoin), puis remettre
+l'horaire définitif une fois vérifié.
 
 ## Relations (synonymes / contraires / famille)
 

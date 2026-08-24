@@ -19,16 +19,12 @@
 // pèsent bien plus lourd (~250 Mo) et changent bien moins souvent que la
 // base, inutile de les retransférer chaque nuit.
 
-const NOM_LOG = 'last-run-debug.log';
-
 require_once __DIR__ . '/backup-common.php';
 
-// Par précaution (voir backup-files.php, qui a révélé une limite CLI
-// inattendue sur cet hébergement) - le dump seul est petit et rapide, mais
-// autant écarter tout risque de kill en plein milieu.
+// Par précaution (le dump seul est petit et rapide, mais un hébergement
+// mutualisé peut appliquer une limite de temps même en CLI - vu sur
+// backup-files.php, qui manipule des fichiers bien plus gros).
 set_time_limit(0);
-
-trace(NOM_LOG, 'script démarré, SAPI=' . PHP_SAPI . ', max_execution_time=' . ini_get('max_execution_time'));
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(403);
@@ -40,10 +36,7 @@ if (PHP_SAPI !== 'cli') {
 // server/README.md "Upload FTP") - ce fichier-ci, lui, est déployé en
 // dehors de ce dossier (ex. /clicetmots/api-src/), donc SIBLING de api/, pas
 // à l'intérieur. D'où le "../api/" et non "/api/".
-$cheminConfig = __DIR__ . '/../api/config.php';
-trace(NOM_LOG, 'chargement config depuis ' . $cheminConfig . ' (existe: ' . (file_exists($cheminConfig) ? 'oui' : 'NON') . ')');
-require_once $cheminConfig;
-trace(NOM_LOG, 'config chargée avec succès');
+require_once __DIR__ . '/../api/config.php';
 
 const BACKUP_RETENTION_JOURS = 30;
 
@@ -62,22 +55,20 @@ $commande = sprintf(
     escapeshellarg($cheminLocal),
 );
 exec($commande, $sortie, $codeRetour);
-trace(NOM_LOG, "mysqldump exécuté, code retour $codeRetour");
 
 if ($codeRetour !== 0 || !file_exists($cheminLocal) || filesize($cheminLocal) === 0) {
     $erreur = @file_get_contents('/tmp/clicetmots_backup_err.log') ?: '(pas de détail)';
-    echec(NOM_LOG, "mysqldump a échoué (code $codeRetour) : $erreur");
+    echec("mysqldump a échoué (code $codeRetour) : $erreur");
 }
-trace(NOM_LOG, 'dump créé : ' . filesize($cheminLocal) . ' octets');
 
 // 2. Envoi vers B2 ------------------------------------------------------------
 
-$connexion = b2Connexion(NOM_LOG);
-b2Envoyer(NOM_LOG, $connexion, $cheminLocal, $nomFichier);
+$connexion = b2Connexion();
+b2Envoyer($connexion, $cheminLocal, $nomFichier);
 unlink($cheminLocal);
 echo "[clicetmots-backup] OK : $nomFichier envoyé vers B2.\n";
 
 // 3. Rotation -------------------------------------------------------------
 
-$supprimes = b2Rotation(NOM_LOG, $connexion, 'clicetmots_', BACKUP_RETENTION_JOURS);
+$supprimes = b2Rotation($connexion, 'clicetmots_', BACKUP_RETENTION_JOURS);
 echo "[clicetmots-backup] Rotation : $supprimes ancienne(s) sauvegarde(s) supprimée(s) (rétention " . BACKUP_RETENTION_JOURS . " jours).\n";
