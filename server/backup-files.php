@@ -20,7 +20,13 @@ const NOM_LOG = 'last-run-debug-files.log';
 
 require_once __DIR__ . '/backup-common.php';
 
-trace(NOM_LOG, 'script démarré, SAPI=' . PHP_SAPI);
+// ~250 Mo à archiver : plus long qu'une limite CLI par défaut sur certains
+// hébergements (repéré ici - le script s'arrêtait net en plein milieu du
+// tar, sans la moindre trace d'erreur, signe d'un kill plutôt que d'un vrai
+// échec applicatif).
+set_time_limit(0);
+
+trace(NOM_LOG, 'script démarré, SAPI=' . PHP_SAPI . ', max_execution_time=' . ini_get('max_execution_time'));
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(403);

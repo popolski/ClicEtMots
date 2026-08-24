@@ -23,7 +23,12 @@ const NOM_LOG = 'last-run-debug.log';
 
 require_once __DIR__ . '/backup-common.php';
 
-trace(NOM_LOG, 'script démarré, SAPI=' . PHP_SAPI);
+// Par précaution (voir backup-files.php, qui a révélé une limite CLI
+// inattendue sur cet hébergement) - le dump seul est petit et rapide, mais
+// autant écarter tout risque de kill en plein milieu.
+set_time_limit(0);
+
+trace(NOM_LOG, 'script démarré, SAPI=' . PHP_SAPI . ', max_execution_time=' . ini_get('max_execution_time'));
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(403);
