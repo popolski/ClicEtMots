@@ -49,13 +49,20 @@ function echec(string $message): never {
 
 function b2Appel(string $url, array $headers, ?string $body = null): array {
     $ch = curl_init($url);
-    curl_setopt_array($ch, [
+    $options = [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => $headers,
-        CURLOPT_POST => $body !== null,
-        CURLOPT_POSTFIELDS => $body,
         CURLOPT_TIMEOUT => 120,
-    ]);
+    ];
+    // Ne définir CURLOPT_POSTFIELDS que si on a vraiment un corps à envoyer :
+    // le fixer à null bascule quand même la requête en POST côté cURL (même
+    // vide), alors que b2_authorize_account attend un GET simple avec juste
+    // l'en-tête d'autorisation - d'où l'échec "object should start with brace".
+    if ($body !== null) {
+        $options[CURLOPT_POST] = true;
+        $options[CURLOPT_POSTFIELDS] = $body;
+    }
+    curl_setopt_array($ch, $options);
     $reponse = curl_exec($ch);
     if ($reponse === false) {
         echec('cURL - ' . curl_error($ch));
@@ -100,6 +107,7 @@ $auth = b2Appel(
 );
 $apiUrl = $auth['apiUrl'];
 $jetonAuth = $auth['authorizationToken'];
+trace("autorisé auprès de B2, apiUrl=$apiUrl");
 
 // Le bucket doit exister au préalable (créé une fois à la main sur
 // backblaze.com) - on retrouve juste son bucketId à partir de son nom.
@@ -112,6 +120,7 @@ if (empty($buckets['buckets'])) {
     echec('bucket "' . B2_BUCKET_NAME . '" introuvable sur ce compte B2.');
 }
 $bucketId = $buckets['buckets'][0]['bucketId'];
+trace("bucket trouvé : $bucketId");
 
 // 3. Envoi du fichier ---------------------------------------------------------
 
