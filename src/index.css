@@ -12,6 +12,12 @@
   --color-brand-700: #0b756a;
   --color-accent-500: #efae1c;
   --color-accent-600: #d4970f;
+  /* Texte lisible sur un fond accent-500/100 clair (même rôle que brand-700
+     pour le brand) - ex. le badge "Enseignant" de la page d'accueil. */
+  --color-accent-700: #9b6b00;
+  /* Gris chaud (pas le gris froid par défaut de Tailwind) assorti au fond
+     crème de la page (#f2ecc4 ci-dessous) - bordures de champs de saisie. */
+  --color-sable-300: #c9c3ae;
 }
 
 body {

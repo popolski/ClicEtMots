@@ -79,11 +79,11 @@ export function Home() {
             <form onSubmit={onSubmitEleve} className="mt-6">
               <label className="block">
                 <span className="text-sm font-semibold text-gray-700">Ton prénom</span>
-                <input type="text" value={identifiant} onChange={(e) => setIdentifiant(e.target.value)} autoComplete="username" required className="mt-1.5 h-11 w-full rounded-lg border border-[#c9c3ae] bg-white px-3 text-base outline-none focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20" />
+                <input type="text" value={identifiant} onChange={(e) => setIdentifiant(e.target.value)} autoComplete="username" required className="mt-1.5 h-11 w-full rounded-lg border border-sable-300 bg-white px-3 text-base outline-none focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20" />
               </label>
               <label className="mt-4 block">
                 <span className="text-sm font-semibold text-gray-700">Ton mot de passe</span>
-                <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} autoComplete="current-password" required className="mt-1.5 h-11 w-full rounded-lg border border-[#c9c3ae] bg-white px-3 text-base outline-none focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20" />
+                <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} autoComplete="current-password" required className="mt-1.5 h-11 w-full rounded-lg border border-sable-300 bg-white px-3 text-base outline-none focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20" />
               </label>
               {erreur && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{erreur}</p>}
               <button type="submit" disabled={enCours} className="mt-6 min-h-11 w-full rounded-lg bg-brand-600 px-6 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-md disabled:opacity-50">
@@ -94,18 +94,18 @@ export function Home() {
 
           <section className="relative min-h-[390px] overflow-hidden rounded-[14px] border border-gray-700/10 bg-white/60 px-8 py-7 text-left shadow-[0_5px_14px_rgba(0,0,0,.07)]">
             <span className="absolute inset-y-6 left-0 w-[5px] rounded-r bg-accent-500" aria-hidden="true" />
-            <span className="mb-2.5 inline-block rounded-full bg-accent-500/15 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-[#9b6b00]">Enseignant</span>
+            <span className="mb-2.5 inline-block rounded-full bg-accent-500/15 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-accent-700">Enseignant</span>
             <h1 className="m-0 text-2xl font-semibold text-gray-800">Accès enseignant</h1>
             <p className="mt-1.5 text-sm text-gray-500">Connectez-vous pour gérer les élèves et leurs résultats.</p>
 
             <form onSubmit={onSubmitEnseignant} className="mt-6">
               <label className="block">
                 <span className="text-sm font-semibold text-gray-700">Identifiant</span>
-                <input type="text" value={identifiantEnseignant} onChange={(e) => setIdentifiantEnseignant(e.target.value)} autoComplete="username" required className="mt-1.5 h-11 w-full rounded-lg border border-[#c9c3ae] bg-white px-3 text-base outline-none focus:border-accent-500 focus:ring-3 focus:ring-accent-500/20" />
+                <input type="text" value={identifiantEnseignant} onChange={(e) => setIdentifiantEnseignant(e.target.value)} autoComplete="username" required className="mt-1.5 h-11 w-full rounded-lg border border-sable-300 bg-white px-3 text-base outline-none focus:border-accent-500 focus:ring-3 focus:ring-accent-500/20" />
               </label>
               <label className="mt-4 block">
                 <span className="text-sm font-semibold text-gray-700">Mot de passe</span>
-                <input type="password" value={motDePasseEnseignant} onChange={(e) => setMotDePasseEnseignant(e.target.value)} autoComplete="current-password" required className="mt-1.5 h-11 w-full rounded-lg border border-[#c9c3ae] bg-white px-3 text-base outline-none focus:border-accent-500 focus:ring-3 focus:ring-accent-500/20" />
+                <input type="password" value={motDePasseEnseignant} onChange={(e) => setMotDePasseEnseignant(e.target.value)} autoComplete="current-password" required className="mt-1.5 h-11 w-full rounded-lg border border-sable-300 bg-white px-3 text-base outline-none focus:border-accent-500 focus:ring-3 focus:ring-accent-500/20" />
               </label>
               {erreurEnseignant && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{erreurEnseignant}</p>}
               <button type="submit" disabled={enCoursEnseignant} className="mt-6 min-h-11 w-full rounded-lg bg-accent-500 px-6 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md disabled:opacity-50">
