@@ -63,9 +63,11 @@ export function ToolLayout({
           overflow-x-auto n'était qu'un filet de sécurité jamais nécessaire en
           pratique. */}
       <div className="mb-6 flex items-center justify-between gap-4">
-        <Link to="/clavier" className="shrink-0">
-          <img src={assetUrl('/logo.png')} alt="Clic &amp; Mots" className="h-8 w-auto" />
-        </Link>
+        <div className="flex shrink-0 items-center gap-3">
+          <Link to="/clavier">
+            <img src={assetUrl('/logo.png')} alt="Clic &amp; Mots" className="h-8 w-auto" />
+          </Link>
+        </div>
         <div className="flex shrink-0 items-center gap-4 whitespace-nowrap">
           {/* Enseignante : toujours. Élève : seulement si autorisé au cas par
               cas (voir SectionEleves dans Admin.tsx) - les autres restent

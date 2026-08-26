@@ -158,6 +158,40 @@ export function motsAmbigus(wordIndex: WordEntry[]): Set<string> {
   return ambigus
 }
 
+/**
+ * Orthographes impossibles à départager dans une dictée de mots isolés :
+ * deux mots DE LEMMES DIFFÉRENTS partageant exactement la même suite de
+ * phonèmes (ex. "vert"/"vers"/"verre"/"ver", tous prononcés [vɛʁ]) - la
+ * dictée ne donne aucun indice de sens ou de contexte pour trancher.
+ *
+ * Ne compte volontairement PAS les formes d'un même lemme qui se prononcent
+ * pareil (singulier/pluriel comme "chat"/"chats", masculin/féminin...) :
+ * là, il n'y a rien à départager, l'élève écrit simplement le mot dicté par
+ * l'enseignante. Une première version comparait par mot sans regarder le
+ * lemme et excluait ainsi ~74 % du lexique (tout nom au pluriel muet en
+ * "-s" collisionnant avec son singulier) - repéré en testant contre le
+ * lexique réel, voir quizLogic.test.ts.
+ */
+export function motsAmbigusALOral(wordIndex: WordEntry[]): Set<string> {
+  const parPrononciation = new Map<string, { mots: Set<string>; lemmes: Set<string> }>()
+  for (const entree of wordIndex) {
+    const prononciation = entree.phonemes.join('|')
+    if (!prononciation) continue
+    const groupe = parPrononciation.get(prononciation) ?? { mots: new Set<string>(), lemmes: new Set<string>() }
+    groupe.mots.add(entree.word.toLowerCase())
+    groupe.lemmes.add(entree.lemmaId)
+    parPrononciation.set(prononciation, groupe)
+  }
+
+  const ambigus = new Set<string>()
+  for (const { mots, lemmes } of parPrononciation.values()) {
+    if (lemmes.size > 1) {
+      for (const mot of mots) ambigus.add(mot)
+    }
+  }
+  return ambigus
+}
+
 export function melanger<T>(items: T[]): T[] {
   const copie = [...items]
   for (let i = copie.length - 1; i > 0; i--) {

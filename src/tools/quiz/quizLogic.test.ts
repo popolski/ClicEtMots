@@ -10,6 +10,7 @@ import {
   CATEGORIES_GRAMMAIRE,
   equilibrerParNature,
   motsAmbigus,
+  motsAmbigusALOral,
   motsFrequentsPourGrammaire,
   motsFrequentsPourQuiz,
   natureGrammaireDe,
@@ -159,4 +160,33 @@ describe('listes blanches pronoms/prépositions', () => {
       expect(ambigus.has(mot)).toBe(false)
     },
   )
+})
+
+describe('mots indiscernables à l\'oral pour la dictée (motsAmbigusALOral)', () => {
+  const ambigusOral = motsAmbigusALOral(lexique)
+
+  // Vrais homophones de LEMMES DIFFÉRENTS : la dictée ne peut pas les
+  // départager (aucun contexte), à raison de les exclure.
+  it.each(['vert', 'vers', 'verre', 'ver'])('%s (homophones de lemmes différents) est exclu de la dictée', (mot) => {
+    expect(ambigusOral.has(mot)).toBe(true)
+  })
+
+  // Une première version comparait par mot sans regarder le lemme et
+  // excluait ~74 % du lexique : tout nom au pluriel muet en "-s" (la
+  // grande majorité des noms français) collisionnait avec son propre
+  // singulier. "chat"/"chats" partagent la même suite de phonèmes mais
+  // sont le MÊME lemme (nom:chat) - il n'y a rien à départager, l'élève
+  // écrit simplement le mot dicté par l'enseignante.
+  it.each(['chat', 'chats', 'jambe', 'jambes'])(
+    '%s (même lemme que sa forme plurielle/singulière) reste dictable',
+    (mot) => {
+      expect(ambigusOral.has(mot)).toBe(false)
+    },
+  )
+
+  it("n'exclut pas la quasi-totalité du lexique (régression du bug ci-dessus)", () => {
+    // Avant le fix : ~74 % (19 783/26 815). De vrais homophones existent en
+    // français, mais pas au point d'exclure la majorité du lexique.
+    expect(ambigusOral.size / lexique.length).toBeLessThan(0.4)
+  })
 })

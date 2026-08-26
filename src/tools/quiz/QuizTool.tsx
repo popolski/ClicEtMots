@@ -16,6 +16,7 @@ import {
   equilibrerParNature,
   melanger,
   motsAmbigus,
+  motsAmbigusALOral,
   motsFrequentsPourGrammaire,
   motsFrequentsPourQuiz,
   type CategorieGrammaireQuiz,
@@ -494,6 +495,12 @@ export function QuizTool() {
     // choix, qui le masque dans ce cas).
     if (mode === 'dictee') {
       if (!motsSemaineCumules || !motsRates) return
+      // Exclut les mots dont l'orthographe est indiscernable à l'oral d'un
+      // autre mot du lexique (ex. "jambe"/"jambes", mêmes phonèmes) : une
+      // dictée ne peut pas départager ces cas, contrairement au filtre
+      // motsAmbigus ci-dessus (nature grammaticale, sans objet ici).
+      const ambigusALOral = motsAmbigusALOral(wordIndex)
+      const motsPourDictee = motsSemaineCumules.filter((mot) => !ambigusALOral.has(mot.word.toLowerCase()))
       // Pas de filtre motsAmbigus ici : on dicte des mots choisis à la main
       // par l'enseignante, et écrire "bonne" reste un exercice d'orthographe
       // parfaitement valable - l'ambiguïté ne gênait que l'étiquette de
@@ -503,14 +510,14 @@ export function QuizTool() {
       // ratés en premier (l'API les trie déjà). Un mot resté dans cette liste
       // alors qu'il a disparu de la liste hebdomadaire est ignoré : on ne
       // dicte que des mots que l'enseignante a effectivement donnés.
-      const parCle = new Map(motsSemaineCumules.map((m) => [`${m.lemmaId}|${m.word}`, m]))
+      const parCle = new Map(motsPourDictee.map((m) => [`${m.lemmaId}|${m.word}`, m]))
       const revisions: MotCandidat[] = []
       for (const rate of motsRates) {
         const mot = parCle.get(`${rate.lemmaId}|${rate.word}`)
         if (mot) revisions.push(mot)
       }
       const dejaPris = new Set(revisions.map((m) => `${m.lemmaId}|${m.word}`))
-      const nouveaux = melanger(motsSemaineCumules.filter((m) => !dejaPris.has(`${m.lemmaId}|${m.word}`)))
+      const nouveaux = melanger(motsPourDictee.filter((m) => !dejaPris.has(`${m.lemmaId}|${m.word}`)))
       // Les révisions ne mangent pas toute la séance : la moitié au plus,
       // sinon un élève en difficulté ne verrait plus jamais de mot nouveau.
       const tirage = [
@@ -820,6 +827,10 @@ export function QuizTool() {
   const entreeCible = wordIndex?.find(
     (e) => e.lemmaId === question.entree.lemmaId && e.word === question.entree.word,
   )
+  const signatureDictee = entreeCible?.phonemes.join('|')
+  const reponsesDicteeAcceptees = signatureDictee && wordIndex
+    ? [...new Set(wordIndex.filter((e) => e.phonemes.join('|') === signatureDictee).map((e) => e.word))]
+    : [question.entree.word]
   // Voir le commentaire au-dessus du rendu des composants Question* : inclut
   // le tour (principal/rattrapage) pour forcer un remount à la transition.
   const cleQuestion = `${enRattrapage}-${index}`
@@ -958,6 +969,7 @@ export function QuizTool() {
           entree={question.entree}
           entreeCible={entreeCible}
           trie={trieDictee}
+          reponsesAcceptees={reponsesDicteeAcceptees}
           onReponse={handleReponse}
           onAideUtilisee={() => {
             const cle = `${question.entree.lemmaId}|${question.entree.word}`

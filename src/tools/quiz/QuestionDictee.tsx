@@ -18,6 +18,8 @@ interface QuestionDicteeProps {
   entreeCible: WordEntry | undefined
   /** Pour la liste de mots suggérés dans le filet de secours (voir plus bas) - null tant que le lexique n'est pas chargé. */
   trie: PhonemeTrieNode | null
+  /** Toutes les orthographes réellement indiscernables à l'oral. */
+  reponsesAcceptees: string[]
   /**
    * `correct` = mot finalement écrit juste (à n'importe quel essai). `duPremierCoup`
    * distingue l'élève qui savait de celui qui a trouvé au 3e essai. `aideUtilisee`
@@ -62,7 +64,7 @@ const ESSAIS_MAX = 1
  * mot lui retire aussi son statut de réussite dans le score (voir
  * QuizTool.tsx, handleReponse) - la dictée doit rester un exercice honnête.
  */
-export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUtilisee }: QuestionDicteeProps) {
+export function QuestionDictee({ entree, entreeCible, trie, reponsesAcceptees, onReponse, onAideUtilisee }: QuestionDicteeProps) {
   const [saisie, setSaisie] = useState('')
   const [erreur, setErreur] = useState<string | null>(null)
   const [valide, setValide] = useState<boolean | null>(null)
@@ -135,7 +137,7 @@ export function QuestionDictee({ entree, entreeCible, trie, onReponse, onAideUti
     }
     setErreur(null)
 
-    if (propose === entree.word.toLowerCase()) {
+    if (reponsesAcceptees.some((mot) => propose === mot.toLowerCase())) {
       setValide(true)
       onReponse(true, essais === 0, aideOuverte)
       return
