@@ -46,7 +46,7 @@ export function Home() {
     <main className="mx-auto w-full max-w-[940px] px-4 py-10 text-center sm:py-12">
       <div className="mb-3 text-center">
         <a
-          href="/"
+          href="/portail/"
           className="inline-flex min-h-10 items-center justify-center rounded-lg border border-gray-300/70 bg-white/60 px-4 py-2 text-sm font-medium text-gray-700 transition hover:-translate-y-0.5 hover:border-brand-500 hover:bg-white/90"
         >
           ← Retour au portail

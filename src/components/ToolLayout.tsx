@@ -98,13 +98,21 @@ export function ToolLayout({
             </Link>
           )}
           {session?.authenticated && (
-            <button
-              type="button"
-              onClick={() => logout().then(() => navigate('/'))}
-              className="text-sm text-gray-500 hover:text-brand-600"
-            >
-              Déconnexion ({session.label})
-            </button>
+            <>
+              <a
+                href="/portail/"
+                className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
+              >
+                ← Portail
+              </a>
+              <button
+                type="button"
+                onClick={() => logout().then(() => navigate('/'))}
+                className="text-sm text-gray-500 hover:text-brand-600"
+              >
+                Déconnexion ({session.label})
+              </button>
+            </>
           )}
         </div>
       </div>
