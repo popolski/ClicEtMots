@@ -42,15 +42,20 @@ const args = Object.fromEntries(
   }),
 )
 
-// Certains mots empruntés à l'anglais se prononcent différemment de ce que
-// leur orthographe suggère en français, et le moteur TTS choisit alors la
-// lecture "à la française" par défaut - ambiguïté qu'il ne peut pas lever
-// tout seul. Ex. "jean" (le pantalon, /dʒin/) lu comme le prénom "Jean"
-// (/ʒɑ̃/). Corrigé en donnant au moteur un texte respectant la prononciation
-// voulue plutôt que l'orthographe réelle (jamais affiché, uniquement envoyé
-// à l'API de synthèse) - découvert au cas par cas à l'usage.
+// Certains mots ont une orthographe qui laisse le moteur TTS hésiter entre
+// deux prononciations, et il choisit parfois la mauvaise sans qu'on puisse
+// lever l'ambiguïté autrement. Deux cas rencontrés :
+// - emprunt à l'anglais lu "à la française" : "jean" (le pantalon, /dʒin/)
+//   lu comme le prénom "Jean" (/ʒɑ̃/).
+// - homographe avec un mot d'une autre catégorie qui se prononce
+//   différemment : "vis" (la vis, /vis/) lu comme la forme verbale "vis"
+//   (je vis/tu vis, /vi/, sans le s).
+// Corrigé en donnant au moteur un texte respectant la prononciation voulue
+// plutôt que l'orthographe réelle (jamais affiché, uniquement envoyé à
+// l'API de synthèse) - découvert au cas par cas à l'usage.
 const TEXTE_PRONONCIATION = {
   'nom:jean': 'djinne',
+  'nom:vis': 'visse',
 }
 
 function texteAPrononcer(entry) {

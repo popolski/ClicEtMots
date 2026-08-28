@@ -71,6 +71,7 @@ function tryPlayAudioFile(word: string, category: WordCategory, lemmaId: string)
 // prononciation une fois régénéré.
 const TEXTE_PRONONCIATION: Record<string, string> = {
   'nom:jean': 'djinne',
+  'nom:vis': 'visse',
 }
 
 async function speakWithBrowserVoice(text: string, lemmaId?: string): Promise<void> {

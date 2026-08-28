@@ -95,8 +95,9 @@ describe('adjectifs parasites (fréquence héritée d\'un nom homographe au fém
 
 describe('pictogrammes retirés parce que trompeurs', () => {
   // Le matching automatique ARASAAC avait associé une image sans rapport :
-  // un casse-croûte pour "cas", "façonner de la pâte" pour "façon".
-  it.each(['façon', 'cas'])('%s n\'a plus de pictogramme', (mot) => {
+  // un casse-croûte pour "cas", "façonner de la pâte" pour "façon", un verre
+  // à boire pour "bel" (l'adjectif, comme dans "un bel homme").
+  it.each(['façon', 'cas', 'bel'])('%s n\'a plus de pictogramme', (mot) => {
     expect((wordPictos as Record<string, string>)[mot]).toBeUndefined()
   })
 })
