@@ -29,12 +29,20 @@ export interface SessionState {
   /** Élève uniquement - filet de secours de la dictée (clavier phonétique) autorisé par l'enseignante. */
 }
 
+/**
+ * La classe vient de Fast Éval : `id` est l'identifiant de l'élève là-bas, et
+ * la ligne locale n'existe qu'à partir du premier réglage ou de la première
+ * connexion. D'où `created_at` qui peut être nul, et `deja_connecte` : sans
+ * lui, une classe entière à zéro résultat ressemble à une panne.
+ */
 export interface Student {
   id: number
   prenom: string
-  created_at: string
+  nom: string
+  created_at: string | null
   recherche_directe: boolean
   confort_lecture: boolean
+  deja_connecte: boolean
 }
 
 export type RelationType = 'synonyme' | 'antonyme' | 'famille'
@@ -173,13 +181,10 @@ export const api = {
 
   logout: () => request<{ ok: true }>('logout.php', { method: 'POST' }),
 
+  // La création et la suppression d'élèves ont quitté Clic & Mots : Fast Éval
+  // est la source de vérité pour la classe, et students.php répond 405 à un
+  // POST comme à un DELETE. Ne pas les remettre ici.
   listStudents: () => request<{ students: Student[] }>('students.php'),
-
-  createStudent: (prenom: string, motDePasse: string) =>
-    request<{ id: number; prenom: string }>('students.php', {
-      method: 'POST',
-      body: JSON.stringify({ prenom, motDePasse }),
-    }),
 
   setRechercheDirecte: (id: number, rechercheDirecte: boolean) =>
     request<{ ok: true }>(`students.php?id=${id}`, {
@@ -193,7 +198,6 @@ export const api = {
       body: JSON.stringify({ confortLecture }),
     }),
 
-  deleteStudent: (id: number) => request<{ ok: true }>(`students.php?id=${id}`, { method: 'DELETE' }),
 
   listLexicon: () => request<{ words: LexiconWord[] }>('lexicon.php'),
 

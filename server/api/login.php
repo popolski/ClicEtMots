@@ -21,9 +21,18 @@ if (tooManyAttempts($ip, $identifiant)) {
 
 $db = getDb();
 
-// On essaie d'abord la table enseignant (compte unique), puis les élèves —
-// même message d'erreur générique dans les deux cas pour ne pas révéler
-// quels identifiants existent.
+// La connexion locale des ÉLÈVES a été retirée à la rentrée 2026 : ils
+// entrent désormais par le portail commun (/portail/), qui les reconnaît et
+// sait de quelle classe ils sont.
+//
+// Ce n'est pas un choix de confort. La connexion locale cherchait un élève par
+// son seul prénom, sans savoir de quelle classe il était, et prenait le
+// PREMIER trouvé. Avec deux classes, le Lucas de Marion n'aurait jamais pu se
+// connecter : la requête aurait toujours rendu celui de Camille, dont le mot
+// de passe ne correspond pas. Le portail, lui, connaît la classe.
+//
+// La connexion locale ENSEIGNANTE reste en place, volontairement : c'est la
+// porte de secours si le portail tombe un matin de classe.
 $stmt = $db->prepare('SELECT id, username AS label, password_hash FROM teachers WHERE username = ?');
 $stmt->execute([$identifiant]);
 $teacher = $stmt->fetch();
@@ -36,30 +45,6 @@ if ($teacher && password_verify($motDePasse, $teacher['password_hash'])) {
     session_regenerate_id(true);
     $_SESSION['user'] = ['id' => $teacher['id'], 'role' => 'teacher', 'label' => $teacher['label']];
     jsonResponse(200, ['role' => 'teacher', 'label' => $teacher['label']]);
-}
-
-$stmt = $db->prepare('SELECT id, prenom AS label, password_hash, recherche_directe, confort_lecture FROM students WHERE prenom = ?');
-$stmt->execute([$identifiant]);
-$student = $stmt->fetch();
-
-if ($student && password_verify($motDePasse, $student['password_hash'])) {
-    session_regenerate_id(true); // voir le commentaire côté enseignant ci-dessus
-    purgerSiNouvelleAnneeScolaire((int) $student['id']);
-    $rechercheDirecte = (bool) $student['recherche_directe'];
-    $confortLecture = (bool) $student['confort_lecture'];
-    $_SESSION['user'] = [
-        'id' => $student['id'],
-        'role' => 'student',
-        'label' => $student['label'],
-        'rechercheDirecte' => $rechercheDirecte,
-        'confortLecture' => $confortLecture,
-    ];
-    jsonResponse(200, [
-        'role' => 'student',
-        'label' => $student['label'],
-        'rechercheDirecte' => $rechercheDirecte,
-        'confortLecture' => $confortLecture,
-    ]);
 }
 
 recordFailedAttempt($ip, $identifiant);

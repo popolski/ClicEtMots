@@ -8,13 +8,18 @@
 // API ne renvoyait que le plus récent).
 require_once __DIR__ . '/auth.php';
 configureSession();
-requireAuth();
+// L'élève lit aussi cette API : on résout son enseignante pour ne lui montrer
+// que les listes de SA classe. Un CE1 n'a rien à faire avec les mots du CE2.
+$enseignante = contexteEnseignante(requireAuth());
 
 $db = getDb();
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    $stmt = $db->query('SELECT id, nom, mots, updated_at FROM liste_mots_semaine ORDER BY id DESC');
+    $stmt = $db->prepare(
+        'SELECT id, nom, mots, updated_at FROM liste_mots_semaine WHERE updated_by = ? ORDER BY id DESC',
+    );
+    $stmt->execute([$enseignante['teacherId']]);
     $rows = $stmt->fetchAll();
     $listes = array_map(fn($row) => [
         'id' => (int) $row['id'],
@@ -56,8 +61,20 @@ if ($method === 'POST') {
     // id fourni = on modifie une liste existante (ex. corriger une erreur
     // avant impression) ; sinon on démarre une nouvelle semaine.
     if ($id !== null && $id > 0) {
-        $stmt = $db->prepare('UPDATE liste_mots_semaine SET nom = ?, mots = ? WHERE id = ?');
-        $stmt->execute([$nom, $motsJson, $id]);
+        // Le WHERE porte aussi sur l'autrice : sans lui, envoyer l'identifiant
+        // d'une liste de l'autre classe suffisait à la réécrire.
+        $stmt = $db->prepare('UPDATE liste_mots_semaine SET nom = ?, mots = ? WHERE id = ? AND updated_by = ?');
+        $stmt->execute([$nom, $motsJson, $id, $user['id']]);
+        if ($stmt->rowCount() === 0) {
+            // rowCount() vaut aussi 0 quand la liste existe mais n'a pas
+            // changé d'un octet : on vérifie donc qu'elle est bien à elle
+            // avant de crier à l'introuvable.
+            $verif = $db->prepare('SELECT 1 FROM liste_mots_semaine WHERE id = ? AND updated_by = ?');
+            $verif->execute([$id, $user['id']]);
+            if (!$verif->fetchColumn()) {
+                jsonResponse(404, ['error' => 'Liste introuvable']);
+            }
+        }
         jsonResponse(200, ['ok' => true, 'id' => $id]);
     }
 
@@ -68,13 +85,16 @@ if ($method === 'POST') {
 }
 
 if ($method === 'DELETE') {
-    requireTeacher();
+    $user = requireTeacher();
     $id = (int) ($_GET['id'] ?? 0);
     if ($id <= 0) {
         jsonResponse(400, ['error' => 'id manquant']);
     }
-    $stmt = $db->prepare('DELETE FROM liste_mots_semaine WHERE id = ?');
-    $stmt->execute([$id]);
+    $stmt = $db->prepare('DELETE FROM liste_mots_semaine WHERE id = ? AND updated_by = ?');
+    $stmt->execute([$id, $user['id']]);
+    if ($stmt->rowCount() === 0) {
+        jsonResponse(404, ['error' => 'Liste introuvable']);
+    }
     jsonResponse(200, ['ok' => true]);
 }
 

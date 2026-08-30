@@ -6,15 +6,21 @@
 // c'est une vue d'ensemble sur des données qui existaient déjà.
 require_once __DIR__ . '/auth.php';
 configureSession();
-requireTeacher();
+$enseignante = contexteEnseignante(requireTeacher());
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     jsonResponse(405, ['error' => 'Méthode non autorisée']);
 }
 
-$studentId = isset($_GET['studentId']) ? (int) $_GET['studentId'] : 0;
-if ($studentId <= 0) {
-    jsonResponse(400, ['error' => 'studentId manquant']);
+// L'identifiant reçu est celui de Fast Éval, comme dans la liste de classe.
+$studentId = eleveLocalDeLaClasse(
+    isset($_GET['studentId']) ? (int) $_GET['studentId'] : 0,
+    $enseignante['fastevalId'],
+);
+if ($studentId === null) {
+    // Élève inscrit dans Fast Éval mais jamais venu sur Clic & Mots : son
+    // bilan est vide, ce n'est pas une erreur.
+    jsonResponse(200, ['resultats' => [], 'motsRates' => []]);
 }
 
 $db = getDb();

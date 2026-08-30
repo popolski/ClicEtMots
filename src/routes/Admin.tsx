@@ -264,44 +264,29 @@ function BilanClasse() {
   )
 }
 
+/**
+ * La classe n'appartient plus à Clic & Mots : elle vient de Fast Éval, qui en
+ * est la source de vérité. Cet écran ne crée ni ne supprime d'élève, il ne
+ * garde que les réglages propres à Clic & Mots (recherche directe, confort de
+ * lecture) et les données d'usage. Créer un compte ici recréerait deux listes
+ * à tenir à jour, ce qui était exactement le problème d'avant.
+ */
 function SectionEleves() {
   const [students, setStudents] = useState<Student[] | null>(null)
-  const [prenom, setPrenom] = useState('')
-  const [motDePasse, setMotDePasse] = useState('')
   const [erreur, setErreur] = useState<string | null>(null)
-  const [enCours, setEnCours] = useState(false)
   const [bilanOuvertPour, setBilanOuvertPour] = useState<number | null>(null)
 
   useEffect(() => {
     api
       .listStudents()
       .then((r) => setStudents(r.students))
-      .catch(() => setStudents([]))
+      .catch(() => {
+        // La liste vient d'une seconde base : si elle ne répond pas, il faut
+        // le dire, sinon l'écran ressemble à une classe vide.
+        setErreur('La liste des élèves est momentanément indisponible.')
+        setStudents([])
+      })
   }, [])
-
-  async function ajouter(event: React.FormEvent) {
-    event.preventDefault()
-    setErreur(null)
-    setEnCours(true)
-    try {
-      await api.createStudent(prenom.trim(), motDePasse)
-      const r = await api.listStudents()
-      setStudents(r.students)
-      setPrenom('')
-      setMotDePasse('')
-    } catch (e) {
-      setErreur(e instanceof Error ? e.message : 'Une erreur est survenue')
-    } finally {
-      setEnCours(false)
-    }
-  }
-
-  async function supprimer(student: Student) {
-    if (!confirm(`Supprimer le compte de ${student.prenom} ? Cette action est définitive.`)) return
-    await api.deleteStudent(student.id)
-    const r = await api.listStudents()
-    setStudents(r.students)
-  }
 
   async function basculerRechercheDirecte(student: Student) {
     const valeur = !student.recherche_directe
@@ -347,105 +332,85 @@ function SectionEleves() {
 
   return (
     <section className="mb-10 rounded-2xl border-2 border-gray-200 bg-gray-50 p-5">
-      <h2 className="mb-4 text-xl font-bold text-gray-800">Les élèves</h2>
+      <h2 className="mb-1 text-xl font-bold text-gray-800">Les élèves</h2>
 
-      <form onSubmit={ajouter} className="mb-6 flex flex-wrap items-end gap-3">
-        <label className="flex-1">
-          <span className="text-sm font-semibold text-gray-700">Prénom</span>
-          <input
-            type="text"
-            value={prenom}
-            onChange={(e) => setPrenom(e.target.value)}
-            required
-            className="mt-1 w-full rounded-lg border-2 border-gray-200 bg-white px-3 py-2 focus:border-brand-500 focus:outline-none"
-          />
-        </label>
-        <label className="flex-1">
-          <span className="text-sm font-semibold text-gray-700">Mot de passe (4 caractères min.)</span>
-          <input
-            type="text"
-            value={motDePasse}
-            onChange={(e) => setMotDePasse(e.target.value)}
-            required
-            minLength={4}
-            className="mt-1 w-full rounded-lg border-2 border-gray-200 bg-white px-3 py-2 focus:border-brand-500 focus:outline-none"
-          />
-        </label>
-        <button
-          type="submit"
-          disabled={enCours}
-          className="rounded-lg bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+      <p className="mb-4 text-sm text-gray-600">
+        La classe vient de Fast Éval. Les élèves inscrits là-bas apparaissent ici automatiquement, avant même leur
+        première connexion. Clic &amp; Mots ne garde que ses propres réglages.{' '}
+        <a
+          href="/fasteval/gestion-classe.php"
+          className="font-semibold text-brand-700 underline underline-offset-2 hover:text-brand-800"
         >
-          Ajouter
-        </button>
-      </form>
+          Gérer la classe dans Fast Éval
+        </a>
+      </p>
 
       {erreur && <p className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{erreur}</p>}
 
       {students === null ? (
         <p className="text-gray-400">Chargement…</p>
       ) : students.length === 0 ? (
-        <p className="text-gray-400">Aucun élève pour l'instant.</p>
+        <p className="text-gray-400">Aucun élève inscrit dans Fast Éval pour cette classe.</p>
       ) : (
-        <ul className="flex flex-wrap gap-3">
+        <ul className="flex flex-col gap-2">
           {students.map((s) => (
             <li
               key={s.id}
-              className="flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2"
+              className="flex min-w-0 flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5"
             >
-              <span className="text-lg font-medium text-blue-900">{s.prenom}</span>
-              <label className="flex items-center gap-1 text-xs text-blue-800" title="Autoriser la recherche directe par orthographe">
-                <input
-                  type="checkbox"
-                  checked={s.recherche_directe}
-                  onChange={() => basculerRechercheDirecte(s)}
-                />
-                🔍 Recherche
-              </label>
-              <label className="flex items-center gap-1 text-xs text-blue-800" title="Activer le mode confort de lecture (dys)">
-                <input
-                  type="checkbox"
-                  checked={s.confort_lecture}
-                  onChange={() => basculerConfortLecture(s)}
-                />
-                👓 Confort
-              </label>
-              <button
-                type="button"
-                onClick={() => setBilanOuvertPour((prec) => (prec === s.id ? null : s.id))}
-                aria-label={`Voir le bilan de ${s.prenom}`}
-                title="Voir ses résultats et ses mots les plus ratés"
-                className="text-sm text-gray-400 hover:text-brand-600"
-              >
-                📊
-              </button>
-              <button
-                type="button"
-                onClick={() => reinitialiserUnEleve(s)}
-                aria-label={`Réinitialiser les données de ${s.prenom}`}
-                title="Effacer ses scores de quiz, favoris et historique"
-                className="text-sm text-gray-400 hover:text-brand-600"
-              >
-                🗑
-              </button>
-              <button
-                type="button"
-                onClick={() => supprimer(s)}
-                aria-label={`Supprimer ${s.prenom}`}
-                className="text-sm text-gray-400 hover:text-red-600"
-              >
-                ✕
-              </button>
+              <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+              <span className="flex min-w-0 items-baseline gap-2">
+                <span className="truncate text-lg font-semibold text-blue-900" title={`${s.prenom} ${s.nom}`}>
+                  {s.prenom}
+                </span>
+                {!s.deja_connecte && (
+                  <span className="shrink-0 rounded-full bg-white/70 px-2 py-0.5 text-xs whitespace-nowrap text-gray-500">
+                    jamais venu
+                  </span>
+                )}
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <label className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1 text-xs text-blue-800 hover:bg-blue-100" title="Autoriser la recherche directe par orthographe">
+                  <input
+                    type="checkbox"
+                    checked={s.recherche_directe}
+                    onChange={() => basculerRechercheDirecte(s)}
+                  />
+                  🔍 Recherche
+                </label>
+                <label className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1 text-xs text-blue-800 hover:bg-blue-100" title="Activer le mode confort de lecture (dys)">
+                  <input
+                    type="checkbox"
+                    checked={s.confort_lecture}
+                    onChange={() => basculerConfortLecture(s)}
+                  />
+                  👓 Confort
+                </label>
+                <span className="mx-0.5 h-6 w-px bg-blue-200" aria-hidden="true" />
+                <button
+                  type="button"
+                  onClick={() => setBilanOuvertPour((prec) => (prec === s.id ? null : s.id))}
+                  aria-label={`Voir le bilan de ${s.prenom}`}
+                  title="Voir ses résultats et ses mots les plus ratés"
+                  className="flex h-8 w-8 items-center justify-center rounded-md text-sm text-gray-500 hover:bg-white hover:text-brand-600"
+                >
+                  📊
+                </button>
+                <button
+                  type="button"
+                  onClick={() => reinitialiserUnEleve(s)}
+                  aria-label={`Réinitialiser les données de ${s.prenom}`}
+                  title="Effacer ses scores de quiz, favoris et historique"
+                  className="flex h-8 w-8 items-center justify-center rounded-md text-sm text-gray-500 hover:bg-white hover:text-brand-600"
+                >
+                  🗑
+                </button>
+              </div>
+              </div>
+              {bilanOuvertPour === s.id && <BilanEleve student={s} onClose={() => setBilanOuvertPour(null)} />}
             </li>
           ))}
         </ul>
-      )}
-
-      {bilanOuvertPour !== null && (
-        <BilanEleve
-          student={students?.find((s) => s.id === bilanOuvertPour) ?? null}
-          onClose={() => setBilanOuvertPour(null)}
-        />
       )}
 
       {students !== null && students.length > 0 && (
@@ -457,11 +422,6 @@ function SectionEleves() {
           🗑 Réinitialiser les scores de quiz, favoris et historique de tous les élèves
         </button>
       )}
-
-      <p className="mt-4 text-xs text-gray-500">
-        Le mot de passe n'est visible qu'au moment où vous le choisissez : il est ensuite chiffré et ne peut plus
-        être relu, seulement remplacé en recréant le compte.
-      </p>
     </section>
   )
 }

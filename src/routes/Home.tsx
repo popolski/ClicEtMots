@@ -5,10 +5,8 @@ import { useAuth } from '../lib/authContext'
 
 export function Home() {
   const { session, login } = useAuth()
-  const [identifiant, setIdentifiant] = useState('')
-  const [motDePasse, setMotDePasse] = useState('')
-  const [erreur, setErreur] = useState<string | null>(null)
-  const [enCours, setEnCours] = useState(false)
+  // Plus d'etat de connexion eleve : les eleves entrent par le portail, qui
+  // ouvre les trois sites d'un coup. Voir la section « Acces eleve » plus bas.
   const [identifiantEnseignant, setIdentifiantEnseignant] = useState('')
   const [motDePasseEnseignant, setMotDePasseEnseignant] = useState('')
   const [erreurEnseignant, setErreurEnseignant] = useState<string | null>(null)
@@ -16,18 +14,6 @@ export function Home() {
 
   if (session?.authenticated) {
     return <Navigate to="/clavier" replace />
-  }
-
-  async function onSubmitEleve(event: React.FormEvent) {
-    event.preventDefault()
-    setErreur(null)
-    setEnCours(true)
-    try {
-      await login(identifiant.trim(), motDePasse)
-    } catch (e) {
-      setErreur(e instanceof Error ? e.message : 'Une erreur est survenue')
-      setEnCours(false)
-    }
   }
 
   async function onSubmitEnseignant(event: React.FormEvent) {
@@ -74,22 +60,24 @@ export function Home() {
             <span className="absolute inset-y-6 left-0 w-[5px] rounded-r bg-brand-500" aria-hidden="true" />
             <span className="mb-2.5 inline-block rounded-full bg-brand-500/15 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-brand-700">Élève</span>
             <h1 className="m-0 text-2xl font-semibold text-gray-800">Accès élève</h1>
-            <p className="mt-1.5 text-sm text-gray-500">Connecte-toi pour utiliser ton clavier phonétique.</p>
+            <p className="mt-1.5 text-sm text-gray-500">Tu entres par le portail de l'école.</p>
 
-            <form onSubmit={onSubmitEleve} className="mt-6">
-              <label className="block">
-                <span className="text-sm font-semibold text-gray-700">Ton prénom</span>
-                <input type="text" value={identifiant} onChange={(e) => setIdentifiant(e.target.value)} autoComplete="username" required className="mt-1.5 h-11 w-full rounded-lg border border-sable-300 bg-white px-3 text-base outline-none focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20" />
-              </label>
-              <label className="mt-4 block">
-                <span className="text-sm font-semibold text-gray-700">Ton mot de passe</span>
-                <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} autoComplete="current-password" required className="mt-1.5 h-11 w-full rounded-lg border border-sable-300 bg-white px-3 text-base outline-none focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20" />
-              </label>
-              {erreur && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{erreur}</p>}
-              <button type="submit" disabled={enCours} className="mt-6 min-h-11 w-full rounded-lg bg-brand-600 px-6 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-md disabled:opacity-50">
-                {enCours ? 'Connexion…' : 'Se connecter'}
-              </button>
-            </form>
+            {/* Plus de connexion eleve ici : un eleve se connecte une fois au
+                portail, qui lui ouvre Fast Eval, School Monsters et Clic &
+                Mots. Deux formulaires pour un meme mot de passe, c'etait un
+                mot de passe de plus a retenir et une liste de plus a tenir. */}
+            <div className="mt-6">
+              <a
+                href="/portail/"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-brand-600 px-6 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-md"
+              >
+                Aller au portail
+              </a>
+              <p className="mt-4 text-sm text-gray-500">
+                Tu t'y connectes une seule fois, puis tu ouvres Clic &amp; Mots. C'est le même identifiant que pour
+                Fast Éval et School Monsters.
+              </p>
+            </div>
           </section>
 
           <section className="relative min-h-[390px] overflow-hidden rounded-[14px] border border-gray-700/10 bg-white/60 px-8 py-7 text-left shadow-[0_5px_14px_rgba(0,0,0,.07)]">

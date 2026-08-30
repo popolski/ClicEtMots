@@ -118,6 +118,88 @@ function requireTeacher(): array
     return $user;
 }
 
+// --- Cloisonnement par enseignante ------------------------------------------
+// Jusqu'à la rentrée 2026, Clic & Mots n'avait qu'un seul compte enseignant :
+// aucune requête ne filtrait par classe, et « tous les élèves » voulait dire
+// « la classe de Camille ». Avec Marion, ce raccourci devient une fuite : sans
+// filtre, chacune voit, modifie et supprime les élèves de l'autre.
+//
+// DEUX CLÉS, ET C'EST VOULU. Les tables ne désignent pas l'enseignante de la
+// même façon :
+//   - students.fasteval_enseignant_id pointe vers Fast Éval (la source des
+//     comptes depuis le portail commun) ;
+//   - liste_mots_semaine.updated_by et lexicon_additions.created_by pointent
+//     vers teachers.id, l'identifiant LOCAL.
+// On résout donc les deux d'un coup, une fois par requête, plutôt que de
+// laisser chaque endpoint improviser sa jointure.
+function contexteEnseignante(array $user): array
+{
+    $db = getDb();
+
+    if ($user['role'] === 'teacher') {
+        $stmt = $db->prepare('SELECT fasteval_enseignant_id FROM teachers WHERE id = ?');
+        $stmt->execute([$user['id']]);
+        $fasteval = $stmt->fetchColumn();
+
+        // Un compte enseignant purement local, jamais relié au portail, ne
+        // peut être rattaché à aucun élève : plutôt que de lui montrer toute
+        // la base (le comportement d'avant) ou une classe vide sans
+        // explication, on le dit.
+        if ($fasteval === false || $fasteval === null) {
+            jsonResponse(409, ['error' => "Ce compte enseignant n'est pas relié à Fast Éval. Connecte-toi par le portail pour l'associer."]);
+        }
+
+        return ['teacherId' => (int) $user['id'], 'fastevalId' => (int) $fasteval];
+    }
+
+    // Côté élève, l'enseignante est celle inscrite sur sa fiche. Elle sert à
+    // ne lui montrer que les listes de mots de SA classe.
+    $stmt = $db->prepare('SELECT fasteval_enseignant_id FROM students WHERE id = ?');
+    $stmt->execute([$user['id']]);
+    $fasteval = $stmt->fetchColumn();
+    if ($fasteval === false || $fasteval === null) {
+        return ['teacherId' => 0, 'fastevalId' => 0];
+    }
+
+    $stmt = $db->prepare('SELECT id FROM teachers WHERE fasteval_enseignant_id = ?');
+    $stmt->execute([(int) $fasteval]);
+    $teacherId = $stmt->fetchColumn();
+
+    return [
+        'teacherId' => $teacherId === false ? 0 : (int) $teacherId,
+        'fastevalId' => (int) $fasteval,
+    ];
+}
+
+// Depuis que la liste de classe vient de Fast Éval, les écrans envoient des
+// identifiants FAST ÉVAL. Cette fonction fait le pont : elle vérifie que
+// l'élève est bien dans la classe de l'enseignante connectée, puis rend son
+// identifiant LOCAL — ou null s'il ne s'est jamais connecté et n'a donc pas
+// encore de dossier ici. Un null n'est pas une erreur : c'est un élève sans
+// données, dont le bilan est simplement vide.
+function eleveLocalDeLaClasse(int $idFasteval, int $fastevalEnseignantId): ?int
+{
+    if ($idFasteval <= 0) {
+        jsonResponse(400, ['error' => 'id manquant']);
+    }
+
+    $fasteval = getDbFasteval();
+    if ($fasteval === null) {
+        jsonResponse(503, ['error' => 'Fast Éval est momentanément injoignable.']);
+    }
+    $verif = $fasteval->prepare('SELECT 1 FROM classe WHERE id_eleve = ? AND id_enseignant = ? AND actif = 1');
+    $verif->execute([$idFasteval, $fastevalEnseignantId]);
+    if (!$verif->fetchColumn()) {
+        // 404 et non 403 : dire « interdit » confirmerait que l'élève existe.
+        jsonResponse(404, ['error' => 'Élève introuvable']);
+    }
+
+    $stmt = getDb()->prepare('SELECT id FROM students WHERE fasteval_eleve_id = ?');
+    $stmt->execute([$idFasteval]);
+    $id = $stmt->fetchColumn();
+    return $id === false ? null : (int) $id;
+}
+
 // --- Purge annuelle des données élève (quiz/favoris/historique) -----------
 // Miroir côté serveur de src/lib/rotationAnneeScolaire.ts : un PC de classe
 // réutilisé d'un élève à l'autre ou d'une année sur l'autre ne doit jamais

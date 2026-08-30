@@ -189,19 +189,28 @@ if ($method === 'DELETE') {
         jsonResponse(400, ['error' => 'id manquant']);
     }
 
+    // Le lexique est COMMUN en lecture : un mot décomposé par Camille sert
+    // aussi à Marion, et le redécouper chacune de son côté produirait deux
+    // vérités pour le même mot. La suppression, elle, reste à l'autrice : on
+    // n'efface pas le travail de sa collègue, même par erreur.
+    $stmt = $db->prepare('SELECT mot, categorie, created_by FROM lexicon_additions WHERE id = ?');
+    $stmt->execute([$id]);
+    $mot = $stmt->fetch();
+    if (!$mot) {
+        jsonResponse(404, ['error' => 'Mot introuvable']);
+    }
+    if ((int) $mot['created_by'] !== (int) $user['id']) {
+        jsonResponse(403, ['error' => 'Ce mot a été ajouté par une autre enseignante : elle seule peut le supprimer.']);
+    }
+
     // ON DELETE CASCADE (voir schema-v2.sql) supprime les relations DE ce mot
     // (word_id), mais target_lemma_id n'est qu'un texte, pas une clé
     // étrangère : les relations DES AUTRES mots QUI POINTENT VERS celui-ci
     // survivraient sinon, orphelines — un élève cliquant sur ce lien mort
     // tomberait sur "mot introuvable". On les retire explicitement d'abord.
-    $stmt = $db->prepare('SELECT mot, categorie FROM lexicon_additions WHERE id = ?');
-    $stmt->execute([$id]);
-    $mot = $stmt->fetch();
-    if ($mot) {
-        $lemmaId = "ajout:{$mot['categorie']}:{$mot['mot']}";
-        $stmt = $db->prepare('DELETE FROM lexicon_relations WHERE target_lemma_id = ?');
-        $stmt->execute([$lemmaId]);
-    }
+    $lemmaId = "ajout:{$mot['categorie']}:{$mot['mot']}";
+    $stmt = $db->prepare('DELETE FROM lexicon_relations WHERE target_lemma_id = ?');
+    $stmt->execute([$lemmaId]);
 
     $stmt = $db->prepare('DELETE FROM lexicon_additions WHERE id = ?');
     $stmt->execute([$id]);

@@ -44,6 +44,13 @@ scripts/output/
 # uniquement sur le serveur OVH (voir server/api/config.php.example)
 server/api/config.php
 
+# Secret partagé de l'authentification commune aux trois sites. Il vit
+# uniquement sur le serveur OVH, à côté de config.php. Ce dépôt est PUBLIC :
+# sans cette ligne, une copie déposée par mégarde dans le dossier partirait
+# sur GitHub au premier « git add -A ». Constaté le 31/08/2026, le fichier
+# existait en production sans être exclu ici.
+server/api/auth-commune-secret.php
+
 # Fichiers audio TTS pré-générés (scripts/generate-word-audio.mjs) : ~230 Mo,
 # transmis directement par FTP vers le serveur, jamais commités (alourdirait
 # le dépôt à chaque clone). Régénérables à tout moment via le script.
