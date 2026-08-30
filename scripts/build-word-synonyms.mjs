@@ -27,8 +27,14 @@
 // téléchargés depuis jeuxdemots.org/JDM-LEXICALNET-FR/, non versionnés).
 //
 // Lancé à la main, après build-word-index.mjs : node scripts/build-word-synonyms.mjs
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs'
 import { isExcludedRelation, hasSuppressedRelations, manualSynonymsFor } from './excluded-relations.mjs'
+
+// Tri des mots à plusieurs sens, fait hors ligne par build-sens-enfant.mjs et
+// relu à la main. Facultatif : sans ce fichier, on retombe sur le seul tri
+// par poids JeuxDeMots (comportement d'avant).
+const sensEnfantPath = new URL('./sens-enfant.json', import.meta.url)
+const sensEnfant = existsSync(sensEnfantPath) ? JSON.parse(readFileSync(sensEnfantPath, 'utf8')) : {}
 
 const wordIndexPath = new URL('../src/data/words-clavier2.json', import.meta.url)
 const wordIndex = JSON.parse(readFileSync(wordIndexPath, 'utf8'))
@@ -167,6 +173,24 @@ function buildIndex(dirName) {
       .sort((a, b) => b.weight - a.weight)
       .slice(0, MAX_PAR_MOT)
       .map((t) => t.member)
+  }
+
+  // Remplace le tri par poids par le tri fait hors ligne (voir
+  // build-sens-enfant.mjs), pour les mots qui y figurent — les plus fréquents.
+  // C'est ce qui règle les mots à plusieurs sens, que ni le poids JeuxDeMots
+  // ni la fréquence Manulex ne savent départager : "chien" propose toutou
+  // (l'animal), charme (« avoir du chien ») et gardien avec des poids
+  // comparables, et seul le premier convient à un élève de CE1.
+  for (const [lemmaId, mots] of Object.entries(sensEnfant[dirName === 'r_syn' ? 'syn' : 'anto'] ?? {})) {
+    const retenus = mots
+      .map((w) => baseEntriesByWord.get(w)?.[0])
+      .filter((e) => e !== undefined)
+      .map((e) => ({ word: e.word, category: e.category, lemmaId: e.lemmaId }))
+    // Une liste vide est un choix explicite (« aucun candidat ne convient »),
+    // pas une absence de données : on retire l'entrée plutôt que de laisser
+    // les propositions écartées.
+    if (retenus.length > 0) index[lemmaId] = retenus
+    else delete index[lemmaId]
   }
 
   // Remplace entièrement le calcul JeuxDeMots pour les quelques mots figés à

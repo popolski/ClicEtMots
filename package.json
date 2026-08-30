@@ -19,6 +19,7 @@
     "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.122.0",
     "@google-cloud/text-to-speech": "^6.4.1",
     "@tailwindcss/vite": "^4.3.2",
     "@types/node": "^24.13.2",
