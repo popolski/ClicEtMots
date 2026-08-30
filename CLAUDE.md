@@ -81,7 +81,7 @@ Ne pas réintroduire la création ni la suppression d'élèves ici.
 
 ## Base de données
 
-Dix migrations à passer **dans l'ordre** : `schema.sql`, puis `schema-v2` à `-v10`.
+Quinze migrations à passer **dans l'ordre** : `schema.sql`, puis `schema-v2` à `-v15`.
 Il n'y a volontairement pas de fichier tout-en-un, pour éviter une deuxième source
 de vérité. Voir `server/README.md`.
 
@@ -110,6 +110,28 @@ Dans `third_party/`, **non versionnées**. Reconstruites par le pipeline
 | ARASAAC | environ 3 300 pictogrammes, résolus au build, jamais d'appel API depuis le navigateur |
 
 Piège de parsing sur JeuxDeMots : décoder les entités HTML **avant** le `split(';')`.
+
+### Les mots à plusieurs sens
+
+JeuxDeMots ne distingue pas les sens. Pour « chien », il propose toutou (l'animal),
+charme (« avoir du chien ») et gardien avec des poids comparables, et seul le premier
+convient en CE1.
+
+**Deux tris automatiques ont été mesurés et écartés. Ne pas les reproposer.** Par poids
+JeuxDeMots : « cerbère » (254) passe devant « cabot » (249). Par fréquence d'usage :
+« manger » donne prendre/déjeuner/dîner au lieu de dévorer/avaler/engloutir. Écartées
+aussi la réciprocité de la relation, les raffinements de sens du dump, et le
+regroupement des candidats par synonymie mutuelle, qui sépare bien les sens mais ne
+désigne pas le bon.
+
+D'où `build-sens-enfant.mjs` (31/08/2026) : une passe hors ligne, faite une fois, qui
+soumet les candidats des 2000 mots les plus fréquents à un modèle via l'API de lots
+(environ 2 $). Sa sortie est `scripts/sens-enfant.json`, **versionnée et relue à la
+main** ; `build-word-synonyms.mjs` l'applique quand elle existe et garde le
+comportement d'avant sinon. Une liste vide y veut dire « aucun candidat ne convient »
+et retire la rubrique. Rien n'est produit en direct côté élève.
+
+Le script demande `ANTHROPIC_API_KEY`. **Il n'a pas encore été lancé.**
 
 EQOL a été abandonné : il faisait perdre des mots français légitimes sans bénéfice réel.
 
