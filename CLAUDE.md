@@ -115,6 +115,17 @@ Composition, dans l'ordre, et **elle doit tenir sur une seule ligne** :
 
 **Pas de bouton Déconnexion** : la session appartient au portail, on s'y déconnecte.
 
+**Le nom affiché vient du portail, pas des tables locales.** `server/api/sso.php`
+stockait `teachers.username` (« Camille ») pour l'enseignante et `students.prenom`
+pour l'élève : le bandeau montrait un nom tronqué là où Fast Éval affiche
+« Prénom NOM ». Il reprend maintenant `$identity['label']`, que le portail
+construit avec `portailNomComplet()`, et retombe sur la colonne locale si le
+portail n'envoyait rien. Corrigé le 31/08/2026.
+
+Conséquence : le nom est écrit dans la session **au moment du passage par le
+portail**. Une session déjà ouverte garde l'ancien libellé jusqu'à la prochaine
+connexion. Ce n'est pas un bug, et un Ctrl+F5 n'y change rien.
+
 Le bandeau mesure **72 px** : 46 de logo, 12 en haut, 12 en bas, plus les bordures.
 C'est la mesure des deux autres sites, et tout écart est un défaut.
 

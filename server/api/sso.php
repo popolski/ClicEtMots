@@ -13,6 +13,14 @@ require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/sso-lib.php';
 configureSession();
 $identity = ssoRequireIdentity();
+
+// Le portail transmet le nom complet, « Prénom NOM », construit depuis les
+// colonnes prenom et nom de Fast Éval. C'est ce que les bandeaux des trois
+// sites affichent. Les colonnes locales n'en gardent qu'un morceau -
+// teachers.username vaut « Camille », students.prenom vaut le prénom seul -
+// et le bandeau affichait donc un nom tronqué par rapport aux deux autres
+// sites. Elles ne servent plus que de secours si le portail n'envoyait rien.
+$nomAffiche = trim((string) $identity['label']);
 $db = getDb();
 
 // LA SESSION PRECEDENTE EST JETEE DES L'ARRIVEE, avant meme de savoir qui
@@ -91,7 +99,7 @@ if ($identity['role'] === 'teacher') {
     }
 
     session_regenerate_id(true);
-    $_SESSION['user'] = ['id' => (int) $row['id'], 'role' => 'teacher', 'label' => $row['label']];
+    $_SESSION['user'] = ['id' => (int) $row['id'], 'role' => 'teacher', 'label' => $nomAffiche !== '' ? $nomAffiche : $row['label']];
     header('Location: /clicetmots/enseignant');
     exit;
 }
@@ -148,7 +156,7 @@ purgerSiNouvelleAnneeScolaire((int) $row['id']);
 $_SESSION['user'] = [
     'id' => (int) $row['id'],
     'role' => 'student',
-    'label' => $row['label'],
+    'label' => $nomAffiche !== '' ? $nomAffiche : $row['label'],
     'rechercheDirecte' => (bool) $row['recherche_directe'],
     'confortLecture' => (bool) $row['confort_lecture'],
 ];
