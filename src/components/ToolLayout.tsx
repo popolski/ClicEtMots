@@ -87,8 +87,15 @@ export function ToolLayout({
           </span>
         )}
         {/* Tout a droite, a la place de l'ancien bouton de deconnexion : on se
-            deconnecte depuis le portail, qui detient la session des trois sites. */}
-        {session?.role === 'teacher' && (
+            deconnecte depuis le portail, qui detient la session des trois sites.
+
+            Masque sur /enseignant : le lien y pointerait vers la page ou l'on se
+            trouve deja, et il faisait doublon avec la pastille « Compte
+            enseignant » juste a cote, signale par Hugues le 31/08/2026. Meme
+            regle que « Retour au clavier », masque sur le clavier lui-meme.
+            Il reste partout ailleurs : c'est le seul acces a l'espace
+            enseignant depuis le clavier et les outils. */}
+        {session?.role === 'teacher' && pathname !== '/enseignant' && (
           <Link to="/enseignant" className="gx-entete-portail">Espace enseignant</Link>
         )}
       </header>
