@@ -163,6 +163,13 @@ EQOL a été abandonné : il faisait perdre des mots français légitimes sans b
   n'est nulle part.
 - Vérifier `git status` avant de construire : le dossier peut contenir du code non
   commité qui n'est pas de vous, et qui partirait en ligne avec le build.
+- **Et `git log --oneline -5` en revenant dans le dépôt**, pas seulement au premier
+  contact. Hugues ouvre couramment **plusieurs sessions en parallèle sur ce dépôt** :
+  le 31/08/2026, l'une d'elles a poussé trois commits et en a ajouté un quatrième
+  pendant que je travaillais ailleurs. Tous les commits de cette machine sont signés
+  « Hugues », l'auteur ne distingue donc rien ; ce sont l'heure et le message qui le
+  disent. Conséquence pratique : modification ciblée plutôt que réécriture complète
+  d'un fichier, sinon deux sessions s'écrasent.
 
 ## Une confusion possible
 
