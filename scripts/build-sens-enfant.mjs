@@ -30,6 +30,10 @@
 //   - npm install (dépendance @anthropic-ai/sdk)
 //   - une clé API dans la variable d'environnement ANTHROPIC_API_KEY
 //     (console.anthropic.com, section API keys)
+//   - si cette clé est « liée à une identité », l'identifiant de l'espace de
+//     travail dans ANTHROPIC_WORKSPACE_ID, ou --workspace=... : sans lui l'API
+//     répond « anthropic-workspace-id is required ». Ce n'est pas un secret,
+//     il se lit dans l'adresse de la console.
 //   - les dumps third_party/jeuxdemots/r_syn|r_anto (déjà nécessaires pour
 //     build-word-synonyms.mjs)
 //
@@ -274,7 +278,15 @@ async function main() {
   }
 
   const { default: Anthropic } = await import('@anthropic-ai/sdk')
-  const client = new Anthropic()
+  // Une cle « liee a une identite » - celle que la console propose par defaut
+  // depuis 2026 - n'appartient a aucun espace de travail : l'API refuse alors
+  // la requete avec « anthropic-workspace-id is required ». On transmet donc
+  // l'identifiant de l'espace quand il est fourni. Une cle classique, rattachee
+  // a un espace, n'en a pas besoin : la variable reste vide et rien ne change.
+  const espace = process.env.ANTHROPIC_WORKSPACE_ID || args.workspace
+  const client = new Anthropic(
+    espace ? { defaultHeaders: { 'anthropic-workspace-id': String(espace) } } : {},
+  )
 
   let batchId
   if (args.reprendre) {
