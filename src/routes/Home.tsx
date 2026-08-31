@@ -29,31 +29,22 @@ export function Home() {
   }
 
   return (
-    // Gabarit d'entete commun aux trois sites : le meme conteneur que
-    // .connexion-page de Fast Eval et .page-connexion de School Monsters,
-    // au pixel pres. Si l'un des trois bouge, les deux autres doivent suivre.
-    <main className="mx-auto w-[min(940px,calc(100%_-_32px))] pt-[25px] pb-[55px] text-center md:pt-[42px]">
+    <main className="mx-auto w-full max-w-[940px] px-4 py-10 text-center sm:py-12">
       <div className="mb-3 text-center">
         <a
           href="/portail/"
-          className="inline-flex min-h-10 items-center justify-center rounded-[9px] border border-[rgba(48,52,61,.14)] bg-white/[.58] px-[14px] py-2 text-[13px] font-medium text-gray-700 transition hover:-translate-y-0.5 hover:border-brand-500 hover:bg-white/[.86]"
+          className="inline-flex min-h-10 items-center justify-center rounded-lg border border-gray-300/70 bg-white/60 px-4 py-2 text-sm font-medium text-gray-700 transition hover:-translate-y-0.5 hover:border-brand-500 hover:bg-white/90"
         >
           ← Retour au portail
         </a>
       </div>
 
-      {/* La largeur retenue differe de celle des deux autres sites, et c'est
-          voulu : notre logo est plus plat (1024x350, contre 649x261 pour Fast
-          Eval et 1920x819 pour School Monsters). C'est la HAUTEUR rendue qui
-          est harmonisee, environ 263 px, valeur sur laquelle les deux autres
-          s'accordent deja (261 et 264 px). Aligner les largeurs donnerait un
-          bandeau visiblement plus bas que les leurs. */}
       <img
         src={assetUrl('/logo.png')}
         alt="Clic &amp; Mots — le clavier phono-ludique du CP au CM2"
-        className="mx-auto h-auto w-full max-w-[612px] md:max-w-[769px]"
+        className="mx-auto h-auto w-full max-w-xl"
       />
-      <p className="mt-1 mb-[30px] text-base text-gray-500">
+      <p className="mt-3 text-base text-gray-500">
         Un clavier phonétique pour aider les élèves à trouver l'orthographe des mots qu'ils veulent écrire.
       </p>
 
@@ -64,7 +55,7 @@ export function Home() {
       {session === null ? (
         <p className="mt-10 text-gray-400">Chargement…</p>
       ) : (
-        <div className="mx-auto grid max-w-[920px] grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="mx-auto mt-8 grid max-w-[920px] grid-cols-1 gap-6 md:grid-cols-2">
           <section className="relative min-h-[390px] overflow-hidden rounded-[14px] border border-gray-700/10 bg-white/60 px-8 py-7 text-left shadow-[0_5px_14px_rgba(0,0,0,.07)]">
             <span className="absolute inset-y-6 left-0 w-[5px] rounded-r bg-brand-500" aria-hidden="true" />
             <span className="mb-2.5 inline-block rounded-full bg-brand-500/15 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-brand-700">Élève</span>

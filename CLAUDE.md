@@ -54,6 +54,20 @@ sites, ajouté à la main sur le serveur et absent du dépôt : le premier build
 l'aurait supprimé sans que rien ne le signale. Il est désormais dans le
 `index.html` du dépôt. Trouvé le 31/08/2026, en comparant avant d'écraser.
 
+**Un changement visuel se montre avant d'être mis en ligne.** Le 31/08/2026,
+l'entête de l'accueil a été aligné sur celui de Fast Éval et School Monsters, puis
+transféré sans avoir été soumis : logo passé de 576 à 769 px, marges resserrées,
+bouton de retour redessiné. Hugues a vu un site « revenu à un état antérieur ».
+Rien n'était cassé - historique git intact, 32 morceaux sur 32 servis, API
+correcte, aucune phrase perdue entre l'ancien et le nouveau bundle - mais la page
+qu'il ouvre tous les jours avait changé d'allure sans qu'il l'ait décidé. Remis
+comme avant le jour même, la version harmonisée étant gardée dans
+`RETOUR-ARRIERE/Home.tsx.harmonise-31-08`.
+
+Pour ce genre de lot : capture avant, capture après, et on transfère seulement
+après accord. L'harmonisation des trois sites reste souhaitable, mais c'est un
+choix de conception, pas une correction technique.
+
 **Vérifier avant de transférer, pas après.** Le `dist/` construit se sert en local
 et se mesure comme n'importe quelle page : serveur statique, navigateur sans
 fenêtre, sonde JavaScript qui relève les dimensions. Une session peut être simulée

@@ -62,3 +62,9 @@ public/audio/
 
 # Réglages Claude Code propres à chaque machine (launch.json, lui, est partagé).
 .claude/settings.local.json
+
+# Copies gardées avant d'écraser quelque chose en ligne. Un dist/ complet pèse
+# 11 Mo et ne sert que sur cette machine, le temps de pouvoir revenir en arrière
+# par simple transfert au lieu d'une reconstruction. Le dépôt, lui, garde déjà
+# l'historique du code source.
+RETOUR-ARRIERE/
