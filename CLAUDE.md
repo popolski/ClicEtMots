@@ -79,6 +79,27 @@ le temps d'un essai. Il se récupère depuis le serveur quand on en a besoin.
 front.** Le SSO d'abord, un build et un tag entre les deux. Un seul build qui
 embarquerait les deux rendrait impossible de savoir lequel a cassé la connexion.
 
+## L'entête d'accueil est commun aux trois sites
+
+Les pages d'entrée des trois sites partagent un gabarit, au pixel près. Si l'un
+bouge, les deux autres doivent suivre.
+
+| | valeur |
+|---|---|
+| conteneur | `min(940px, calc(100% - 32px))`, centré |
+| marges | `42px` en haut, `55px` en bas, `25px` en haut sous 768 px |
+| bouton retour portail | texte 13 px, rayon 9 px, bordure `rgba(48,52,61,.14)`, fond `rgba(255,255,255,.58)` |
+| baseline sous le logo | 4 px au-dessus, 30 px en dessous |
+
+Côté Fast Éval c'est `.connexion-page`, côté School Monsters `.page-connexion`,
+côté Clic & Mots le `<main>` de `src/routes/Home.tsx`.
+
+**Le logo s'aligne sur la HAUTEUR rendue, environ 263 px, pas sur la largeur.**
+Les trois logos n'ont pas les mêmes proportions : 649x261 pour Fast Éval,
+1920x819 pour School Monsters, 1024x350 pour Clic & Mots. Aligner les largeurs
+donnerait trois bandeaux de hauteurs différentes. D'où 769 px de large chez
+nous, contre 649 et 620 ailleurs.
+
 ## La classe vient de Fast Éval
 
 Elle n'appartient plus à Clic & Mots. **Fast Éval en est la source de vérité** :
