@@ -182,15 +182,31 @@ function buildIndex(dirName) {
   // (l'animal), charme (« avoir du chien ») et gardien avec des poids
   // comparables, et seul le premier convient à un élève de CE1.
   for (const [lemmaId, mots] of Object.entries(sensEnfant[dirName === 'r_syn' ? 'syn' : 'anto'] ?? {})) {
+    // Même catégorie grammaticale, comme pour le tri par poids plus haut.
+    // Sans ce filtre, le tri hors ligne passait à côté : le verbe « manger »
+    // recevait « nourriture » et « aliment », deux noms. Mesuré le 31/08/2026
+    // sur la première passe réelle : 230 relations sur 2809, soit 8,2 %,
+    // avaient une catégorie discordante. Le modèle n'est pas en cause, il
+    // répond pour le sens naturel du mot ; ce sont surtout des entrées
+    // douteuses du lexique - « nom:content », « nom:jeune », « adverbe:cher ».
+    const categorieSource = lemmaId.split(':')[0]
     const retenus = mots
-      .map((w) => baseEntriesByWord.get(w)?.[0])
+      .map((w) => (baseEntriesByWord.get(w) ?? []).find((e) => e.category === categorieSource))
       .filter((e) => e !== undefined)
       .map((e) => ({ word: e.word, category: e.category, lemmaId: e.lemmaId }))
-    // Une liste vide est un choix explicite (« aucun candidat ne convient »),
-    // pas une absence de données : on retire l'entrée plutôt que de laisser
-    // les propositions écartées.
+    // Trois cas, et il faut les distinguer.
+    //
+    // 1. Le modèle a retenu quelque chose d'utilisable : on le prend.
+    // 2. Le modèle n'a rien retenu : c'est un choix explicite, « aucun
+    //    candidat ne convient », et on retire la rubrique.
+    // 3. Le modèle a retenu des mots, mais tous d'une autre catégorie : il a
+    //    répondu pour un autre sens du mot source, il n'a donc pas jugé les
+    //    bons candidats. On garde alors le tri par poids plutôt que de vider.
+    //    Sans cette distinction, le verbe « manger » perdait « dévorer,
+    //    avaler, engloutir », qui étaient justes, parce que le modèle avait
+    //    répondu « nourriture, aliment ». Constaté le 31/08/2026.
     if (retenus.length > 0) index[lemmaId] = retenus
-    else delete index[lemmaId]
+    else if (mots.length === 0) delete index[lemmaId]
   }
 
   // Remplace entièrement le calcul JeuxDeMots pour les quelques mots figés à

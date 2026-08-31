@@ -1,0 +1,6056 @@
+{
+  "syn": {
+    "nom:monde": [
+      "univers",
+      "globe",
+      "foule"
+    ],
+    "adverbe:oui": [
+      "certainement",
+      "évidemment"
+    ],
+    "nom:air": [
+      "apparence",
+      "allure",
+      "aspect"
+    ],
+    "nom:pourquoi": [],
+    "nom:verbe": [],
+    "adverbe:beaucoup": [
+      "énormément"
+    ],
+    "nom:monsieur": [
+      "homme"
+    ],
+    "adverbe:trop": [],
+    "nom:père": [
+      "papa",
+      "parent"
+    ],
+    "nom:comment": [],
+    "nom:papa": [
+      "père"
+    ],
+    "nom:peur": [
+      "frayeur",
+      "crainte",
+      "terreur"
+    ],
+    "nom:exemple": [
+      "modèle"
+    ],
+    "nom:bonne": [
+      "servante",
+      "domestique"
+    ],
+    "adverbe:gros": [],
+    "adjectif:quitte": [],
+    "nom:client": [
+      "acheteur",
+      "consommateur",
+      "habitué"
+    ],
+    "nom:rapport": [
+      "relation",
+      "lien"
+    ],
+    "nom:toilette": [
+      "nettoyage"
+    ],
+    "adjectif:pointu": [
+      "aigu",
+      "piquant"
+    ],
+    "verbe:ajouter": [
+      "rajouter",
+      "additionner",
+      "compléter"
+    ],
+    "nom:propos": [
+      "parole",
+      "discours"
+    ],
+    "nom:épée": [
+      "sabre",
+      "glaive"
+    ],
+    "nom:maire": [],
+    "nom:rage": [
+      "fureur"
+    ],
+    "verbe:rejoindre": [
+      "retrouver",
+      "rattraper"
+    ],
+    "nom:niveau": [
+      "étage",
+      "hauteur",
+      "degré"
+    ],
+    "nom:rive": [
+      "bord",
+      "rivage",
+      "berge"
+    ],
+    "nom:sage": [
+      "calme",
+      "tranquille",
+      "prudent"
+    ],
+    "nom:unité": [],
+    "nom:poème": [
+      "poésie"
+    ],
+    "nom:vin": [],
+    "nom:choix": [
+      "sélection",
+      "préférence",
+      "décision"
+    ],
+    "nom:désordre": [
+      "fouillis",
+      "confusion",
+      "bazar"
+    ],
+    "nom:piste": [
+      "chemin",
+      "sentier",
+      "voie"
+    ],
+    "nom:vue": [
+      "vision",
+      "paysage"
+    ],
+    "nom:capitaine": [
+      "commandant",
+      "chef"
+    ],
+    "nom:chêne": [],
+    "verbe:montrer": [
+      "indiquer",
+      "présenter",
+      "signaler"
+    ],
+    "nom:poids": [
+      "charge",
+      "masse"
+    ],
+    "adjectif:réussi": [
+      "parfait",
+      "soigné",
+      "impeccable"
+    ],
+    "nom:prince": [],
+    "verbe:construire": [
+      "bâtir",
+      "fabriquer",
+      "faire"
+    ],
+    "adverbe:cher": [
+      "chéri",
+      "bien-aimé"
+    ],
+    "adjectif:joueur": [
+      "enjoué",
+      "taquin"
+    ],
+    "adjectif:posé": [
+      "calme",
+      "tranquille",
+      "réfléchi"
+    ],
+    "verbe:retourner": [
+      "revenir",
+      "rentrer"
+    ],
+    "nom:pois": [],
+    "adjectif:certain": [
+      "sûr",
+      "évident",
+      "vrai"
+    ],
+    "nom:retourne": [],
+    "nom:amour": [
+      "affection",
+      "tendresse"
+    ],
+    "nom:emploi": [
+      "métier",
+      "travail",
+      "profession"
+    ],
+    "nom:envers": [
+      "dos",
+      "revers"
+    ],
+    "nom:fine": [],
+    "verbe:former": [
+      "créer",
+      "faire",
+      "construire"
+    ],
+    "nom:métal": [],
+    "nom:paire": [
+      "couple",
+      "duo"
+    ],
+    "nom:événement": [],
+    "verbe:offrir": [
+      "donner",
+      "proposer",
+      "présenter"
+    ],
+    "verbe:cuire": [
+      "cuisiner",
+      "mijoter",
+      "griller"
+    ],
+    "nom:océan": [
+      "mer"
+    ],
+    "nom:chaud": [],
+    "nom:camion": [
+      "camionnette",
+      "véhicule"
+    ],
+    "nom:lundi": [],
+    "nom:parole": [
+      "mot",
+      "propos"
+    ],
+    "nom:plume": [
+      "duvet"
+    ],
+    "verbe:payer": [
+      "régler"
+    ],
+    "verbe:danser": [
+      "valser"
+    ],
+    "nom:allure": [
+      "démarche",
+      "air",
+      "aspect"
+    ],
+    "nom:girafe": [],
+    "nom:langage": [
+      "langue",
+      "vocabulaire"
+    ],
+    "nom:planche": [
+      "planchette",
+      "latte"
+    ],
+    "verbe:jeter": [
+      "lancer"
+    ],
+    "nom:taxi": [],
+    "verbe:laver": [
+      "nettoyer",
+      "rincer",
+      "frotter"
+    ],
+    "nom:garde": [
+      "gardien",
+      "sentinelle",
+      "surveillant"
+    ],
+    "nom:moto": [
+      "motocyclette"
+    ],
+    "adverbe:heureusement": [],
+    "nom:directeur": [
+      "principal"
+    ],
+    "nom:secret": [
+      "caché",
+      "mystérieux"
+    ],
+    "nom:parc": [
+      "jardin",
+      "enclos"
+    ],
+    "adjectif:appris": [
+      "su",
+      "étudié"
+    ],
+    "nom:salade": [],
+    "nom:sang": [],
+    "nom:action": [
+      "acte",
+      "activité",
+      "fait"
+    ],
+    "nom:féminin": [],
+    "nom:fantôme": [
+      "revenant",
+      "spectre",
+      "apparition"
+    ],
+    "nom:rose": [],
+    "verbe:coucher": [
+      "crépuscule",
+      "couchant"
+    ],
+    "nom:blé": [],
+    "nom:rêve": [
+      "songe",
+      "rêverie"
+    ],
+    "adjectif:immense": [
+      "énorme",
+      "gigantesque",
+      "grand"
+    ],
+    "nom:chaperon": [
+      "capuchon"
+    ],
+    "nom:document": [
+      "papier",
+      "écrit",
+      "dossier"
+    ],
+    "verbe:tirer": [
+      "retirer",
+      "sortir"
+    ],
+    "nom:région": [
+      "zone",
+      "territoire",
+      "coin"
+    ],
+    "nom:courage": [
+      "force",
+      "énergie"
+    ],
+    "nom:peinture": [
+      "tableau"
+    ],
+    "verbe:couper": [
+      "trancher",
+      "tailler"
+    ],
+    "nom:oh": [],
+    "verbe:chercher": [
+      "rechercher",
+      "fouiller"
+    ],
+    "nom:souris": [],
+    "adjectif:mis": [
+      "placé"
+    ],
+    "nom:pied": [
+      "patte"
+    ],
+    "nom:classe": [
+      "sorte",
+      "catégorie",
+      "groupe"
+    ],
+    "nom:présent": [
+      "actuel",
+      "courant"
+    ],
+    "nom:maître": [
+      "principal",
+      "premier"
+    ],
+    "nom:couleur": [
+      "teinte",
+      "nuance",
+      "coloration"
+    ],
+    "nom:dessin": [
+      "croquis",
+      "image",
+      "figure"
+    ],
+    "nom:jeune": [
+      "nouveau",
+      "neuf",
+      "récent"
+    ],
+    "nom:chien": [],
+    "nom:traverse": [],
+    "nom:trace": [
+      "marque",
+      "empreinte"
+    ],
+    "verbe:griser": [],
+    "nom:aiguille": [],
+    "nom:lourd": [],
+    "nom:prison": [
+      "cachot",
+      "cellule"
+    ],
+    "nom:fourmi": [],
+    "nom:score": [
+      "résultat",
+      "marque"
+    ],
+    "nom:violent": [
+      "brutal",
+      "fort",
+      "terrible"
+    ],
+    "adjectif:criant": [
+      "évident"
+    ],
+    "nom:repos": [
+      "pause",
+      "détente",
+      "tranquillité"
+    ],
+    "adjectif:surpris": [],
+    "nom:invisible": [],
+    "adverbe:environ": [
+      "presque",
+      "quasiment"
+    ],
+    "adjectif:gagné": [],
+    "adverbe:également": [
+      "aussi"
+    ],
+    "nom:pâte": [],
+    "nom:samedi": [],
+    "verbe:descendre": [
+      "baisser",
+      "dégringoler",
+      "tomber"
+    ],
+    "nom:four": [
+      "fourneau"
+    ],
+    "nom:planète": [
+      "astre"
+    ],
+    "adjectif:joyeux": [
+      "gai",
+      "content",
+      "heureux"
+    ],
+    "adjectif:sombre": [
+      "obscur"
+    ],
+    "verbe:éviter": [
+      "contourner",
+      "fuir"
+    ],
+    "nom:carton": [
+      "boîte"
+    ],
+    "nom:chanson": [
+      "chant",
+      "air",
+      "refrain"
+    ],
+    "nom:bureau": [],
+    "nom:état": [
+      "situation",
+      "condition"
+    ],
+    "adjectif:brun": [
+      "châtain",
+      "marron",
+      "foncé"
+    ],
+    "adjectif:indien": [],
+    "nom:hôtel": [
+      "auberge",
+      "pension",
+      "gîte"
+    ],
+    "nom:lave": [],
+    "nom:pin": [
+      "conifère"
+    ],
+    "nom:coquille": [
+      "coque",
+      "coquillage",
+      "carapace"
+    ],
+    "verbe:réussir": [
+      "parvenir",
+      "arriver",
+      "aboutir"
+    ],
+    "nom:type": [
+      "genre",
+      "modèle"
+    ],
+    "verbe:baguer": [
+      "marquer"
+    ],
+    "nom:bague": [
+      "anneau",
+      "alliance"
+    ],
+    "nom:patron": [
+      "chef",
+      "directeur",
+      "modèle"
+    ],
+    "nom:seigneur": [
+      "noble",
+      "châtelain",
+      "souverain"
+    ],
+    "nom:anglais": [
+      "britannique"
+    ],
+    "nom:bal": [
+      "fête",
+      "soirée",
+      "danse"
+    ],
+    "nom:opération": [
+      "calcul",
+      "intervention",
+      "action"
+    ],
+    "verbe:apercevoir": [
+      "voir",
+      "remarquer",
+      "distinguer"
+    ],
+    "verbe:trembler": [
+      "frissonner",
+      "grelotter",
+      "vibrer"
+    ],
+    "nom:ver": [],
+    "nom:patience": [
+      "calme"
+    ],
+    "adjectif:fragile": [
+      "faible",
+      "délicat",
+      "frêle"
+    ],
+    "adjectif:tiré": [
+      "fatigué"
+    ],
+    "nom:chacal": [],
+    "nom:estomac": [
+      "ventre"
+    ],
+    "verbe:encrer": [
+      "enduire"
+    ],
+    "nom:placard": [
+      "armoire",
+      "penderie"
+    ],
+    "adjectif:poussé": [
+      "profond"
+    ],
+    "nom:courrier": [
+      "lettre",
+      "correspondance"
+    ],
+    "nom:utile": [
+      "pratique",
+      "nécessaire",
+      "indispensable"
+    ],
+    "nom:équilibre": [
+      "stabilité"
+    ],
+    "adjectif:malade": [],
+    "adjectif:venu": [],
+    "nom:content": [
+      "heureux",
+      "joyeux",
+      "satisfait"
+    ],
+    "nom:jean": [
+      "blue-jean",
+      "pantalon"
+    ],
+    "nom:sorcier": [
+      "magicienne"
+    ],
+    "adverbe:plutôt": [
+      "assez"
+    ],
+    "nom:retour": [
+      "rentrée"
+    ],
+    "nom:arrivé": [],
+    "nom:semaine": [],
+    "verbe:répondre": [
+      "répliquer"
+    ],
+    "verbe:vivre": [
+      "habiter",
+      "demeurer"
+    ],
+    "nom:mille": [
+      "millier"
+    ],
+    "nom:fée": [
+      "magicienne"
+    ],
+    "nom:grâce": [
+      "élégance",
+      "charme",
+      "beauté"
+    ],
+    "adjectif:doux": [
+      "gentil",
+      "agréable",
+      "tendre"
+    ],
+    "nom:bec": [],
+    "nom:arrivée": [
+      "venue"
+    ],
+    "nom:gentil": [
+      "aimable",
+      "charmant",
+      "serviable"
+    ],
+    "nom:grenouille": [
+      "rainette"
+    ],
+    "adverbe:debout": [
+      "droit"
+    ],
+    "adverbe:autant": [
+      "aussi",
+      "tant"
+    ],
+    "nom:cadeau": [
+      "présent",
+      "don",
+      "surprise"
+    ],
+    "adverbe:ailleurs": [],
+    "nom:chance": [],
+    "nom:saute": [],
+    "nom:piscine": [
+      "bassin"
+    ],
+    "nom:fil": [
+      "ficelle",
+      "cordon"
+    ],
+    "nom:singulier": [
+      "étrange",
+      "bizarre",
+      "étonnant"
+    ],
+    "adjectif:triste": [
+      "malheureux"
+    ],
+    "nom:robe": [],
+    "verbe:rester": [
+      "demeurer"
+    ],
+    "nom:laisse": [
+      "attache",
+      "lien"
+    ],
+    "nom:poule": [],
+    "nom:docteur": [
+      "médecin",
+      "docteur"
+    ],
+    "nom:rapide": [
+      "vif"
+    ],
+    "nom:jaune": [
+      "doré",
+      "jaunâtre"
+    ],
+    "nom:malade": [
+      "patient"
+    ],
+    "nom:oie": [],
+    "nom:héros": [
+      "personnage",
+      "modèle"
+    ],
+    "adjectif:sale": [
+      "dégoûtant",
+      "crasseux"
+    ],
+    "nom:museau": [
+      "truffe",
+      "groin"
+    ],
+    "nom:français": [],
+    "nom:vide": [
+      "désert",
+      "creux",
+      "inhabité"
+    ],
+    "nom:hasard": [
+      "chance"
+    ],
+    "nom:rencontre": [
+      "match"
+    ],
+    "nom:salon": [
+      "séjour",
+      "pièce"
+    ],
+    "nom:tente": [
+      "abri"
+    ],
+    "nom:thé": [],
+    "nom:avance": [
+      "avancée",
+      "progression"
+    ],
+    "adverbe:frais": [
+      "fraîchement",
+      "récemment",
+      "nouvellement"
+    ],
+    "nom:offre": [
+      "proposition",
+      "promotion"
+    ],
+    "nom:paysage": [
+      "vue",
+      "panorama",
+      "décor"
+    ],
+    "nom:puissant": [
+      "fort",
+      "solide",
+      "musclé"
+    ],
+    "nom:passant": [
+      "fréquenté"
+    ],
+    "nom:poète": [
+      "écrivain",
+      "auteur"
+    ],
+    "nom:touche": [],
+    "nom:chaîne": [
+      "lien",
+      "attache",
+      "collier"
+    ],
+    "nom:quart": [
+      "quatrième"
+    ],
+    "nom:tennis": [
+      "chaussure"
+    ],
+    "nom:allée": [
+      "chemin",
+      "voie",
+      "sentier"
+    ],
+    "nom:col": [
+      "encolure",
+      "passage"
+    ],
+    "verbe:nourrir": [
+      "alimenter",
+      "élever"
+    ],
+    "nom:veille": [
+      "surveillance",
+      "garde",
+      "veillée"
+    ],
+    "nom:cirque": [
+      "chapiteau",
+      "piste",
+      "arène"
+    ],
+    "nom:propre": [
+      "net",
+      "soigné"
+    ],
+    "nom:drôle": [
+      "amusant",
+      "comique",
+      "rigolo"
+    ],
+    "nom:droite": [],
+    "nom:noir": [
+      "noirâtre"
+    ],
+    "nom:âne": [
+      "bourrique",
+      "ânesse"
+    ],
+    "verbe:retrouver": [
+      "récupérer",
+      "revoir",
+      "reconnaître"
+    ],
+    "nom:écoute": [
+      "attention",
+      "audition"
+    ],
+    "verbe:entendre": [
+      "percevoir"
+    ],
+    "verbe:dormir": [
+      "sommeiller",
+      "somnoler"
+    ],
+    "nom:fromage": [],
+    "nom:pot": [
+      "récipient",
+      "bocal",
+      "vase"
+    ],
+    "nom:toit": [
+      "toiture",
+      "maison",
+      "abri"
+    ],
+    "nom:tas": [
+      "amas",
+      "monceau"
+    ],
+    "nom:voile": [],
+    "verbe:pleurer": [
+      "sangloter"
+    ],
+    "nom:poupée": [],
+    "verbe:expliquer": [
+      "apprendre",
+      "enseigner"
+    ],
+    "nom:tempête": [
+      "ouragan",
+      "orage",
+      "bourrasque"
+    ],
+    "adjectif:décidé": [
+      "déterminé",
+      "résolu"
+    ],
+    "nom:os": [
+      "ossement"
+    ],
+    "nom:gare": [
+      "station",
+      "arrêt"
+    ],
+    "nom:parapluie": [],
+    "nom:viande": [
+      "chair"
+    ],
+    "verbe:poser": [
+      "mettre",
+      "placer",
+      "installer"
+    ],
+    "nom:tourne": [],
+    "adverbe:cependant": [
+      "pourtant",
+      "toutefois",
+      "néanmoins"
+    ],
+    "verbe:tenir": [
+      "maintenir",
+      "garder",
+      "retenir"
+    ],
+    "verbe:crier": [
+      "hurler"
+    ],
+    "nom:oublie": [],
+    "nom:problème": [
+      "difficulté",
+      "ennui",
+      "souci"
+    ],
+    "verbe:pouvoir": [
+      "puissance",
+      "force",
+      "capacité"
+    ],
+    "nom:cochon": [
+      "sale",
+      "dégoûtant"
+    ],
+    "nom:face": [
+      "visage",
+      "figure",
+      "côté"
+    ],
+    "nom:cage": [],
+    "nom:midi": [],
+    "nom:odeur": [
+      "parfum",
+      "senteur",
+      "arôme"
+    ],
+    "nom:étrange": [
+      "bizarre",
+      "curieux",
+      "étonnant"
+    ],
+    "nom:frappe": [],
+    "adjectif:amusant": [
+      "drôle",
+      "plaisant",
+      "gai"
+    ],
+    "verbe:chasser": [
+      "renvoyer",
+      "repousser",
+      "éloigner"
+    ],
+    "nom:professeur": [
+      "maîtresse"
+    ],
+    "nom:chat": [
+      "minette",
+      "minou"
+    ],
+    "nom:danse": [
+      "ballet",
+      "ronde",
+      "bal"
+    ],
+    "nom:élève": [
+      "écolier",
+      "étudiant"
+    ],
+    "adjectif:humide": [
+      "mouillé",
+      "trempé"
+    ],
+    "adverbe:ci": [
+      "ici"
+    ],
+    "adverbe:épais": [
+      "gros"
+    ],
+    "verbe:placer": [],
+    "nom:solution": [
+      "réponse",
+      "résultat"
+    ],
+    "adjectif:fatigué": [
+      "épuisé",
+      "las"
+    ],
+    "adjectif:léger": [],
+    "nom:bain": [
+      "baignade"
+    ],
+    "nom:port": [],
+    "nom:danger": [
+      "risque",
+      "péril",
+      "menace"
+    ],
+    "nom:masculin": [
+      "mâle"
+    ],
+    "nom:sapin": [],
+    "verbe:rentrer": [
+      "revenir",
+      "retourner",
+      "entrer"
+    ],
+    "nom:robot": [
+      "automate",
+      "machine"
+    ],
+    "adjectif:magnifique": [
+      "superbe",
+      "splendide",
+      "beau"
+    ],
+    "nom:direction": [
+      "sens",
+      "orientation",
+      "chemin"
+    ],
+    "nom:métier": [
+      "profession",
+      "emploi",
+      "travail"
+    ],
+    "nom:corbeau": [
+      "corneille"
+    ],
+    "nom:voleur": [
+      "malhonnête"
+    ],
+    "adverbe:soit": [
+      "bon",
+      "bien",
+      "d'accord"
+    ],
+    "nom:perdu": [
+      "égaré",
+      "disparu"
+    ],
+    "nom:vitesse": [
+      "rapidité",
+      "allure",
+      "hâte"
+    ],
+    "nom:bleu": [
+      "bleuté",
+      "azur",
+      "bleuâtre"
+    ],
+    "nom:lecture": [],
+    "nom:fleur": [],
+    "adverbe:passé": [
+      "fané",
+      "vieux",
+      "terne"
+    ],
+    "nom:simple": [
+      "facile",
+      "naturel",
+      "ordinaire"
+    ],
+    "verbe:départir": [
+      "distribuer",
+      "partager",
+      "répartir"
+    ],
+    "nom:départ": [
+      "début",
+      "commencement",
+      "origine"
+    ],
+    "verbe:pirater": [],
+    "nom:pirate": [],
+    "nom:cloche": [],
+    "nom:contenant": [
+      "récipient",
+      "boîte"
+    ],
+    "nom:vallée": [
+      "vallon",
+      "val"
+    ],
+    "adverbe:chouette": [
+      "sympa",
+      "génial",
+      "agréable"
+    ],
+    "nom:fonction": [
+      "rôle",
+      "emploi",
+      "métier"
+    ],
+    "verbe:lancer": [
+      "jet",
+      "lancement"
+    ],
+    "verbe:réveiller": [
+      "éveiller"
+    ],
+    "nom:vaisseau": [
+      "navire",
+      "bateau"
+    ],
+    "nom:café": [],
+    "nom:doute": [
+      "hésitation",
+      "soupçon",
+      "méfiance"
+    ],
+    "nom:panier": [
+      "corbeille",
+      "cabas",
+      "sac"
+    ],
+    "nom:note": [
+      "remarque",
+      "observation",
+      "indication"
+    ],
+    "nom:oreille": [
+      "ouïe",
+      "audition"
+    ],
+    "adverbe:hier": [
+      "récemment"
+    ],
+    "nom:escalier": [],
+    "adjectif:facile": [
+      "simple",
+      "aisé",
+      "accessible"
+    ],
+    "nom:fer": [
+      "métal",
+      "acier"
+    ],
+    "nom:regard": [
+      "vue",
+      "vision"
+    ],
+    "verbe:perdre": [
+      "égarer"
+    ],
+    "nom:machine": [
+      "appareil",
+      "engin",
+      "instrument"
+    ],
+    "nom:deuxième": [
+      "second",
+      "seconde"
+    ],
+    "nom:taille": [
+      "dimension",
+      "grandeur",
+      "mesure"
+    ],
+    "adjectif:adjectif": [],
+    "nom:objet": [
+      "chose"
+    ],
+    "adverbe:au-dessus": [],
+    "adjectif:compris": [
+      "inclus",
+      "entendu",
+      "saisi"
+    ],
+    "nom:noël": [],
+    "nom:bête": [
+      "âne"
+    ],
+    "nom:sort": [
+      "destin",
+      "destinée",
+      "hasard"
+    ],
+    "verbe:rendre": [
+      "redonner",
+      "remettre",
+      "rapporter"
+    ],
+    "nom:sujet": [
+      "soumis"
+    ],
+    "adverbe:rapidement": [
+      "vite",
+      "vivement",
+      "aussitôt"
+    ],
+    "nom:instant": [],
+    "nom:plaisir": [
+      "joie",
+      "bonheur",
+      "satisfaction"
+    ],
+    "nom:ventre": [
+      "abdomen"
+    ],
+    "adjectif:fou": [
+      "insensé"
+    ],
+    "adjectif:suivant": [
+      "prochain"
+    ],
+    "nom:boeuf": [],
+    "nom:arrêt": [
+      "pause",
+      "interruption",
+      "halte"
+    ],
+    "nom:bibliothèque": [],
+    "nom:change": [],
+    "nom:produit": [],
+    "nom:voisin": [
+      "proche"
+    ],
+    "nom:collection": [
+      "ensemble",
+      "série"
+    ],
+    "nom:époque": [
+      "période",
+      "temps",
+      "âge"
+    ],
+    "verbe:nager": [],
+    "nom:hauteur": [],
+    "nom:sol": [
+      "terre",
+      "plancher",
+      "terrain"
+    ],
+    "nom:fils": [
+      "enfant",
+      "garçon"
+    ],
+    "nom:lait": [],
+    "adverbe:parce que": [
+      "puisque",
+      "comme"
+    ],
+    "nom:journal": [
+      "quotidien"
+    ],
+    "nom:chapeau": [
+      "couvre-chef"
+    ],
+    "nom:pierre": [
+      "caillou",
+      "roche"
+    ],
+    "adverbe:presque": [
+      "quasiment",
+      "pratiquement",
+      "quasi"
+    ],
+    "adverbe:soudain": [
+      "brusque",
+      "inattendu",
+      "subit"
+    ],
+    "nom:question": [
+      "interrogation"
+    ],
+    "verbe:venir": [
+      "arriver",
+      "approcher"
+    ],
+    "nom:cuisine": [],
+    "nom:attention": [
+      "concentration",
+      "soin",
+      "prudence"
+    ],
+    "nom:endroit": [
+      "lieu",
+      "place",
+      "coin"
+    ],
+    "nom:barque": [
+      "bateau",
+      "canot",
+      "embarcation"
+    ],
+    "nom:jeudi": [],
+    "nom:roule": [],
+    "adverbe:tranquillement": [
+      "calmement",
+      "paisiblement"
+    ],
+    "nom:affaire": [
+      "histoire",
+      "cas"
+    ],
+    "nom:paragraphe": [
+      "passage",
+      "partie"
+    ],
+    "verbe:centrer": [
+      "cadrer"
+    ],
+    "nom:centre": [
+      "milieu",
+      "coeur"
+    ],
+    "nom:règle": [
+      "loi",
+      "règlement"
+    ],
+    "nom:soin": [
+      "attention",
+      "application"
+    ],
+    "nom:poussière": [
+      "saleté",
+      "particule",
+      "débris"
+    ],
+    "adjectif:gardien": [
+      "protecteur"
+    ],
+    "verbe:cacher": [
+      "dissimuler",
+      "masquer",
+      "couvrir"
+    ],
+    "nom:composé": [
+      "compliqué",
+      "complexe"
+    ],
+    "nom:douce": [],
+    "nom:bonheur": [
+      "joie",
+      "plaisir",
+      "contentement"
+    ],
+    "nom:publicité": [
+      "pub",
+      "réclame",
+      "annonce"
+    ],
+    "adverbe:suivant": [
+      "prochain",
+      "successeur",
+      "remplaçant"
+    ],
+    "nom:alphabet": [
+      "abécédaire"
+    ],
+    "nom:dragon": [
+      "cordon"
+    ],
+    "nom:fou": [
+      "dingue",
+      "insensé",
+      "malade"
+    ],
+    "nom:pantalon": [
+      "jean",
+      "culotte"
+    ],
+    "nom:point": [
+      "endroit",
+      "lieu",
+      "emplacement"
+    ],
+    "nom:groupe": [
+      "bande",
+      "ensemble",
+      "troupe"
+    ],
+    "nom:bruit": [
+      "vacarme",
+      "tapage",
+      "tintamarre"
+    ],
+    "adverbe:enfin": [
+      "finalement"
+    ],
+    "adverbe:autour": [],
+    "nom:moins": [],
+    "nom:arbre": [],
+    "nom:vieux": [],
+    "verbe:manger": [
+      "nourriture",
+      "aliment"
+    ],
+    "nom:jeu": [
+      "amusement",
+      "divertissement",
+      "récréation"
+    ],
+    "nom:passe": [
+      "passage"
+    ],
+    "nom:vie": [],
+    "nom:aide": [
+      "secours",
+      "soutien",
+      "appui"
+    ],
+    "nom:vélo": [
+      "bicyclette"
+    ],
+    "nom:lendemain": [
+      "demain"
+    ],
+    "nom:accord": [
+      "entente",
+      "harmonie",
+      "union"
+    ],
+    "nom:envie": [
+      "désir",
+      "souhait",
+      "besoin"
+    ],
+    "adverbe:long": [
+      "interminable",
+      "allongé",
+      "grand"
+    ],
+    "nom:boîte": [
+      "coffret",
+      "caisse",
+      "étui"
+    ],
+    "nom:peau": [
+      "écorce",
+      "épluchure"
+    ],
+    "nom:rat": [
+      "rongeur",
+      "mulot"
+    ],
+    "nom:passage": [
+      "couloir",
+      "chemin",
+      "voie"
+    ],
+    "nom:colère": [
+      "fureur",
+      "rage",
+      "mécontentement"
+    ],
+    "nom:oncle": [
+      "tonton"
+    ],
+    "nom:corps": [
+      "organisme"
+    ],
+    "nom:doigt": [],
+    "verbe:attendre": [
+      "patienter"
+    ],
+    "nom:an": [
+      "année"
+    ],
+    "verbe:connaître": [
+      "savoir",
+      "comprendre"
+    ],
+    "verbe:demander": [
+      "réclamer"
+    ],
+    "nom:mouton": [],
+    "nom:serpent": [],
+    "adverbe:tôt": [],
+    "verbe:gagner": [
+      "remporter",
+      "obtenir"
+    ],
+    "nom:appareil": [
+      "machine",
+      "engin",
+      "instrument"
+    ],
+    "verbe:chanter": [
+      "fredonner"
+    ],
+    "nom:collier": [
+      "chaîne",
+      "bijou"
+    ],
+    "nom:soif": [],
+    "nom:sortie": [
+      "issue",
+      "promenade",
+      "départ"
+    ],
+    "nom:coupe": [
+      "découpe",
+      "coupure"
+    ],
+    "nom:couverture": [
+      "couvre-lit"
+    ],
+    "nom:large": [
+      "grand",
+      "vaste",
+      "ample"
+    ],
+    "nom:pie": [],
+    "nom:filet": [],
+    "nom:grotte": [
+      "caverne"
+    ],
+    "nom:barre": [
+      "tige",
+      "barreau",
+      "baguette"
+    ],
+    "nom:prénom": [],
+    "adverbe:guère": [
+      "peu"
+    ],
+    "nom:colonne": [
+      "pilier",
+      "file"
+    ],
+    "nom:santé": [
+      "forme"
+    ],
+    "verbe:mourir": [
+      "périr",
+      "disparaître"
+    ],
+    "nom:bicyclette": [
+      "vélo"
+    ],
+    "nom:saison": [
+      "période",
+      "époque"
+    ],
+    "adverbe:finalement": [
+      "enfin"
+    ],
+    "adverbe:sec": [],
+    "nom:mouvement": [
+      "agitation",
+      "animation"
+    ],
+    "nom:situation": [
+      "position",
+      "état",
+      "place"
+    ],
+    "adjectif:choisi": [
+      "préféré",
+      "favori"
+    ],
+    "adverbe:quelquefois": [
+      "parfois"
+    ],
+    "nom:adresse": [
+      "habileté",
+      "talent"
+    ],
+    "nom:parti": [
+      "absent"
+    ],
+    "verbe:dîner": [],
+    "verbe:minuter": [],
+    "nom:leçon": [
+      "enseignement"
+    ],
+    "nom:minute": [
+      "instant",
+      "moment",
+      "seconde"
+    ],
+    "adverbe:court": [
+      "bref",
+      "petit"
+    ],
+    "nom:matériel": [],
+    "nom:échelle": [
+      "escabeau"
+    ],
+    "adjectif:disant": [],
+    "nom:agent": [
+      "agent"
+    ],
+    "nom:anniversaire": [
+      "fête"
+    ],
+    "nom:important": [
+      "grand"
+    ],
+    "verbe:dessiner": [
+      "tracer",
+      "représenter"
+    ],
+    "verbe:desservir": [
+      "débarrasser",
+      "relier"
+    ],
+    "nom:dessert": [],
+    "nom:violon": [],
+    "adverbe:dedans": [
+      "intérieur"
+    ],
+    "nom:rond": [
+      "arrondi",
+      "dodu"
+    ],
+    "adjectif:libre": [],
+    "nom:coche": [],
+    "adjectif:immobile": [
+      "fixe",
+      "figé"
+    ],
+    "nom:curieux": [
+      "bizarre",
+      "étrange",
+      "étonnant"
+    ],
+    "nom:esprit": [
+      "intelligence",
+      "pensée"
+    ],
+    "nom:mystère": [
+      "secret",
+      "énigme"
+    ],
+    "verbe:tuer": [
+      "abattre",
+      "supprimer"
+    ],
+    "nom:gorge": [
+      "gosier"
+    ],
+    "nom:noix": [],
+    "nom:toile": [
+      "tissu",
+      "tableau",
+      "peinture"
+    ],
+    "nom:troupeau": [
+      "bétail",
+      "troupe"
+    ],
+    "verbe:reconnaître": [
+      "identifier",
+      "distinguer",
+      "admettre"
+    ],
+    "nom:bond": [
+      "saut",
+      "gambade"
+    ],
+    "nom:facteur": [],
+    "nom:pêcheur": [],
+    "verbe:pousser": [],
+    "nom:boue": [
+      "saleté"
+    ],
+    "nom:plante": [
+      "végétal",
+      "herbe"
+    ],
+    "adverbe:complètement": [],
+    "nom:intrus": [],
+    "nom:ordre": [
+      "organisation",
+      "classement",
+      "rangement"
+    ],
+    "nom:jardin": [
+      "jardinet",
+      "potager",
+      "square"
+    ],
+    "adverbe:souvent": [
+      "fréquemment",
+      "couramment",
+      "habituellement"
+    ],
+    "nom:cheval": [
+      "monture"
+    ],
+    "adverbe:loin": [],
+    "nom:seul": [],
+    "nom:roi": [
+      "monarque",
+      "souverain",
+      "empereur"
+    ],
+    "nom:animal": [],
+    "nom:suite": [
+      "série",
+      "succession",
+      "file"
+    ],
+    "nom:famille": [
+      "foyer",
+      "clan",
+      "tribu"
+    ],
+    "verbe:prendre": [
+      "attraper",
+      "saisir"
+    ],
+    "adverbe:point": [
+      "pas",
+      "non"
+    ],
+    "nom:côté": [
+      "face",
+      "bord",
+      "flanc"
+    ],
+    "nom:mari": [
+      "époux"
+    ],
+    "nom:prairie": [
+      "pré",
+      "pâturage",
+      "herbage"
+    ],
+    "nom:épaule": [],
+    "verbe:envoyer": [
+      "expédier",
+      "lancer",
+      "adresser"
+    ],
+    "nom:merci": [],
+    "adverbe:parfaitement": [
+      "très bien",
+      "complètement",
+      "totalement"
+    ],
+    "nom:annonce": [
+      "message",
+      "déclaration",
+      "information"
+    ],
+    "nom:clou": [
+      "punaise"
+    ],
+    "nom:fermier": [
+      "paysan"
+    ],
+    "adverbe:verticalement": [
+      "debout",
+      "droit"
+    ],
+    "nom:cuir": [
+      "peau"
+    ],
+    "nom:information": [
+      "renseignement",
+      "nouvelle",
+      "annonce"
+    ],
+    "nom:linge": [],
+    "nom:effort": [
+      "peine",
+      "travail",
+      "mal"
+    ],
+    "nom:besoin": [
+      "nécessité",
+      "envie",
+      "manque"
+    ],
+    "nom:travers": [
+      "défaut"
+    ],
+    "adverbe:seulement": [
+      "uniquement",
+      "juste",
+      "simplement"
+    ],
+    "nom:liste": [
+      "énumération",
+      "inventaire"
+    ],
+    "nom:gros": [],
+    "nom:éléphant": [],
+    "adverbe:demain": [
+      "lendemain"
+    ],
+    "nom:heureux": [
+      "content",
+      "joyeux",
+      "ravi"
+    ],
+    "verbe:courser": [
+      "poursuivre",
+      "courir"
+    ],
+    "nom:course": [
+      "compétition",
+      "parcours",
+      "trajet"
+    ],
+    "nom:soeur": [],
+    "verbe:rire": [
+      "rigoler"
+    ],
+    "nom:impossible": [
+      "inconcevable",
+      "irréalisable"
+    ],
+    "adjectif:cher": [
+      "coûteux",
+      "chéri",
+      "aimé"
+    ],
+    "nom:ami": [
+      "amical",
+      "proche",
+      "affectueux"
+    ],
+    "nom:sommet": [
+      "cime",
+      "pic",
+      "haut"
+    ],
+    "nom:tigre": [
+      "fauve"
+    ],
+    "verbe:travailler": [
+      "étudier",
+      "fabriquer",
+      "produire"
+    ],
+    "nom:fusée": [],
+    "nom:coq": [],
+    "nom:papillon": [],
+    "nom:équipe": [
+      "groupe",
+      "troupe",
+      "bande"
+    ],
+    "nom:cheminée": [
+      "âtre",
+      "foyer"
+    ],
+    "verbe:raconter": [
+      "conter",
+      "dire",
+      "décrire"
+    ],
+    "verbe:servir": [
+      "aider",
+      "assister",
+      "secourir"
+    ],
+    "nom:miroir": [
+      "glace"
+    ],
+    "nom:marche": [
+      "démarche"
+    ],
+    "nom:spectacle": [
+      "représentation"
+    ],
+    "nom:recherche": [
+      "enquête",
+      "étude",
+      "exploration"
+    ],
+    "nom:téléphone": [
+      "appareil",
+      "mobile"
+    ],
+    "adjectif:magique": [
+      "merveilleux",
+      "féerique",
+      "fantastique"
+    ],
+    "nom:tortue": [],
+    "adjectif:tortu": [
+      "tordu",
+      "courbe"
+    ],
+    "nom:auteur": [
+      "auteur"
+    ],
+    "nom:médecin": [
+      "docteur"
+    ],
+    "nom:chèvre": [
+      "biquette",
+      "bique"
+    ],
+    "adverbe:puisque": [
+      "parce que",
+      "comme"
+    ],
+    "verbe:devenir": [
+      "futur",
+      "évolution"
+    ],
+    "nom:nuage": [],
+    "nom:plat": [],
+    "nom:approche": [
+      "arrivée",
+      "proximité"
+    ],
+    "nom:compte": [
+      "addition",
+      "calcul",
+      "total"
+    ],
+    "nom:crocodile": [
+      "caïman",
+      "alligator"
+    ],
+    "nom:extraordinaire": [
+      "incroyable",
+      "étonnant",
+      "fantastique"
+    ],
+    "nom:reine": [
+      "souveraine"
+    ],
+    "verbe:garder": [
+      "conserver",
+      "protéger"
+    ],
+    "verbe:policer": [],
+    "nom:police": [],
+    "verbe:revenir": [
+      "retourner",
+      "rentrer",
+      "réapparaître"
+    ],
+    "nom:monstre": [
+      "énorme",
+      "gigantesque",
+      "géant"
+    ],
+    "nom:branche": [
+      "rameau",
+      "brindille",
+      "branchage"
+    ],
+    "nom:dieu": [
+      "seigneur",
+      "idole"
+    ],
+    "nom:nourriture": [
+      "aliment",
+      "alimentation",
+      "repas"
+    ],
+    "nom:pont": [
+      "passerelle"
+    ],
+    "nom:retard": [
+      "lenteur",
+      "délai"
+    ],
+    "nom:dû": [],
+    "verbe:penser": [
+      "réfléchir",
+      "imaginer",
+      "songer"
+    ],
+    "nom:étoile": [
+      "astre",
+      "vedette",
+      "star"
+    ],
+    "adverbe:autrefois": [
+      "jadis",
+      "auparavant",
+      "avant"
+    ],
+    "verbe:sauter": [
+      "bondir",
+      "sautiller",
+      "gambader"
+    ],
+    "nom:nature": [
+      "caractère",
+      "tempérament",
+      "naturel"
+    ],
+    "nom:dîner": [
+      "repas"
+    ],
+    "nom:tonnerre": [
+      "grondement"
+    ],
+    "verbe:échapper": [
+      "fuir",
+      "éviter"
+    ],
+    "nom:hérisson": [],
+    "nom:ordinateur": [],
+    "verbe:promener": [
+      "balader",
+      "emmener"
+    ],
+    "nom:costume": [
+      "habit",
+      "tenue",
+      "déguisement"
+    ],
+    "nom:définition": [
+      "explication",
+      "signification",
+      "description"
+    ],
+    "nom:furieux": [
+      "enragé",
+      "déchaîné"
+    ],
+    "nom:trottoir": [],
+    "nom:frais": [
+      "fraîcheur"
+    ],
+    "verbe:fauter": [],
+    "nom:faute": [
+      "erreur",
+      "bêtise",
+      "maladresse"
+    ],
+    "nom:goût": [],
+    "nom:saut": [
+      "bond",
+      "cabriole",
+      "gambade"
+    ],
+    "verbe:seconder": [
+      "aider",
+      "épauler",
+      "assister"
+    ],
+    "nom:août": [],
+    "nom:seconde": [
+      "deuxième"
+    ],
+    "adjectif:mystérieux": [
+      "secret",
+      "caché",
+      "inconnu"
+    ],
+    "verbe:tromper": [
+      "duper",
+      "abuser"
+    ],
+    "nom:sirène": [
+      "alarme"
+    ],
+    "nom:tache": [
+      "saleté",
+      "marque",
+      "trace"
+    ],
+    "nom:ennemi": [
+      "hostile",
+      "opposé"
+    ],
+    "nom:jouet": [
+      "joujou"
+    ],
+    "nom:menton": [],
+    "nom:soie": [],
+    "adjectif:délicieux": [
+      "bon",
+      "savoureux",
+      "succulent"
+    ],
+    "adverbe:lorsque": [
+      "quand"
+    ],
+    "adverbe:milieu": [
+      "centre",
+      "entourage",
+      "environnement"
+    ],
+    "adverbe:vraiment": [
+      "réellement",
+      "véritablement",
+      "effectivement"
+    ],
+    "nom:frère": [],
+    "nom:début": [
+      "commencement",
+      "départ",
+      "naissance"
+    ],
+    "nom:fond": [
+      "profondeur",
+      "intérieur"
+    ],
+    "nom:dos": [
+      "verso",
+      "envers",
+      "revers"
+    ],
+    "nom:chemin": [
+      "sentier",
+      "route",
+      "voie"
+    ],
+    "nom:lieu": [
+      "endroit",
+      "place",
+      "emplacement"
+    ],
+    "nom:idée": [
+      "pensée",
+      "image"
+    ],
+    "nom:mois": [],
+    "adverbe:assez": [
+      "suffisamment"
+    ],
+    "nom:bouton": [
+      "interrupteur"
+    ],
+    "nom:hache": [
+      "hachette"
+    ],
+    "nom:hirondeau": [],
+    "verbe:frapper": [
+      "taper",
+      "cogner",
+      "battre"
+    ],
+    "verbe:reposer": [
+      "poser",
+      "remettre"
+    ],
+    "verbe:reprendre": [
+      "recommencer",
+      "récupérer"
+    ],
+    "nom:savon": [
+      "savonnette"
+    ],
+    "nom:disque": [
+      "album"
+    ],
+    "adjectif:différent": [
+      "autre",
+      "distinct"
+    ],
+    "adverbe:absolument": [
+      "totalement",
+      "complètement",
+      "entièrement"
+    ],
+    "nom:marteau": [
+      "maillet"
+    ],
+    "adjectif:entier": [
+      "complet",
+      "total",
+      "intact"
+    ],
+    "nom:chant": [
+      "chanson",
+      "mélodie",
+      "air"
+    ],
+    "nom:habit": [
+      "vêtement",
+      "costume",
+      "tenue"
+    ],
+    "nom:malin": [
+      "futé",
+      "rusé",
+      "intelligent"
+    ],
+    "nom:mar": [
+      "étang",
+      "flaque"
+    ],
+    "nom:dent": [
+      "croc"
+    ],
+    "nom:flamme": [
+      "feu"
+    ],
+    "nom:puits": [
+      "trou"
+    ],
+    "nom:récréation": [
+      "pause",
+      "détente"
+    ],
+    "verbe:rouler": [],
+    "verbe:sauver": [
+      "protéger"
+    ],
+    "nom:écriture": [],
+    "adverbe:piano": [
+      "doucement",
+      "lentement"
+    ],
+    "nom:auto": [
+      "voiture",
+      "automobile",
+      "véhicule"
+    ],
+    "nom:fiche": [
+      "carton",
+      "feuille"
+    ],
+    "adverbe:justement": [
+      "précisément",
+      "exactement",
+      "juste"
+    ],
+    "nom:camp": [
+      "campement",
+      "clan",
+      "équipe"
+    ],
+    "nom:appelé": [],
+    "nom:bouge": [],
+    "nom:impression": [
+      "sentiment",
+      "sensation"
+    ],
+    "verbe:visiter": [
+      "explorer",
+      "parcourir"
+    ],
+    "nom:panne": [
+      "arrêt",
+      "incident",
+      "interruption"
+    ],
+    "nom:escargot": [],
+    "nom:distance": [
+      "écart",
+      "espace",
+      "intervalle"
+    ],
+    "nom:entier": [],
+    "nom:garage": [],
+    "nom:préparation": [
+      "confection",
+      "fabrication",
+      "préparatif"
+    ],
+    "nom:jupe": [],
+    "nom:merle": [],
+    "nom:ouest": [],
+    "verbe:vaguer": [
+      "errer",
+      "vagabonder"
+    ],
+    "nom:plafond": [],
+    "nom:superbe": [
+      "magnifique",
+      "beau"
+    ],
+    "nom:vague": [
+      "flou",
+      "confus",
+      "incertain"
+    ],
+    "adverbe:soigneusement": [
+      "attentivement",
+      "minutieusement"
+    ],
+    "adjectif:formidable": [
+      "extraordinaire",
+      "merveilleux",
+      "fantastique"
+    ],
+    "verbe:agir": [
+      "faire"
+    ],
+    "nom:traîneau": [
+      "luge"
+    ],
+    "nom:beurre": [],
+    "nom:paquet": [
+      "colis",
+      "envoi"
+    ],
+    "adverbe:simplement": [
+      "seulement",
+      "uniquement"
+    ],
+    "nom:conseil": [
+      "suggestion",
+      "recommandation"
+    ],
+    "nom:accident": [
+      "incident",
+      "malheur"
+    ],
+    "nom:moteur": [],
+    "verbe:découvrir": [
+      "trouver",
+      "apercevoir",
+      "remarquer"
+    ],
+    "verbe:fabriquer": [
+      "faire",
+      "construire",
+      "produire"
+    ],
+    "adverbe:brusquement": [
+      "soudainement",
+      "subitement",
+      "brutalement"
+    ],
+    "nom:désert": [
+      "vide",
+      "inhabité",
+      "abandonné"
+    ],
+    "nom:pointe": [
+      "sommet",
+      "cime"
+    ],
+    "adverbe:attentivement": [
+      "soigneusement",
+      "sérieusement"
+    ],
+    "nom:fourrure": [
+      "pelage",
+      "poil"
+    ],
+    "adjectif:sage": [
+      "calme",
+      "raisonnable",
+      "obéissant"
+    ],
+    "nom:peintre": [
+      "artiste"
+    ],
+    "nom:remplaçant": [],
+    "nom:église": [
+      "chapelle",
+      "cathédrale"
+    ],
+    "nom:légende": [
+      "conte",
+      "histoire",
+      "récit"
+    ],
+    "nom:riz": [
+      "céréale"
+    ],
+    "nom:vêtement": [
+      "habit",
+      "habillement"
+    ],
+    "nom:circulation": [
+      "trafic"
+    ],
+    "nom:couche": [],
+    "nom:compagnon": [
+      "camarade",
+      "ami",
+      "copain"
+    ],
+    "nom:rideau": [],
+    "nom:parent": [],
+    "nom:pays": [
+      "région",
+      "territoire"
+    ],
+    "adverbe:mieux": [
+      "progrès",
+      "amélioration"
+    ],
+    "verbe:mettre": [
+      "placer",
+      "poser",
+      "installer"
+    ],
+    "nom:beau": [],
+    "nom:route": [
+      "chemin",
+      "voie",
+      "chaussée"
+    ],
+    "adverbe:près": [
+      "auprès"
+    ],
+    "nom:réponse": [
+      "réplique",
+      "solution",
+      "explication"
+    ],
+    "adverbe:fort": [
+      "solide",
+      "robuste",
+      "puissant"
+    ],
+    "nom:nez": [],
+    "nom:neige": [],
+    "nom:lit": [],
+    "adjectif:fier": [
+      "orgueilleux",
+      "satisfait"
+    ],
+    "verbe:observer": [
+      "regarder",
+      "examiner",
+      "remarquer"
+    ],
+    "nom:clé": [],
+    "nom:rôle": [
+      "fonction"
+    ],
+    "nom:vérité": [
+      "réalité"
+    ],
+    "nom:couteau": [
+      "canif",
+      "poignard"
+    ],
+    "nom:mode": [
+      "manière",
+      "façon"
+    ],
+    "adjectif:capable": [
+      "habile",
+      "adroit",
+      "compétent"
+    ],
+    "nom:banc": [
+      "banquette"
+    ],
+    "nom:glisse": [
+      "glissement"
+    ],
+    "verbe:vendre": [],
+    "nom:copain": [
+      "ami",
+      "camarade",
+      "compagnon"
+    ],
+    "nom:ponctuation": [],
+    "nom:tombée": [
+      "chute"
+    ],
+    "nom:étang": [
+      "mare",
+      "lac"
+    ],
+    "nom:sucre": [],
+    "verbe:suivre": [
+      "accompagner",
+      "poursuivre"
+    ],
+    "adjectif:entendu": [
+      "convenu",
+      "compris"
+    ],
+    "verbe:monter": [
+      "augmenter",
+      "élever"
+    ],
+    "nom:raison": [
+      "cause",
+      "motif"
+    ],
+    "nom:aura": [],
+    "nom:oeuf": [],
+    "adjectif:huit": [],
+    "verbe:acheter": [],
+    "adjectif:épais": [
+      "gros",
+      "dense",
+      "touffu"
+    ],
+    "verbe:dialoguer": [
+      "parler",
+      "discuter"
+    ],
+    "nom:dialogue": [
+      "conversation",
+      "discussion",
+      "échange"
+    ],
+    "nom:erreur": [
+      "faute"
+    ],
+    "nom:naissance": [],
+    "verbe:glisser": [
+      "déraper"
+    ],
+    "nom:abeille": [],
+    "nom:armoire": [
+      "placard",
+      "penderie"
+    ],
+    "adjectif:exact": [
+      "juste",
+      "vrai",
+      "précis"
+    ],
+    "nom:géant": [
+      "gigantesque",
+      "énorme",
+      "immense"
+    ],
+    "nom:malheureux": [
+      "triste",
+      "misérable"
+    ],
+    "adjectif:volé": [
+      "dérobé"
+    ],
+    "nom:basse": [],
+    "nom:travail": [
+      "métier",
+      "emploi",
+      "tâche"
+    ],
+    "nom:bateau": [
+      "embarcation",
+      "navire",
+      "barque"
+    ],
+    "adverbe:combien": [],
+    "nom:vert": [
+      "verdâtre"
+    ],
+    "verbe:chambrer": [],
+    "nom:chambre": [
+      "pièce"
+    ],
+    "nom:demande": [
+      "prière",
+      "souhait",
+      "désir"
+    ],
+    "adverbe:longtemps": [
+      "longuement"
+    ],
+    "adverbe:aujourd'hui": [
+      "maintenant",
+      "actuellement"
+    ],
+    "nom:écrit": [
+      "marqué",
+      "inscrit",
+      "indiqué"
+    ],
+    "adjectif:pris": [
+      "occupé",
+      "retenu",
+      "bloqué"
+    ],
+    "nom:papier": [
+      "feuille",
+      "document",
+      "lettre"
+    ],
+    "adverbe:bientôt": [
+      "prochainement"
+    ],
+    "nom:champ": [
+      "terrain",
+      "terre",
+      "prairie"
+    ],
+    "nom:palais": [
+      "château"
+    ],
+    "nom:paysan": [
+      "rural",
+      "agricole",
+      "champêtre"
+    ],
+    "nom:récit": [
+      "histoire",
+      "conte",
+      "narration"
+    ],
+    "nom:fleuve": [
+      "rivière"
+    ],
+    "nom:reçu": [],
+    "nom:caisse": [
+      "coffre",
+      "boîte",
+      "malle"
+    ],
+    "nom:chaleur": [],
+    "nom:manque": [
+      "absence"
+    ],
+    "nom:fusil": [
+      "carabine"
+    ],
+    "adverbe:ci-dessous": [],
+    "nom:affiche": [
+      "pancarte",
+      "écriteau",
+      "poster"
+    ],
+    "nom:louis": [
+      "pièce"
+    ],
+    "verbe:lamper": [
+      "boire"
+    ],
+    "nom:lampe": [
+      "lanterne",
+      "ampoule"
+    ],
+    "nom:cabane": [
+      "hutte",
+      "baraque",
+      "maisonnette"
+    ],
+    "nom:cache": [
+      "cachette",
+      "abri",
+      "refuge"
+    ],
+    "nom:sport": [
+      "exercice",
+      "gymnastique",
+      "activité"
+    ],
+    "nom:lièvre": [],
+    "nom:orthographe": [],
+    "nom:plan": [
+      "plat",
+      "uni",
+      "égal"
+    ],
+    "nom:courant": [
+      "ordinaire",
+      "habituel",
+      "normal"
+    ],
+    "nom:marchand": [
+      "commerçant"
+    ],
+    "adverbe:droit": [
+      "directement",
+      "debout"
+    ],
+    "verbe:lever": [
+      "soulever",
+      "élever",
+      "hausser"
+    ],
+    "adverbe:aussi": [
+      "également"
+    ],
+    "nom:eau": [],
+    "nom:as": [
+      "champion",
+      "génie",
+      "expert"
+    ],
+    "nom:petit": [
+      "fillette",
+      "fille"
+    ],
+    "nom:nom": [
+      "prénom",
+      "surnom"
+    ],
+    "adjectif:trois": [],
+    "nom:maison": [
+      "habitation",
+      "logement",
+      "demeure"
+    ],
+    "adjectif:quel": [],
+    "adverbe:peu": [
+      "brin",
+      "miette",
+      "goutte"
+    ],
+    "nom:jour": [
+      "journée",
+      "lumière",
+      "clarté"
+    ],
+    "adverbe:puis": [
+      "ensuite",
+      "après",
+      "alors"
+    ],
+    "adverbe:encore": [
+      "davantage"
+    ],
+    "nom:histoire": [
+      "récit",
+      "conte",
+      "aventure"
+    ],
+    "adverbe:non": [],
+    "nom:instrument": [
+      "outil",
+      "ustensile",
+      "appareil"
+    ],
+    "nom:marque": [
+      "trace",
+      "empreinte",
+      "signe"
+    ],
+    "adverbe:lourd": [
+      "pesant"
+    ],
+    "nom:espèce": [
+      "sorte",
+      "genre",
+      "catégorie"
+    ],
+    "nom:valise": [
+      "bagage",
+      "malle",
+      "mallette"
+    ],
+    "verbe:huiler": [
+      "graisser"
+    ],
+    "nom:huile": [],
+    "verbe:asseoir": [],
+    "nom:correspondant": [
+      "semblable"
+    ],
+    "nom:case": [
+      "casier",
+      "compartiment"
+    ],
+    "adverbe:forte": [],
+    "nom:joueur": [],
+    "nom:surtout": [],
+    "nom:renard": [],
+    "adjectif:trouvé": [
+      "découvert"
+    ],
+    "nom:tombe": [
+      "tombeau"
+    ],
+    "verbe:tomber": [
+      "dégringoler"
+    ],
+    "nom:carte": [
+      "plan"
+    ],
+    "verbe:damer": [
+      "tasser"
+    ],
+    "nom:dame": [
+      "femme",
+      "madame"
+    ],
+    "nom:grand-père": [
+      "papi",
+      "papy",
+      "grand-papa"
+    ],
+    "nom:herbe": [
+      "gazon",
+      "pelouse"
+    ],
+    "adjectif:lu": [],
+    "adverbe:doucement": [
+      "lentement",
+      "calmement"
+    ],
+    "nom:visage": [
+      "figure",
+      "face"
+    ],
+    "nom:chocolat": [
+      "brun"
+    ],
+    "adjectif:deuxième": [
+      "second"
+    ],
+    "nom:bande": [
+      "groupe",
+      "troupe"
+    ],
+    "nom:tapis": [
+      "moquette",
+      "paillasson"
+    ],
+    "adverbe:chaud": [
+      "bouillant"
+    ],
+    "verbe:ombrer": [],
+    "nom:ombre": [
+      "obscurité",
+      "pénombre",
+      "ombrage"
+    ],
+    "nom:photo": [
+      "photographie",
+      "image"
+    ],
+    "adjectif:dangereux": [
+      "périlleux",
+      "menaçant"
+    ],
+    "nom:montre": [
+      "chronomètre"
+    ],
+    "nom:balle": [
+      "boule"
+    ],
+    "adverbe:mauvais": [
+      "méchant",
+      "désagréable"
+    ],
+    "nom:par": [],
+    "nom:dit": [
+      "nommé"
+    ],
+    "adverbe:bien": [
+      "bon",
+      "correct",
+      "convenable"
+    ],
+    "adjectif:deux": [],
+    "adverbe:comme": [],
+    "adverbe:petit": [
+      "court"
+    ],
+    "verbe:faire": [
+      "fabriquer",
+      "créer",
+      "construire"
+    ],
+    "nom:fait": [
+      "fini",
+      "accompli"
+    ],
+    "adverbe:très": [
+      "extrêmement",
+      "bien"
+    ],
+    "nom:mets": [
+      "plat",
+      "aliment"
+    ],
+    "verbe:comprendre": [
+      "saisir",
+      "entendre"
+    ],
+    "nom:nouveau": [
+      "information"
+    ],
+    "nom:bonjour": [
+      "salut",
+      "coucou"
+    ],
+    "nom:île": [
+      "îlot"
+    ],
+    "nom:avion": [
+      "appareil"
+    ],
+    "nom:sable": [
+      "beige"
+    ],
+    "adverbe:lentement": [
+      "doucement",
+      "posément",
+      "tranquillement"
+    ],
+    "nom:coin": [
+      "endroit",
+      "lieu",
+      "angle"
+    ],
+    "nom:trou": [
+      "cavité",
+      "ouverture",
+      "creux"
+    ],
+    "nom:prix": [
+      "coût",
+      "tarif",
+      "récompense"
+    ],
+    "verbe:titrer": [
+      "intituler"
+    ],
+    "nom:titre": [],
+    "nom:partie": [
+      "morceau",
+      "part",
+      "portion"
+    ],
+    "nom:ours": [],
+    "adverbe:depuis": [],
+    "adverbe:peut-être": [
+      "probablement"
+    ],
+    "nom:bord": [
+      "bordure",
+      "limite",
+      "contour"
+    ],
+    "nom:queue": [
+      "fin",
+      "bout",
+      "file"
+    ],
+    "verbe:donner": [],
+    "nom:premier": [],
+    "nom:village": [
+      "bourg",
+      "hameau"
+    ],
+    "nom:blanc": [
+      "pur",
+      "immaculé",
+      "clair"
+    ],
+    "nom:confiture": [
+      "marmelade",
+      "gelée"
+    ],
+    "nom:piano": [],
+    "adverbe:gras": [
+      "gros",
+      "dodu",
+      "rond"
+    ],
+    "adjectif:riant": [
+      "gai",
+      "joyeux",
+      "agréable"
+    ],
+    "adverbe:sinon": [
+      "autrement"
+    ],
+    "nom:parenthèse": [],
+    "verbe:compter": [
+      "évaluer",
+      "penser",
+      "croire"
+    ],
+    "nom:malheur": [
+      "malchance",
+      "catastrophe",
+      "chagrin"
+    ],
+    "adjectif:véritable": [
+      "vrai",
+      "réel",
+      "authentique"
+    ],
+    "nom:grenier": [
+      "débarras"
+    ],
+    "nom:mesure": [
+      "dimension",
+      "proportion"
+    ],
+    "nom:âme": [
+      "esprit",
+      "coeur"
+    ],
+    "adjectif:peint": [
+      "coloré",
+      "décoré"
+    ],
+    "nom:juge": [
+      "arbitre",
+      "magistrat"
+    ],
+    "nom:bille": [
+      "balle"
+    ],
+    "nom:chagrin": [
+      "peine",
+      "tristesse",
+      "douleur"
+    ],
+    "nom:gaz": [
+      "vapeur"
+    ],
+    "adjectif:changé": [
+      "transformé",
+      "modifié",
+      "différent"
+    ],
+    "nom:commun": [
+      "ordinaire",
+      "courant",
+      "habituel"
+    ],
+    "nom:longueur": [
+      "dimension",
+      "taille"
+    ],
+    "nom:restaurant": [
+      "cantine",
+      "brasserie",
+      "auberge"
+    ],
+    "nom:tenant": [],
+    "verbe:coder": [
+      "programmer"
+    ],
+    "nom:appartement": [
+      "logement",
+      "habitation",
+      "studio"
+    ],
+    "nom:calme": [
+      "tranquille",
+      "paisible",
+      "doux"
+    ],
+    "nom:code": [],
+    "nom:mamie": [
+      "grand-mère",
+      "grand-maman"
+    ],
+    "nom:télé": [
+      "télévision",
+      "téléviseur"
+    ],
+    "nom:livre": [
+      "ouvrage",
+      "album",
+      "volume"
+    ],
+    "nom:garçon": [
+      "gamin",
+      "garçonnet",
+      "enfant"
+    ],
+    "nom:forêt": [
+      "bois"
+    ],
+    "adjectif:notre": [],
+    "verbe:partir": [
+      "quitter",
+      "sortir",
+      "déménager"
+    ],
+    "nom:exercice": [
+      "entraînement",
+      "devoir",
+      "travail"
+    ],
+    "nom:lettre": [
+      "courrier",
+      "message",
+      "billet"
+    ],
+    "adverbe:ici": [],
+    "verbe:voiturer": [
+      "transporter",
+      "conduire",
+      "amener"
+    ],
+    "nom:bout": [
+      "morceau",
+      "extrémité",
+      "fin"
+    ],
+    "nom:voiture": [
+      "automobile",
+      "auto",
+      "véhicule"
+    ],
+    "verbe:jouer": [
+      "interpréter",
+      "imiter",
+      "représenter"
+    ],
+    "adverbe:déjà": [
+      "auparavant",
+      "avant",
+      "précédemment"
+    ],
+    "nom:ciel": [
+      "air",
+      "atmosphère"
+    ],
+    "adverbe:ainsi": [],
+    "nom:charlotte": [],
+    "nom:croix": [
+      "marque"
+    ],
+    "nom:pente": [
+      "versant",
+      "côte",
+      "descente"
+    ],
+    "adjectif:atteint": [
+      "malade",
+      "touché"
+    ],
+    "adjectif:précieux": [],
+    "verbe:voisiner": [],
+    "nom:chou": [],
+    "nom:match": [
+      "rencontre",
+      "partie",
+      "compétition"
+    ],
+    "nom:sérieux": [
+      "sage",
+      "réfléchi",
+      "raisonnable"
+    ],
+    "nom:vaisselle": [],
+    "adjectif:rempli": [
+      "plein",
+      "empli",
+      "garni"
+    ],
+    "verbe:vouloir": [
+      "volonté",
+      "désir",
+      "intention"
+    ],
+    "verbe:imaginer": [
+      "inventer",
+      "supposer",
+      "penser"
+    ],
+    "verbe:oublier": [],
+    "nom:chameau": [],
+    "nom:compagnie": [
+      "groupe",
+      "société"
+    ],
+    "nom:enveloppe": [],
+    "nom:geste": [
+      "mouvement",
+      "signe"
+    ],
+    "nom:stylo": [],
+    "verbe:fermer": [
+      "clore"
+    ],
+    "nom:appel": [
+      "cri"
+    ],
+    "nom:bol": [],
+    "nom:déterminant": [
+      "important",
+      "essentiel"
+    ],
+    "nom:sirop": [],
+    "adjectif:placé": [
+      "mis",
+      "situé",
+      "posé"
+    ],
+    "adverbe:menu": [
+      "fin",
+      "petit"
+    ],
+    "nom:pluie": [
+      "averse",
+      "giboulée"
+    ],
+    "adverbe:ensuite": [
+      "puis",
+      "alors"
+    ],
+    "nom:rivière": [
+      "fleuve"
+    ],
+    "nom:forme": [
+      "aspect",
+      "apparence",
+      "allure"
+    ],
+    "nom:journée": [
+      "jour"
+    ],
+    "nom:argent": [],
+    "adverbe:d'abord": [
+      "premièrement",
+      "avant",
+      "auparavant"
+    ],
+    "nom:pain": [
+      "miche",
+      "baguette",
+      "aliment"
+    ],
+    "nom:vacance": [],
+    "nom:château": [
+      "palais",
+      "manoir",
+      "forteresse"
+    ],
+    "adverbe:parfois": [
+      "quelquefois"
+    ],
+    "nom:grand-mère": [
+      "mamie",
+      "grand-maman",
+      "mémé"
+    ],
+    "nom:montagne": [
+      "mont",
+      "sommet",
+      "colline"
+    ],
+    "verbe:recevoir": [
+      "obtenir",
+      "accueillir",
+      "avoir"
+    ],
+    "nom:ogre": [
+      "monstre",
+      "géant"
+    ],
+    "adverbe:ci-dessus": [],
+    "verbe:coffrer": [
+      "emprisonner",
+      "enfermer",
+      "arrêter"
+    ],
+    "nom:coffre": [
+      "caisse",
+      "malle",
+      "boîte"
+    ],
+    "nom:suivi": [
+      "continu",
+      "régulier",
+      "constant"
+    ],
+    "nom:veste": [
+      "blouson",
+      "veston"
+    ],
+    "nom:chauffeur": [],
+    "nom:sentier": [
+      "chemin",
+      "piste"
+    ],
+    "verbe:conduire": [
+      "mener",
+      "guider",
+      "diriger"
+    ],
+    "nom:occasion": [
+      "possibilité",
+      "circonstance"
+    ],
+    "verbe:buller": [],
+    "nom:appétit": [
+      "faim",
+      "envie"
+    ],
+    "nom:suivant": [],
+    "nom:autobus": [
+      "bus",
+      "car",
+      "autocar"
+    ],
+    "nom:bouquet": [
+      "gerbe",
+      "brassée"
+    ],
+    "nom:guitare": [],
+    "nom:laissé": [],
+    "nom:trompe": [],
+    "adverbe:dur": [
+      "sévère",
+      "difficile",
+      "rude"
+    ],
+    "nom:colle": [
+      "glu"
+    ],
+    "verbe:bouger": [
+      "remuer",
+      "gigoter",
+      "déplacer"
+    ],
+    "nom:carnaval": [
+      "défilé"
+    ],
+    "nom:écran": [],
+    "adjectif:italique": [],
+    "verbe:atteindre": [
+      "toucher",
+      "arriver",
+      "parvenir"
+    ],
+    "nom:aventure": [
+      "expédition",
+      "histoire"
+    ],
+    "nom:bonhomme": [
+      "bon",
+      "brave"
+    ],
+    "nom:navire": [
+      "bateau",
+      "paquebot"
+    ],
+    "nom:plage": [
+      "rivage",
+      "côte"
+    ],
+    "nom:boule": [
+      "balle",
+      "sphère",
+      "ballon"
+    ],
+    "nom:chaise": [
+      "siège"
+    ],
+    "nom:manteau": [
+      "pardessus"
+    ],
+    "nom:modèle": [
+      "exemplaire",
+      "parfait",
+      "idéal"
+    ],
+    "nom:pousse": [
+      "bourgeon",
+      "germe"
+    ],
+    "nom:soupe": [
+      "potage",
+      "bouillon"
+    ],
+    "nom:canard": [],
+    "nom:sel": [],
+    "nom:tire": [],
+    "verbe:contrer": [
+      "empêcher"
+    ],
+    "nom:contre": [
+      "opposé"
+    ],
+    "nom:rue": [
+      "avenue",
+      "ruelle",
+      "boulevard"
+    ],
+    "nom:train": [
+      "convoi"
+    ],
+    "verbe:tabler": [
+      "compter"
+    ],
+    "nom:table": [],
+    "nom:bras": [],
+    "nom:personne": [
+      "aucun",
+      "nul"
+    ],
+    "nom:doit": [],
+    "nom:page": [
+      "feuille"
+    ],
+    "adverbe:quelque": [
+      "certain"
+    ],
+    "verbe:trouver": [
+      "découvrir",
+      "dénicher",
+      "repérer"
+    ],
+    "adjectif:vif": [
+      "rapide",
+      "agile",
+      "remuant"
+    ],
+    "nom:éclair": [
+      "rapide"
+    ],
+    "nom:venue": [
+      "arrivée",
+      "apparition"
+    ],
+    "adjectif:aimable": [
+      "gentil",
+      "agréable",
+      "charmant"
+    ],
+    "nom:casquette": [
+      "couvre-chef",
+      "chapeau"
+    ],
+    "nom:cercle": [
+      "rond",
+      "anneau"
+    ],
+    "nom:citron": [
+      "jaune"
+    ],
+    "nom:enquête": [
+      "recherche",
+      "étude",
+      "examen"
+    ],
+    "adverbe:correctement": [
+      "bien",
+      "convenablement"
+    ],
+    "adverbe:généralement": [
+      "habituellement",
+      "souvent",
+      "ordinairement"
+    ],
+    "nom:berger": [
+      "gardien"
+    ],
+    "nom:mine": [
+      "air",
+      "visage",
+      "apparence"
+    ],
+    "nom:rang": [
+      "place",
+      "niveau",
+      "position"
+    ],
+    "nom:rire": [],
+    "nom:pomme": [],
+    "nom:maîtresse": [
+      "institutrice"
+    ],
+    "nom:dictionnaire": [],
+    "verbe:regarder": [
+      "observer",
+      "examiner",
+      "voir"
+    ],
+    "nom:lion": [
+      "fauve"
+    ],
+    "nom:façon": [
+      "manière",
+      "méthode"
+    ],
+    "nom:bouche": [],
+    "nom:faim": [
+      "appétit"
+    ],
+    "nom:joie": [
+      "bonheur",
+      "gaieté",
+      "plaisir"
+    ],
+    "nom:blanche": [],
+    "nom:feuille": [
+      "papier",
+      "page"
+    ],
+    "adverbe:surtout": [
+      "particulièrement"
+    ],
+    "adverbe:maintenant": [
+      "actuellement",
+      "aujourd'hui",
+      "désormais"
+    ],
+    "adverbe:avant": [],
+    "nom:car": [
+      "autocar",
+      "bus",
+      "autobus"
+    ],
+    "nom:feu": [],
+    "nom:vu": [
+      "observé"
+    ],
+    "nom:donne": [],
+    "nom:vrai": [
+      "véritable",
+      "exact",
+      "réel"
+    ],
+    "nom:moment": [
+      "instant",
+      "temps"
+    ],
+    "nom:mère": [
+      "maman"
+    ],
+    "adverbe:fin": [],
+    "nom:voie": [
+      "chemin",
+      "route",
+      "rue"
+    ],
+    "adjectif:invisible": [
+      "introuvable",
+      "transparent"
+    ],
+    "verbe:goûter": [
+      "casse-croûte",
+      "repas"
+    ],
+    "verbe:soigner": [
+      "entretenir"
+    ],
+    "nom:revenu": [
+      "guéri"
+    ],
+    "verbe:orchestrer": [
+      "organiser",
+      "diriger",
+      "coordonner"
+    ],
+    "nom:orchestre": [
+      "fanfare",
+      "ensemble",
+      "groupe"
+    ],
+    "nom:ronde": [
+      "danse",
+      "farandole"
+    ],
+    "adjectif:attendant": [],
+    "nom:brun": [
+      "marron",
+      "châtain",
+      "chocolat"
+    ],
+    "nom:casserole": [
+      "marmite",
+      "cocotte",
+      "récipient"
+    ],
+    "nom:indien": [],
+    "nom:marc": [],
+    "nom:chef": [
+      "patron",
+      "directeur",
+      "responsable"
+    ],
+    "adjectif:joli": [
+      "beau",
+      "charmant",
+      "ravissant"
+    ],
+    "nom:scène": [],
+    "adverbe:tellement": [
+      "tant",
+      "si"
+    ],
+    "nom:cour": [
+      "préau"
+    ],
+    "nom:gâteau": [
+      "pâtisserie"
+    ],
+    "nom:longue": [
+      "long"
+    ],
+    "adjectif:assis": [],
+    "nom:nid": [
+      "abri"
+    ],
+    "adjectif:énorme": [
+      "gigantesque",
+      "immense",
+      "grand"
+    ],
+    "nom:cas": [
+      "situation"
+    ],
+    "nom:froid": [
+      "glacé",
+      "glacial"
+    ],
+    "nom:bébé": [
+      "nourrisson",
+      "nouveau-né",
+      "tout-petit"
+    ],
+    "verbe:boire": [
+      "avaler"
+    ],
+    "nom:hibou": [],
+    "nom:jardinier": [],
+    "nom:message": [
+      "lettre",
+      "information",
+      "annonce"
+    ],
+    "verbe:gueuler": [
+      "crier",
+      "hurler"
+    ],
+    "nom:gueule": [
+      "bouche"
+    ],
+    "adverbe:facilement": [
+      "aisément"
+    ],
+    "nom:mémoire": [
+      "souvenir"
+    ],
+    "adjectif:vieil": [
+      "vieux"
+    ],
+    "verbe:quitter": [
+      "partir",
+      "abandonner",
+      "laisser"
+    ],
+    "nom:poil": [
+      "pelage",
+      "duvet",
+      "fourrure"
+    ],
+    "verbe:arrêter": [
+      "bloquer",
+      "immobiliser",
+      "interrompre"
+    ],
+    "nom:clown": [
+      "pitre",
+      "guignol",
+      "farceur"
+    ],
+    "nom:secours": [
+      "aide",
+      "assistance",
+      "soutien"
+    ],
+    "adjectif:terrible": [
+      "effrayant",
+      "affreux",
+      "horrible"
+    ],
+    "nom:pose": [
+      "position",
+      "posture",
+      "attitude"
+    ],
+    "nom:terrain": [
+      "terre",
+      "emplacement"
+    ],
+    "nom:magasin": [
+      "boutique",
+      "commerce"
+    ],
+    "adjectif:nombreux": [
+      "abondant"
+    ],
+    "nom:habitude": [
+      "coutume",
+      "usage"
+    ],
+    "nom:intérieur": [
+      "interne"
+    ],
+    "adjectif:oublié": [
+      "abandonné"
+    ],
+    "verbe:espacer": [
+      "écarter",
+      "séparer"
+    ],
+    "nom:espace": [
+      "étendue",
+      "zone"
+    ],
+    "adjectif:féminin": [],
+    "adverbe:dessus": [
+      "haut",
+      "sommet"
+    ],
+    "verbe:tourner": [
+      "tournoyer",
+      "virer"
+    ],
+    "verbe:battre": [
+      "frapper",
+      "taper",
+      "cogner"
+    ],
+    "nom:clair": [
+      "lumineux",
+      "net",
+      "transparent"
+    ],
+    "nom:voyant": [
+      "coloré",
+      "éclatant",
+      "vif"
+    ],
+    "nom:cartable": [
+      "sac",
+      "sacoche",
+      "mallette"
+    ],
+    "verbe:commencer": [
+      "débuter",
+      "démarrer",
+      "entamer"
+    ],
+    "nom:tambour": [
+      "tambourin",
+      "tam-tam"
+    ],
+    "verbe:remplacer": [
+      "changer"
+    ],
+    "nom:camarade": [
+      "ami",
+      "copain",
+      "compagnon"
+    ],
+    "nom:paille": [],
+    "verbe:débarrasser": [
+      "enlever",
+      "ôter",
+      "dégager"
+    ],
+    "nom:masque": [
+      "déguisement"
+    ],
+    "nom:portrait": [
+      "image",
+      "dessin",
+      "peinture"
+    ],
+    "nom:total": [
+      "complet",
+      "entier"
+    ],
+    "nom:zéro": [
+      "rien"
+    ],
+    "nom:employé": [
+      "utilisé"
+    ],
+    "nom:prochain": [
+      "suivant",
+      "proche",
+      "futur"
+    ],
+    "nom:trompette": [],
+    "nom:couloir": [
+      "passage",
+      "corridor"
+    ],
+    "nom:flèche": [],
+    "nom:fraise": [],
+    "nom:magicien": [
+      "sorcier",
+      "illusionniste",
+      "enchanteur"
+    ],
+    "nom:royaume": [
+      "pays",
+      "empire"
+    ],
+    "nom:fatigue": [
+      "épuisement",
+      "lassitude",
+      "faiblesse"
+    ],
+    "adverbe:davantage": [
+      "plus",
+      "encore"
+    ],
+    "verbe:ceinturer": [
+      "entourer",
+      "encercler"
+    ],
+    "nom:aigle": [
+      "rapace"
+    ],
+    "nom:ceinture": [],
+    "adjectif:gai": [
+      "joyeux",
+      "heureux",
+      "enjoué"
+    ],
+    "nom:explication": [
+      "renseignement",
+      "précision",
+      "commentaire"
+    ],
+    "verbe:carotter": [
+      "voler",
+      "tromper"
+    ],
+    "nom:carotte": [
+      "roux"
+    ],
+    "nom:boutique": [
+      "magasin",
+      "commerce"
+    ],
+    "nom:signal": [
+      "signe",
+      "avertissement"
+    ],
+    "verbe:présenter": [
+      "montrer",
+      "exposer",
+      "offrir"
+    ],
+    "verbe:revoir": [
+      "réviser",
+      "repasser"
+    ],
+    "nom:chasseur": [
+      "trappeur"
+    ],
+    "nom:farine": [],
+    "nom:poste": [
+      "emploi",
+      "place"
+    ],
+    "nom:vache": [
+      "méchant",
+      "sévère",
+      "dur"
+    ],
+    "nom:troisième": [],
+    "adjectif:aucun": [],
+    "nom:marché": [
+      "foire"
+    ],
+    "nom:orage": [
+      "tempête",
+      "ouragan"
+    ],
+    "adjectif:sauf": [
+      "indemne"
+    ],
+    "nom:sommeil": [
+      "repos"
+    ],
+    "verbe:attraper": [
+      "prendre",
+      "saisir"
+    ],
+    "nom:figure": [
+      "visage",
+      "face"
+    ],
+    "nom:genre": [
+      "sorte",
+      "type",
+      "espèce"
+    ],
+    "nom:ruisseau": [
+      "ru"
+    ],
+    "verbe:obtenir": [
+      "gagner",
+      "recevoir",
+      "remporter"
+    ],
+    "nom:attrape": [
+      "blague",
+      "farce",
+      "plaisanterie"
+    ],
+    "verbe:cueillir": [
+      "ramasser",
+      "récolter"
+    ],
+    "nom:zoo": [
+      "ménagerie",
+      "parc"
+    ],
+    "verbe:dater": [
+      "remonter"
+    ],
+    "nom:cave": [
+      "souterrain",
+      "creux"
+    ],
+    "nom:date": [
+      "jour",
+      "moment",
+      "époque"
+    ],
+    "verbe:protéger": [
+      "défendre",
+      "préserver",
+      "garder"
+    ],
+    "nom:manche": [
+      "partie",
+      "match"
+    ],
+    "nom:trait": [],
+    "adjectif:célèbre": [
+      "connu",
+      "fameux",
+      "réputé"
+    ],
+    "adverbe:immédiatement": [
+      "aussitôt",
+      "sur-le-champ",
+      "tout de suite"
+    ],
+    "adjectif:anglais": [
+      "britannique"
+    ],
+    "adjectif:cassé": [
+      "brisé",
+      "rompu"
+    ],
+    "adverbe:désormais": [
+      "dorénavant"
+    ],
+    "nom:aube": [
+      "aurore",
+      "commencement",
+      "début"
+    ],
+    "nom:minuscule": [
+      "petit",
+      "microscopique",
+      "miniature"
+    ],
+    "nom:ouverture": [
+      "trou",
+      "fente",
+      "orifice"
+    ],
+    "verbe:installer": [
+      "placer",
+      "mettre",
+      "poser"
+    ],
+    "nom:conduit": [
+      "tuyau",
+      "canal",
+      "canalisation"
+    ],
+    "nom:prudent": [
+      "sage",
+      "réfléchi",
+      "attentif"
+    ],
+    "verbe:retenir": [
+      "tenir",
+      "maintenir",
+      "arrêter"
+    ],
+    "nom:baguette": [
+      "bâton",
+      "tige",
+      "pain"
+    ],
+    "nom:impératif": [
+      "urgent",
+      "nécessaire",
+      "indispensable"
+    ],
+    "nom:boire": [
+      "boisson"
+    ],
+    "verbe:arriver": [
+      "venir",
+      "parvenir",
+      "atteindre"
+    ],
+    "nom:cause": [
+      "raison",
+      "motif",
+      "origine"
+    ],
+    "nom:personnage": [
+      "personne",
+      "individu"
+    ],
+    "nom:film": [
+      "vidéo"
+    ],
+    "nom:dernier": [
+      "final",
+      "ultime"
+    ],
+    "verbe:entrer": [
+      "pénétrer",
+      "rentrer"
+    ],
+    "adjectif:difficile": [
+      "dur",
+      "compliqué",
+      "ardu"
+    ],
+    "nom:chasse": [
+      "poursuite",
+      "battue",
+      "recherche"
+    ],
+    "nom:conte": [
+      "histoire",
+      "récit",
+      "fable"
+    ],
+    "nom:dimanche": [],
+    "adverbe:plein": [
+      "rempli",
+      "bourré",
+      "complet"
+    ],
+    "verbe:courir": [
+      "galoper"
+    ],
+    "nom:langue": [
+      "langage"
+    ],
+    "nom:cou": [],
+    "nom:âge": [],
+    "verbe:aider": [
+      "soutenir",
+      "secourir",
+      "assister"
+    ],
+    "nom:expression": [
+      "tournure",
+      "air"
+    ],
+    "nom:verre": [
+      "gobelet",
+      "récipient"
+    ],
+    "nom:manière": [
+      "façon",
+      "genre",
+      "style"
+    ],
+    "nom:silence": [
+      "calme",
+      "tranquillité",
+      "paix"
+    ],
+    "nom:télévision": [
+      "télé",
+      "téléviseur"
+    ],
+    "nom:adjectif": [
+      "qualificatif"
+    ],
+    "adjectif:nature": [
+      "naturel"
+    ],
+    "verbe:voler": [
+      "dérober",
+      "prendre"
+    ],
+    "nom:cent": [],
+    "verbe:corder": [],
+    "nom:corde": [
+      "ficelle",
+      "câble",
+      "cordage"
+    ],
+    "verbe:porter": [],
+    "nom:signe": [
+      "marque",
+      "symbole",
+      "signal"
+    ],
+    "nom:disparu": [
+      "perdu",
+      "introuvable",
+      "parti"
+    ],
+    "nom:théâtre": [
+      "scène"
+    ],
+    "adverbe:dehors": [
+      "extérieur"
+    ],
+    "nom:surprise": [
+      "étonnement"
+    ],
+    "verbe:apprendre": [
+      "enseigner",
+      "instruire"
+    ],
+    "nom:coeur": [],
+    "nom:femme": [
+      "dame",
+      "épouse"
+    ],
+    "nom:fête": [
+      "kermesse",
+      "festival"
+    ],
+    "nom:poisson": [],
+    "verbe:passer": [
+      "traverser"
+    ],
+    "nom:madame": [
+      "dame"
+    ],
+    "verbe:écrire": [
+      "noter",
+      "rédiger",
+      "inscrire"
+    ],
+    "adverbe:tard": [],
+    "nom:joue": [],
+    "nom:oeil": [],
+    "adverbe:tant": [
+      "tellement",
+      "autant",
+      "si"
+    ],
+    "nom:or": [],
+    "nom:lune": [],
+    "adverbe:quand": [
+      "lorsque"
+    ],
+    "nom:me": [
+      "moi"
+    ],
+    "nom:moi": [
+      "me"
+    ],
+    "adverbe:si": [
+      "tellement",
+      "tant",
+      "aussi"
+    ],
+    "adverbe:tout": [
+      "entier",
+      "complet",
+      "chaque"
+    ],
+    "nom:mot": [
+      "terme",
+      "expression",
+      "parole"
+    ],
+    "nom:temps": [
+      "moment",
+      "période",
+      "époque"
+    ],
+    "adjectif:chaque": [
+      "tout"
+    ],
+    "adverbe:alors": [
+      "ensuite",
+      "puis"
+    ],
+    "nom:texte": [
+      "écrit",
+      "document"
+    ],
+    "verbe:être": [
+      "créature",
+      "personne",
+      "humain"
+    ],
+    "adverbe:là": [
+      "ici"
+    ],
+    "nom:radio": [
+      "poste"
+    ],
+    "adjectif:regardant": [],
+    "nom:cm": [
+      "centimètre"
+    ],
+    "nom:rocher": [
+      "roche",
+      "roc",
+      "pierre"
+    ],
+    "nom:bâton": [
+      "baguette",
+      "canne",
+      "tige"
+    ],
+    "nom:laine": [
+      "lainage"
+    ],
+    "nom:sauvage": [
+      "farouche"
+    ],
+    "adjectif:né": [],
+    "nom:vocabulaire": [
+      "lexique"
+    ],
+    "adjectif:tombé": [
+      "effondré"
+    ],
+    "nom:mort": [],
+    "nom:quartier": [
+      "morceau",
+      "coin"
+    ],
+    "nom:gardien": [
+      "surveillant",
+      "garde",
+      "portier"
+    ],
+    "nom:fauteuil": [
+      "siège"
+    ],
+    "nom:pré": [
+      "prairie",
+      "pâturage"
+    ],
+    "nom:souffle": [
+      "haleine",
+      "respiration"
+    ],
+    "adjectif:bizarre": [
+      "étrange",
+      "curieux",
+      "original"
+    ],
+    "verbe:croire": [
+      "imaginer",
+      "supposer"
+    ],
+    "adverbe:sûrement": [
+      "certainement",
+      "forcément",
+      "évidemment"
+    ],
+    "nom:vol": [
+      "cambriolage"
+    ],
+    "verbe:utiliser": [
+      "employer"
+    ],
+    "nom:but": [
+      "objectif",
+      "intention"
+    ],
+    "nom:surface": [
+      "superficie",
+      "étendue"
+    ],
+    "nom:côte": [
+      "rivage",
+      "littoral"
+    ],
+    "nom:grille": [
+      "grillage",
+      "clôture",
+      "barrière"
+    ],
+    "verbe:essayer": [
+      "tenter",
+      "tester"
+    ],
+    "nom:réveil": [
+      "réveille-matin",
+      "éveil"
+    ],
+    "nom:trésor": [
+      "richesse",
+      "fortune"
+    ],
+    "adjectif:intrus": [],
+    "adverbe:c'est-à-dire": [],
+    "nom:roue": [],
+    "nom:jus": [],
+    "nom:poésie": [
+      "poème"
+    ],
+    "nom:agréable": [
+      "doux",
+      "plaisant",
+      "charmant"
+    ],
+    "nom:liberté": [
+      "indépendance"
+    ],
+    "nom:précis": [
+      "exact",
+      "clair",
+      "juste"
+    ],
+    "nom:ficelle": [
+      "corde",
+      "fil"
+    ],
+    "adjectif:caché": [
+      "secret",
+      "dissimulé",
+      "masqué"
+    ],
+    "nom:musée": [],
+    "nom:bulle": [],
+    "nom:conjugaison": [],
+    "nom:cousin": [
+      "parent"
+    ],
+    "nom:perroquet": [],
+    "verbe:avancer": [
+      "progresser",
+      "marcher"
+    ],
+    "nom:radis": [],
+    "nom:claire": [],
+    "adjectif:pâle": [
+      "blême",
+      "terne"
+    ],
+    "adverbe:auprès": [
+      "près"
+    ],
+    "verbe:occuper": [
+      "prendre",
+      "remplir",
+      "amuser"
+    ],
+    "nom:tronc": [
+      "torse"
+    ],
+    "verbe:peindre": [
+      "colorer",
+      "représenter"
+    ],
+    "nom:plateau": [],
+    "verbe:casser": [
+      "briser",
+      "rompre",
+      "abîmer"
+    ],
+    "nom:concours": [
+      "compétition"
+    ],
+    "nom:agneau": [
+      "mouton"
+    ],
+    "nom:maladie": [
+      "mal"
+    ],
+    "adjectif:rare": [
+      "inhabituel",
+      "exceptionnel"
+    ],
+    "verbe:goutter": [
+      "couler"
+    ],
+    "nom:cesse": [
+      "arrêt"
+    ],
+    "nom:horizon": [],
+    "nom:football": [
+      "foot"
+    ],
+    "adjectif:rencontré": [
+      "croisé"
+    ],
+    "nom:humeur": [],
+    "nom:hôpital": [
+      "clinique",
+      "infirmerie"
+    ],
+    "verbe:remettre": [
+      "donner",
+      "rendre",
+      "redonner"
+    ],
+    "nom:proie": [
+      "victime",
+      "gibier"
+    ],
+    "adjectif:formé": [
+      "entraîné",
+      "développé"
+    ],
+    "nom:tableau": [
+      "peinture",
+      "image"
+    ],
+    "adjectif:sûr": [
+      "certain",
+      "assuré"
+    ],
+    "adverbe:mal": [
+      "mauvais"
+    ],
+    "nom:hiver": [],
+    "verbe:parler": [
+      "langage",
+      "langue"
+    ],
+    "nom:possible": [
+      "réalisable"
+    ],
+    "nom:peine": [
+      "chagrin",
+      "tristesse",
+      "douleur"
+    ],
+    "nom:sac": [
+      "sacoche",
+      "cabas"
+    ],
+    "nom:relève": [
+      "remplacement"
+    ],
+    "adverbe:derrière": [
+      "fesse",
+      "postérieur"
+    ]
+  },
+  "anto": {
+    "verbe:espacer": [
+      "rapprocher",
+      "serrer"
+    ],
+    "verbe:revenir": [
+      "partir",
+      "repartir"
+    ],
+    "nom:monstre": [],
+    "nom:branche": [
+      "tronc",
+      "racine"
+    ],
+    "nom:dieu": [
+      "diable"
+    ],
+    "nom:retard": [
+      "avance"
+    ],
+    "verbe:penser": [
+      "oublier"
+    ],
+    "adverbe:autrefois": [
+      "maintenant",
+      "aujourd'hui"
+    ],
+    "nom:nature": [],
+    "verbe:voler": [
+      "donner"
+    ],
+    "verbe:porter": [
+      "enlever"
+    ],
+    "nom:disparu": [
+      "présent",
+      "vivant"
+    ],
+    "adverbe:dehors": [
+      "dedans"
+    ],
+    "adjectif:un": [
+      "nombreux"
+    ],
+    "nom:est": [
+      "ouest"
+    ],
+    "adverbe:pas": [],
+    "nom:tu": [],
+    "nom:sur": [],
+    "nom:son": [],
+    "adverbe:plus": [
+      "moins"
+    ],
+    "nom:dit": [],
+    "adjectif:haut": [
+      "bas",
+      "petit",
+      "inférieur"
+    ],
+    "verbe:sortir": [
+      "rentrer",
+      "entrer"
+    ],
+    "nom:salle": [],
+    "nom:mur": [],
+    "nom:pauvre": [
+      "riche",
+      "abondant"
+    ],
+    "adjectif:donné": [],
+    "nom:pièce": [],
+    "nom:glace": [
+      "chaleur"
+    ],
+    "nom:lumière": [
+      "obscurité",
+      "noir",
+      "nuit"
+    ],
+    "nom:besoin": [
+      "richesse",
+      "abondance"
+    ],
+    "nom:gros": [],
+    "adverbe:demain": [
+      "hier"
+    ],
+    "nom:heureux": [
+      "triste",
+      "malheureux",
+      "mécontent"
+    ],
+    "adverbe:enfin": [
+      "d'abord"
+    ],
+    "adverbe:moins": [
+      "plus"
+    ],
+    "nom:vieux": [
+      "jeune",
+      "fille",
+      "fillette"
+    ],
+    "verbe:manger": [],
+    "nom:vie": [
+      "mort"
+    ],
+    "nom:parent": [],
+    "nom:pays": [],
+    "adverbe:mieux": [
+      "pire"
+    ],
+    "verbe:mettre": [
+      "enlever",
+      "retirer",
+      "ôter"
+    ],
+    "nom:beau": [
+      "laide"
+    ],
+    "adverbe:près": [
+      "loin"
+    ],
+    "nom:réponse": [
+      "question",
+      "demande"
+    ],
+    "nom:inquiet": [
+      "calme",
+      "tranquille",
+      "serein"
+    ],
+    "nom:terminaison": [
+      "commencement"
+    ],
+    "nom:brouillard": [
+      "soleil"
+    ],
+    "nom:paix": [
+      "guerre",
+      "bagarre",
+      "violence"
+    ],
+    "verbe:imaginer": [],
+    "verbe:oublier": [
+      "souvenir",
+      "retrouver"
+    ],
+    "nom:compagnie": [
+      "solitude",
+      "isolement"
+    ],
+    "verbe:fermer": [
+      "ouvrir"
+    ],
+    "nom:appel": [],
+    "adverbe:menu": [
+      "gros",
+      "énorme",
+      "épais"
+    ],
+    "adjectif:courageux": [
+      "peureux",
+      "froussard",
+      "craintif"
+    ],
+    "nom:parfum": [],
+    "adjectif:fatigué": [
+      "énergique",
+      "frais"
+    ],
+    "adjectif:épais": [
+      "fin",
+      "mince"
+    ],
+    "nom:dialogue": [],
+    "nom:erreur": [
+      "vérité"
+    ],
+    "nom:naissance": [
+      "mort",
+      "fin"
+    ],
+    "verbe:glisser": [],
+    "adjectif:exact": [
+      "faux"
+    ],
+    "nom:géant": [
+      "petit",
+      "minuscule"
+    ],
+    "nom:malheureux": [
+      "heureux",
+      "content",
+      "ravi"
+    ],
+    "adjectif:volé": [
+      "donné"
+    ],
+    "verbe:recevoir": [
+      "refuser"
+    ],
+    "adverbe:ci-dessus": [],
+    "verbe:coffrer": [],
+    "nom:travail": [
+      "repos",
+      "loisir",
+      "récréation"
+    ],
+    "nom:bateau": [],
+    "nom:vert": [
+      "mûr"
+    ],
+    "nom:demande": [
+      "réponse",
+      "refus"
+    ],
+    "adverbe:longtemps": [],
+    "adverbe:aujourd'hui": [
+      "demain",
+      "hier"
+    ],
+    "adjectif:pris": [
+      "libre",
+      "disponible"
+    ],
+    "adverbe:bientôt": [],
+    "adverbe:milieu": [
+      "bord",
+      "extrémité"
+    ],
+    "nom:frère": [
+      "soeur"
+    ],
+    "nom:début": [
+      "fin"
+    ],
+    "nom:fond": [],
+    "nom:noir": [
+      "blanc",
+      "clair"
+    ],
+    "nom:dehors": [
+      "dedans"
+    ],
+    "nom:surprise": [],
+    "verbe:apprendre": [
+      "oublier",
+      "ignorer"
+    ],
+    "verbe:attendre": [],
+    "verbe:connaître": [
+      "ignorer",
+      "oublier"
+    ],
+    "verbe:demander": [
+      "répondre",
+      "donner"
+    ],
+    "nom:mouton": [],
+    "adverbe:tôt": [
+      "tard"
+    ],
+    "verbe:gagner": [
+      "perdre",
+      "échouer"
+    ],
+    "verbe:chanter": [],
+    "verbe:crier": [
+      "chuchoter",
+      "murmurer"
+    ],
+    "nom:problème": [
+      "solution"
+    ],
+    "nom:cochon": [
+      "propre"
+    ],
+    "nom:pouvoir": [],
+    "verbe:rendre": [
+      "garder",
+      "emprunter"
+    ],
+    "nom:sujet": [
+      "complément"
+    ],
+    "adverbe:rapidement": [
+      "lentement",
+      "doucement"
+    ],
+    "nom:instant": [
+      "éternité"
+    ],
+    "nom:plaisir": [
+      "douleur",
+      "ennui",
+      "peine"
+    ],
+    "nom:ventre": [
+      "dos"
+    ],
+    "nom:chef": [
+      "employé"
+    ],
+    "adjectif:joli": [
+      "laid",
+      "vilain"
+    ],
+    "nom:cour": [],
+    "nom:longue": [],
+    "adjectif:assis": [
+      "couché",
+      "allongé"
+    ],
+    "nom:froid": [
+      "chaud",
+      "brûlant"
+    ],
+    "nom:bébé": [
+      "adulte"
+    ],
+    "verbe:boire": [],
+    "nom:danger": [
+      "sécurité",
+      "sûreté"
+    ],
+    "nom:masculin": [
+      "féminin"
+    ],
+    "verbe:rentrer": [
+      "sortir",
+      "ressortir"
+    ],
+    "nom:robot": [
+      "humain"
+    ],
+    "adjectif:magnifique": [
+      "horrible",
+      "laid"
+    ],
+    "adjectif:voleur": [
+      "honnête"
+    ],
+    "nom:moyen": [],
+    "adverbe:là-bas": [
+      "ici"
+    ],
+    "nom:guerre": [
+      "paix"
+    ],
+    "nom:service": [],
+    "verbe:appeler": [],
+    "verbe:voiler": [],
+    "nom:foule": [],
+    "nom:santé": [
+      "maladie"
+    ],
+    "verbe:mourir": [
+      "vivre",
+      "naître",
+      "renaître"
+    ],
+    "adverbe:sec": [
+      "mouillé",
+      "humide",
+      "trempé"
+    ],
+    "nom:mouvement": [
+      "immobilité",
+      "arrêt",
+      "repos"
+    ],
+    "adjectif:choisi": [],
+    "adverbe:quelquefois": [
+      "jamais",
+      "toujours",
+      "souvent"
+    ],
+    "nom:adresse": [
+      "maladresse"
+    ],
+    "nom:furieux": [
+      "calme",
+      "tranquille",
+      "doux"
+    ],
+    "nom:faute": [],
+    "nom:goût": [
+      "dégoût"
+    ],
+    "nom:imparfait": [
+      "parfait",
+      "fini"
+    ],
+    "nom:nécessaire": [
+      "inutile"
+    ],
+    "adjectif:minuscule": [
+      "immense",
+      "géant",
+      "gigantesque"
+    ],
+    "verbe:installer": [
+      "déloger",
+      "déménager"
+    ],
+    "nom:conduit": [],
+    "nom:prudent": [
+      "imprudent",
+      "étourdi",
+      "insouciant"
+    ],
+    "verbe:retenir": [
+      "lâcher",
+      "libérer",
+      "laisser"
+    ],
+    "adjectif:impératif": [],
+    "adverbe:profond": [
+      "plat",
+      "léger"
+    ],
+    "nom:fortune": [
+      "pauvreté",
+      "misère"
+    ],
+    "nom:importance": [],
+    "adverbe:pareil": [
+      "contraire"
+    ],
+    "nom:roux": [],
+    "nom:âne": [],
+    "verbe:retrouver": [
+      "perdre"
+    ],
+    "verbe:entendre": [],
+    "verbe:dormir": [
+      "réveiller",
+      "veiller"
+    ],
+    "nom:toit": [],
+    "adjectif:triste": [
+      "joyeux",
+      "heureux",
+      "content"
+    ],
+    "verbe:rester": [],
+    "nom:docteur": [
+      "patient"
+    ],
+    "nom:malade": [],
+    "nom:état": [],
+    "nom:tranquille": [
+      "agité",
+      "bruyant",
+      "inquiet"
+    ],
+    "adjectif:bizarre": [
+      "ordinaire",
+      "habituel",
+      "banal"
+    ],
+    "verbe:croire": [
+      "douter",
+      "nier"
+    ],
+    "adverbe:sûrement": [],
+    "nom:vol": [],
+    "verbe:utiliser": [],
+    "nom:surface": [
+      "fond",
+      "profondeur"
+    ],
+    "nom:côte": [
+      "descente"
+    ],
+    "nom:grille": [],
+    "verbe:essayer": [
+      "abandonner"
+    ],
+    "nom:palais": [],
+    "nom:reçu": [],
+    "verbe:arriver": [
+      "partir",
+      "quitter"
+    ],
+    "nom:cause": [
+      "conséquence",
+      "effet",
+      "résultat"
+    ],
+    "nom:dernier": [
+      "premier",
+      "prochain"
+    ],
+    "verbe:entrer": [
+      "sortir"
+    ],
+    "adjectif:difficile": [
+      "facile",
+      "aisé",
+      "élémentaire"
+    ],
+    "nom:conte": [
+      "réalité",
+      "vérité"
+    ],
+    "nom:dimanche": [],
+    "nom:plein": [
+      "vide",
+      "incomplet"
+    ],
+    "nom:propre": [
+      "sale",
+      "dégoûtant",
+      "crasseux"
+    ],
+    "nom:drôle": [
+      "triste",
+      "sérieux",
+      "ennuyeux"
+    ],
+    "nom:droite": [
+      "gauche"
+    ],
+    "nom:recette": [
+      "dépense"
+    ],
+    "adjectif:nord": [
+      "sud"
+    ],
+    "nom:minute": [],
+    "nom:agent": [],
+    "adjectif:regardant": [],
+    "adjectif:tombé": [],
+    "nom:chaleur": [
+      "froid",
+      "fraîcheur"
+    ],
+    "nom:manque": [
+      "abondance",
+      "excès"
+    ],
+    "nom:fusil": [],
+    "verbe:laver": [
+      "salir",
+      "tacher",
+      "barbouiller"
+    ],
+    "adverbe:heureusement": [
+      "malheureusement"
+    ],
+    "nom:directeur": [],
+    "nom:secret": [],
+    "nom:action": [
+      "immobilité",
+      "arrêt"
+    ],
+    "nom:féminin": [
+      "masculin",
+      "mâle"
+    ],
+    "adverbe:dessus": [
+      "dessous"
+    ],
+    "verbe:battre": [
+      "caresser"
+    ],
+    "adjectif:rare": [
+      "fréquent",
+      "commun",
+      "abondant"
+    ],
+    "nom:goutte": [],
+    "nom:minuit": [
+      "midi"
+    ],
+    "verbe:remettre": [
+      "enlever",
+      "ôter",
+      "retirer"
+    ],
+    "adjectif:quitte": [],
+    "nom:client": [
+      "vendeur",
+      "marchand"
+    ],
+    "adjectif:pointu": [
+      "rond"
+    ],
+    "verbe:ajouter": [
+      "enlever",
+      "ôter",
+      "retirer"
+    ],
+    "nom:rage": [
+      "douceur"
+    ],
+    "verbe:rejoindre": [],
+    "nom:sage": [
+      "turbulent",
+      "agité",
+      "vilain"
+    ],
+    "adverbe:horizontalement": [
+      "verticalement"
+    ],
+    "nom:découvert": [
+      "couvert",
+      "caché"
+    ],
+    "nom:château": [
+      "cabane"
+    ],
+    "adverbe:parfois": [
+      "toujours",
+      "jamais"
+    ],
+    "nom:montagne": [
+      "plaine"
+    ],
+    "nom:fils": [
+      "père",
+      "mère"
+    ],
+    "adverbe:presque": [
+      "complètement",
+      "entièrement"
+    ],
+    "adverbe:soudain": [
+      "progressivement"
+    ],
+    "nom:question": [
+      "réponse"
+    ],
+    "verbe:venir": [
+      "partir",
+      "aller"
+    ],
+    "nom:attention": [
+      "distraction"
+    ],
+    "nom:endroit": [
+      "envers"
+    ],
+    "adverbe:ensemble": [],
+    "nom:ligne": [
+      "courbe"
+    ],
+    "adverbe:haut": [
+      "fond"
+    ],
+    "nom:grain": [],
+    "nom:gras": [
+      "maigre",
+      "mince"
+    ],
+    "adjectif:riant": [
+      "triste",
+      "sombre"
+    ],
+    "nom:malheur": [
+      "bonheur",
+      "joie",
+      "chance"
+    ],
+    "adjectif:véritable": [
+      "faux",
+      "imaginaire"
+    ],
+    "nom:mesure": [],
+    "adjectif:amusant": [
+      "ennuyeux",
+      "embêtant"
+    ],
+    "verbe:chasser": [],
+    "nom:professeur": [
+      "élève"
+    ],
+    "adjectif:humide": [
+      "sec"
+    ],
+    "adverbe:ci": [
+      "là"
+    ],
+    "adverbe:épais": [
+      "fin"
+    ],
+    "verbe:placer": [
+      "déplacer"
+    ],
+    "nom:solution": [],
+    "adjectif:malade": [
+      "sain",
+      "guéri"
+    ],
+    "nom:content": [
+      "mécontent",
+      "triste",
+      "malheureux"
+    ],
+    "nom:retour": [
+      "départ"
+    ],
+    "verbe:répondre": [
+      "demander",
+      "questionner",
+      "interroger"
+    ],
+    "verbe:vivre": [
+      "mourir"
+    ],
+    "nom:morceau": [
+      "tout",
+      "ensemble"
+    ],
+    "nom:gris": [],
+    "verbe:marcher": [
+      "arrêter",
+      "stopper"
+    ],
+    "adjectif:neuf": [
+      "vieux",
+      "usé",
+      "usagé"
+    ],
+    "verbe:laisser": [
+      "emporter"
+    ],
+    "nom:entrée": [
+      "sortie"
+    ],
+    "nom:printemps": [
+      "automne"
+    ],
+    "nom:gauche": [
+      "droite"
+    ],
+    "nom:dedans": [
+      "dehors",
+      "extérieur"
+    ],
+    "adjectif:libre": [
+      "esclave",
+      "attaché"
+    ],
+    "adjectif:immobile": [
+      "mobile",
+      "remuant"
+    ],
+    "nom:esprit": [],
+    "nom:mystère": [],
+    "verbe:huiler": [],
+    "verbe:asseoir": [],
+    "adjectif:correspondant": [],
+    "verbe:soigner": [
+      "blesser",
+      "abandonner"
+    ],
+    "nom:revenu": [],
+    "nom:brun": [
+      "blond",
+      "clair"
+    ],
+    "verbe:réussir": [
+      "rater",
+      "échouer"
+    ],
+    "nom:type": [],
+    "nom:patron": [
+      "apprenti"
+    ],
+    "nom:seigneur": [],
+    "nom:anglais": [],
+    "adjectif:cassé": [],
+    "nom:aube": [
+      "crépuscule"
+    ],
+    "nom:minuscule": [
+      "géant"
+    ],
+    "nom:ouverture": [
+      "fermeture",
+      "fin"
+    ],
+    "nom:course": [
+      "immobilité"
+    ],
+    "verbe:rire": [
+      "pleur",
+      "larme",
+      "sanglot"
+    ],
+    "verbe:savoir": [
+      "ignorance"
+    ],
+    "nom:façon": [],
+    "nom:faim": [],
+    "nom:joie": [
+      "tristesse",
+      "chagrin",
+      "peine"
+    ],
+    "verbe:tomber": [
+      "monter",
+      "remonter"
+    ],
+    "nom:dame": [
+      "monsieur",
+      "homme"
+    ],
+    "adverbe:doucement": [
+      "rapidement",
+      "brusquement",
+      "fort"
+    ],
+    "nom:vitesse": [
+      "lenteur"
+    ],
+    "nom:bleu": [],
+    "adverbe:là": [
+      "ici"
+    ],
+    "adverbe:aussi": [],
+    "adverbe:peu": [
+      "beaucoup",
+      "énormément"
+    ],
+    "nom:jour": [
+      "nuit",
+      "obscurité"
+    ],
+    "adverbe:puis": [],
+    "adverbe:encore": [],
+    "adverbe:non": [
+      "oui"
+    ],
+    "verbe:avoir": [
+      "perdre",
+      "donner"
+    ],
+    "nom:tête": [
+      "queue"
+    ],
+    "adverbe:ici": [
+      "là-bas",
+      "ailleurs"
+    ],
+    "nom:bout": [
+      "milieu",
+      "commencement",
+      "centre"
+    ],
+    "nom:ordre": [
+      "désordre",
+      "pagaille",
+      "confusion"
+    ],
+    "nom:jardin": [],
+    "adverbe:souvent": [
+      "rarement",
+      "jamais"
+    ],
+    "adverbe:loin": [
+      "près"
+    ],
+    "nom:seul": [
+      "accompagné"
+    ],
+    "nom:animal": [],
+    "nom:suite": [],
+    "verbe:prendre": [
+      "donner",
+      "lâcher"
+    ],
+    "nom:côté": [
+      "milieu",
+      "centre"
+    ],
+    "nom:groupe": [
+      "individu"
+    ],
+    "nom:bruit": [
+      "silence",
+      "calme"
+    ],
+    "adjectif:voisin": [
+      "lointain",
+      "éloigné"
+    ],
+    "nom:collection": [],
+    "verbe:nager": [
+      "couler"
+    ],
+    "nom:hauteur": [],
+    "verbe:cuire": [
+      "refroidir"
+    ],
+    "nom:lundi": [],
+    "nom:parole": [
+      "silence"
+    ],
+    "verbe:payer": [],
+    "verbe:jeter": [
+      "ramasser",
+      "attraper"
+    ],
+    "adjectif:sale": [
+      "propre",
+      "net",
+      "soigné"
+    ],
+    "nom:vide": [
+      "plein",
+      "rempli",
+      "occupé"
+    ],
+    "nom:hasard": [],
+    "nom:avance": [
+      "retard",
+      "recul"
+    ],
+    "adverbe:frais": [
+      "chaud"
+    ],
+    "nom:effort": [
+      "repos",
+      "facilité",
+      "paresse"
+    ],
+    "nom:gaz": [
+      "liquide",
+      "solide"
+    ],
+    "nom:commun": [
+      "extraordinaire",
+      "inhabituel",
+      "différent"
+    ],
+    "nom:longueur": [
+      "largeur",
+      "hauteur"
+    ],
+    "nom:tenant": [],
+    "nom:calme": [
+      "agité",
+      "énervé",
+      "nerveux"
+    ],
+    "nom:mamie": [
+      "papi",
+      "pépé",
+      "grand-père"
+    ],
+    "nom:creux": [
+      "plein",
+      "bombé",
+      "arrondi"
+    ],
+    "nom:caractère": [
+      "faiblesse"
+    ],
+    "verbe:enlever": [
+      "mettre",
+      "porter",
+      "rajouter"
+    ],
+    "verbe:réparer": [
+      "casser",
+      "abîmer",
+      "détruire"
+    ],
+    "adjectif:grand": [
+      "petit",
+      "minuscule",
+      "bas"
+    ],
+    "nom:phrase": [],
+    "nom:rien": [
+      "tout"
+    ],
+    "nom:chien": [],
+    "adverbe:même": [
+      "différent",
+      "autre"
+    ],
+    "adverbe:toujours": [
+      "jamais",
+      "parfois",
+      "quelquefois"
+    ],
+    "nom:sou": [],
+    "verbe:voir": [],
+    "adverbe:après": [
+      "avant",
+      "auparavant"
+    ],
+    "nom:nuit": [],
+    "adverbe:vite": [
+      "lent"
+    ],
+    "nom:été": [
+      "hiver"
+    ],
+    "verbe:dire": [
+      "taire",
+      "cacher"
+    ],
+    "adjectif:éclair": [],
+    "adjectif:aimable": [
+      "désagréable",
+      "grognon"
+    ],
+    "adverbe:correctement": [
+      "mal"
+    ],
+    "adverbe:généralement": [
+      "rarement"
+    ],
+    "verbe:seconder": [
+      "gêner"
+    ],
+    "adjectif:mystérieux": [
+      "connu",
+      "clair"
+    ],
+    "verbe:tromper": [
+      "informer",
+      "avertir"
+    ],
+    "nom:ennemi": [
+      "ami"
+    ],
+    "adjectif:délicieux": [
+      "mauvais",
+      "immangeable",
+      "infect"
+    ],
+    "nom:croix": [],
+    "nom:pente": [
+      "plat"
+    ],
+    "adjectif:atteint": [],
+    "adjectif:précieux": [],
+    "nom:sérieux": [],
+    "verbe:construire": [
+      "détruire",
+      "démolir",
+      "défaire"
+    ],
+    "nom:cher": [
+      "gratuit",
+      "économique"
+    ],
+    "nom:impossible": [
+      "possible",
+      "facile",
+      "réalisable"
+    ],
+    "nom:sommet": [
+      "vallée"
+    ],
+    "verbe:travailler": [],
+    "adjectif:nominal": [],
+    "verbe:raconter": [
+      "taire"
+    ],
+    "verbe:servir": [
+      "commander"
+    ],
+    "adverbe:environ": [
+      "exactement",
+      "précisément"
+    ],
+    "verbe:descendre": [
+      "monter",
+      "grimper",
+      "remonter"
+    ],
+    "nom:four": [
+      "réussite",
+      "succès"
+    ],
+    "adjectif:joyeux": [
+      "triste",
+      "sombre",
+      "morne"
+    ],
+    "adjectif:sombre": [
+      "clair",
+      "lumineux",
+      "enjoué"
+    ],
+    "adjectif:noir": [
+      "blanc",
+      "clair",
+      "pâle"
+    ],
+    "nom:dos": [
+      "devant",
+      "face",
+      "poitrine"
+    ],
+    "nom:chemin": [],
+    "nom:idée": [
+      "réalité"
+    ],
+    "adverbe:assez": [
+      "trop",
+      "peu"
+    ],
+    "nom:coeur": [],
+    "nom:femme": [
+      "homme",
+      "mari"
+    ],
+    "verbe:passer": [
+      "arrêter",
+      "durer"
+    ],
+    "nom:madame": [
+      "monsieur"
+    ],
+    "adverbe:tard": [
+      "tôt"
+    ],
+    "nom:oeil": [],
+    "adverbe:tant": [
+      "peu"
+    ],
+    "nom:lune": [
+      "soleil"
+    ],
+    "adjectif:sûr": [
+      "incertain",
+      "dangereux"
+    ],
+    "adverbe:mal": [
+      "bien",
+      "mieux"
+    ],
+    "adverbe:jamais": [
+      "toujours",
+      "souvent"
+    ],
+    "nom:homme": [
+      "femme",
+      "enfant"
+    ],
+    "nom:monde": [
+      "désert"
+    ],
+    "adverbe:oui": [
+      "non"
+    ],
+    "nom:air": [],
+    "adverbe:beaucoup": [
+      "peu"
+    ],
+    "nom:monsieur": [
+      "dame"
+    ],
+    "adverbe:trop": [],
+    "nom:père": [
+      "mère",
+      "fils",
+      "fille"
+    ],
+    "nom:peur": [
+      "courage"
+    ],
+    "nom:bonne": [],
+    "adverbe:gros": [
+      "mince",
+      "fin"
+    ],
+    "nom:mer": [],
+    "adjectif:nécessaire": [
+      "inutile"
+    ],
+    "verbe:ranger": [
+      "déranger",
+      "mélanger"
+    ],
+    "verbe:gueuler": [
+      "chuchoter",
+      "murmurer"
+    ],
+    "adverbe:facilement": [
+      "difficilement",
+      "péniblement"
+    ],
+    "nom:mémoire": [
+      "oubli"
+    ],
+    "verbe:quitter": [
+      "demeurer",
+      "arriver"
+    ],
+    "verbe:obtenir": [
+      "perdre",
+      "rater",
+      "manquer"
+    ],
+    "nom:attrape": [],
+    "verbe:cueillir": [],
+    "nom:cave": [],
+    "verbe:protéger": [
+      "attaquer",
+      "menacer",
+      "exposer"
+    ],
+    "nom:manche": [],
+    "adjectif:célèbre": [],
+    "adverbe:immédiatement": [],
+    "nom:joueur": [
+      "spectateur"
+    ],
+    "adjectif:posé": [
+      "énervé",
+      "nerveux",
+      "étourdi"
+    ],
+    "verbe:retourner": [],
+    "adjectif:certain": [
+      "douteux"
+    ],
+    "nom:amour": [
+      "haine",
+      "indifférence"
+    ],
+    "nom:emploi": [
+      "chômage"
+    ],
+    "nom:envers": [
+      "endroit",
+      "face"
+    ],
+    "verbe:former": [
+      "déformer"
+    ],
+    "verbe:offrir": [
+      "recevoir",
+      "refuser"
+    ],
+    "adverbe:dur": [
+      "mou",
+      "tendre",
+      "facile"
+    ],
+    "verbe:bouger": [
+      "rester"
+    ],
+    "nom:carnaval": [],
+    "verbe:atteindre": [
+      "manquer",
+      "rater"
+    ],
+    "adjectif:utile": [
+      "inutile"
+    ],
+    "verbe:couronner": [],
+    "nom:soirée": [
+      "matinée"
+    ],
+    "nom:sécurité": [
+      "danger",
+      "risque"
+    ],
+    "nom:douleur": [
+      "plaisir",
+      "joie",
+      "bonheur"
+    ],
+    "nom:présence": [
+      "absence"
+    ],
+    "adjectif:vaste": [
+      "petit",
+      "étroit"
+    ],
+    "adjectif:intelligent": [],
+    "verbe:boucher": [
+      "déboucher",
+      "ouvrir",
+      "percer"
+    ],
+    "verbe:débarrasser": [
+      "encombrer",
+      "charger"
+    ],
+    "nom:masque": [],
+    "nom:qualité": [
+      "défaut",
+      "inconvénient"
+    ],
+    "nom:public": [
+      "privé",
+      "secret"
+    ],
+    "adjectif:tel": [],
+    "adjectif:étonné": [],
+    "verbe:toucher": [
+      "manquer"
+    ],
+    "nom:réalité": [
+      "imaginaire"
+    ],
+    "verbe:frapper": [
+      "caresser"
+    ],
+    "verbe:reposer": [
+      "fatiguer"
+    ],
+    "verbe:reprendre": [
+      "arrêter",
+      "interrompre",
+      "cesser"
+    ],
+    "nom:général": [
+      "particulier"
+    ],
+    "adjectif:différent": [
+      "pareil",
+      "identique",
+      "semblable"
+    ],
+    "adverbe:absolument": [],
+    "nom:honneur": [
+      "honte"
+    ],
+    "nom:face": [
+      "pile",
+      "dos",
+      "envers"
+    ],
+    "nom:midi": [
+      "nord"
+    ],
+    "verbe:devenir": [],
+    "nom:plat": [
+      "creux",
+      "bombé",
+      "rond"
+    ],
+    "nom:approche": [
+      "départ",
+      "fuite"
+    ],
+    "nom:extraordinaire": [
+      "ordinaire",
+      "habituel",
+      "banal"
+    ],
+    "verbe:garder": [
+      "lâcher",
+      "abandonner",
+      "céder"
+    ],
+    "nom:bonhomme": [
+      "méchant"
+    ],
+    "nom:modèle": [
+      "copie",
+      "imitation"
+    ],
+    "adjectif:léger": [
+      "lourd",
+      "pesant",
+      "grave"
+    ],
+    "nom:collier": [],
+    "nom:soif": [],
+    "nom:sortie": [],
+    "nom:couverture": [],
+    "nom:large": [
+      "étroit",
+      "serré"
+    ],
+    "nom:pie": [],
+    "nom:filet": [],
+    "adverbe:guère": [
+      "beaucoup"
+    ],
+    "nom:colonne": [],
+    "verbe:dessiner": [],
+    "verbe:desservir": [
+      "servir",
+      "mettre"
+    ],
+    "nom:dessert": [],
+    "adverbe:dedans": [
+      "dehors"
+    ],
+    "nom:fantôme": [],
+    "verbe:coucher": [
+      "lever"
+    ],
+    "nom:automne": [
+      "printemps"
+    ],
+    "nom:rêve": [
+      "réalité"
+    ],
+    "adjectif:immense": [
+      "petit",
+      "minuscule",
+      "microscopique"
+    ],
+    "verbe:tirer": [
+      "pousser"
+    ],
+    "nom:courage": [
+      "peur",
+      "lâcheté",
+      "crainte"
+    ],
+    "verbe:couper": [
+      "recoudre"
+    ],
+    "verbe:lamper": [],
+    "nom:plan": [],
+    "nom:courant": [
+      "rare",
+      "extraordinaire",
+      "exceptionnel"
+    ],
+    "nom:marchand": [
+      "acheteur"
+    ],
+    "verbe:pleurer": [
+      "rire"
+    ],
+    "verbe:expliquer": [],
+    "adjectif:décidé": [
+      "indécis",
+      "incertain"
+    ],
+    "nom:os": [
+      "chair"
+    ],
+    "verbe:poser": [
+      "lever",
+      "enlever"
+    ],
+    "verbe:tenir": [
+      "lâcher"
+    ],
+    "nom:vache": [
+      "gentil",
+      "sympathique",
+      "agréable"
+    ],
+    "adjectif:aucun": [
+      "tout"
+    ],
+    "nom:orage": [
+      "calme"
+    ],
+    "adjectif:sauf": [
+      "blessé"
+    ],
+    "nom:sommeil": [
+      "réveil",
+      "éveil"
+    ],
+    "verbe:attraper": [
+      "lâcher",
+      "rater",
+      "manquer"
+    ],
+    "nom:figure": [],
+    "nom:genre": [],
+    "nom:hiver": [
+      "été"
+    ],
+    "nom:mal": [
+      "bien",
+      "bon"
+    ],
+    "nom:parler": [],
+    "nom:possible": [
+      "impossible"
+    ],
+    "nom:peine": [
+      "joie",
+      "plaisir",
+      "bonheur"
+    ],
+    "adverbe:derrière": [
+      "devant"
+    ],
+    "nom:pluie": [
+      "soleil",
+      "sécheresse"
+    ],
+    "adverbe:ensuite": [
+      "avant",
+      "d'abord"
+    ],
+    "nom:forme": [],
+    "nom:journée": [
+      "nuit"
+    ],
+    "adverbe:d'abord": [
+      "ensuite",
+      "après",
+      "enfin"
+    ],
+    "nom:vacance": [
+      "travail",
+      "rentrée"
+    ],
+    "adverbe:attentivement": [
+      "distraitement"
+    ],
+    "nom:front": [],
+    "nom:fillette": [
+      "garçon"
+    ],
+    "verbe:finir": [
+      "commencer",
+      "débuter",
+      "entamer"
+    ],
+    "adverbe:exactement": [
+      "environ"
+    ],
+    "adjectif:parlé": [
+      "écrit"
+    ],
+    "nom:nord": [
+      "sud"
+    ],
+    "nom:oreille": [],
+    "adverbe:hier": [
+      "aujourd'hui",
+      "maintenant"
+    ],
+    "adjectif:facile": [
+      "difficile",
+      "dur",
+      "compliqué"
+    ],
+    "verbe:perdre": [
+      "gagner",
+      "trouver",
+      "conserver"
+    ],
+    "nom:deuxième": [
+      "premier"
+    ],
+    "adverbe:chaud": [
+      "froid",
+      "glacé",
+      "glacial"
+    ],
+    "verbe:ombrer": [],
+    "nom:ombre": [
+      "lumière",
+      "soleil",
+      "clarté"
+    ],
+    "adjectif:dangereux": [
+      "sûr",
+      "inoffensif"
+    ],
+    "adverbe:mauvais": [
+      "bien",
+      "délicieux",
+      "beau"
+    ],
+    "adjectif:pareil": [
+      "différent",
+      "contraire",
+      "opposé"
+    ],
+    "adjectif:roux": [],
+    "adverbe:certainement": [],
+    "adverbe:meilleur": [
+      "pire"
+    ],
+    "nom:construction": [
+      "destruction"
+    ],
+    "nom:immeuble": [],
+    "verbe:apporter": [],
+    "nom:sud": [
+      "nord"
+    ],
+    "nom:vif": [
+      "lent",
+      "mou",
+      "endormi"
+    ],
+    "nom:éclair": [],
+    "nom:complètement": [],
+    "nom:réveil": [
+      "sommeil"
+    ],
+    "nom:agréable": [
+      "pénible",
+      "affreux",
+      "fatigant"
+    ],
+    "nom:liberté": [
+      "prison",
+      "esclavage",
+      "captivité"
+    ],
+    "nom:précis": [
+      "vague",
+      "flou",
+      "incertain"
+    ],
+    "adjectif:caché": [
+      "découvert"
+    ],
+    "verbe:empêcher": [
+      "aider",
+      "autoriser",
+      "laisser"
+    ],
+    "nom:fruit": [],
+    "nom:riche": [
+      "pauvre",
+      "modeste"
+    ],
+    "adjectif:moindre": [
+      "meilleur",
+      "supérieur"
+    ],
+    "verbe:amuser": [
+      "ennuyer",
+      "embêter"
+    ],
+    "nom:poitrine": [
+      "dos"
+    ],
+    "adjectif:sérieux": [
+      "drôle",
+      "rigolo",
+      "amusant"
+    ],
+    "adjectif:rempli": [
+      "vide"
+    ],
+    "verbe:vouloir": [
+      "refuser"
+    ],
+    "nom:contenant": [
+      "contenu"
+    ],
+    "nom:vallée": [
+      "mont",
+      "colline"
+    ],
+    "nom:chouette": [
+      "affreux",
+      "moche"
+    ],
+    "verbe:lancer": [
+      "attraper",
+      "recevoir"
+    ],
+    "verbe:réveiller": [
+      "endormir"
+    ],
+    "nom:patience": [
+      "impatience",
+      "précipitation"
+    ],
+    "adjectif:fragile": [
+      "solide",
+      "résistant",
+      "costaud"
+    ],
+    "adjectif:tiré": [
+      "poussé"
+    ],
+    "nom:placard": [],
+    "nom:utile": [
+      "inutile"
+    ],
+    "nom:équilibre": []
+  }
+}
