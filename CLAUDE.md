@@ -24,16 +24,28 @@ effacerait le cache des définitions et la liste de fiches en cours.
 
 ## Mise en ligne
 
-Le transfert se fait **par FTP, à la main**. Il n'y a aucun accès serveur depuis le
-dépôt.
+Le transfert se fait **par FTP**, vers OVH. La session WinSCP enregistrée sous
+`OVH cours-vandewalle` atteint bien `/www/clicetmots` : vérifié le 31/08/2026.
+Une version antérieure de ce fichier affirmait qu'il n'y avait aucun accès serveur,
+c'était faux.
 
 1. `npm run release` : lance lint, tests et build, puis affiche ce qu'il faut
    transférer, dans l'ordre. Ne modifie rien sur le serveur.
-2. Le transfert est fait à la main.
+2. Le transfert, par WinSCP en script ou à la main.
 3. `npm run release:done`, **seulement après confirmation** que le transfert a eu lieu.
 
 **Le `npm run build` est lancé par Claude, jamais par l'utilisateur.** Consigne
-explicite : lui ne fait que le transfert.
+explicite.
+
+**Vérifier avant de transférer, pas après.** Le `dist/` construit se sert en local
+et se mesure comme n'importe quelle page : serveur statique, navigateur sans
+fenêtre, sonde JavaScript qui relève les dimensions. Une session peut être simulée
+par un build local à l'authentification court-circuitée, **jamais transféré**, pour
+voir les écrans qui sont derrière la connexion. Même principe que le
+`_amorce_session.php` utilisé côté PHP.
+
+**Garder le `dist/` précédent** dans `RETOUR-ARRIERE` avant d'écraser : le retour en
+arrière devient alors un simple transfert, et non une reconstruction.
 
 **Ordre à respecter quand il y a une migration** : le SQL dans phpMyAdmin, puis les
 fichiers PHP, puis `dist/`. L'inverser casse le site, parce que le PHP référence les
