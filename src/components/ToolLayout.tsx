@@ -72,10 +72,18 @@ export function ToolLayout({
         {(session?.role === 'teacher' || (session?.role === 'student' && session.rechercheDirecte)) && (
           <RechercheMotDirecte />
         )}
+        {/* Sous le nom, le role plutot que le nom du site : celui-ci est deja dit
+            par le logo a gauche et par le lisere colore. Meme regle que sur Fast
+            Eval et School Monsters, ou elle vit dans /galaxie-role.php.
+            Clic & Mots ne distingue pas l'administratrice de l'enseignante : le
+            jeton signe du portail ne transporte pas est_admin, et l'espace
+            enseignant est le meme pour Camille et pour Marion. */}
         {session?.authenticated && (
           <span className="gx-entete-identite">
             <strong>{session.label}</strong>
-            <span>Clic &amp; Mots</span>
+            {session.role === 'teacher'
+              ? <span className="gx-entete-role">Compte enseignant</span>
+              : <span>Clic &amp; Mots</span>}
           </span>
         )}
         {/* Tout a droite, a la place de l'ancien bouton de deconnexion : on se
