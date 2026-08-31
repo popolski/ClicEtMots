@@ -1,4 +1,4 @@
-import { useLocation, Link } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { assetUrl } from '../lib/assetUrl'
 import { useAuth } from '../lib/authContext'
@@ -44,7 +44,17 @@ export function ToolLayout({
   titleBelow,
 }: ToolLayoutProps) {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const { session } = useAuth()
+
+  /* Peut-on vraiment remonter d'un cran ? React Router numérote les entrées
+     qu'il a lui-même empilées dans history.state.idx. À zéro, l'élève est
+     arrivé directement par l'URL ou par un favori : « Retour » le ferait
+     sortir du site, ce qui n'est pas un retour. Le bouton disparaît alors,
+     plutôt que de mentir. Recalculé à chaque rendu, donc à chaque navigation,
+     puisque useLocation en déclenche un. */
+  const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0
+  const peutRemonter = Boolean(onBack) || idx > 0
   return (
     // Gabarit repris de Fast Eval, qui sert de reference de design aux trois
     // sites. .gx-page pose la meme largeur (1068 px) et le meme retrait haut
@@ -60,12 +70,20 @@ export function ToolLayout({
         {pathname !== '/clavier' && (
           <Link to="/clavier" className="gx-entete-portail">← Retour au clavier</Link>
         )}
-        {/* Le « Retour » generique faisait doublon avec « Retour au clavier » et
-            poussait « Espace enseignant » a la ligne. Il ne reste que la ou une
-            page a sa propre navigation interne (le quiz, entre ses etapes) : la,
-            remonter d'un cran n'est pas la meme chose que revenir au clavier. */}
-        {onBack && !hideBackButton && (
-          <button type="button" className="gx-entete-portail" onClick={onBack}>
+        {/* « Retour » remonte d'UN cran, la ou « Retour au clavier » ramene au
+            depart : sur la definition d'un mot, l'eleve veut revenir a la fiche
+            du mot, pas au clavier. Les deux coexistent donc, demande de Hugues
+            le 31/08/2026 - il avait ete restreint a tort aux seules pages ayant
+            un onBack, c'est-a-dire au quiz.
+            Une page qui gere ses propres etapes fournit onBack : l'historique du
+            navigateur ne connait pas ces etapes-la et ferait sauter l'ecran
+            intermediaire. Partout ailleurs, c'est l'historique qui fait foi. */}
+        {!hideBackButton && peutRemonter && (
+          <button
+            type="button"
+            className="gx-entete-portail"
+            onClick={onBack ?? (() => navigate(-1))}
+          >
             ← Retour
           </button>
         )}
