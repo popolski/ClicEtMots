@@ -192,7 +192,10 @@ const SCHEMA = {
         type: 'object',
         properties: {
           mot: { type: 'string' },
-          retenus: { type: 'array', items: { type: 'string' }, maxItems: 3 },
+          // Pas de maxItems : l'API le refuse sur un tableau, et les 193 requetes
+          // du 31/08/2026 ont ete rejetees pour cette seule raison. La limite de
+          // 3 tient par la consigne, et par le slice(0, 3) a la lecture.
+          retenus: { type: 'array', items: { type: 'string' } },
         },
         required: ['mot', 'retenus'],
         additionalProperties: false,
@@ -321,12 +324,22 @@ async function main() {
   let ok = 0
   let rates = 0
 
+  let premiereErreur = null
   for await (const resultat of await client.messages.batches.results(batchId)) {
     const requete = parCustomId.get(resultat.custom_id)
     if (!requete) continue
     if (resultat.result.type !== 'succeeded') {
       rates++
-      console.error(`[${resultat.custom_id}] ${resultat.result.type}`)
+      const e = resultat.result.error?.error?.error ?? resultat.result.error?.error
+      const raison = e?.message ? ` — ${e.message}` : ''
+      // Le detail n'est affiche qu'une fois : quand tout un lot echoue pour la
+      // meme cause, 193 lignes identiques n'aident personne.
+      if (raison && !premiereErreur) {
+        premiereErreur = raison
+        console.error(`[${resultat.custom_id}] ${resultat.result.type}${raison}`)
+      } else {
+        console.error(`[${resultat.custom_id}] ${resultat.result.type}`)
+      }
       continue
     }
     const bloc = resultat.result.message.content.find((b) => b.type === 'text')
@@ -348,6 +361,13 @@ async function main() {
     }
   }
 
+  // Aucune reussite : on n'ecrit rien. Le 31/08/2026, un lot entierement
+  // en erreur a tout de meme produit un fichier vide, que
+  // build-word-synonyms.mjs aurait applique tel quel.
+  if (ok === 0) {
+    console.error('Aucun mot trié : le fichier de sortie n’est pas écrit.')
+    process.exit(1)
+  }
   writeFileSync(FICHIER_SORTIE, JSON.stringify(sortie, null, 2))
   console.log(`\n${ok} mots triés, ${rates} requêtes perdues.`)
   console.log(`Écrit : ${FICHIER_SORTIE.pathname}`)
