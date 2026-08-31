@@ -37,6 +37,23 @@ c'était faux.
 **Le `npm run build` est lancé par Claude, jamais par l'utilisateur.** Consigne
 explicite.
 
+**Un transfert au mauvais endroit ne se voit pas.** WinSCP rend un code de sortie
+0 et affiche « 100% » pour chaque fichier même quand la destination est fausse.
+Le dossier de session est `/www`, donc un `put` vers `/clicetmots/...` crée un
+dossier parasite hors du site et la production ne reçoit rien. Écrire le chemin
+complet `/www/clicetmots/...`, et contrôler par HTTP plutôt que par le code de
+sortie : les empreintes servies doivent être celles du build local.
+
+```
+curl -s https://www.cours-vandewalle.fr/clicetmots/ | grep -o 'assets/index-[^"]*'
+```
+
+**Comparer un fichier au sien avant de l'écraser.** Le `index.html` en ligne
+portait un `<link>` vers `/galaxie-tokens.css`, le socle visuel commun aux trois
+sites, ajouté à la main sur le serveur et absent du dépôt : le premier build
+l'aurait supprimé sans que rien ne le signale. Il est désormais dans le
+`index.html` du dépôt. Trouvé le 31/08/2026, en comparant avant d'écraser.
+
 **Vérifier avant de transférer, pas après.** Le `dist/` construit se sert en local
 et se mesure comme n'importe quelle page : serveur statique, navigateur sans
 fenêtre, sonde JavaScript qui relève les dimensions. Une session peut être simulée
