@@ -99,22 +99,29 @@ export function ToolLayout({
         {session?.authenticated && (
           <span className="gx-entete-identite">
             <strong>{session.label}</strong>
-            {session.role === 'teacher'
-              ? <span className="gx-entete-role">Compte enseignant</span>
-              : <span>Clic &amp; Mots</span>}
+            {session.role !== 'teacher' && <span>Clic &amp; Mots</span>}
+            {/* La pastille EST le lien vers l'espace enseignant. Le bouton
+                « Espace enseignant » qui l'accompagnait a ete retire : a trois
+                boutons de retour, il faisait passer le bandeau sur deux lignes,
+                et il disait la meme chose que la pastille juste a cote.
+                Idee de Hugues, le 31/08/2026.
+                Sur /enseignant meme, elle redevient un simple marqueur : un
+                lien vers la page ou l'on se trouve deja ne menerait nulle part.
+                Le libelle visible ne dit pas ou l'on va - d'ou aria-label, qui
+                l'annonce aux lecteurs d'ecran, et title pour la souris. */}
+            {session.role === 'teacher' && (
+              pathname === '/enseignant'
+                ? <span className="gx-entete-role">Compte enseignant</span>
+                : <Link
+                    to="/enseignant"
+                    className="gx-entete-role"
+                    title="Ouvrir l'espace enseignant"
+                    aria-label="Compte enseignant - ouvrir l'espace enseignant"
+                  >
+                    Compte enseignant
+                  </Link>
+            )}
           </span>
-        )}
-        {/* Tout a droite, a la place de l'ancien bouton de deconnexion : on se
-            deconnecte depuis le portail, qui detient la session des trois sites.
-
-            Masque sur /enseignant : le lien y pointerait vers la page ou l'on se
-            trouve deja, et il faisait doublon avec la pastille « Compte
-            enseignant » juste a cote, signale par Hugues le 31/08/2026. Meme
-            regle que « Retour au clavier », masque sur le clavier lui-meme.
-            Il reste partout ailleurs : c'est le seul acces a l'espace
-            enseignant depuis le clavier et les outils. */}
-        {session?.role === 'teacher' && pathname !== '/enseignant' && (
-          <Link to="/enseignant" className="gx-entete-portail">Espace enseignant</Link>
         )}
       </header>
       <div className="gx-cartouche">
