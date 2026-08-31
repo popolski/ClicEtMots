@@ -83,8 +83,22 @@ for (const e of wordIndex) {
 
 // Les mots à traiter : les plus fréquents, ceux qu'une classe consulte
 // vraiment. Les mots rares gardent le comportement actuel.
+//
+// Deux exclusions, mesurées le 31/08/2026 avant de lancer la passe. Sans elles,
+// les 25 premiers mots par fréquence sont « de, le, la, les, et, un, il, à... » :
+// des mots-outils dont aucun élève ne cherche le synonyme, et qui consommaient
+// pourtant des requêtes puisque JeuxDeMots leur en donne.
+//   - les invariables : déterminants, prépositions, conjonctions, pronoms ;
+//   - les entrées d'une seule lettre, artefacts du lexique (« l » classé nom,
+//     « d » classé nom, « est » classé nom).
+// Effet mesuré à budget constant : 172 entrées inutiles sortent, 172 vrais mots
+// entrent à leur place - prudent, retenir, baguette, profond, billet, rivage,
+// seau, engin, fortune, importance, pareil, roux.
+const motCherchable = (e) =>
+  e.category !== 'invariable' && e.word.replace(/['’]/g, '').length > 1
+
 const motsCibles = wordIndex
-  .filter((e) => e.formRole === BASE_ROLE[e.category])
+  .filter((e) => e.formRole === BASE_ROLE[e.category] && motCherchable(e))
   .sort((a, b) => b.frequency - a.frequency)
   .slice(0, TOP)
 
