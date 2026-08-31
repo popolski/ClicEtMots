@@ -95,14 +95,14 @@ export function DefinitionTool() {
 
   if (!mot || !categorieValide) {
     return (
-      <ToolLayout title="Définition" description="" showBackToKeyboard>
+      <ToolLayout title="Définition" description="">
         <p className="py-10 text-center text-gray-400">Mot introuvable.</p>
       </ToolLayout>
     )
   }
 
   return (
-    <ToolLayout title={mot} description="Définition" showBackToKeyboard>
+    <ToolLayout title={mot} description="Définition">
       {definition === undefined ? (
         <p className="py-10 text-center text-gray-400">Recherche de la définition…</p>
       ) : definition === null ? (

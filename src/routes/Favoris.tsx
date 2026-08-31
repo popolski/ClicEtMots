@@ -18,7 +18,7 @@ export function Favoris() {
   }, [])
 
   return (
-    <ToolLayout title="Mes favoris" description="Les mots que tu as choisi de retenir." showBackToKeyboard>
+    <ToolLayout title="Mes favoris" description="Les mots que tu as choisi de retenir.">
       {entrees === null ? (
         <p className="py-10 text-center text-gray-400">Chargement…</p>
       ) : entrees.length === 0 ? (

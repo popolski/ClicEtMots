@@ -21,7 +21,6 @@ export function Historique() {
     <ToolLayout
       title="Mots récents"
       description="Les derniers mots que tu as consultés."
-      showBackToKeyboard
     >
       {entrees === null ? (
         <p className="py-10 text-center text-gray-400">Chargement…</p>

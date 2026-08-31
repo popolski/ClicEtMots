@@ -178,7 +178,7 @@ export function MotTool() {
 
   if (!forms || !family || !synonyms || !antonyms) {
     return (
-      <ToolLayout title="Fiche mot" description="Chargement…" showBackToKeyboard>
+      <ToolLayout title="Fiche mot" description="Chargement…">
         <p className="py-10 text-center text-gray-400">Chargement…</p>
       </ToolLayout>
     )
@@ -187,7 +187,7 @@ export function MotTool() {
   const primary = primaryMemo
   if (!primary) {
     return (
-      <ToolLayout title="Fiche mot" description="Mot introuvable" showBackToKeyboard>
+      <ToolLayout title="Fiche mot" description="Mot introuvable">
         <p className="py-10 text-center text-gray-400">Aucune fiche pour « {lemmaId} ».</p>
       </ToolLayout>
     )
@@ -202,7 +202,6 @@ export function MotTool() {
     <ToolLayout
       title={primary.word}
       description=""
-      showBackToKeyboard
       titleBelow={
         groupe ? (
           <p className="font-semibold text-gray-900">({groupe})</p>

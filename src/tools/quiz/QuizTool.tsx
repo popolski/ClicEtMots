@@ -720,7 +720,6 @@ export function QuizTool() {
       <ToolLayout
         title="Mes exercices"
         description="Combien de mots pour cette séance ?"
-        showBackToKeyboard
         onBack={() => setModeEnChoixTaille(null)}
       >
         <div className="mx-auto flex max-w-sm flex-wrap justify-center gap-3">
@@ -750,7 +749,7 @@ export function QuizTool() {
       (m) => m !== 'dictee' || (motsSemaineCumules?.length ?? 0) > 0,
     )
     return (
-      <ToolLayout title="Mes exercices" description="Choisis un exercice pour réviser." showBackToKeyboard>
+      <ToolLayout title="Mes exercices" description="Choisis un exercice pour réviser.">
         {motsSemaineCumules && (
           <div className="mb-5 flex justify-center">
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-brand-100 bg-white px-4 py-2 text-sm text-brand-700">
@@ -798,7 +797,6 @@ export function QuizTool() {
       <ToolLayout
         title="Mes exercices"
         description="Choisis un exercice pour réviser."
-        showBackToKeyboard
         onBack={revenirAuChoixDuMode}
       >
         <p className="py-10 text-center text-gray-400">Préparation du quiz…</p>
@@ -816,7 +814,6 @@ export function QuizTool() {
       <ToolLayout
         title="Mes exercices"
         description="Choisis un exercice pour réviser."
-        showBackToKeyboard
         onBack={revenirAuChoixDuMode}
       >
         <p className="py-10 text-center text-gray-400">Préparation du quiz…</p>
@@ -855,7 +852,6 @@ export function QuizTool() {
       <ToolLayout
         title="Mes exercices"
         description="Choisis un exercice pour réviser."
-        showBackToKeyboard
         onBack={revenirAuChoixDuMode}
       >
         <div className="py-6 text-center">
@@ -934,7 +930,6 @@ export function QuizTool() {
     <ToolLayout
       title="Mes exercices"
       description="Choisis un exercice pour réviser."
-      showBackToKeyboard
       onBack={revenirAuChoixDuMode}
     >
       <div className="mb-6 flex items-center justify-between">

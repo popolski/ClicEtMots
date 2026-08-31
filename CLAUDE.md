@@ -54,19 +54,21 @@ sites, ajouté à la main sur le serveur et absent du dépôt : le premier build
 l'aurait supprimé sans que rien ne le signale. Il est désormais dans le
 `index.html` du dépôt. Trouvé le 31/08/2026, en comparant avant d'écraser.
 
-**Un changement visuel se montre avant d'être mis en ligne.** Le 31/08/2026,
-l'entête de l'accueil a été aligné sur celui de Fast Éval et School Monsters, puis
-transféré sans avoir été soumis : logo passé de 576 à 769 px, marges resserrées,
-bouton de retour redessiné. Hugues a vu un site « revenu à un état antérieur ».
-Rien n'était cassé - historique git intact, 32 morceaux sur 32 servis, API
-correcte, aucune phrase perdue entre l'ancien et le nouveau bundle - mais la page
-qu'il ouvre tous les jours avait changé d'allure sans qu'il l'ait décidé. Remis
-comme avant le jour même, la version harmonisée étant gardée dans
-`RETOUR-ARRIERE/Home.tsx.harmonise-31-08`.
+**Un changement visuel se montre avant d'être mis en ligne, et on vérifie qu'on a
+compris la demande.** Le 31/08/2026, l'entête de l'accueil a été harmonisé avec
+Fast Éval et School Monsters puis transféré sans être soumis. Hugues a écrit
+« revenu à un état antérieur » ; c'était compris comme un reproche fait à
+l'harmonisation, alors qu'il constatait l'inverse - que le bandeau des pages
+internes, lui, n'était toujours pas harmonisé. L'harmonisation a donc été annulée,
+puis rétablie dans la même matinée. L'aller-retour a coûté deux transferts et
+trois builds.
 
-Pour ce genre de lot : capture avant, capture après, et on transfère seulement
-après accord. L'harmonisation des trois sites reste souhaitable, mais c'est un
-choix de conception, pas une correction technique.
+Ce qu'il fallait faire : demander sur quelle page et quel écran, avant de toucher
+au code. Une phrase d'un utilisateur qui décrit un symptôme n'est pas un
+diagnostic. **L'accueil harmonisé est en ligne**, la question portait sur le
+bandeau interne, traité plus bas.
+
+Pour ce genre de lot : capture avant, capture après, accord, puis transfert.
 
 **Vérifier avant de transférer, pas après.** Le `dist/` construit se sert en local
 et se mesure comme n'importe quelle page : serveur statique, navigateur sans
@@ -87,6 +89,40 @@ Dossiers à exclure du transfert quand ils n'ont pas changé : `audio/` (environ
 
 **L'automatisation du déploiement a été écartée le 29/08/2026. Ne pas la
 reproposer.** Le FTP manuel reste la méthode.
+
+## Le bandeau des pages internes
+
+**Fast Éval est la référence de design des trois sites.** Décision de Hugues,
+31/08/2026. En cas de doute sur une couleur, une largeur ou une composition, on
+regarde ce que fait Fast Éval et on s'aligne.
+
+`ToolLayout` porte le bandeau commun depuis le 31/08/2026 : conteneur `.gx-page`
+(1068 px, 32 px de retrait haut, donc aligné en haut comme chez Fast Éval), puis
+`.gx-entete` et `.gx-cartouche` du socle `/galaxie-tokens.css`. La variante
+`.gx-app-clicetmots` existait déjà dans le socle, inutilisée jusque-là.
+
+Composition, dans l'ordre, et **elle doit tenir sur une seule ligne** :
+
+| Élément | Remarque |
+|---|---|
+| logo | 46 px, mène au clavier |
+| ← Portail | |
+| ← Retour au clavier | sur toutes les pages sauf le clavier lui-même |
+| ← Retour | **seulement** si la page passe un `onBack` (le quiz, entre ses étapes) |
+| recherche directe | reste dans le bandeau, l'enseignante s'en sert sans arrêt |
+| identité | nom, puis « Clic & Mots » |
+| Espace enseignant | tout à droite |
+
+**Pas de bouton Déconnexion** : la session appartient au portail, on s'y déconnecte.
+
+Le bandeau mesure **72 px** : 46 de logo, 12 en haut, 12 en bas, plus les bordures.
+C'est la mesure des deux autres sites, et tout écart est un défaut.
+
+**La place est comptée.** Mesuré à 1150, 1280 et 1440 px : la ligne tient tout
+juste. Ajouter un bouton fait passer « Espace enseignant » à la ligne suivante et
+le bandeau à 140 px. C'est ce qui a fait retirer le « ← Retour » générique, qui
+faisait doublon avec « Retour au clavier ». Avant d'ajouter quoi que ce soit ici,
+mesurer à 1150 px.
 
 ## Connexion : le portail est la porte d'entrée
 

@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { assetUrl } from '../lib/assetUrl'
 import { useAuth } from '../lib/authContext'
@@ -8,13 +8,9 @@ interface ToolLayoutProps {
   title: string
   description: string
   children: ReactNode
-  /**
-   * Ajoute un lien direct vers /clavier, à côté du "← Retour" habituel. Utile
-   * sur les fiches mot/conjugueur, atteignables en plusieurs clics depuis une
-   * chaîne de familles/synonymes — "Retour" ne remonte alors que d'un cran,
-   * pas jusqu'au clavier.
-   */
-  showBackToKeyboard?: boolean
+  /* Le retour au clavier n'est plus une option : depuis le 31/08/2026 il est
+     dans le bandeau sur toutes les pages sauf le clavier lui-même. La propriété
+     showBackToKeyboard, qui l'ajoutait au cas par cas, a donc disparu. */
   /** Masque le "← Retour" habituel — sur /clavier, remonter dans l'historique ne sert à rien. */
   hideBackButton?: boolean
   /**
@@ -41,92 +37,62 @@ export function ToolLayout({
   title,
   description,
   children,
-  showBackToKeyboard,
   hideBackButton,
   onBack,
   titleIcon,
   titleAfter,
   titleBelow,
 }: ToolLayoutProps) {
-  const navigate = useNavigate()
-  const { session, logout } = useAuth()
+  const { pathname } = useLocation()
+  const { session } = useAuth()
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      {/* PAS de overflow-x-auto ici : ça coupe aussi le débordement vertical
-          (CSS - un axe non "visible" force l'autre à "auto"), ce qui rendait
-          invisible la liste déroulante de RechercheMotDirecte (positionnée
-          en absolute sous la barre de recherche) sans aucune erreur console -
-          signalé par l'enseignante ("la recherche ne retourne aucun mot" alors
-          que les résultats étaient bien présents dans la page, juste coupés
-          visuellement). shrink-0 + whitespace-nowrap suffisent à garder tout
-          sur une ligne (voir commit "tout sur une seule ligne") ; le
-          overflow-x-auto n'était qu'un filet de sécurité jamais nécessaire en
-          pratique. */}
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <div className="flex shrink-0 items-center gap-3">
-          <Link to="/clavier">
-            <img src={assetUrl('/logo.png')} alt="Clic &amp; Mots" className="h-8 w-auto" />
-          </Link>
+    // Gabarit repris de Fast Eval, qui sert de reference de design aux trois
+    // sites. .gx-page pose la meme largeur (1068 px) et le meme retrait haut
+    // (32 px) : le bandeau est donc aligne en haut, comme chez lui.
+    <div className="gx-typo gx-app-clicetmots gx-page">
+      <header className="gx-entete">
+        <Link to="/clavier">
+          <img className="gx-entete-logo" src={assetUrl('/logo.png')} alt="Clic &amp; Mots" />
+        </Link>
+        <a href="/portail/" className="gx-entete-portail">← Portail</a>
+        {/* Demande de Hugues : un retour direct au clavier depuis n'importe
+            quelle page. Inutile sur le clavier lui-meme. */}
+        {pathname !== '/clavier' && (
+          <Link to="/clavier" className="gx-entete-portail">← Retour au clavier</Link>
+        )}
+        {/* Le « Retour » generique faisait doublon avec « Retour au clavier » et
+            poussait « Espace enseignant » a la ligne. Il ne reste que la ou une
+            page a sa propre navigation interne (le quiz, entre ses etapes) : la,
+            remonter d'un cran n'est pas la meme chose que revenir au clavier. */}
+        {onBack && !hideBackButton && (
+          <button type="button" className="gx-entete-portail" onClick={onBack}>
+            ← Retour
+          </button>
+        )}
+        {(session?.role === 'teacher' || (session?.role === 'student' && session.rechercheDirecte)) && (
+          <RechercheMotDirecte />
+        )}
+        {session?.authenticated && (
+          <span className="gx-entete-identite">
+            <strong>{session.label}</strong>
+            <span>Clic &amp; Mots</span>
+          </span>
+        )}
+        {/* Tout a droite, a la place de l'ancien bouton de deconnexion : on se
+            deconnecte depuis le portail, qui detient la session des trois sites. */}
+        {session?.role === 'teacher' && (
+          <Link to="/enseignant" className="gx-entete-portail">Espace enseignant</Link>
+        )}
+      </header>
+      <div className="gx-cartouche">
+        <div className="flex items-center justify-center gap-3">
+          {titleIcon}
+          <h1>{title}</h1>
+          {titleAfter}
         </div>
-        <div className="flex shrink-0 items-center gap-4 whitespace-nowrap">
-          {/* Enseignante : toujours. Élève : seulement si autorisé au cas par
-              cas (voir SectionEleves dans Admin.tsx) - les autres restent
-              limités au clavier phonétique. */}
-          {(session?.role === 'teacher' || (session?.role === 'student' && session.rechercheDirecte)) && (
-            <RechercheMotDirecte />
-          )}
-          {!hideBackButton && (
-            <button
-              type="button"
-              onClick={onBack ?? (() => navigate(-1))}
-              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
-            >
-              ← Retour
-            </button>
-          )}
-          {showBackToKeyboard && (
-            <Link to="/clavier" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
-              ⌨️ Retour au clavier
-            </Link>
-          )}
-          {session?.role === 'teacher' && (
-            <Link
-              to="/enseignant"
-              className="inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
-            >
-              👩‍🏫 Espace enseignant
-            </Link>
-          )}
-          {session?.authenticated && (
-            <>
-              <a
-                href="/portail/"
-                className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
-              >
-                ← Portail
-              </a>
-              <button
-                type="button"
-                onClick={() => logout().then(() => navigate('/'))}
-                className="text-sm text-gray-500 hover:text-brand-600"
-              >
-                Déconnexion ({session.label})
-              </button>
-            </>
-          )}
-        </div>
+        {titleBelow}
+        <p>{description}</p>
       </div>
-      <div className="flex items-center gap-3">
-        {titleIcon}
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-semibold text-gray-900">{title}</h1>
-            {titleAfter}
-          </div>
-          {titleBelow}
-        </div>
-      </div>
-      <p className="mt-1 mb-8 text-gray-500">{description}</p>
       {children}
     </div>
   )

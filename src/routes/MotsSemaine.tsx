@@ -52,7 +52,7 @@ export function MotsSemaine() {
   }, [listes])
 
   return (
-    <ToolLayout title="Mots de la semaine" description="Les mots vus en classe." showBackToKeyboard>
+    <ToolLayout title="Mots de la semaine" description="Les mots vus en classe.">
       {listes === undefined ? (
         <p className="py-10 text-center text-gray-400">Chargement…</p>
       ) : !listes || listes.length === 0 ? (
