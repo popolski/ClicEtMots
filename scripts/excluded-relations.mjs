@@ -62,6 +62,23 @@ export function hasSuppressedRelations(word) {
 // bonne fois pour toutes plutôt que de continuer à découvrir des exceptions.
 const MANUAL_SYNONYMS = {
   dent: ['croc', 'défense'],
+
+  // Deux rattrapages demandés par Hugues le 31/08/2026, après relecture de la
+  // première passe hors ligne. Ils vivent ici et non dans sens-enfant.json,
+  // qui est réécrit à chaque passe : une extension au reste du lexique les
+  // effacerait.
+  //
+  // « chien » : le modèle avait tout écarté, y compris « toutou », sans doute
+  // jugé trop familier. Pour un CE1 c'est pourtant LE mot, et le seul candidat
+  // de JeuxDeMots qui désigne l'animal - les autres relèvent de « avoir du
+  // chien », « être chien » ou du gardien.
+  chien: ['toutou'],
+
+  // « chat » : le modèle avait retenu « minette, minou » et laissé « matou ».
+  // « minette » désigne la femelle, comme « jument » pour « cheval » - le
+  // modèle avait d'ailleurs écarté celui-là pour cette raison. On garde donc
+  // les deux mots qui désignent l'animal sans distinction de sexe.
+  chat: ['matou', 'minou'],
 }
 
 export function manualSynonymsFor(word) {
