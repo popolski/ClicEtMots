@@ -294,14 +294,31 @@ async function main() {
   let batchId
   if (args.reprendre) {
     if (!existsSync(FICHIER_BATCH)) throw new Error(`Aucun lot en cours : ${FICHIER_BATCH.pathname} est absent.`)
-    batchId = readFileSync(FICHIER_BATCH, 'utf8').trim()
+    const garde = readFileSync(FICHIER_BATCH, 'utf8').trim().split(' ')
+    batchId = garde[0]
+    // L'étendue est gardée à côté de l'identifiant, et vérifiée à la reprise.
+    //
+    // Les réponses sont recollées sur les requêtes par leur custom_id, qui
+    // contient le rang du mot dans la liste. Reprendre avec un --top
+    // différent de celui de l'envoi reconstruit une AUTRE liste : les
+    // custom_id ne correspondent plus et les réponses sont jetées en
+    // silence. Le 31/08/2026, une reprise sans --top a fait tomber 13 746
+    // mots triés à 1 861, sans le moindre message. Les réponses étaient
+    // pourtant intactes côté serveur.
+    const topEnvoi = garde[1] ? Number(garde[1]) : null
+    if (topEnvoi !== null && topEnvoi !== TOP) {
+      throw new Error(
+        `Ce lot a été envoyé avec --top=${topEnvoi}, la reprise demande ` +
+        `--top=${TOP}. Relancer avec --reprendre --top=${topEnvoi}.`,
+      )
+    }
     console.log(`\nReprise du lot ${batchId}.`)
   } else {
     const lot = await client.messages.batches.create({
       requests: toutes.map(({ custom_id, params }) => ({ custom_id, params })),
     })
     batchId = lot.id
-    writeFileSync(FICHIER_BATCH, batchId)
+    writeFileSync(FICHIER_BATCH, `${batchId} ${TOP}`)
     console.log(`\nLot envoyé : ${batchId} (identifiant gardé dans ${FICHIER_BATCH.pathname}).`)
     console.log('En cas de coupure, relancer avec --reprendre.')
   }
