@@ -34,7 +34,7 @@ c'était faux.
 2. Le transfert, par WinSCP en script ou à la main.
 3. `npm run release:done`, **seulement après confirmation** que le transfert a eu lieu.
 
-**Le `npm run build` est lancé par Claude, jamais par l'utilisateur.** Consigne
+**Le `npm run build` est lancé par Codex, jamais par l'utilisateur.** Consigne
 explicite.
 
 ## Travailler à deux : Claude et Codex sur le même dépôt
@@ -325,8 +325,8 @@ EQOL a été abandonné : il faisait perdre des mots français légitimes sans b
 
 - **Tenir ce fichier à jour.** À chaque livraison, avant de considérer le travail
   fini : ce qui a changé dans le projet, une décision prise, un piège découvert.
-  Consigne de Hugues, 31/08/2026. Un CLAUDE.md qui ment coûte plus cher que pas de
-  CLAUDE.md du tout.
+  Consigne de Hugues, 31/08/2026. Un AGENTS.md qui ment coûte plus cher que pas de
+  AGENTS.md du tout.
 - Le code et les commentaires sont **en français**. Les commentaires disent
   *pourquoi*, pas *quoi*.
 - Dans le texte écrit pour l'utilisateur : **des tirets classiques, jamais de tiret
