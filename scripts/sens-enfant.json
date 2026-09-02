@@ -14,7 +14,6 @@
       "couvrir"
     ],
     "nom:composé": [
-      "compliqué",
       "complexe"
     ],
     "nom:douce": [],
@@ -28,16 +27,11 @@
       "réclame",
       "annonce"
     ],
-    "adverbe:suivant": [
-      "prochain",
-      "successeur"
-    ],
+    "adverbe:suivant": [],
     "nom:alphabet": [
       "abécédaire"
     ],
-    "nom:dragon": [
-      "cordon"
-    ],
+    "nom:dragon": [],
     "nom:fou": [],
     "nom:pantalon": [
       "jean",
@@ -108,9 +102,7 @@
       "agité",
       "distrait"
     ],
-    "nom:bricoleur": [
-      "habile"
-    ],
+    "nom:bricoleur": [],
     "nom:alpinisme": [
       "escalade",
       "ascension"
@@ -272,7 +264,6 @@
     ],
     "verbe:abîmer": [
       "endommager",
-      "détériorer",
       "casser"
     ],
     "nom:héritage": [],
@@ -350,9 +341,7 @@
       "escabeau"
     ],
     "adjectif:disant": [],
-    "nom:agent": [
-      "agent"
-    ],
+    "nom:agent": [],
     "nom:anniversaire": [
       "fête"
     ],
@@ -508,9 +497,7 @@
     ],
     "nom:cru": [],
     "nom:moque": [],
-    "nom:promis": [
-      "fiancée"
-    ],
+    "nom:promis": [],
     "verbe:bicher": [],
     "verbe:prévenir": [
       "avertir",
@@ -679,10 +666,7 @@
       "gaieté",
       "joie"
     ],
-    "verbe:savoir": [
-      "connaissance",
-      "culture"
-    ],
+    "verbe:savoir": [],
     "nom:pomme": [],
     "nom:maîtresse": [
       "institutrice"
@@ -726,14 +710,8 @@
     ],
     "nom:pintade": [],
     "nom:routier": [],
-    "nom:résistant": [
-      "solide",
-      "robuste",
-      "fort"
-    ],
-    "nom:indépendant": [
-      "autonome"
-    ],
+    "nom:résistant": [],
+    "nom:indépendant": [],
     "verbe:accéder": [
       "entrer",
       "atteindre",
@@ -845,9 +823,7 @@
       "couvaison"
     ],
     "nom:pittoresque": [
-      "charmant",
-      "original",
-      "coloré"
+      "original"
     ],
     "nom:préfecture": [],
     "nom:tournure": [
@@ -963,10 +939,7 @@
       "propre"
     ],
     "verbe:affamer": [],
-    "nom:affamé": [
-      "vorace",
-      "avide"
-    ],
+    "nom:affamé": [],
     "nom:rumeur": [
       "bruit",
       "brouhaha"
@@ -986,9 +959,7 @@
     "nom:boa": [],
     "nom:combinaison": [],
     "nom:indéfini": [
-      "vague",
-      "flou",
-      "confus"
+      "vague"
     ],
     "nom:médecine": [],
     "nom:réalisation": [
@@ -1016,9 +987,7 @@
       "terminer",
       "accomplir"
     ],
-    "nom:chrétien": [
-      "croyant"
-    ],
+    "nom:chrétien": [],
     "nom:pourcentage": [
       "proportion"
     ],
@@ -1049,9 +1018,7 @@
       "écorcher",
       "rayer"
     ],
-    "nom:distributeur": [
-      "vendeur"
-    ],
+    "nom:distributeur": [],
     "adjectif:flou": [
       "vague",
       "confus",
@@ -1145,8 +1112,6 @@
       "bifteck"
     ],
     "nom:comprimé": [
-      "aplati",
-      "serré",
       "pressé"
     ],
     "nom:faune": [],
@@ -1224,8 +1189,7 @@
     "nom:porteur": [],
     "nom:sournois": [
       "hypocrite",
-      "faux",
-      "dissimulé"
+      "faux"
     ],
     "adverbe:voire": [
       "même"
@@ -1253,18 +1217,13 @@
       "espace"
     ],
     "nom:supérieur": [
-      "meilleur",
-      "haut",
-      "élevé"
+      "haut"
     ],
     "adjectif:pensant": [],
     "adjectif:rejoint": [
       "atteint"
     ],
-    "verbe:supporter": [
-      "partisan",
-      "admirateur"
-    ],
+    "verbe:supporter": [],
     "adjectif:mordu": [
       "passionné"
     ],
@@ -1273,9 +1232,7 @@
       "qualité",
       "caractéristique"
     ],
-    "nom:mignon": [
-      "belle"
-    ],
+    "nom:mignon": [],
     "nom:épicier": [
       "marchand"
     ],
@@ -1328,8 +1285,7 @@
     ],
     "nom:jugement": [
       "opinion",
-      "décision",
-      "avis"
+      "décision"
     ],
     "nom:réalisateur": [
       "cinéaste"
@@ -1456,10 +1412,7 @@
     "nom:révolution": [
       "révolte"
     ],
-    "nom:époux": [
-      "mari",
-      "marié"
-    ],
+    "nom:époux": [],
     "adjectif:intense": [
       "fort",
       "grand",
@@ -1566,9 +1519,7 @@
     ],
     "nom:naufrage": [],
     "nom:moka": [],
-    "nom:observateur": [
-      "attentif"
-    ],
+    "nom:observateur": [],
     "nom:ogresse": [
       "ogre",
       "monstre"
@@ -1650,7 +1601,6 @@
       "bord"
     ],
     "nom:impatient": [
-      "pressée",
       "nerveux",
       "vif"
     ],
@@ -1712,9 +1662,7 @@
       "grâce"
     ],
     "nom:gamin": [
-      "espiègle",
-      "malicieux",
-      "farceur"
+      "espiègle"
     ],
     "verbe:voyager": [
       "partir"
@@ -1825,7 +1773,6 @@
     ],
     "nom:connaisseur": [
       "expert",
-      "compétent",
       "amateur"
     ],
     "nom:envieux": [
@@ -1851,28 +1798,20 @@
       "mélodieux",
       "équilibré"
     ],
-    "nom:parent": [
-      "proche",
-      "semblable"
-    ],
+    "nom:parent": [],
     "nom:pays": [
       "région",
       "territoire",
       "contrée"
     ],
-    "adverbe:mieux": [
-      "progrès",
-      "amélioration"
-    ],
+    "adverbe:mieux": [],
     "verbe:mettre": [
       "placer",
       "poser",
       "installer"
     ],
     "nom:beau": [
-      "superbe",
-      "élégante",
-      "jolie"
+      "superbe"
     ],
     "nom:route": [
       "chemin",
@@ -1887,11 +1826,7 @@
       "réaction",
       "solution"
     ],
-    "adverbe:fort": [
-      "robuste",
-      "solide",
-      "puissant"
-    ],
+    "adverbe:fort": [],
     "nom:nez": [
       "odorat",
       "museau",
@@ -2072,11 +2007,7 @@
       "discret"
     ],
     "nom:cacaoyer": [],
-    "nom:rescapé": [
-      "vivant",
-      "indemne",
-      "sain"
-    ],
+    "nom:rescapé": [],
     "nom:limpidité": [
       "clarté",
       "pureté"
@@ -2097,18 +2028,14 @@
       "autorisation",
       "garantie"
     ],
-    "nom:croissant": [
-      "grandissant"
-    ],
+    "nom:croissant": [],
     "nom:gourmandise": [
       "friandise",
       "douceur",
       "bonbon"
     ],
     "nom:noble": [
-      "grand",
-      "généreux",
-      "digne"
+      "grand"
     ],
     "nom:opéra": [],
     "verbe:grossir": [
@@ -2140,13 +2067,10 @@
     ],
     "nom:ravi": [
       "heureux",
-      "content",
-      "joyeux"
+      "content"
     ],
     "nom:exception": [],
     "nom:mécontent": [
-      "fâché",
-      "contrarié",
       "déçu"
     ],
     "nom:patin": [],
@@ -2164,7 +2088,6 @@
     ],
     "nom:américain": [],
     "nom:blond": [
-      "doré",
       "jaune"
     ],
     "nom:ciment": [],
@@ -2364,9 +2287,7 @@
       "communiqué",
       "message"
     ],
-    "nom:sculpteur": [
-      "sculpteur"
-    ],
+    "nom:sculpteur": [],
     "nom:visibilité": [
       "clarté"
     ],
@@ -2397,10 +2318,7 @@
       "invention",
       "histoire"
     ],
-    "nom:galant": [
-      "attentif",
-      "serviable"
-    ],
+    "nom:galant": [],
     "nom:hall": [
       "entrée",
       "vestibule"
@@ -2550,7 +2468,6 @@
     ],
     "nom:professionnel": [
       "spécialiste",
-      "expert",
       "technicien"
     ],
     "nom:pin's": [
@@ -2566,9 +2483,7 @@
       "cabosser"
     ],
     "nom:accidenté": [
-      "inégal",
-      "irrégulier",
-      "montagneux"
+      "irrégulier"
     ],
     "verbe:bloquer": [
       "arrêter",
@@ -2606,9 +2521,7 @@
       "tordu",
       "courbe"
     ],
-    "nom:auteur": [
-      "auteur"
-    ],
+    "nom:auteur": [],
     "nom:médecin": [
       "docteur"
     ],
@@ -2626,10 +2539,7 @@
       "exclure"
     ],
     "verbe:évaporer": [],
-    "nom:assuré": [
-      "sûr",
-      "certain"
-    ],
+    "nom:assuré": [],
     "nom:bosquet": [
       "bois"
     ],
@@ -2646,10 +2556,7 @@
       "entente",
       "équilibre"
     ],
-    "nom:mélancolique": [
-      "triste",
-      "sombre"
-    ],
+    "nom:mélancolique": [],
     "nom:treuil": [],
     "adjectif:pitoyable": [
       "lamentable",
@@ -2670,10 +2577,7 @@
       "champion",
       "expert"
     ],
-    "nom:petit": [
-      "fillette",
-      "fille"
-    ],
+    "nom:petit": [],
     "nom:nom": [],
     "adjectif:trois": [],
     "nom:maison": [
@@ -2682,10 +2586,7 @@
       "demeure"
     ],
     "adjectif:quel": [],
-    "adverbe:peu": [
-      "brin",
-      "miette"
-    ],
+    "adverbe:peu": [],
     "nom:jour": [
       "journée",
       "lumière",
@@ -2717,9 +2618,7 @@
     "nom:fièvre": [
       "chaleur"
     ],
-    "nom:invité": [
-      "invité"
-    ],
+    "nom:invité": [],
     "adjectif:tué": [],
     "verbe:décrire": [
       "raconter",
@@ -2840,7 +2739,6 @@
       "désagréable"
     ],
     "adjectif:amical": [
-      "gentil",
       "affectueux",
       "aimable"
     ],
@@ -3116,8 +3014,7 @@
       "doucement"
     ],
     "nom:condamné": [
-      "perdu",
-      "fini"
+      "perdu"
     ],
     "nom:gamme": [
       "éventail",
@@ -3142,9 +3039,7 @@
     "nom:vermillon": [
       "rouge"
     ],
-    "nom:éleveur": [
-      "agriculteur"
-    ],
+    "nom:éleveur": [],
     "adjectif:crotté": [
       "sale"
     ],
@@ -3206,10 +3101,7 @@
     ],
     "nom:arbre": [],
     "nom:vieux": [],
-    "verbe:manger": [
-      "nourriture",
-      "aliment"
-    ],
+    "verbe:manger": [],
     "nom:jeu": [
       "amusement",
       "divertissement",
@@ -3274,7 +3166,6 @@
       "chemin"
     ],
     "nom:particulier": [
-      "spécial",
       "original"
     ],
     "nom:gosier": [
@@ -3400,11 +3291,7 @@
       "confiserie",
       "sucette"
     ],
-    "nom:brillant": [
-      "éclatant",
-      "étincelant",
-      "lumineux"
-    ],
+    "nom:brillant": [],
     "nom:frayeur": [
       "peur",
       "effroi",
@@ -3640,9 +3527,7 @@
       "dur",
       "sévère"
     ],
-    "nom:conteur": [
-      "conteur"
-    ],
+    "nom:conteur": [],
     "nom:explorateur": [
       "voyageur"
     ],
@@ -3978,10 +3863,7 @@
     "verbe:guérir": [],
     "nom:antenne": [],
     "nom:foyer": [],
-    "nom:portier": [
-      "gardien",
-      "concierge"
-    ],
+    "nom:portier": [],
     "nom:vendu": [
       "traître"
     ],
@@ -4118,9 +4000,7 @@
     "nom:arithmétique": [
       "mathématique"
     ],
-    "nom:coéquipier": [
-      "partenaire"
-    ],
+    "nom:coéquipier": [],
     "adjectif:cousu": [],
     "adjectif:vissé": [
       "fixé",
@@ -4136,9 +4016,7 @@
     ],
     "verbe:essouffler": [],
     "nom:dégoûtant": [
-      "sale",
-      "affreux",
-      "horrible"
+      "affreux"
     ],
     "nom:gourmet": [
       "connaisseur",
@@ -4264,7 +4142,6 @@
     ],
     "nom:agréable": [
       "plaisant",
-      "charmant",
       "doux"
     ],
     "nom:liberté": [
@@ -4272,7 +4149,6 @@
       "permission"
     ],
     "nom:précis": [
-      "exact",
       "clair",
       "juste"
     ],
@@ -4367,11 +4243,7 @@
       "montagne",
       "sommet"
     ],
-    "adverbe:net": [
-      "clair",
-      "propre",
-      "précis"
-    ],
+    "adverbe:net": [],
     "nom:ennui": [
       "souci",
       "difficulté"
@@ -4401,8 +4273,7 @@
     ],
     "verbe:pétrir": [
       "modeler",
-      "travailler",
-      "malaxer"
+      "travailler"
     ],
     "adjectif:tondu": [
       "ras",
@@ -4425,14 +4296,10 @@
       "adresse",
       "agilité"
     ],
-    "nom:pèlerin": [
-      "cape",
-      "manteau"
-    ],
+    "nom:pèlerin": [],
     "nom:vaniteux": [
       "orgueilleux",
-      "prétentieux",
-      "fier"
+      "prétentieux"
     ],
     "nom:brodequin": [
       "chaussure",
@@ -4471,9 +4338,7 @@
       "bac",
       "récipient"
     ],
-    "nom:beurré": [
-      "tartine"
-    ],
+    "nom:beurré": [],
     "nom:couffin": [
       "panier",
       "berceau"
@@ -4606,7 +4471,6 @@
       "constater"
     ],
     "nom:ancien": [
-      "vieille",
       "antique"
     ],
     "nom:magie": [
@@ -4676,7 +4540,6 @@
       "abandonner"
     ],
     "nom:requis": [
-      "obligatoire",
       "nécessaire",
       "indispensable"
     ],
@@ -5038,11 +4901,7 @@
       "poème",
       "chant"
     ],
-    "nom:grincheux": [
-      "grognon",
-      "ronchon",
-      "bougon"
-    ],
+    "nom:grincheux": [],
     "nom:marmelade": [
       "confiture",
       "compote"
@@ -5172,11 +5031,7 @@
     ],
     "adverbe:heureusement": [],
     "nom:directeur": [],
-    "nom:secret": [
-      "caché",
-      "mystérieux",
-      "dissimulé"
-    ],
+    "nom:secret": [],
     "nom:parc": [
       "jardin"
     ],
@@ -5233,11 +5088,7 @@
       "voltiger",
       "voler"
     ],
-    "nom:déchaîné": [
-      "furieux",
-      "enragé",
-      "violent"
-    ],
+    "nom:déchaîné": [],
     "adjectif:quitte": [
       "libéré",
       "libre",
@@ -5334,9 +5185,7 @@
       "étreindre",
       "comprimer"
     ],
-    "nom:incident": [
-      "secondaire"
-    ],
+    "nom:incident": [],
     "nom:tourtereau": [],
     "nom:vedette": [
       "star",
@@ -5433,7 +5282,6 @@
     "nom:nice": [],
     "nom:tendre": [
       "doux",
-      "affectueux",
       "câlin"
     ],
     "verbe:ramener": [
@@ -5448,15 +5296,11 @@
       "surgir",
       "paraître"
     ],
-    "nom:cité": [
-      "nommé",
-      "indiqué"
-    ],
+    "nom:cité": [],
     "nom:sueur": [
       "transpiration"
     ],
     "nom:contrôle": [
-      "vérification",
       "surveillance",
       "inspection"
     ],
@@ -5495,9 +5339,7 @@
     "nom:acier": [
       "fer"
     ],
-    "nom:gourmand": [
-      "mangeuse"
-    ],
+    "nom:gourmand": [],
     "nom:kilo": [
       "kilogramme"
     ],
@@ -5665,9 +5507,7 @@
       "demeure"
     ],
     "nom:paysan": [
-      "rural",
-      "agricole",
-      "champêtre"
+      "rural"
     ],
     "nom:récit": [
       "histoire",
@@ -5798,9 +5638,7 @@
       "habileté",
       "talent"
     ],
-    "nom:parti": [
-      "absent"
-    ],
+    "nom:parti": [],
     "verbe:dîner": [
       "manger"
     ],
@@ -5917,13 +5755,8 @@
       "mauvais"
     ],
     "nom:hiver": [],
-    "verbe:parler": [
-      "langage",
-      "langue"
-    ],
-    "nom:possible": [
-      "réalisable"
-    ],
+    "verbe:parler": [],
+    "nom:possible": [],
     "nom:peine": [
       "chagrin",
       "tristesse",
@@ -5936,10 +5769,7 @@
     "nom:relève": [
       "remplacement"
     ],
-    "adverbe:derrière": [
-      "fesse",
-      "postérieur"
-    ],
+    "adverbe:derrière": [],
     "adjectif:déchaîné": [
       "furieux",
       "enragé",
@@ -5956,9 +5786,7 @@
       "dense",
       "épais"
     ],
-    "nom:retardé": [
-      "tardif"
-    ],
+    "nom:retardé": [],
     "verbe:grimacer": [],
     "verbe:enquêter": [
       "rechercher",
@@ -5972,8 +5800,7 @@
     ],
     "verbe:gigoter": [
       "remuer",
-      "bouger",
-      "s'agiter"
+      "bouger"
     ],
     "verbe:glousser": [
       "caqueter",
@@ -6029,9 +5856,7 @@
       "révolte"
     ],
     "nom:informatique": [],
-    "nom:malchanceux": [
-      "malheureux"
-    ],
+    "nom:malchanceux": [],
     "nom:technologie": [
       "technique"
     ],
@@ -6083,11 +5908,7 @@
     "verbe:valser": [
       "danser"
     ],
-    "nom:allié": [
-      "ami",
-      "partenaire",
-      "camarade"
-    ],
+    "nom:allié": [],
     "adjectif:gradué": [],
     "adjectif:nature": [
       "naturel"
@@ -6109,15 +5930,11 @@
       "symbole",
       "signal"
     ],
-    "nom:disparu": [
-      "morte"
-    ],
+    "nom:disparu": [],
     "nom:théâtre": [
       "scène"
     ],
-    "adverbe:dehors": [
-      "extérieur"
-    ],
+    "adverbe:dehors": [],
     "nom:surprise": [
       "étonnement",
       "stupéfaction"
@@ -6135,9 +5952,7 @@
       "farce"
     ],
     "nom:saucisson": [],
-    "nom:soufflant": [
-      "étonnant"
-    ],
+    "nom:soufflant": [],
     "verbe:accepter": [
       "admettre",
       "approuver",
@@ -6307,9 +6122,7 @@
       "information",
       "renseignement"
     ],
-    "nom:vieillard": [
-      "vieille"
-    ],
+    "nom:vieillard": [],
     "adjectif:chair": [],
     "adverbe:malheureusement": [],
     "nom:extrémité": [
@@ -6383,11 +6196,7 @@
     "nom:blessé": [
       "accidenté"
     ],
-    "nom:brave": [
-      "courageux",
-      "vaillant",
-      "intrépide"
-    ],
+    "nom:brave": [],
     "nom:rôti": [],
     "verbe:différencier": [
       "distinguer",
@@ -6451,9 +6260,7 @@
       "transporter",
       "transmettre"
     ],
-    "nom:bien-aimé": [
-      "fiancée"
-    ],
+    "nom:bien-aimé": [],
     "nom:catamaran": [
       "bateau"
     ],
@@ -6465,11 +6272,7 @@
       "amabilité",
       "bonté"
     ],
-    "nom:paralysé": [
-      "immobile",
-      "figé",
-      "bloqué"
-    ],
+    "nom:paralysé": [],
     "nom:performance": [
       "exploit",
       "prouesse",
@@ -6489,8 +6292,7 @@
       "aimable"
     ],
     "adjectif:endommagé": [
-      "brisé",
-      "abîmé"
+      "brisé"
     ],
     "adjectif:inaccessible": [
       "difficile",
@@ -6527,8 +6329,7 @@
       "sondage"
     ],
     "adjectif:conservé": [
-      "protégé",
-      "gardé"
+      "protégé"
     ],
     "adverbe:sourdement": [
       "faiblement",
@@ -6553,9 +6354,7 @@
     "nom:noyade": [],
     "nom:papas": [],
     "nom:sensationnel": [
-      "extraordinaire",
-      "formidable",
-      "étonnant"
+      "extraordinaire"
     ],
     "verbe:tricher": [
       "tromper",
@@ -6594,9 +6393,7 @@
       "répétition",
       "réparation"
     ],
-    "nom:magistrat": [
-      "magistrat"
-    ],
+    "nom:magistrat": [],
     "nom:péage": [],
     "nom:vertu": [
       "qualité",
@@ -6635,9 +6432,7 @@
     ],
     "nom:chapelure": [],
     "nom:extraction": [],
-    "nom:serveur": [
-      "serveur"
-    ],
+    "nom:serveur": [],
     "nom:troll": [
       "lutin",
       "gnome",
@@ -6774,10 +6569,7 @@
       "exagérer"
     ],
     "nom:harpon": [],
-    "nom:intéressant": [
-      "passionnant",
-      "fascinant"
-    ],
+    "nom:intéressant": [],
     "nom:mufle": [
       "grossier",
       "impoli"
@@ -6849,8 +6641,7 @@
     ],
     "verbe:assurer": [
       "affirmer",
-      "garantir",
-      "promettre"
+      "garantir"
     ],
     "nom:embarcation": [
       "bateau",
@@ -6876,11 +6667,7 @@
       "apparition"
     ],
     "nom:rose": [],
-    "verbe:coucher": [
-      "crépuscule",
-      "couchant",
-      "soir"
-    ],
+    "verbe:coucher": [],
     "nom:blé": [
       "froment",
       "céréale"
@@ -7120,10 +6907,7 @@
     "adjectif:tordu": [
       "courbe"
     ],
-    "nom:anxieux": [
-      "inquiet",
-      "angoissé"
-    ],
+    "nom:anxieux": [],
     "nom:priorité": [],
     "nom:brouet": [
       "bouillon",
@@ -7166,9 +6950,7 @@
     "nom:colimaçon": [
       "escargot"
     ],
-    "nom:attaquant": [
-      "agresseur"
-    ],
+    "nom:attaquant": [],
     "nom:brigadier": [
       "caporal",
       "chef"
@@ -7534,7 +7316,6 @@
     ],
     "nom:câlin": [],
     "nom:détraqué": [
-      "cassé",
       "fou"
     ],
     "nom:envahisseur": [
@@ -7568,7 +7349,6 @@
       "défendre"
     ],
     "nom:enchanteur": [
-      "charmant",
       "merveilleux",
       "agréable"
     ],
@@ -7627,9 +7407,7 @@
       "aimable"
     ],
     "nom:courbe": [
-      "courbé",
-      "arrondi",
-      "recourbé"
+      "arrondi"
     ],
     "nom:intermédiaire": [
       "moyen"
@@ -7703,9 +7481,7 @@
     ],
     "nom:couleuvre": [],
     "nom:méfiant": [
-      "soupçonneux",
-      "prudent",
-      "craintif"
+      "prudent"
     ],
     "adjectif:monstrueux": [
       "horrible",
@@ -7744,9 +7520,7 @@
     "nom:laissé": [],
     "nom:trompe": [],
     "adverbe:dur": [
-      "ferme",
-      "difficile",
-      "sévère"
+      "ferme"
     ],
     "nom:colle": [
       "glu"
@@ -7797,11 +7571,7 @@
       "détresse",
       "trouble"
     ],
-    "nom:enseignant": [
-      "professeur",
-      "instituteur",
-      "maître"
-    ],
+    "nom:enseignant": [],
     "nom:heaume": [
       "casque"
     ],
@@ -7813,10 +7583,7 @@
     "nom:maraudeur": [
       "voleur"
     ],
-    "nom:occupant": [
-      "habitant",
-      "locataire"
-    ],
+    "nom:occupant": [],
     "nom:tignasse": [
       "chevelure"
     ],
@@ -7833,8 +7600,7 @@
     ],
     "nom:bleuet": [],
     "nom:commercial": [
-      "commerçante",
-      "vendeur"
+      "commerçante"
     ],
     "nom:diplôme": [
       "certificat",
@@ -7861,9 +7627,7 @@
       "énergiquement"
     ],
     "nom:fanon": [],
-    "nom:mat": [
-      "terne"
-    ],
+    "nom:mat": [],
     "nom:rature": [],
     "nom:flamberge": [
       "épée"
@@ -7894,11 +7658,7 @@
       "outillage",
       "installation"
     ],
-    "adverbe:bis": [
-      "brun",
-      "gris",
-      "beige"
-    ],
+    "adverbe:bis": [],
     "verbe:circuler": [
       "rouler",
       "passer",
@@ -7929,15 +7689,9 @@
       "chat",
       "minet"
     ],
-    "nom:sinistre": [
-      "effrayant",
-      "sombre",
-      "inquiétant"
-    ],
+    "nom:sinistre": [],
     "nom:tirée": [],
-    "nom:couturier": [
-      "tailleur"
-    ],
+    "nom:couturier": [],
     "adjectif:détaché": [],
     "adjectif:permanent": [
       "constant",
@@ -8323,10 +8077,7 @@
     "nom:matinée": [
       "matin"
     ],
-    "adverbe:dessous": [
-      "sous-vêtement",
-      "envers"
-    ],
+    "adverbe:dessous": [],
     "nom:exclamation": [
       "cri"
     ],
@@ -8356,7 +8107,6 @@
       "marque"
     ],
     "nom:violent": [
-      "brutal",
       "fort",
       "dur"
     ],
@@ -8498,9 +8248,7 @@
       "abrité",
       "enfoui"
     ],
-    "nom:souverain": [
-      "reine"
-    ],
+    "nom:souverain": [],
     "nom:tartelette": [
       "tarte"
     ],
@@ -8593,7 +8341,6 @@
     ],
     "nom:vivant": [
       "vif",
-      "animé",
       "actif"
     ],
     "adjectif:marchant": [],
@@ -8686,8 +8433,7 @@
     ],
     "nom:privilégié": [
       "favori",
-      "préféré",
-      "chanceux"
+      "préféré"
     ],
     "adjectif:charmé": [
       "ravi",
@@ -8755,8 +8501,7 @@
     ],
     "nom:commun": [
       "ordinaire",
-      "courant",
-      "habituel"
+      "courant"
     ],
     "nom:longueur": [
       "dimension",
@@ -8776,7 +8521,6 @@
     ],
     "nom:calme": [
       "tranquille",
-      "paisible",
       "doux"
     ],
     "nom:code": [],
@@ -8918,9 +8662,7 @@
     "nom:échine": [
       "dos"
     ],
-    "verbe:boulanger": [
-      "boulangère"
-    ],
+    "verbe:boulanger": [],
     "verbe:réfléchir": [
       "penser",
       "raisonner",
@@ -8930,10 +8672,7 @@
       "pipeau",
       "instrument"
     ],
-    "nom:jambe": [
-      "patte",
-      "gambette"
-    ],
+    "nom:jambe": [],
     "nom:mouche": [],
     "nom:honneur": [
       "gloire",
@@ -8946,7 +8685,6 @@
     ],
     "nom:solide": [
       "résistant",
-      "robuste",
       "fort"
     ],
     "nom:température": [
@@ -9030,10 +8768,7 @@
     "nom:compresse": [
       "pansement"
     ],
-    "nom:consciencieux": [
-      "sérieux",
-      "travailleur"
-    ],
+    "nom:consciencieux": [],
     "nom:déballage": [],
     "nom:escapade": [
       "balade",
@@ -9074,11 +8809,7 @@
       "réservé",
       "simple"
     ],
-    "nom:historique": [
-      "célèbre",
-      "inoubliable",
-      "mémorable"
-    ],
+    "nom:historique": [],
     "verbe:axer": [
       "orienter",
       "centrer"
@@ -9107,11 +8838,7 @@
       "bien"
     ],
     "verbe:douer": [],
-    "nom:chéri": [
-      "bien-aimé",
-      "cher",
-      "préféré"
-    ],
+    "nom:chéri": [],
     "nom:forteresse": [
       "château-fort",
       "fort",
@@ -9136,8 +8863,7 @@
     ],
     "nom:esclave": [
       "captif",
-      "prisonnier",
-      "soumis"
+      "prisonnier"
     ],
     "nom:hulotte": [
       "chouette"
@@ -9215,9 +8941,7 @@
       "élever",
       "relever"
     ],
-    "nom:artiste": [
-      "artistique"
-    ],
+    "nom:artiste": [],
     "nom:cavalier": [],
     "adjectif:subordonné": [
       "inférieur",
@@ -9587,8 +9311,7 @@
       "doux"
     ],
     "nom:combiné": [
-      "associé",
-      "mêlé"
+      "associé"
     ],
     "nom:forge": [],
     "nom:poupe": [
@@ -9597,9 +9320,7 @@
     "nom:anorak": [
       "veste"
     ],
-    "nom:week-end": [
-      "week end"
-    ],
+    "nom:week-end": [],
     "nom:bétail": [
       "troupeau"
     ],
@@ -9646,10 +9367,7 @@
     "nom:film": [
       "vidéo"
     ],
-    "nom:dernier": [
-      "final",
-      "ultime"
-    ],
+    "nom:dernier": [],
     "verbe:entrer": [
       "pénétrer",
       "rentrer"
@@ -9669,11 +9387,7 @@
       "fable"
     ],
     "nom:dimanche": [],
-    "adverbe:plein": [
-      "rempli",
-      "bourré",
-      "complet"
-    ],
+    "adverbe:plein": [],
     "adverbe:essentiellement": [
       "principalement"
     ],
@@ -9789,12 +9503,9 @@
     ],
     "nom:gros": [],
     "nom:éléphant": [],
-    "adverbe:demain": [
-      "lendemain"
-    ],
+    "adverbe:demain": [],
     "nom:heureux": [
       "content",
-      "joyeux",
       "ravi"
     ],
     "verbe:courser": [
@@ -9921,8 +9632,7 @@
     ],
     "nom:circuit": [
       "trajet",
-      "tour",
-      "parcours"
+      "tour"
     ],
     "nom:industrie": [
       "usine",
@@ -9976,13 +9686,11 @@
       "enseignement"
     ],
     "nom:nu": [
-      "découvert",
-      "dégarni"
+      "découvert"
     ],
     "nom:éternel": [
       "infini",
-      "permanent",
-      "durable"
+      "permanent"
     ],
     "adjectif:dressant": [],
     "verbe:fatiguer": [
@@ -10069,8 +9777,6 @@
       "net"
     ],
     "nom:super": [
-      "génial",
-      "formidable",
       "merveilleux"
     ],
     "nom:épingle": [
@@ -10130,9 +9836,7 @@
       "humer"
     ],
     "nom:classique": [
-      "habituel",
-      "ordinaire",
-      "traditionnel"
+      "ordinaire"
     ],
     "nom:compliment": [
       "félicitation"
@@ -10337,9 +10041,7 @@
       "magistrat"
     ],
     "nom:bille": [],
-    "nom:chagrin": [
-      "triste"
-    ],
+    "nom:chagrin": [],
     "nom:honte": [
       "gêne",
       "embarras",
@@ -10357,10 +10059,7 @@
       "caddie",
       "charrette"
     ],
-    "nom:maigre": [
-      "mince",
-      "chétif"
-    ],
+    "nom:maigre": [],
     "nom:niche": [
       "abri"
     ],
@@ -10421,8 +10120,7 @@
     "nom:légume": [],
     "nom:naturel": [
       "simple",
-      "vrai",
-      "sincère"
+      "vrai"
     ],
     "nom:navigation": [],
     "adjectif:brusque": [
@@ -10464,9 +10162,7 @@
       "tirage"
     ],
     "nom:louche": [
-      "douteux",
-      "suspect",
-      "bizarre"
+      "suspect"
     ],
     "nom:lama": [
       "prêtre"
@@ -10514,8 +10210,7 @@
       "foule"
     ],
     "adverbe:oui": [
-      "certainement",
-      "bien sûr"
+      "certainement"
     ],
     "nom:air": [
       "allure",
@@ -10636,11 +10331,7 @@
       "étiquette",
       "papier"
     ],
-    "nom:arrêté": [
-      "décidé",
-      "fixé",
-      "immobile"
-    ],
+    "nom:arrêté": [],
     "adverbe:justement": [
       "précisément",
       "exactement"
@@ -10999,8 +10690,7 @@
     ],
     "nom:naïf": [
       "innocent",
-      "simple",
-      "confiant"
+      "simple"
     ],
     "adjectif:brodé": [
       "orné"
@@ -11058,11 +10748,8 @@
     ],
     "nom:dessert": [],
     "nom:violon": [],
-    "adverbe:dedans": [
-      "intérieur"
-    ],
+    "adverbe:dedans": [],
     "nom:rond": [
-      "dodu",
       "arrondi",
       "gros"
     ],
@@ -11080,9 +10767,7 @@
       "stable"
     ],
     "nom:curieux": [
-      "bizarre",
-      "étrange",
-      "étonnant"
+      "étrange"
     ],
     "nom:esprit": [
       "intelligence",
@@ -11098,9 +10783,7 @@
     ],
     "nom:entonnoir": [],
     "nom:farceur": [
-      "taquin",
-      "espiègle",
-      "drôle"
+      "espiègle"
     ],
     "nom:marathon": [
       "course"
@@ -11140,11 +10823,9 @@
       "arène"
     ],
     "nom:propre": [
-      "net",
-      "soigné"
+      "net"
     ],
     "nom:drôle": [
-      "amusant",
       "comique",
       "rigolo"
     ],
@@ -11185,8 +10866,7 @@
     "nom:ovale": [],
     "nom:serein": [
       "calme",
-      "tranquille",
-      "paisible"
+      "tranquille"
     ],
     "nom:éternité": [
       "infini"
@@ -11229,8 +10909,7 @@
       "grand"
     ],
     "adjectif:fendu": [
-      "ouvert",
-      "coupé"
+      "ouvert"
     ],
     "adjectif:froussard": [
       "peureux",
@@ -11305,8 +10984,7 @@
     ],
     "nom:raccourci": [
       "court",
-      "abrégé",
-      "coupé"
+      "abrégé"
     ],
     "verbe:emplir": [
       "remplir",
@@ -11455,10 +11133,7 @@
       "ôter",
       "soustraire"
     ],
-    "nom:entêté": [
-      "têtu",
-      "tenace"
-    ],
+    "nom:entêté": [],
     "nom:grade": [
       "rang",
       "degré",
@@ -11523,8 +11198,6 @@
       "explication"
     ],
     "nom:inondé": [
-      "trempé",
-      "mouillé",
       "noyé"
     ],
     "nom:intervention": [
@@ -11810,7 +11483,6 @@
       "avenir"
     ],
     "nom:uniforme": [
-      "identique",
       "pareil",
       "régulier"
     ],
@@ -11830,8 +11502,7 @@
       "complet"
     ],
     "adjectif:bronzé": [
-      "brun",
-      "doré"
+      "brun"
     ],
     "adjectif:comptable": [
       "responsable"
@@ -11891,7 +11562,6 @@
       "branche"
     ],
     "nom:rondelet": [
-      "dodu",
       "rond",
       "gros"
     ],
@@ -11966,8 +11636,7 @@
     ],
     "nom:seul": [
       "solitaire",
-      "isolé",
-      "unique"
+      "isolé"
     ],
     "adverbe:parfois": [
       "quelquefois"
@@ -12041,8 +11710,6 @@
       "essai"
     ],
     "nom:affreux": [
-      "horrible",
-      "épouvantable",
       "laid"
     ],
     "nom:cousin": [
@@ -12070,8 +11737,7 @@
     ],
     "nom:piano": [],
     "adverbe:gras": [
-      "gros",
-      "dodu"
+      "gros"
     ],
     "nom:aile": [],
     "nom:grain": [
@@ -12113,7 +11779,6 @@
     ],
     "nom:traité": [],
     "nom:écarté": [
-      "éloigné",
       "isolé",
       "lointain"
     ],
@@ -12215,8 +11880,7 @@
     ],
     "nom:précipité": [
       "rapide",
-      "pressé",
-      "brusque"
+      "pressé"
     ],
     "nom:sang-froid": [
       "calme",
@@ -12325,9 +11989,7 @@
     "nom:ride": [
       "pli"
     ],
-    "nom:sauteur": [
-      "casserole"
-    ],
+    "nom:sauteur": [],
     "nom:trajectoire": [
       "trajet",
       "chemin"
@@ -12356,7 +12018,6 @@
     "nom:massacre": [],
     "nom:comble": [
       "plein",
-      "rempli",
       "complet"
     ],
     "nom:lente": [
@@ -12525,10 +12186,7 @@
       "phrase",
       "propos"
     ],
-    "nom:plume": [
-      "duvet",
-      "plumage"
-    ],
+    "nom:plume": [],
     "verbe:payer": [
       "régler",
       "rembourser",
@@ -12584,18 +12242,12 @@
       "abri",
       "refuge"
     ],
-    "verbe:devoir": [
-      "obligation",
-      "tâche",
-      "travail"
-    ],
+    "verbe:devoir": [],
     "nom:pipe": [],
     "nom:aperçu": [
       "idée"
     ],
-    "adverbe:pile": [
-      "tas"
-    ],
+    "adverbe:pile": [],
     "nom:grange": [
       "hangar",
       "remise"
@@ -12698,17 +12350,13 @@
     "adjectif:venu": [],
     "nom:content": [
       "heureux",
-      "ravi",
-      "satisfait"
+      "ravi"
     ],
     "nom:jean": [
       "blue-jean",
       "pantalon"
     ],
-    "nom:sorcier": [
-      "difficile",
-      "compliqué"
-    ],
+    "nom:sorcier": [],
     "adverbe:plutôt": [
       "assez"
     ],
@@ -12740,8 +12388,7 @@
     ],
     "verbe:batailler": [
       "lutter",
-      "combattre",
-      "se bagarrer"
+      "combattre"
     ],
     "verbe:clôturer": [
       "fermer",
@@ -12753,9 +12400,7 @@
       "étaler",
       "enduire"
     ],
-    "nom:battant": [
-      "combattante"
-    ],
+    "nom:battant": [],
     "nom:latte": [
       "planche",
       "planchette",
@@ -12840,11 +12485,7 @@
     "nom:arrivée": [
       "venue"
     ],
-    "nom:gentil": [
-      "aimable",
-      "charmant",
-      "adorable"
-    ],
+    "nom:gentil": [],
     "nom:grenouille": [
       "rainette"
     ],
@@ -12882,10 +12523,7 @@
       "garnir",
       "agencer"
     ],
-    "nom:meuble": [
-      "souple",
-      "léger"
-    ],
+    "nom:meuble": [],
     "nom:virgule": [],
     "verbe:briller": [
       "luire",
@@ -13077,9 +12715,7 @@
     "adjectif:sain": [
       "bon"
     ],
-    "verbe:conseiller": [
-      "guide"
-    ],
+    "verbe:conseiller": [],
     "nom:brésil": [],
     "nom:photographe": [],
     "nom:roche": [
@@ -13097,8 +12733,7 @@
     ],
     "nom:ambulance": [],
     "nom:azur": [
-      "bleu",
-      "bleuté"
+      "bleu"
     ],
     "nom:villa": [
       "maison",
@@ -13225,8 +12860,7 @@
     ],
     "nom:collectif": [
       "commun",
-      "général",
-      "partagé"
+      "général"
     ],
     "nom:gambette": [
       "jambe"
@@ -13429,20 +13063,14 @@
       "agitation"
     ],
     "nom:majorité": [],
-    "nom:promeneur": [
-      "marcheur",
-      "passant"
-    ],
+    "nom:promeneur": [],
     "nom:réparation": [
       "dépannage"
     ],
     "nom:trappeur": [
       "chasseur"
     ],
-    "nom:épineux": [
-      "difficile",
-      "compliqué"
-    ],
+    "nom:épineux": [],
     "nom:aboiement": [
       "jappement"
     ],
@@ -13468,9 +13096,7 @@
       "compétition"
     ],
     "nom:sérieux": [
-      "sage",
-      "raisonnable",
-      "réfléchi"
+      "sage"
     ],
     "nom:vaisselle": [],
     "nom:voisin": [],
@@ -13478,11 +13104,7 @@
       "plein",
       "empli"
     ],
-    "verbe:vouloir": [
-      "volonté",
-      "désir",
-      "intention"
-    ],
+    "verbe:vouloir": [],
     "nom:résolution": [
       "décision",
       "détermination",
@@ -13521,8 +13143,6 @@
       "calme"
     ],
     "nom:volontaire": [
-      "décidé",
-      "têtu",
       "entêté"
     ],
     "adverbe:furtivement": [
@@ -13549,9 +13169,7 @@
     "verbe:tabler": [],
     "nom:table": [],
     "nom:bras": [],
-    "nom:personne": [
-      "aucun"
-    ],
+    "nom:personne": [],
     "nom:doit": [],
     "nom:page": [
       "feuille"
@@ -13636,8 +13254,7 @@
       "poulette"
     ],
     "nom:docteur": [
-      "médecin",
-      "docteur"
+      "médecin"
     ],
     "nom:malade": [
       "patient"
@@ -13716,10 +13333,7 @@
       "faux",
       "artificiel"
     ],
-    "adjectif:indépendant": [
-      "libre",
-      "autonome"
-    ],
+    "adjectif:indépendant": [],
     "adjectif:portatif": [
       "mobile",
       "léger"
@@ -13925,11 +13539,7 @@
       "trafic"
     ],
     "nom:couche": [],
-    "nom:compagnon": [
-      "épouse",
-      "femme",
-      "amie"
-    ],
+    "nom:compagnon": [],
     "nom:rideau": [],
     "nom:amusement": [
       "divertissement",
@@ -14192,22 +13802,15 @@
       "fente",
       "blessure"
     ],
-    "nom:footballeur": [
-      "footballeur"
-    ],
+    "nom:footballeur": [],
     "nom:ignorance": [],
     "nom:localité": [
       "village",
       "commune",
       "bourg"
     ],
-    "nom:poster": [
-      "placé",
-      "planté"
-    ],
-    "nom:protecteur": [
-      "paternel"
-    ],
+    "nom:poster": [],
+    "nom:protecteur": [],
     "adjectif:aventureux": [
       "audacieux",
       "téméraire",
@@ -14428,8 +14031,7 @@
     ],
     "adjectif:féminin": [],
     "adverbe:dessus": [
-      "haut",
-      "sommet"
+      "haut"
     ],
     "verbe:tourner": [
       "tournoyer",
@@ -14442,13 +14044,9 @@
       "cogner"
     ],
     "nom:clair": [
-      "net",
-      "évident",
-      "lumineux"
+      "net"
     ],
     "nom:voyant": [
-      "coloré",
-      "éclatant",
       "vif"
     ],
     "nom:cartable": [
@@ -14525,7 +14123,6 @@
     "nom:ouvrier": [],
     "nom:thym": [],
     "nom:étale": [
-      "immobile",
       "calme"
     ],
     "nom:falaise": [
@@ -14582,7 +14179,6 @@
       "enfant"
     ],
     "nom:pacifique": [
-      "paisible",
       "tranquille",
       "calme"
     ],
@@ -14734,9 +14330,7 @@
       "ordonner"
     ],
     "nom:admis": [
-      "autorisé",
-      "permis",
-      "reconnu"
+      "permis"
     ],
     "nom:barbiche": [
       "barbichette"
@@ -14942,10 +14536,7 @@
       "bouleverser",
       "troubler"
     ],
-    "nom:abrupt": [
-      "raide",
-      "escarpé"
-    ],
+    "nom:abrupt": [],
     "nom:auvent": [
       "abri",
       "toit"
@@ -14984,10 +14575,7 @@
       "paillasson",
       "natte"
     ],
-    "adverbe:chaud": [
-      "bouillant",
-      "brûlant"
-    ],
+    "adverbe:chaud": [],
     "verbe:ombrer": [
       "ombrager",
       "obscurcir",
@@ -15016,11 +14604,7 @@
       "bille",
       "projectile"
     ],
-    "adverbe:mauvais": [
-      "méchant",
-      "désagréable",
-      "horrible"
-    ],
+    "adverbe:mauvais": [],
     "verbe:opposer": [
       "comparer",
       "dresser"
@@ -15048,10 +14632,7 @@
     "nom:collage": [
       "montage"
     ],
-    "nom:consommateur": [
-      "acheteur",
-      "client"
-    ],
+    "nom:consommateur": [],
     "nom:copilote": [],
     "nom:cran": [
       "courage",
@@ -15077,9 +14658,7 @@
       "perte"
     ],
     "nom:mathématique": [
-      "exact",
-      "précis",
-      "certain"
+      "précis"
     ],
     "nom:nonchalance": [
       "mollesse",
@@ -15173,18 +14752,14 @@
       "caractère"
     ],
     "nom:chevalerie": [],
-    "nom:écuyer": [
-      "cavalier"
-    ],
+    "nom:écuyer": [],
     "adjectif:mesuré": [
       "modéré",
       "sage",
       "prudent"
     ],
     "nom:abonnement": [],
-    "nom:hold-up": [
-      "vol"
-    ],
+    "nom:hold-up": [],
     "nom:récitant": [
       "lecteur"
     ],
@@ -15302,10 +14877,7 @@
     ],
     "nom:aération": [],
     "nom:hydromel": [],
-    "nom:illuminé": [
-      "éclairé",
-      "lumineux"
-    ],
+    "nom:illuminé": [],
     "nom:malentendu": [
       "confusion"
     ],
@@ -15378,10 +14950,7 @@
       "restaurant",
       "café"
     ],
-    "nom:carnassier": [
-      "carnivore",
-      "féroce"
-    ],
+    "nom:carnassier": [],
     "nom:coût": [
       "prix",
       "montant",
@@ -15447,8 +15016,6 @@
       "division"
     ],
     "nom:surnaturel": [
-      "magique",
-      "féerique",
       "merveilleux"
     ],
     "adjectif:entrebâillé": [
@@ -15517,7 +15084,6 @@
       "venin"
     ],
     "nom:savant": [
-      "cultivé",
       "expert"
     ],
     "verbe:verser": [
@@ -15530,9 +15096,7 @@
       "corbeille"
     ],
     "nom:repris": [],
-    "nom:dauphin": [
-      "princesse"
-    ],
+    "nom:dauphin": [],
     "nom:invite": [
       "invitation"
     ],
@@ -15598,9 +15162,7 @@
       "réparer",
       "guérir"
     ],
-    "nom:chewing-gum": [
-      "chewing gum"
-    ],
+    "nom:chewing-gum": [],
     "nom:destinataire": [],
     "nom:loge": [
       "cabine"
@@ -15774,7 +15336,6 @@
       "portion"
     ],
     "nom:précédent": [
-      "antérieur",
       "passé",
       "dernier"
     ],
@@ -15792,10 +15353,7 @@
       "désagréable"
     ],
     "nom:charcutier": [],
-    "verbe:cocher": [
-      "conducteur",
-      "charretier"
-    ],
+    "verbe:cocher": [],
     "nom:interlude": [
       "entracte"
     ],
@@ -15859,16 +15417,13 @@
     ],
     "nom:suivi": [
       "continu",
-      "régulier",
-      "constant"
+      "régulier"
     ],
     "nom:veste": [
       "blouson",
       "veston"
     ],
-    "nom:chauffeur": [
-      "siège"
-    ],
+    "nom:chauffeur": [],
     "nom:sentier": [
       "chemin",
       "piste",
@@ -15914,9 +15469,7 @@
       "espace",
       "zone"
     ],
-    "nom:employé": [
-      "utilisé"
-    ],
+    "nom:employé": [],
     "nom:libellule": [],
     "adjectif:pénétré": [],
     "nom:aisance": [
@@ -15924,9 +15477,7 @@
       "confort"
     ],
     "nom:réel": [
-      "vrai",
-      "véritable",
-      "certain"
+      "vrai"
     ],
     "adjectif:supplémentaire": [
       "ajouté"
@@ -15953,10 +15504,7 @@
     "nom:laine": [
       "lainage"
     ],
-    "nom:sauvage": [
-      "farouche",
-      "féroce"
-    ],
+    "nom:sauvage": [],
     "adjectif:né": [],
     "nom:vocabulaire": [
       "lexique",
@@ -15965,9 +15513,7 @@
     "adjectif:tombé": [
       "effondré"
     ],
-    "nom:mort": [
-      "inerte"
-    ],
+    "nom:mort": [],
     "nom:quartier": [
       "arrondissement",
       "secteur"
@@ -15983,8 +15529,7 @@
       "paroi"
     ],
     "nom:final": [
-      "dernier",
-      "définitif"
+      "dernier"
     ],
     "nom:glacier": [],
     "adjectif:appelant": [],
@@ -16002,9 +15547,7 @@
     "nom:bise": [
       "bisou"
     ],
-    "nom:exposé": [
-      "situé"
-    ],
+    "nom:exposé": [],
     "nom:rampant": [],
     "nom:saint": [],
     "nom:songe": [
@@ -16249,7 +15792,6 @@
     ],
     "nom:colombe": [],
     "nom:humain": [
-      "humain",
       "individu"
     ],
     "nom:trèfle": [],
@@ -16259,9 +15801,7 @@
       "carnet"
     ],
     "nom:luisant": [
-      "brillant",
-      "étincelant",
-      "lumineux"
+      "brillant"
     ],
     "nom:cerise": [
       "rouge"
@@ -16317,8 +15857,7 @@
     "nom:sandwich": [],
     "nom:ordre": [
       "organisation",
-      "classement",
-      "rangement"
+      "classement"
     ],
     "nom:jardin": [
       "jardinet",
@@ -16382,12 +15921,8 @@
       "agrandir",
       "étendre"
     ],
-    "nom:allumé": [
-      "éclairé"
-    ],
-    "nom:cordonnier": [
-      "cordonnier"
-    ],
+    "nom:allumé": [],
+    "nom:cordonnier": [],
     "adjectif:étendu": [
       "vaste",
       "large",
@@ -16425,13 +15960,9 @@
       "ornement",
       "parure"
     ],
-    "nom:déguisé": [
-      "costumé",
-      "masqué"
-    ],
+    "nom:déguisé": [],
     "nom:imprudent": [
-      "étourdi",
-      "téméraire"
+      "étourdi"
     ],
     "nom:paradis": [
       "ciel"
@@ -16471,11 +16002,7 @@
     "nom:zéro": [
       "rien"
     ],
-    "nom:prochain": [
-      "suivant",
-      "proche",
-      "futur"
-    ],
+    "nom:prochain": [],
     "nom:trompette": [],
     "nom:couloir": [
       "passage",
@@ -16521,8 +16048,7 @@
     ],
     "verbe:détraquer": [
       "abîmer",
-      "casser",
-      "dérégler"
+      "casser"
     ],
     "verbe:fléchir": [
       "plier",
@@ -16548,10 +16074,7 @@
       "refaire",
       "remettre"
     ],
-    "nom:agité": [
-      "excité",
-      "nerveux"
-    ],
+    "nom:agité": [],
     "nom:collier": [
       "bijou",
       "chaîne",
@@ -16746,9 +16269,7 @@
       "empreinte",
       "signe"
     ],
-    "adverbe:lourd": [
-      "pesant"
-    ],
+    "adverbe:lourd": [],
     "nom:espèce": [
       "sorte",
       "genre",
@@ -16764,9 +16285,7 @@
     ],
     "nom:huile": [],
     "verbe:asseoir": [],
-    "nom:correspondant": [
-      "semblable"
-    ],
+    "nom:correspondant": [],
     "nom:case": [
       "casier",
       "cabane",
@@ -16835,9 +16354,7 @@
       "repousser",
       "renvoyer"
     ],
-    "nom:professeur": [
-      "maîtresse"
-    ],
+    "nom:professeur": [],
     "nom:chat": [
       "matou",
       "minet",
@@ -17016,7 +16533,6 @@
     "nom:friche": [],
     "nom:goinfre": [
       "glouton",
-      "goulu",
       "gourmand"
     ],
     "nom:porcelet": [
@@ -17074,9 +16590,7 @@
       "noter",
       "indiquer"
     ],
-    "nom:musicien": [
-      "musical"
-    ],
+    "nom:musicien": [],
     "nom:pinson": [
       "passereau"
     ],
@@ -17123,8 +16637,7 @@
       "nettoyer"
     ],
     "nom:brique": [
-      "rouge",
-      "orangé"
+      "rouge"
     ],
     "nom:narrateur": [
       "conteur"
@@ -17161,11 +16674,7 @@
       "tourné"
     ],
     "nom:tireur": [],
-    "nom:cloué": [
-      "immobile",
-      "fixé",
-      "figé"
-    ],
+    "nom:cloué": [],
     "nom:mobylette": [
       "vélomoteur"
     ],
@@ -17210,9 +16719,7 @@
     "nom:épicéa": [
       "sapin"
     ],
-    "nom:virtuose": [
-      "habile"
-    ],
+    "nom:virtuose": [],
     "nom:guéridon": [
       "table"
     ],
@@ -17663,9 +17170,7 @@
     "adverbe:finement": [
       "délicatement"
     ],
-    "nom:horloger": [
-      "horloger"
-    ],
+    "nom:horloger": [],
     "nom:levier": [
       "manette",
       "barre"
@@ -17723,11 +17228,7 @@
       "vrai",
       "précis"
     ],
-    "nom:géant": [
-      "gigantesque",
-      "énorme",
-      "immense"
-    ],
+    "nom:géant": [],
     "nom:malheureux": [
       "pauvre"
     ],
@@ -17793,8 +17294,7 @@
       "juge"
     ],
     "nom:canon": [
-      "modèle",
-      "idéal"
+      "modèle"
     ],
     "nom:sonnette": [
       "clochette",
@@ -17889,11 +17389,7 @@
     "nom:brame": [
       "cri"
     ],
-    "nom:amateur": [
-      "passionné",
-      "collectionneur",
-      "connaisseur"
-    ],
+    "nom:amateur": [],
     "nom:cordage": [
       "corde",
       "câble"
@@ -18164,9 +17660,7 @@
       "faiblement",
       "peu"
     ],
-    "adverbe:pis": [
-      "pire"
-    ],
+    "adverbe:pis": [],
     "nom:art": [],
     "nom:remarque": [
       "observation",
@@ -18210,11 +17704,7 @@
     "nom:chevalier": [
       "cavalier"
     ],
-    "nom:rendu": [
-      "fatigué",
-      "épuisé",
-      "las"
-    ],
+    "nom:rendu": [],
     "nom:tristesse": [
       "chagrin",
       "peine",
@@ -18222,7 +17712,6 @@
     ],
     "nom:levé": [
       "haut",
-      "élevé",
       "relevé"
     ],
     "adverbe:gentiment": [
@@ -18461,9 +17950,7 @@
       "blesser"
     ],
     "nom:crudité": [],
-    "nom:écouteur": [
-      "casque"
-    ],
+    "nom:écouteur": [],
     "adjectif:sidéral": [
       "astronomique"
     ],
@@ -18481,8 +17968,7 @@
       "lié"
     ],
     "verbe:chavirer": [
-      "basculer",
-      "se renverser"
+      "basculer"
     ],
     "verbe:exagérer": [
       "grossir",
@@ -18624,9 +18110,7 @@
     "nom:polka": [
       "danse"
     ],
-    "nom:toxique": [
-      "vénéneux"
-    ],
+    "nom:toxique": [],
     "nom:archipel": [],
     "nom:portemanteau": [
       "cintre"
@@ -18664,7 +18148,6 @@
     ],
     "nom:plate": [],
     "nom:peureux": [
-      "craintif",
       "poltron"
     ],
     "adjectif:cuit": [],
@@ -18890,9 +18373,7 @@
     "nom:ébullition": [
       "bouillonnement"
     ],
-    "nom:élu": [
-      "choisi"
-    ],
+    "nom:élu": [],
     "adjectif:bondissant": [
       "sautant"
     ],
@@ -18935,9 +18416,7 @@
     "nom:lavage": [
       "nettoyage"
     ],
-    "nom:mortel": [
-      "humain"
-    ],
+    "nom:mortel": [],
     "adjectif:reconnu": [
       "connu",
       "admis",
@@ -18953,9 +18432,7 @@
     ],
     "nom:science-fiction": [],
     "nom:semblable": [
-      "identique",
-      "pareil",
-      "comparable"
+      "pareil"
     ],
     "verbe:distraire": [
       "divertir",
@@ -18995,8 +18472,7 @@
     ],
     "adjectif:gardé": [
       "protégé",
-      "conservé",
-      "surveillé"
+      "conservé"
     ],
     "nom:tricycle": [],
     "adverbe:littéralement": [
@@ -19069,8 +18545,6 @@
       "indiscrétion"
     ],
     "nom:inconnu": [
-      "mystérieux",
-      "caché",
       "secret"
     ],
     "adjectif:horrible": [
@@ -19083,11 +18557,7 @@
       "clarté",
       "éclat"
     ],
-    "nom:lézard": [
-      "fissure",
-      "fente",
-      "crevasse"
-    ],
+    "nom:lézard": [],
     "nom:maçon": [
       "bâtisseur"
     ],
@@ -19119,9 +18589,7 @@
       "trouble"
     ],
     "nom:chassé": [
-      "expulsé",
-      "repoussé",
-      "éloigné"
+      "expulsé"
     ],
     "nom:relais": [
       "étape",
@@ -19156,8 +18624,7 @@
       "tâche"
     ],
     "nom:gagnant": [
-      "vainqueur",
-      "triomphant"
+      "vainqueur"
     ],
     "adjectif:doué": [
       "habile",
@@ -19180,14 +18647,10 @@
     "nom:sein": [
       "poitrine"
     ],
-    "verbe:baiser": [
-      "bisou",
-      "bise"
-    ],
+    "verbe:baiser": [],
     "verbe:lutter": [
       "combattre",
-      "affronter",
-      "se bagarrer"
+      "affronter"
     ],
     "nom:stupeur": [
       "étonnement",
@@ -19336,9 +18799,7 @@
       "dessert"
     ],
     "nom:garni": [
-      "rempli",
-      "plein",
-      "fourni"
+      "plein"
     ],
     "nom:studio": [
       "appartement",
@@ -19470,9 +18931,7 @@
     "nom:glaive": [
       "épée"
     ],
-    "nom:littoral": [
-      "côtier"
-    ],
+    "nom:littoral": [],
     "nom:paroisse": [],
     "nom:quenouille": [],
     "nom:zénith": [
@@ -19579,10 +19038,7 @@
       "danger",
       "péril"
     ],
-    "verbe:plancher": [
-      "sol",
-      "parquet"
-    ],
+    "verbe:plancher": [],
     "nom:apparition": [
       "arrivée",
       "venue"
@@ -19736,9 +19192,7 @@
       "calmer",
       "consoler"
     ],
-    "nom:bâti": [
-      "constitué"
-    ],
+    "nom:bâti": [],
     "nom:carême": [],
     "nom:figurant": [],
     "nom:panoplie": [],
@@ -19771,9 +19225,7 @@
     "nom:aquarelle": [
       "peinture"
     ],
-    "nom:pion": [
-      "surveillante"
-    ],
+    "nom:pion": [],
     "nom:réduction": [
       "remise",
       "baisse"
@@ -19877,8 +19329,7 @@
       "formule"
     ],
     "nom:responsable": [
-      "coupable",
-      "sérieux"
+      "coupable"
     ],
     "nom:excursion": [
       "promenade",
@@ -19925,8 +19376,7 @@
       "compagnie"
     ],
     "nom:lâche": [
-      "peureux",
-      "craintif"
+      "peureux"
     ],
     "nom:ressort": [],
     "verbe:ferrailler": [
@@ -19977,10 +19427,7 @@
       "succession",
       "changement"
     ],
-    "nom:associé": [
-      "partenaire",
-      "collègue"
-    ],
+    "nom:associé": [],
     "nom:bambin": [
       "enfant",
       "bébé",
@@ -20022,18 +19469,13 @@
       "illusionniste"
     ],
     "nom:protégé": [
-      "défendu",
       "couvert"
     ],
     "nom:serviteur": [
       "domestique",
       "valet"
     ],
-    "verbe:reporter": [
-      "journaliste",
-      "correspondant",
-      "envoyé"
-    ],
+    "verbe:reporter": [],
     "nom:frontière": [
       "limite",
       "borne",
@@ -20049,9 +19491,7 @@
       "exceptionnel",
       "unique"
     ],
-    "adverbe:goutte": [
-      "gouttelette"
-    ],
+    "adverbe:goutte": [],
     "verbe:goutter": [
       "couler"
     ],
@@ -20318,22 +19758,14 @@
       "tintamarre"
     ],
     "nom:collant": [],
-    "nom:non": [
-      "négatif"
-    ],
-    "verbe:avoir": [
-      "fortune",
-      "bien",
-      "richesse"
-    ],
+    "nom:non": [],
+    "verbe:avoir": [],
     "nom:tête": [
       "crâne",
       "visage",
       "figure"
     ],
     "adverbe:grand": [
-      "énorme",
-      "immense",
       "haut"
     ],
     "nom:phrase": [
@@ -20344,9 +19776,7 @@
     "nom:maman": [
       "mère"
     ],
-    "nom:ton": [
-      "tien"
-    ],
+    "nom:ton": [],
     "nom:rien": [
       "néant",
       "vide"
@@ -20409,14 +19839,11 @@
       "aliment",
       "nourriture"
     ],
-    "nom:chasseur": [
-      "trappeur"
-    ],
+    "nom:chasseur": [],
     "nom:farine": [],
     "nom:poste": [],
     "nom:vache": [
       "méchant",
-      "sévère",
       "dur"
     ],
     "nom:troisième": [],
@@ -20474,9 +19901,7 @@
       "inscrire",
       "enregistrer"
     ],
-    "nom:auxiliaire": [
-      "supplémentaire"
-    ],
+    "nom:auxiliaire": [],
     "nom:consigne": [
       "ordre",
       "instruction"
@@ -20485,9 +19910,7 @@
       "organisation",
       "ordre"
     ],
-    "nom:scolaire": [
-      "éducatif"
-    ],
+    "nom:scolaire": [],
     "nom:préparation": [
       "préparatif",
       "confection",
@@ -20502,14 +19925,9 @@
     ],
     "nom:plafond": [],
     "nom:superbe": [
-      "beau",
-      "magnifique"
+      "beau"
     ],
-    "nom:vague": [
-      "flou",
-      "confus",
-      "incertain"
-    ],
+    "nom:vague": [],
     "adverbe:soigneusement": [
       "attentivement",
       "minutieusement"
@@ -20527,8 +19945,7 @@
     ],
     "adjectif:nommé": [
       "élu",
-      "cité",
-      "désigné"
+      "cité"
     ],
     "adverbe:poliment": [
       "respectueusement"
@@ -20571,10 +19988,7 @@
       "angoisser"
     ],
     "nom:demi-heure": [],
-    "nom:heur": [
-      "chance",
-      "bonheur"
-    ],
+    "nom:heur": [],
     "nom:panique": [
       "affolement",
       "peur",
@@ -20596,9 +20010,7 @@
       "sculpter"
     ],
     "nom:semelle": [],
-    "nom:élastique": [
-      "souple"
-    ],
+    "nom:élastique": [],
     "verbe:colorier": [
       "colorer",
       "peindre"
@@ -20768,11 +20180,7 @@
       "fil",
       "cordage"
     ],
-    "nom:expert": [
-      "habile",
-      "expérimenté",
-      "adroit"
-    ],
+    "nom:expert": [],
     "nom:participation": [
       "aide",
       "collaboration",
@@ -20801,10 +20209,7 @@
       "roche"
     ],
     "nom:mouillage": [],
-    "nom:trouble": [
-      "flou",
-      "confus"
-    ],
+    "nom:trouble": [],
     "adverbe:éternellement": [
       "toujours",
       "continuellement",
@@ -21189,7 +20594,6 @@
     ],
     "nom:commode": [
       "pratique",
-      "facile",
       "agréable"
     ],
     "nom:habitué": [
@@ -21205,11 +20609,7 @@
     "nom:cèpe": [
       "champignon"
     ],
-    "nom:miteux": [
-      "usé",
-      "misérable",
-      "pauvre"
-    ],
+    "nom:miteux": [],
     "nom:mosaïque": [
       "carrelage"
     ],
@@ -21224,9 +20624,7 @@
       "rincer"
     ],
     "nom:caractéristique": [
-      "typique",
-      "particulier",
-      "spécial"
+      "particulier"
     ],
     "nom:coupure": [
       "entaille",
@@ -21257,11 +20655,7 @@
     "nom:nappe": [
       "couche"
     ],
-    "nom:couvert": [
-      "nuageux",
-      "sombre",
-      "vêtu"
-    ],
+    "nom:couvert": [],
     "nom:discours": [
       "exposé",
       "conférence",
@@ -21435,10 +20829,7 @@
       "situation",
       "circonstance"
     ],
-    "nom:froid": [
-      "glacial",
-      "glacé"
-    ],
+    "nom:froid": [],
     "nom:bébé": [
       "nourrisson",
       "nouveau-né",
@@ -21527,14 +20918,9 @@
     ],
     "nom:recours": [
       "secours",
-      "soutien",
-      "aide"
+      "soutien"
     ],
-    "nom:aïeul": [
-      "grand-mère",
-      "mamie",
-      "mémé"
-    ],
+    "nom:aïeul": [],
     "nom:cochonnet": [
       "porcelet",
       "boule"
@@ -21569,11 +20955,7 @@
     "nom:chapiteau": [
       "tente"
     ],
-    "nom:fidèle": [
-      "loyal",
-      "sincère",
-      "honnête"
-    ],
+    "nom:fidèle": [],
     "nom:victime": [],
     "nom:comptine": [
       "chanson",
@@ -21632,9 +21014,7 @@
       "graver"
     ],
     "nom:crampe": [],
-    "nom:montagnard": [
-      "montagneux"
-    ],
+    "nom:montagnard": [],
     "nom:somnifère": [],
     "adjectif:éprouvé": [
       "expérimenté",
@@ -21696,9 +21076,7 @@
       "brutalement"
     ],
     "nom:désert": [
-      "vide",
-      "inhabité",
-      "abandonné"
+      "vide"
     ],
     "nom:pointe": [],
     "adverbe:attentivement": [
@@ -21751,9 +21129,7 @@
       "marque",
       "trace"
     ],
-    "nom:financier": [
-      "bancaire"
-    ],
+    "nom:financier": [],
     "nom:organisateur": [],
     "verbe:progresser": [
       "avancer",
@@ -21801,11 +21177,7 @@
       "partie",
       "part"
     ],
-    "nom:gris": [
-      "terne",
-      "argenté",
-      "nuageux"
-    ],
+    "nom:gris": [],
     "verbe:pocher": [],
     "nom:poche": [
       "pochette",
@@ -21838,9 +21210,7 @@
       "salle"
     ],
     "nom:gauche": [
-      "maladroit",
-      "gêné",
-      "embarrassé"
+      "maladroit"
     ],
     "nom:hôtesse": [],
     "adjectif:botté": [
@@ -21855,10 +21225,7 @@
       "loi",
       "code"
     ],
-    "nom:teint": [
-      "coloré",
-      "peint"
-    ],
+    "nom:teint": [],
     "adjectif:appartenant": [],
     "adjectif:frisé": [
       "bouclé",
@@ -21891,10 +21258,7 @@
       "carnaval"
     ],
     "nom:patine": [],
-    "nom:plissé": [
-      "ridé",
-      "froissé"
-    ],
+    "nom:plissé": [],
     "nom:pépère": [
       "tranquille",
       "calme"
@@ -22108,9 +21472,7 @@
       "gel"
     ],
     "nom:égal": [
-      "pareil",
-      "identique",
-      "même"
+      "pareil"
     ],
     "verbe:blouser": [
       "tromper"
@@ -22142,9 +21504,7 @@
       "occupant"
     ],
     "nom:variable": [
-      "changeant",
-      "irrégulier",
-      "inégal"
+      "irrégulier"
     ],
     "nom:débarquement": [
       "arrivée",
@@ -22249,18 +21609,13 @@
       "accès",
       "approche"
     ],
-    "nom:aventurier": [
-      "voyageur"
-    ],
+    "nom:aventurier": [],
     "nom:protestation": [
       "réclamation",
       "plainte",
       "opposition"
     ],
-    "nom:vacancier": [
-      "touriste",
-      "estivant"
-    ],
+    "nom:vacancier": [],
     "nom:vibration": [
       "tremblement",
       "frémissement",
@@ -22300,9 +21655,7 @@
       "chasse",
       "recherche"
     ],
-    "nom:dégoûté": [
-      "écoeuré"
-    ],
+    "nom:dégoûté": [],
     "nom:multitude": [
       "foule",
       "quantité",
@@ -22408,9 +21761,7 @@
       "nettoyer"
     ],
     "nom:mimi": [
-      "mignon",
-      "joli",
-      "adorable"
+      "mignon"
     ],
     "verbe:dégouliner": [
       "couler",
@@ -22427,10 +21778,7 @@
     "nom:fennec": [
       "renard"
     ],
-    "nom:indécis": [
-      "hésitant",
-      "incertain"
-    ],
+    "nom:indécis": [],
     "nom:drame": [
       "catastrophe",
       "accident"
@@ -22440,8 +21788,6 @@
       "vanité"
     ],
     "nom:lointain": [
-      "éloigné",
-      "reculé",
       "écarté"
     ],
     "nom:passion": [
@@ -22508,9 +21854,7 @@
       "grouper"
     ],
     "nom:patient": [
-      "calme",
-      "persévérant",
-      "tenace"
+      "calme"
     ],
     "nom:scientifique": [],
     "verbe:camper": [
@@ -22614,7 +21958,6 @@
       "penser"
     ],
     "nom:camus": [
-      "aplati",
       "plat"
     ],
     "nom:carquois": [
@@ -22657,8 +22000,6 @@
       "besoin"
     ],
     "adverbe:long": [
-      "interminable",
-      "allongé",
       "grand"
     ],
     "nom:boîte": [
@@ -22701,8 +22042,7 @@
     "nom:cigogne": [],
     "nom:cravate": [],
     "nom:fauve": [
-      "roux",
-      "doré"
+      "roux"
     ],
     "nom:éclat": [
       "lumière",
@@ -22859,11 +22199,7 @@
       "quasiment",
       "pratiquement"
     ],
-    "adverbe:soudain": [
-      "brusque",
-      "inattendu",
-      "imprévu"
-    ],
+    "adverbe:soudain": [],
     "nom:question": [
       "interrogation",
       "problème"
@@ -23018,8 +22354,7 @@
     ],
     "verbe:voter": [],
     "nom:antécédent": [
-      "précédent",
-      "antérieur"
+      "précédent"
     ],
     "nom:piolet": [],
     "nom:actualité": [],
@@ -23096,10 +22431,7 @@
       "éclabousser",
       "mouiller"
     ],
-    "nom:fripon": [
-      "coquin",
-      "espiègle"
-    ],
+    "nom:fripon": [],
     "adjectif:irréel": [
       "imaginaire",
       "fantastique"
@@ -23175,11 +22507,7 @@
       "attraper",
       "quereller"
     ],
-    "nom:relevé": [
-      "épicé",
-      "piquant",
-      "fort"
-    ],
+    "nom:relevé": [],
     "adjectif:obligatoire": [
       "obligé",
       "nécessaire",
@@ -23316,7 +22644,6 @@
       "pardessus"
     ],
     "nom:modèle": [
-      "parfait",
       "exemplaire",
       "idéal"
     ],
@@ -23331,18 +22658,12 @@
     "nom:canard": [],
     "nom:sel": [],
     "nom:tire": [],
-    "nom:abricot": [
-      "orangé"
-    ],
+    "nom:abricot": [],
     "nom:bouc": [],
     "nom:défini": [
-      "précis",
-      "fixé",
-      "déterminé"
+      "précis"
     ],
-    "nom:désespéré": [
-      "malheureuse"
-    ],
+    "nom:désespéré": [],
     "nom:installation": [
       "aménagement",
       "montage",
@@ -23496,8 +22817,7 @@
       "pelle"
     ],
     "nom:composant": [
-      "élément",
-      "composant"
+      "élément"
     ],
     "nom:déçu": [
       "mécontent"
@@ -23534,7 +22854,6 @@
       "malheur"
     ],
     "nom:refusé": [
-      "éliminé",
       "écarté"
     ],
     "nom:spécialiste": [
@@ -23857,9 +23176,7 @@
       "écarter",
       "chasser"
     ],
-    "nom:amoureux": [
-      "copine"
-    ],
+    "nom:amoureux": [],
     "nom:atteinte": [
       "blessure",
       "coup"
@@ -24116,9 +23433,7 @@
       "coutume",
       "usage"
     ],
-    "nom:intérieur": [
-      "interne"
-    ],
+    "nom:intérieur": [],
     "adjectif:oublié": [
       "abandonné"
     ],
@@ -24147,8 +23462,7 @@
     ],
     "nom:pair": [
       "égal",
-      "pareil",
-      "identique"
+      "pareil"
     ],
     "nom:repaire": [
       "tanière",
@@ -24209,11 +23523,7 @@
       "association",
       "club"
     ],
-    "nom:convaincu": [
-      "persuadé",
-      "certain",
-      "sûr"
-    ],
+    "nom:convaincu": [],
     "nom:indigo": [
       "bleu"
     ],
@@ -24313,12 +23623,10 @@
       "crocodile"
     ],
     "nom:critique": [
-      "dangereux",
       "grave"
     ],
     "nom:poltron": [
       "peureux",
-      "craintif",
       "lâche"
     ],
     "nom:semence": [
@@ -24492,10 +23800,7 @@
       "conductrice"
     ],
     "nom:optique": [],
-    "nom:marquis": [
-      "auvent",
-      "abri"
-    ],
+    "nom:marquis": [],
     "nom:rotation": [
       "tour"
     ],
@@ -24603,11 +23908,7 @@
       "passage",
       "changement"
     ],
-    "nom:vénérable": [
-      "respectable",
-      "respecté",
-      "honorable"
-    ],
+    "nom:vénérable": [],
     "adjectif:inaperçu": [],
     "adjectif:individuel": [
       "personnel",
@@ -24702,8 +24003,7 @@
     ],
     "nom:français": [],
     "nom:vide": [
-      "désert",
-      "inhabité"
+      "désert"
     ],
     "nom:hasard": [
       "chance"
@@ -24841,10 +24141,7 @@
       "paquet",
       "colis"
     ],
-    "nom:bidon": [
-      "faux",
-      "truqué"
-    ],
+    "nom:bidon": [],
     "nom:mobile": [
       "raison",
       "cause",
@@ -25187,7 +24484,6 @@
       "rancune"
     ],
     "nom:minimum": [
-      "minimal",
       "mini"
     ],
     "nom:reproduction": [
@@ -25328,8 +24624,7 @@
       "coca-cola"
     ],
     "nom:mollet": [
-      "mou",
-      "moelleux"
+      "mou"
     ],
     "adjectif:sifflant": [
       "aigu",
@@ -25396,15 +24691,9 @@
       "langage"
     ],
     "nom:cou": [],
-    "nom:nouveau": [
-      "information",
-      "renseignement"
-    ],
+    "nom:nouveau": [],
     "nom:âge": [],
-    "adverbe:faux": [
-      "inexact",
-      "artificiel"
-    ],
+    "adverbe:faux": [],
     "verbe:aider": [
       "soutenir",
       "secourir"
@@ -25488,9 +24777,7 @@
       "barque"
     ],
     "adverbe:combien": [],
-    "nom:vert": [
-      "verdâtre"
-    ],
+    "nom:vert": [],
     "verbe:chambrer": [],
     "nom:chambre": [
       "pièce"
@@ -25508,8 +24795,6 @@
       "actuellement"
     ],
     "nom:écrit": [
-      "marqué",
-      "inscrit",
       "manuscrit"
     ],
     "adjectif:pris": [
@@ -25539,8 +24824,6 @@
     ],
     "nom:omnibus": [],
     "nom:pathétique": [
-      "touchant",
-      "émouvant",
       "dramatique"
     ],
     "nom:procédure": [
@@ -25555,8 +24838,7 @@
       "bombé"
     ],
     "adjectif:avide": [
-      "affamé",
-      "gourmand"
+      "affamé"
     ],
     "adjectif:fébrile": [
       "nerveux",
@@ -25622,10 +24904,7 @@
       "fabriquer",
       "faire"
     ],
-    "adverbe:cher": [
-      "chéri",
-      "bien-aimé"
-    ],
+    "adverbe:cher": [],
     "nom:crédit": [],
     "nom:indulgence": [
       "bonté",
@@ -25636,9 +24915,7 @@
       "oreiller",
       "coussin"
     ],
-    "nom:pourri": [
-      "gâté"
-    ],
+    "nom:pourri": [],
     "nom:éperon": [],
     "adjectif:plaintif": [
       "gémissant"
@@ -25829,10 +25106,7 @@
     ],
     "verbe:éternuer": [],
     "nom:limace": [],
-    "nom:râpé": [
-      "usé",
-      "usagé"
-    ],
+    "nom:râpé": [],
     "nom:trempe": [
       "caractère",
       "volée"
@@ -25864,10 +25138,7 @@
       "étaler"
     ],
     "verbe:rouer": [],
-    "nom:auditeur": [
-      "public",
-      "auditoire"
-    ],
+    "nom:auditeur": [],
     "nom:cassure": [
       "fracture",
       "fissure",
@@ -26055,20 +25326,13 @@
       "val",
       "gorge"
     ],
-    "adverbe:chouette": [
-      "sympa",
-      "génial",
-      "agréable"
-    ],
+    "adverbe:chouette": [],
     "nom:fonction": [
       "rôle",
       "emploi",
       "métier"
     ],
-    "verbe:lancer": [
-      "jet",
-      "lancement"
-    ],
+    "verbe:lancer": [],
     "verbe:réveiller": [
       "éveiller"
     ],
@@ -26107,11 +25371,7 @@
       "requis",
       "indispensable"
     ],
-    "nom:marcheur": [
-      "promeneur",
-      "piéton",
-      "passant"
-    ],
+    "nom:marcheur": [],
     "nom:mécontentement": [
       "colère",
       "déception"
@@ -26140,8 +25400,7 @@
     ],
     "nom:fureur": [
       "rage",
-      "emportement",
-      "colère"
+      "emportement"
     ],
     "nom:torrent": [
       "flot",
@@ -26151,14 +25410,11 @@
       "sautillant"
     ],
     "nom:permis": [
-      "autorisé",
-      "admis",
-      "légal"
+      "admis"
     ],
     "nom:préféré": [
       "favori",
-      "chéri",
-      "choisi"
+      "chéri"
     ],
     "nom:habitation": [
       "maison",
@@ -26301,7 +25557,6 @@
     ],
     "nom:balcon": [],
     "nom:emporté": [
-      "coléreux",
       "violent"
     ],
     "nom:pendule": [
@@ -26424,9 +25679,7 @@
     ],
     "nom:roitelet": [],
     "nom:safran": [],
-    "nom:tué": [
-      "morte"
-    ],
+    "nom:tué": [],
     "nom:variante": [
       "version",
       "modification"
@@ -26608,7 +25861,6 @@
       "soulier"
     ],
     "nom:familier": [
-      "habituel",
       "courant",
       "ordinaire"
     ],
@@ -26649,11 +25901,7 @@
       "capuchon"
     ],
     "nom:choc": [],
-    "nom:marin": [
-      "maritime",
-      "naval",
-      "nautique"
-    ],
+    "nom:marin": [],
     "nom:poing": [
       "main"
     ],
@@ -26715,13 +25963,8 @@
       "ennui",
       "question"
     ],
-    "verbe:pouvoir": [
-      "puissance",
-      "force",
-      "capacité"
-    ],
+    "verbe:pouvoir": [],
     "nom:cochon": [
-      "sale",
       "dégoûtant"
     ],
     "nom:face": [
@@ -26742,35 +25985,24 @@
       "arôme"
     ],
     "nom:étrange": [
-      "bizarre",
-      "curieux",
-      "étonnant"
+      "curieux"
     ],
     "adverbe:soit": [
       "bon",
       "bien"
     ],
     "nom:perdu": [
-      "égaré",
       "disparu"
     ],
     "nom:vitesse": [
       "rapidité",
       "allure"
     ],
-    "nom:bleu": [
-      "bleuté",
-      "bleuâtre"
-    ],
+    "nom:bleu": [],
     "nom:lecture": [],
     "nom:fleur": [],
-    "adverbe:passé": [
-      "fané",
-      "pâle",
-      "terne"
-    ],
+    "adverbe:passé": [],
     "nom:simple": [
-      "facile",
       "ordinaire",
       "naturel"
     ],
@@ -26851,8 +26083,7 @@
     ],
     "nom:prétentieux": [
       "vaniteux",
-      "orgueilleux",
-      "fier"
+      "orgueilleux"
     ],
     "verbe:cylindrer": [],
     "nom:bolide": [],
@@ -27077,8 +26308,7 @@
     ],
     "nom:montant": [
       "grimpant",
-      "vertical",
-      "raide"
+      "vertical"
     ],
     "adverbe:énormément": [
       "beaucoup",
@@ -27426,7 +26656,6 @@
       "case"
     ],
     "nom:espiègle": [
-      "malicieux",
       "coquin",
       "polisson"
     ],
@@ -27487,10 +26716,7 @@
       "natte",
       "couette"
     ],
-    "nom:écorché": [
-      "blessé",
-      "déchiré"
-    ],
+    "nom:écorché": [],
     "adjectif:chassant": [],
     "adjectif:détaillé": [
       "précis",
@@ -27542,8 +26768,7 @@
       "panthère"
     ],
     "nom:noiraud": [
-      "noir",
-      "noirâtre"
+      "noir"
     ],
     "adjectif:pédagogique": [
       "éducatif",
@@ -27692,13 +26917,9 @@
     ],
     "nom:lièvre": [],
     "nom:orthographe": [],
-    "nom:plan": [
-      "plat",
-      "uni"
-    ],
+    "nom:plan": [],
     "nom:courant": [
       "ordinaire",
-      "habituel",
       "normal"
     ],
     "adverbe:droit": [
@@ -27949,8 +27170,7 @@
       "aboutir"
     ],
     "nom:type": [
-      "genre",
-      "modèle"
+      "genre"
     ],
     "verbe:baguer": [
       "marquer"
@@ -28019,11 +27239,7 @@
     "nom:dégagé": [
       "découvert"
     ],
-    "nom:député": [
-      "élu",
-      "représentant",
-      "délégué"
-    ],
+    "nom:député": [],
     "nom:fouine": [],
     "nom:garde-boue": [],
     "nom:linceul": [
@@ -28045,10 +27261,7 @@
     "verbe:parachuter": [],
     "nom:tirelire": [],
     "nom:dentelle": [],
-    "nom:mou": [
-      "souple",
-      "moelleux"
-    ],
+    "nom:mou": [],
     "adverbe:sérieusement": [
       "vraiment",
       "gravement"
@@ -28360,8 +27573,6 @@
       "poignard"
     ],
     "nom:tonique": [
-      "énergique",
-      "vigoureux",
       "fortifiant"
     ],
     "adjectif:atterré": [
@@ -28595,7 +27806,6 @@
     ],
     "verbe:répartir": [
       "partager",
-      "distribuer",
       "diviser"
     ],
     "verbe:tasser": [
@@ -28709,7 +27919,6 @@
       "contrarier"
     ],
     "nom:ardent": [
-      "brûlant",
       "chaud",
       "passionné"
     ],
@@ -28726,8 +27935,7 @@
       "respect"
     ],
     "nom:traître": [
-      "sournois",
-      "dangereux"
+      "sournois"
     ],
     "nom:trombone": [
       "attache"
@@ -28993,9 +28201,7 @@
       "passage"
     ],
     "nom:vantard": [
-      "vantard",
-      "fanfaron",
-      "prétentieux"
+      "fanfaron"
     ],
     "adjectif:embrassé": [],
     "nom:concombre": [],
@@ -29066,7 +28272,6 @@
       "mettre"
     ],
     "nom:faible": [
-      "fragile",
       "mou",
       "petit"
     ],
@@ -29150,11 +28355,7 @@
       "tant",
       "aussi"
     ],
-    "adverbe:tout": [
-      "entier",
-      "complet",
-      "chaque"
-    ],
+    "adverbe:tout": [],
     "nom:mot": [
       "terme",
       "parole",
@@ -29178,11 +28379,7 @@
       "document",
       "rédaction"
     ],
-    "verbe:être": [
-      "personne",
-      "créature",
-      "humain"
-    ],
+    "verbe:être": [],
     "adverbe:là": [
       "ici"
     ],
@@ -29368,9 +28565,7 @@
       "peur",
       "crainte"
     ],
-    "nom:maximum": [
-      "maximal"
-    ],
+    "nom:maximum": [],
     "adjectif:terrestre": [],
     "verbe:convenir": [
       "plaire",
@@ -29388,7 +28583,6 @@
     ],
     "nom:avarice": [],
     "nom:aérien": [
-      "léger",
       "délicat"
     ],
     "nom:corsage": [
@@ -29515,14 +28709,9 @@
     ],
     "nom:rongeur": [],
     "nom:par": [],
-    "nom:dit": [
-      "nommé",
-      "prononcé"
-    ],
+    "nom:dit": [],
     "adverbe:bien": [
-      "bon",
-      "correct",
-      "convenable"
+      "bon"
     ],
     "adjectif:deux": [
       "double"
@@ -29531,19 +28720,14 @@
       "ainsi"
     ],
     "adverbe:petit": [
-      "minuscule",
-      "court",
-      "étroit"
+      "court"
     ],
     "verbe:faire": [
       "fabriquer",
       "créer",
       "construire"
     ],
-    "nom:fait": [
-      "fini",
-      "accompli"
-    ],
+    "nom:fait": [],
     "adverbe:très": [
       "extrêmement",
       "énormément",
@@ -29591,8 +28775,7 @@
       "illustré"
     ],
     "nom:commençant": [
-      "débutant",
-      "initial"
+      "débutant"
     ],
     "nom:dompteur": [
       "dresseur"
@@ -29662,15 +28845,11 @@
       "bus"
     ],
     "nom:feu": [],
-    "nom:vu": [
-      "observé"
-    ],
+    "nom:vu": [],
     "nom:donne": [
       "distribution"
     ],
     "nom:vrai": [
-      "véritable",
-      "exact",
       "réel"
     ],
     "nom:moment": [
@@ -29803,8 +28982,6 @@
       "émerveillement"
     ],
     "nom:ordinaire": [
-      "habituel",
-      "banal",
       "courant"
     ],
     "nom:peluche": [
@@ -29898,9 +29075,7 @@
       "somnolence"
     ],
     "nom:vierge": [
-      "neuf",
-      "blanc",
-      "intact"
+      "blanc"
     ],
     "adjectif:copieux": [
       "abondant"
@@ -29917,11 +29092,7 @@
     "nom:gourde": [
       "maladroit"
     ],
-    "nom:guetteur": [
-      "sentinelle",
-      "veilleur",
-      "surveillant"
-    ],
+    "nom:guetteur": [],
     "nom:hululement": [],
     "nom:hurluberlu": [
       "étourdi"
@@ -30126,11 +29297,7 @@
       "punition",
       "jugement"
     ],
-    "nom:damoiseau": [
-      "fille",
-      "mademoiselle",
-      "fillette"
-    ],
+    "nom:damoiseau": [],
     "nom:fouille": [
       "recherche"
     ],
@@ -30138,11 +29305,7 @@
       "grille",
       "clôture"
     ],
-    "nom:sou": [
-      "pièce",
-      "centime",
-      "monnaie"
-    ],
+    "nom:sou": [],
     "adverbe:habituellement": [
       "généralement",
       "normalement",
@@ -30182,7 +29345,6 @@
     ],
     "nom:tranquille": [
       "calme",
-      "paisible",
       "sage"
     ],
     "nom:pré": [
@@ -30202,8 +29364,7 @@
     ],
     "verbe:croire": [
       "imaginer",
-      "supposer",
-      "penser"
+      "supposer"
     ],
     "adverbe:sûrement": [
       "certainement",
@@ -30215,8 +29376,7 @@
       "envol"
     ],
     "verbe:utiliser": [
-      "employer",
-      "se servir de"
+      "employer"
     ],
     "nom:but": [
       "objectif",
@@ -30247,13 +29407,11 @@
     ],
     "nom:fantastique": [
       "extraordinaire",
-      "formidable",
       "merveilleux"
     ],
     "adjectif:étonnant": [
       "surprenant",
-      "extraordinaire",
-      "incroyable"
+      "extraordinaire"
     ],
     "adverbe:tristement": [],
     "nom:défense": [
@@ -30433,18 +29591,13 @@
       "las"
     ],
     "nom:adopté": [
-      "choisi",
-      "utilisé",
       "employé"
     ],
     "nom:bergerie": [
       "étable",
       "abri"
     ],
-    "nom:penchant": [
-      "penché",
-      "incliné"
-    ],
+    "nom:penchant": [],
     "verbe:renvoyer": [
       "chasser",
       "exclure",
@@ -30589,8 +29742,6 @@
       "pacifique"
     ],
     "nom:prétentieux": [
-      "modeste",
-      "humble",
       "simple"
     ],
     "verbe:chérir": [
@@ -30602,8 +29753,7 @@
       "affection"
     ],
     "nom:minimum": [
-      "maximum",
-      "maximal"
+      "maximum"
     ],
     "nom:deuil": [
       "joie",
@@ -30647,10 +29797,7 @@
     "verbe:remplir": [
       "vider"
     ],
-    "nom:recul": [
-      "avance",
-      "approche"
-    ],
+    "nom:recul": [],
     "nom:uni": [],
     "adjectif:débarqué": [],
     "adjectif:inhabituel": [
@@ -30750,8 +29897,7 @@
       "public"
     ],
     "nom:permis": [
-      "interdit",
-      "défendu"
+      "interdit"
     ],
     "nom:pompe": [],
     "nom:avenue": [],
@@ -30856,9 +30002,7 @@
     "adjectif:indemne": [],
     "verbe:attendrir": [],
     "verbe:orner": [],
-    "nom:crapule": [
-      "honnête"
-    ],
+    "nom:crapule": [],
     "verbe:arrondir": [],
     "verbe:dépecer": [],
     "nom:camus": [],
@@ -30876,9 +30020,7 @@
     "verbe:égaler": [
       "dépasser"
     ],
-    "nom:aventurier": [
-      "peureux"
-    ],
+    "nom:aventurier": [],
     "nom:protestation": [
       "approbation"
     ],
@@ -30935,13 +30077,10 @@
       "défaire"
     ],
     "nom:cher": [
-      "gratuit",
       "économique"
     ],
     "nom:impossible": [
-      "possible",
-      "facile",
-      "réalisable"
+      "possible"
     ],
     "nom:sommet": [
       "vallée"
@@ -30957,7 +30096,6 @@
       "précisément"
     ],
     "verbe:descendre": [
-      "monter",
       "remonter",
       "grimper"
     ],
@@ -31008,7 +30146,6 @@
       "éloigner"
     ],
     "verbe:demeurer": [
-      "partir",
       "disparaître",
       "bouger"
     ],
@@ -31105,11 +30242,7 @@
       "horreur"
     ],
     "adjectif:fui": [],
-    "nom:maladroit": [
-      "adroit",
-      "habile",
-      "capable"
-    ],
+    "nom:maladroit": [],
     "verbe:grouper": [
       "séparer",
       "disperser",
@@ -31139,7 +30272,6 @@
     ],
     "nom:malédiction": [],
     "nom:collectif": [
-      "individuel",
       "personnel"
     ],
     "nom:autoritaire": [
@@ -31158,9 +30290,7 @@
       "effet",
       "résultat"
     ],
-    "nom:dernier": [
-      "premier"
-    ],
+    "nom:dernier": [],
     "verbe:entrer": [
       "sortir"
     ],
@@ -31174,13 +30304,9 @@
       "vide"
     ],
     "nom:propre": [
-      "sale",
       "dégoûtant"
     ],
-    "nom:drôle": [
-      "triste",
-      "ennuyeux"
-    ],
+    "nom:drôle": [],
     "nom:droite": [
       "gauche"
     ],
@@ -31238,11 +30364,7 @@
       "secondaire"
     ],
     "nom:détaché": [],
-    "nom:fâcheux": [
-      "agréable",
-      "heureux",
-      "favorable"
-    ],
+    "nom:fâcheux": [],
     "nom:permanent": [],
     "nom:sévérité": [
       "bonté",
@@ -31273,7 +30395,6 @@
     ],
     "nom:habitant": [],
     "nom:lâche": [
-      "courageux",
       "brave"
     ],
     "nom:ressort": [],
@@ -31306,11 +30427,7 @@
     "nom:maxi": [
       "mini"
     ],
-    "nom:mourant": [
-      "vivant",
-      "guéri",
-      "sain"
-    ],
+    "nom:mourant": [],
     "nom:vassal": [],
     "adjectif:croustillant": [
       "mou"
@@ -31450,9 +30567,7 @@
     "verbe:reprocher": [
       "féliciter"
     ],
-    "nom:convaincu": [
-      "hésitant"
-    ],
+    "nom:convaincu": [],
     "nom:sève": [],
     "adjectif:douloureux": [
       "agréable"
@@ -31524,8 +30639,6 @@
     ],
     "adjectif:embarrassé": [],
     "adverbe:alerte": [
-      "endormi",
-      "fatigué",
       "lourd"
     ],
     "adjectif:élastique": [],
@@ -31561,9 +30674,7 @@
     "verbe:trier": [
       "mêler"
     ],
-    "nom:chic": [
-      "moche"
-    ],
+    "nom:chic": [],
     "nom:confusion": [
       "précision"
     ],
@@ -31691,7 +30802,6 @@
     ],
     "nom:naturel": [
       "faux",
-      "forcé",
       "anormal"
     ],
     "adjectif:brusque": [
@@ -31757,10 +30867,7 @@
     "nom:chausson": [
       "botte"
     ],
-    "nom:irrégulier": [
-      "régulier",
-      "égal"
-    ],
+    "nom:irrégulier": [],
     "adjectif:anonyme": [
       "connu"
     ],
@@ -31776,9 +30883,7 @@
       "faner"
     ],
     "nom:gourmandise": [],
-    "nom:noble": [
-      "honteux"
-    ],
+    "nom:noble": [],
     "verbe:grossir": [
       "maigrir",
       "diminuer"
@@ -31927,7 +31032,6 @@
       "effrayer"
     ],
     "nom:passager": [
-      "durable",
       "permanent",
       "éternel"
     ],
@@ -32033,9 +31137,7 @@
     ],
     "verbe:rester": [],
     "nom:docteur": [],
-    "nom:rapide": [
-      "lent"
-    ],
+    "nom:rapide": [],
     "nom:jaune": [],
     "nom:malade": [],
     "adjectif:traditionnel": [
@@ -32071,7 +31173,6 @@
       "taire"
     ],
     "nom:piquant": [
-      "fade",
       "doux"
     ],
     "adjectif:bouilli": [],
@@ -32327,22 +31428,16 @@
       "mépris"
     ],
     "nom:ordinaire": [
-      "exceptionnel",
       "particulier"
     ],
     "nom:seuil": [],
     "nom:tort": [],
-    "adverbe:demi": [
-      "entier",
-      "double",
-      "complet"
-    ],
+    "adverbe:demi": [],
     "verbe:couler": [
       "flotter"
     ],
     "nom:normal": [
       "anormal",
-      "bizarre",
       "étrange"
     ],
     "verbe:foirer": [
@@ -32406,15 +31501,12 @@
       "inférieur"
     ],
     "verbe:sortir": [
-      "rentrer",
-      "entrer"
+      "rentrer"
     ],
     "nom:salle": [],
     "nom:mur": [],
     "nom:pauvre": [
-      "riche",
-      "abondant",
-      "copieux"
+      "riche"
     ],
     "adjectif:donné": [],
     "nom:pièce": [
@@ -32437,7 +31529,6 @@
       "hier"
     ],
     "nom:heureux": [
-      "triste",
       "malheureux",
       "mécontent"
     ],
@@ -32445,12 +31536,9 @@
     "nom:épreuve": [],
     "nom:affreux": [
       "beau",
-      "superbe",
-      "charmant"
+      "superbe"
     ],
-    "nom:cousin": [
-      "cousin"
-    ],
+    "nom:cousin": [],
     "adjectif:sortant": [
       "entrant"
     ],
@@ -32469,8 +31557,7 @@
     "nom:second": [],
     "adjectif:divers": [
       "identique",
-      "semblable",
-      "pareil"
+      "semblable"
     ],
     "verbe:approcher": [
       "éloigner",
@@ -32533,8 +31620,7 @@
       "mont"
     ],
     "nom:chouette": [
-      "affreux",
-      "moche"
+      "affreux"
     ],
     "verbe:lancer": [
       "attraper",
@@ -32609,19 +31695,14 @@
     "nom:réveil": [
       "sommeil"
     ],
-    "nom:agréable": [
-      "pénible",
-      "fatigant"
-    ],
+    "nom:agréable": [],
     "nom:liberté": [
       "esclavage",
       "prison",
       "captivité"
     ],
     "nom:précis": [
-      "flou",
-      "vague",
-      "incertain"
+      "vague"
     ],
     "adjectif:caché": [
       "découvert",
@@ -32634,8 +31715,7 @@
     ],
     "nom:fruit": [],
     "nom:riche": [
-      "pauvre",
-      "modeste"
+      "pauvre"
     ],
     "adjectif:moindre": [
       "supérieur",
@@ -32731,14 +31811,11 @@
       "gêne"
     ],
     "nom:réel": [
-      "imaginaire",
-      "irréel"
+      "imaginaire"
     ],
     "adverbe:fraîchement": [],
     "nom:distrait": [
-      "attentif",
-      "concentré",
-      "appliqué"
+      "concentré"
     ],
     "adjectif:actuel": [
       "ancien",
@@ -32936,8 +32013,7 @@
     "verbe:peser": [],
     "nom:blond": [
       "brun",
-      "noir",
-      "foncé"
+      "noir"
     ],
     "verbe:venger": [
       "pardonner"
@@ -33018,7 +32094,6 @@
     ],
     "nom:chien": [],
     "adverbe:même": [
-      "différent",
       "autre"
     ],
     "adverbe:toujours": [
@@ -33030,9 +32105,7 @@
       "avant"
     ],
     "nom:nuit": [],
-    "adverbe:vite": [
-      "lent"
-    ],
+    "adverbe:vite": [],
     "nom:été": [
       "hiver"
     ],
@@ -33219,7 +32292,6 @@
       "croûte"
     ],
     "adjectif:gratuit": [
-      "payant",
       "cher",
       "coûteux"
     ],
@@ -33231,12 +32303,10 @@
     ],
     "nom:déçu": [
       "ravi",
-      "heureux",
-      "joyeux"
+      "heureux"
     ],
     "nom:impoli": [
-      "poli",
-      "correct"
+      "poli"
     ],
     "nom:distribution": [
       "ramassage"
@@ -33264,23 +32334,18 @@
     ],
     "nom:maigre": [
       "gros",
-      "gras",
-      "dodu"
+      "gras"
     ],
     "nom:chute": [
       "montée",
       "ascension"
     ],
-    "nom:cru": [
-      "cuit"
-    ],
+    "nom:cru": [],
     "verbe:prévenir": [],
     "verbe:réaliser": [],
     "nom:bouchon": [],
     "nom:choc": [],
-    "nom:marin": [
-      "terrestre"
-    ],
+    "nom:marin": [],
     "nom:origine": [
       "fin"
     ],
@@ -33333,17 +32398,13 @@
     ],
     "nom:parent": [],
     "nom:pays": [],
-    "adverbe:mieux": [
-      "pire"
-    ],
+    "adverbe:mieux": [],
     "verbe:mettre": [
       "enlever",
       "retirer",
       "ôter"
     ],
-    "nom:beau": [
-      "laide"
-    ],
+    "nom:beau": [],
     "adverbe:près": [
       "loin"
     ],
@@ -33467,11 +32528,7 @@
       "recevoir",
       "refuser"
     ],
-    "adverbe:dur": [
-      "mou",
-      "tendre",
-      "facile"
-    ],
+    "adverbe:dur": [],
     "verbe:bouger": [
       "rester"
     ],
@@ -33519,10 +32576,7 @@
     ],
     "adjectif:improvisé": [],
     "verbe:recommander": [],
-    "nom:allié": [
-      "ennemi",
-      "adversaire"
-    ],
+    "nom:allié": [],
     "adjectif:universel": [],
     "verbe:enchanter": [
       "déplaire",
@@ -33587,17 +32641,12 @@
     "adjectif:écrasant": [
       "léger"
     ],
-    "nom:amateur": [
-      "professionnel"
-    ],
+    "nom:amateur": [],
     "nom:collier": [],
     "nom:soif": [],
     "nom:sortie": [],
     "nom:couverture": [],
-    "nom:large": [
-      "étroit",
-      "serré"
-    ],
+    "nom:large": [],
     "nom:pie": [],
     "nom:filet": [],
     "adverbe:guère": [
@@ -33638,10 +32687,7 @@
       "diviser",
       "détacher"
     ],
-    "nom:inférieur": [
-      "supérieur",
-      "maître"
-    ],
+    "nom:inférieur": [],
     "verbe:briser": [
       "arranger"
     ],
@@ -33736,11 +32782,7 @@
     "nom:locataire": [
       "propriétaire"
     ],
-    "nom:variable": [
-      "stable",
-      "fixe",
-      "constant"
-    ],
+    "nom:variable": [],
     "nom:délice": [
       "horreur"
     ],
@@ -33834,15 +32876,11 @@
     "nom:endroit": [
       "envers"
     ],
-    "adverbe:ensemble": [
-      "partie"
-    ],
+    "adverbe:ensemble": [],
     "nom:ligne": [
       "courbe"
     ],
-    "adverbe:haut": [
-      "base"
-    ],
+    "adverbe:haut": [],
     "verbe:exclure": [
       "accueillir",
       "admettre",
@@ -33919,9 +32957,7 @@
     "nom:responsabilité": [],
     "nom:civilisation": [],
     "nom:exécution": [],
-    "nom:louche": [
-      "honnête"
-    ],
+    "nom:louche": [],
     "adjectif:boulot": [],
     "verbe:gêner": [
       "soulager"
@@ -34026,8 +33062,7 @@
     ],
     "nom:naïf": [
       "rusé",
-      "méfiant",
-      "réfléchi"
+      "méfiant"
     ],
     "nom:émoi": [
       "calme"
@@ -34068,11 +33103,7 @@
     "nom:habileté": [
       "maladresse"
     ],
-    "nom:sinistre": [
-      "gai",
-      "joyeux",
-      "rassurant"
-    ],
+    "nom:sinistre": [],
     "nom:terme": [
       "début",
       "commencement"
@@ -34153,9 +33184,7 @@
       "danger"
     ],
     "nom:étranger": [
-      "connu",
-      "familier",
-      "habituel"
+      "familier"
     ],
     "verbe:exécuter": [],
     "nom:clarté": [
@@ -34170,7 +33199,6 @@
     "verbe:maintenir": [],
     "nom:bavard": [
       "silencieux",
-      "discret",
       "muet"
     ],
     "nom:flot": [],
@@ -34178,7 +33206,6 @@
     "nom:état": [],
     "nom:tranquille": [
       "agité",
-      "bruyant",
       "inquiet"
     ],
     "adjectif:bizarre": [
@@ -34227,9 +33254,7 @@
       "patience",
       "calme"
     ],
-    "nom:ouvrant": [
-      "fixe"
-    ],
+    "nom:ouvrant": [],
     "verbe:réchauffer": [
       "refroidir",
       "rafraîchir"
@@ -34346,8 +33371,7 @@
       "calme"
     ],
     "nom:local": [
-      "international",
-      "mondial"
+      "international"
     ],
     "nom:raisonnement": [],
     "adjectif:comestible": [
@@ -34365,9 +33389,7 @@
     "adverbe:certainement": [
       "peut-être"
     ],
-    "adverbe:meilleur": [
-      "pire"
-    ],
+    "adverbe:meilleur": [],
     "nom:construction": [
       "destruction"
     ],
@@ -34377,9 +33399,7 @@
       "nord"
     ],
     "nom:vif": [
-      "lent",
-      "mou",
-      "endormi"
+      "mou"
     ],
     "nom:éclair": [],
     "verbe:équiper": [],
@@ -34425,10 +33445,7 @@
       "lentement"
     ],
     "verbe:déchiffrer": [],
-    "nom:déplacé": [
-      "correct",
-      "convenable"
-    ],
+    "nom:déplacé": [],
     "nom:fidélité": [],
     "adjectif:brisé": [
       "intact",
@@ -34564,9 +33581,7 @@
     "nom:divertissement": [
       "travail"
     ],
-    "nom:indépendant": [
-      "soumis"
-    ],
+    "nom:indépendant": [],
     "adjectif:funèbre": [
       "joyeux",
       "gai",
@@ -34580,9 +33595,7 @@
       "peut-être"
     ],
     "verbe:déchausser": [],
-    "nom:captif": [
-      "libre"
-    ],
+    "nom:captif": [],
     "nom:minéral": [
       "végétal",
       "animal",
@@ -34811,9 +33824,7 @@
     "nom:désarroi": [
       "assurance"
     ],
-    "nom:enseignant": [
-      "élève"
-    ],
+    "nom:enseignant": [],
     "adjectif:articulé": [],
     "adjectif:cordial": [
       "hostile",
@@ -34843,11 +33854,7 @@
       "naître",
       "survivre"
     ],
-    "adverbe:sec": [
-      "humide",
-      "mouillé",
-      "trempé"
-    ],
+    "adverbe:sec": [],
     "nom:mouvement": [
       "immobilité",
       "arrêt",
@@ -34863,8 +33870,7 @@
     ],
     "nom:furieux": [
       "calme",
-      "tranquille",
-      "paisible"
+      "tranquille"
     ],
     "nom:faute": [],
     "nom:goût": [
@@ -35023,14 +34029,9 @@
       "indifférence"
     ],
     "nom:inconnu": [
-      "connu",
-      "célèbre",
       "familier"
     ],
-    "nom:nu": [
-      "habillé",
-      "vêtu"
-    ],
+    "nom:nu": [],
     "adjectif:horrible": [
       "beau",
       "magnifique",
@@ -35088,8 +34089,7 @@
       "allongé"
     ],
     "nom:froid": [
-      "chaud",
-      "brûlant"
+      "chaud"
     ],
     "nom:bébé": [
       "adulte",
@@ -35155,8 +34155,7 @@
     ],
     "nom:vache": [
       "gentil",
-      "agréable",
-      "sympathique"
+      "agréable"
     ],
     "adjectif:aucun": [
       "tout"
@@ -35223,13 +34222,9 @@
     "verbe:disputer": [
       "féliciter"
     ],
-    "nom:relevé": [
-      "bas"
-    ],
+    "nom:relevé": [],
     "adjectif:obligatoire": [],
-    "nom:damoiseau": [
-      "dame"
-    ],
+    "nom:damoiseau": [],
     "adverbe:habituellement": [
       "exceptionnellement"
     ],
@@ -35270,9 +34265,7 @@
       "laisser"
     ],
     "adjectif:impératif": [],
-    "adverbe:profond": [
-      "plat"
-    ],
+    "adverbe:profond": [],
     "nom:fortune": [
       "pauvreté",
       "misère"
@@ -35283,7 +34276,6 @@
     "nom:compartiment": [],
     "adjectif:relatif": [],
     "nom:central": [
-      "éloigné",
       "secondaire"
     ],
     "adjectif:soufflant": [],
@@ -35306,8 +34298,7 @@
     ],
     "nom:paresseux": [
       "actif",
-      "vif",
-      "vaillant"
+      "vif"
     ],
     "nom:talent": [
       "maladresse"
@@ -35500,11 +34491,7 @@
     "nom:malchance": [
       "chance"
     ],
-    "nom:morne": [
-      "joyeux",
-      "gai",
-      "éclatant"
-    ],
+    "nom:morne": [],
     "nom:étourderie": [
       "application"
     ],
@@ -35586,9 +34573,7 @@
     "verbe:débarbouiller": [
       "barbouiller"
     ],
-    "nom:indécis": [
-      "déterminé"
-    ],
+    "nom:indécis": [],
     "nom:alliance": [
       "séparation"
     ],
@@ -35747,8 +34732,7 @@
     "nom:aspect": [],
     "nom:brave": [
       "peureux",
-      "lâche",
-      "craintif"
+      "lâche"
     ],
     "verbe:habiter": [],
     "nom:ancien": [
@@ -35884,7 +34868,6 @@
     ],
     "nom:content": [
       "mécontent",
-      "triste",
       "malheureux"
     ],
     "nom:retour": [
@@ -35903,8 +34886,7 @@
       "ensemble"
     ],
     "nom:gris": [
-      "beau",
-      "lumineux"
+      "beau"
     ],
     "verbe:marcher": [
       "arrêter",
@@ -35981,7 +34963,6 @@
     ],
     "nom:sournois": [
       "franc",
-      "sincère",
       "droit"
     ],
     "verbe:conter": [],
@@ -36022,9 +35003,7 @@
     "adjectif:avantageux": [
       "mauvais"
     ],
-    "adjectif:dispos": [
-      "fatigué"
-    ],
+    "adjectif:dispos": [],
     "adjectif:illisible": [
       "clair"
     ],
@@ -36115,8 +35094,6 @@
     ],
     "nom:destin": [],
     "nom:uniforme": [
-      "varié",
-      "différent",
       "irrégulier"
     ],
     "adjectif:affectueux": [
@@ -36226,8 +35203,7 @@
       "halte"
     ],
     "adverbe:bas": [
-      "haut",
-      "élevé"
+      "haut"
     ],
     "nom:recherche": [],
     "nom:futur": [
@@ -36304,8 +35280,7 @@
       "blond"
     ],
     "nom:ignorant": [
-      "savant",
-      "compétent"
+      "savant"
     ],
     "adjectif:soigneux": [],
     "adjectif:hilare": [
@@ -36325,9 +35300,7 @@
     "nom:crue": [
       "baisse"
     ],
-    "nom:grincheux": [
-      "doux"
-    ],
+    "nom:grincheux": [],
     "nom:luxe": [
       "pauvreté"
     ],
@@ -36362,9 +35335,7 @@
       "loisir"
     ],
     "nom:bateau": [],
-    "nom:vert": [
-      "mûr"
-    ],
+    "nom:vert": [],
     "nom:demande": [
       "réponse"
     ],
@@ -36378,11 +35349,7 @@
       "disponible"
     ],
     "adverbe:bientôt": [],
-    "adverbe:milieu": [
-      "bord",
-      "extrémité",
-      "coin"
-    ],
+    "adverbe:milieu": [],
     "nom:frère": [
       "soeur"
     ],
@@ -36455,16 +35422,10 @@
       "libérer",
       "séparer"
     ],
-    "nom:lisse": [
-      "rugueux",
-      "frisé",
-      "ridé"
-    ],
+    "nom:lisse": [],
     "nom:marron": [],
     "nom:protection": [],
-    "verbe:souvenir": [
-      "oubli"
-    ],
+    "verbe:souvenir": [],
     "nom:enfer": [
       "paradis"
     ],
@@ -36523,11 +35484,9 @@
       "obscurcir"
     ],
     "nom:absurde": [
-      "logique",
-      "raisonnable"
+      "logique"
     ],
     "nom:anormal": [
-      "habituel",
       "ordinaire",
       "naturel"
     ],
@@ -36681,11 +35640,7 @@
     ],
     "nom:bourgeois": [],
     "nom:remords": [],
-    "nom:plaisant": [
-      "désagréable",
-      "embêtant",
-      "pénible"
-    ],
+    "nom:plaisant": [],
     "adverbe:constamment": [
       "jamais",
       "rarement",
@@ -36719,7 +35674,6 @@
     ],
     "nom:coïncidence": [],
     "nom:vertical": [
-      "horizontal",
       "couché"
     ],
     "adjectif:effroyable": [
@@ -36766,8 +35720,7 @@
       "refroidir"
     ],
     "nom:luisant": [
-      "mat",
-      "sombre"
+      "mat"
     ],
     "verbe:moquer": [
       "respecter",
@@ -36880,9 +35833,7 @@
       "lier",
       "fixer"
     ],
-    "nom:avare": [
-      "généreux"
-    ],
+    "nom:avare": [],
     "nom:affection": [
       "haine",
       "mépris"
@@ -36958,7 +35909,6 @@
     ],
     "nom:décharge": [],
     "nom:grognon": [
-      "gai",
       "heureux"
     ],
     "nom:concorde": [],
@@ -36982,11 +35932,7 @@
     ],
     "nom:gravité": [],
     "nom:bagage": [],
-    "nom:mobile": [
-      "fixe",
-      "immobile",
-      "stable"
-    ],
+    "nom:mobile": [],
     "adverbe:ici": [
       "là-bas",
       "ailleurs"
@@ -37009,9 +35955,7 @@
     "adverbe:loin": [
       "près"
     ],
-    "nom:seul": [
-      "accompagné"
-    ],
+    "nom:seul": [],
     "nom:animal": [],
     "nom:suite": [],
     "verbe:prendre": [
@@ -37048,9 +35992,7 @@
       "taire"
     ],
     "verbe:grever": [],
-    "nom:transparent": [
-      "opaque"
-    ],
+    "nom:transparent": [],
     "verbe:ronger": [],
     "nom:fantaisie": [
       "sérieux"
@@ -37124,13 +36066,8 @@
     "nom:course": [
       "immobilité"
     ],
-    "verbe:rire": [
-      "larme",
-      "sanglot"
-    ],
-    "verbe:savoir": [
-      "ignorance"
-    ],
+    "verbe:rire": [],
+    "verbe:savoir": [],
     "nom:façon": [],
     "nom:faim": [],
     "nom:joie": [
@@ -37165,17 +36102,12 @@
       "énergie",
       "vivacité"
     ],
-    "nom:minable": [
-      "réussi",
-      "épatant"
-    ],
+    "nom:minable": [],
     "nom:rancune": [
       "pardon",
       "amitié"
     ],
-    "nom:veuf": [
-      "marié"
-    ],
+    "nom:veuf": [],
     "adjectif:acquis": [
       "naturel"
     ],
@@ -37202,8 +36134,7 @@
     "nom:guignol": [],
     "nom:nul": [
       "bon",
-      "fort",
-      "capable"
+      "fort"
     ],
     "nom:négation": [
       "affirmation"
@@ -37224,10 +36155,7 @@
       "nourrir",
       "rassasier"
     ],
-    "nom:affamé": [
-      "rassasié",
-      "repu"
-    ],
+    "nom:affamé": [],
     "nom:affectation": [
       "naturel"
     ],
@@ -37335,8 +36263,7 @@
     ],
     "nom:imaginaire": [
       "réel",
-      "vrai",
-      "véritable"
+      "vrai"
     ],
     "nom:jaloux": [],
     "nom:thon": [],
@@ -37366,11 +36293,7 @@
     "adjectif:tordu": [
       "droit"
     ],
-    "nom:anxieux": [
-      "calme",
-      "tranquille",
-      "confiant"
-    ],
+    "nom:anxieux": [],
     "adjectif:monotone": [
       "varié"
     ],
@@ -37441,7 +36364,6 @@
       "couler"
     ],
     "nom:menteur": [
-      "sincère",
       "franc"
     ],
     "verbe:bomber": [],
@@ -37450,7 +36372,6 @@
     ],
     "nom:colonie": [],
     "nom:comique": [
-      "triste",
       "sérieux"
     ],
     "nom:principe": [],
@@ -37572,14 +36493,8 @@
       "laisser",
       "rapporter"
     ],
-    "verbe:devoir": [
-      "droit"
-    ],
-    "nom:silencieux": [
-      "bruyant",
-      "sonore",
-      "criard"
-    ],
+    "verbe:devoir": [],
+    "nom:silencieux": [],
     "verbe:ramasser": [
       "éparpiller",
       "jeter",
@@ -37606,7 +36521,6 @@
       "colline"
     ],
     "verbe:continuer": [
-      "arrêter",
       "cesser",
       "abandonner"
     ],
@@ -37717,7 +36631,6 @@
       "sauver"
     ],
     "nom:merveilleux": [
-      "horrible",
       "laid",
       "ordinaire"
     ],
@@ -37759,9 +36672,7 @@
       "mobile"
     ],
     "nom:vilain": [
-      "beau",
-      "joli",
-      "charmant"
+      "beau"
     ],
     "verbe:estimer": [
       "mépriser"
@@ -37818,8 +36729,7 @@
       "indéfini"
     ],
     "nom:désespéré": [
-      "heureux",
-      "confiant"
+      "heureux"
     ],
     "nom:installation": [
       "déménagement"
@@ -37841,9 +36751,7 @@
     "verbe:prêter": [
       "emprunter"
     ],
-    "nom:fidèle": [
-      "changeant"
-    ],
+    "nom:fidèle": [],
     "nom:victime": [
       "bourreau",
       "agresseur"
@@ -37962,9 +36870,7 @@
       "réservé"
     ],
     "nom:délicat": [
-      "grossier",
-      "brutal",
-      "rude"
+      "grossier"
     ],
     "adverbe:continuellement": [
       "rarement",
@@ -38036,10 +36942,7 @@
       "bosse"
     ],
     "nom:indignation": [],
-    "nom:malchanceux": [
-      "chanceux",
-      "heureux"
-    ],
+    "nom:malchanceux": [],
     "adjectif:élancé": [
       "trapu",
       "gros",
@@ -38065,9 +36968,7 @@
     "verbe:vociférer": [
       "chuchoter"
     ],
-    "nom:consciencieux": [
-      "paresseux"
-    ],
+    "nom:consciencieux": [],
     "nom:infection": [],
     "nom:isolement": [
       "compagnie",
@@ -38186,7 +37087,6 @@
     "verbe:comparer": [],
     "nom:pacifique": [
       "violent",
-      "agressif",
       "guerrier"
     ],
     "nom:permanence": [],
@@ -38338,8 +37238,7 @@
     ],
     "verbe:vexer": [],
     "nom:ardent": [
-      "froid",
-      "glacial"
+      "froid"
     ],
     "verbe:récolter": [],
     "adjectif:limpide": [
@@ -38417,9 +37316,7 @@
       "envier"
     ],
     "nom:rasoir": [
-      "intéressant",
-      "passionnant",
-      "amusant"
+      "intéressant"
     ],
     "verbe:effacer": [
       "écrire",
@@ -38455,11 +37352,7 @@
       "qualifier"
     ],
     "verbe:évaporer": [],
-    "nom:assuré": [
-      "incertain",
-      "hésitant",
-      "craintif"
-    ],
+    "nom:assuré": [],
     "nom:broussaille": [
       "clairière"
     ],
@@ -38554,9 +37447,7 @@
       "soigné"
     ],
     "nom:vide": [
-      "plein",
-      "rempli",
-      "occupé"
+      "plein"
     ],
     "nom:hasard": [],
     "nom:avance": [
@@ -38692,9 +37583,7 @@
       "articuler"
     ],
     "nom:unisson": [],
-    "nom:nain": [
-      "géante"
-    ],
+    "nom:nain": [],
     "adjectif:coriace": [
       "moelleux"
     ],
@@ -38786,15 +37675,13 @@
     "verbe:rejoindre": [],
     "nom:sage": [
       "vilain",
-      "agité",
-      "turbulent"
+      "agité"
     ],
     "adverbe:horizontalement": [
       "verticalement"
     ],
     "nom:découvert": [
-      "couvert",
-      "caché"
+      "couvert"
     ],
     "adjectif:croyable": [
       "invraisemblable"
@@ -38813,9 +37700,7 @@
       "apaiser",
       "réconcilier"
     ],
-    "nom:canaille": [
-      "honnête"
-    ],
+    "nom:canaille": [],
     "nom:contentement": [
       "mécontentement",
       "tristesse",
@@ -38825,8 +37710,7 @@
       "réduit"
     ],
     "nom:insolent": [
-      "poli",
-      "aimable"
+      "poli"
     ],
     "nom:saleté": [
       "propreté"
@@ -38851,9 +37735,7 @@
     "verbe:réapparaître": [
       "disparaître"
     ],
-    "nom:arrondi": [
-      "pointu"
-    ],
+    "nom:arrondi": [],
     "nom:désaccord": [
       "accord",
       "entente"
@@ -38902,16 +37784,13 @@
     "nom:midi": [],
     "verbe:devenir": [],
     "nom:plat": [
-      "creux",
-      "bombé"
+      "creux"
     ],
     "nom:approche": [
       "départ"
     ],
     "nom:extraordinaire": [
-      "ordinaire",
-      "banal",
-      "habituel"
+      "ordinaire"
     ],
     "verbe:garder": [
       "lâcher",
@@ -38945,8 +37824,7 @@
     "nom:poison": [],
     "nom:savant": [
       "nul",
-      "simple",
-      "facile"
+      "simple"
     ],
     "verbe:verser": [
       "recevoir"
@@ -38974,9 +37852,7 @@
     "adjectif:regardant": [],
     "adjectif:tombé": [],
     "verbe:prescrire": [],
-    "nom:déchaîné": [
-      "calme"
-    ],
+    "nom:déchaîné": [],
     "verbe:assoupir": [],
     "adjectif:compact": [],
     "verbe:flatter": [
@@ -39045,7 +37921,6 @@
     ],
     "adjectif:maussade": [
       "gai",
-      "joyeux",
       "enjoué"
     ],
     "verbe:interloquer": [],
@@ -39181,9 +38056,7 @@
       "bon",
       "doux"
     ],
-    "nom:grave": [
-      "léger"
-    ],
+    "nom:grave": [],
     "adverbe:exactement": [
       "environ"
     ],
@@ -39267,7 +38140,6 @@
     "verbe:débarquer": [],
     "nom:indifférent": [
       "intéressé",
-      "attentif",
       "passionné"
     ],
     "nom:religion": [],
@@ -39512,7 +38384,6 @@
       "silence"
     ],
     "nom:comédien": [
-      "sincère",
       "vrai"
     ],
     "nom:célébrité": [
@@ -39535,8 +38406,6 @@
     ],
     "nom:néant": [],
     "nom:égoïste": [
-      "généreux",
-      "serviable",
       "bon"
     ],
     "nom:pauvreté": [
@@ -39587,7 +38456,6 @@
     ],
     "nom:laid": [
       "beau",
-      "joli",
       "mignon"
     ],
     "nom:observation": [],
@@ -39680,11 +38548,7 @@
       "douteux",
       "incertain"
     ],
-    "nom:commode": [
-      "difficile",
-      "compliqué",
-      "pénible"
-    ],
+    "nom:commode": [],
     "nom:habitué": [
       "nouveau"
     ],
@@ -39818,7 +38682,6 @@
       "vide"
     ],
     "nom:interdit": [
-      "autorisé",
       "permis"
     ],
     "nom:bijou": [],
@@ -39848,15 +38711,13 @@
     ],
     "nom:collision": [],
     "nom:pastel": [
-      "vif",
-      "foncé"
+      "vif"
     ],
     "adjectif:démesuré": [
       "raisonnable",
       "petit"
     ],
     "verbe:courber": [
-      "redresser",
       "dresser",
       "relever"
     ],
@@ -39875,8 +38736,7 @@
     ],
     "verbe:liquider": [],
     "nom:liquide": [
-      "solide",
-      "épais"
+      "solide"
     ],
     "verbe:saisir": [
       "lâcher"
@@ -39933,9 +38793,7 @@
       "murmure"
     ],
     "nom:fréquence": [],
-    "nom:malhonnête": [
-      "loyal"
-    ],
+    "nom:malhonnête": [],
     "nom:rudiment": [],
     "adjectif:courbé": [
       "droit"
@@ -40044,9 +38902,7 @@
       "confiance"
     ],
     "nom:bonne": [],
-    "adverbe:gros": [
-      "mince"
-    ],
+    "adverbe:gros": [],
     "nom:mer": [],
     "adjectif:éclair": [],
     "adjectif:aimable": [
@@ -40327,8 +39183,7 @@
       "bien-être"
     ],
     "nom:maximum": [
-      "minimum",
-      "minimal"
+      "minimum"
     ],
     "adjectif:terrestre": [
       "aquatique",
@@ -40470,9 +39325,7 @@
       "relever",
       "remonter"
     ],
-    "nom:vulgaire": [
-      "distingué"
-    ],
+    "nom:vulgaire": [],
     "adjectif:découpé": [
       "entier"
     ],
@@ -40483,8 +39336,7 @@
     ],
     "nom:enragé": [
       "calme",
-      "doux",
-      "paisible"
+      "doux"
     ],
     "nom:issue": [
       "entrée"
@@ -40537,18 +39389,13 @@
       "bonheur",
       "plaisir"
     ],
-    "nom:grêle": [
-      "épais"
-    ],
+    "nom:grêle": [],
     "nom:candidat": [],
     "adverbe:apparemment": [
       "réellement"
     ],
-    "nom:accompli": [
-      "incomplet"
-    ],
+    "nom:accompli": [],
     "nom:gaillard": [
-      "fatigué",
       "faible"
     ],
     "nom:intensité": [],
@@ -40711,7 +39558,6 @@
     ],
     "nom:directeur": [],
     "nom:secret": [
-      "ouvert",
       "clair"
     ],
     "nom:action": [
