@@ -129,10 +129,42 @@ Composition, dans l'ordre, et **elle doit tenir sur une seule ligne** :
 | ← Retour au clavier | sur toutes les pages sauf le clavier lui-même |
 | ← Retour | **seulement** si la page passe un `onBack` (le quiz, entre ses étapes) |
 | recherche directe | reste dans le bandeau, l'enseignante s'en sert sans arrêt |
-| identité | nom, puis « Clic & Mots » |
-| Espace enseignant | tout à droite |
+| identité | nom, puis le **rôle** en pastille (voir plus bas) - plus « Clic & Mots » pour un élève |
+| ~~Espace enseignant~~ | **retiré le 01/09/2026**, voir plus bas : la pastille de rôle en tient lieu |
 
 **Pas de bouton Déconnexion** : la session appartient au portail, on s'y déconnecte.
+
+**Sous le nom, le rôle plutôt que le nom du site** (`.gx-entete-role`, `ToolLayout.tsx`) -
+même règle que sur Fast Éval et School Monsters, où elle vit dans
+`/galaxie-role.php` ; ici recodée en React, pas partagée avec les deux autres.
+Le nom du site est déjà dit par le logo et le liséré coloré, le rôle ne
+l'était nulle part. Clic & Mots ne distingue pas l'administratrice de
+l'enseignante (le jeton signé du portail ne transporte pas `est_admin`, et
+l'espace enseignant est le même pour les deux) : la seule pastille possible
+est `Compte enseignant`, un élève n'en a pas.
+
+**Depuis le 01/09/2026, la pastille EST le lien vers l'espace enseignant** -
+décision de Hugues : le bouton « Espace enseignant » qui l'accompagnait
+disait la même chose et faisait passer le bandeau sur deux lignes à trois
+boutons de retour (voir la contrainte de largeur plus bas). Sur `/enseignant`
+elle-même, elle redevient un simple `<span>` : un lien vers la page où l'on
+se trouve déjà ne mènerait nulle part. Le libellé visible ne dit alors pas où
+l'on irait, d'où `aria-label`/`title` sur la version cliquable.
+
+**Deux pièges trouvés à la capture, invisibles à la lecture du code, valables
+pour les trois sites** (voir `--gx-role` dans `/galaxie-tokens.css`) :
+- `--gx-role` (`#efa900`) est un **aplat, pas une encre** - du blanc dessus ne
+  donne que 2,0:1 de contraste, c'était déjà le défaut du badge d'origine de
+  Fast Éval. Le texte posé dessus doit être de l'encre (`--gx-encre` ou
+  équivalent), qui donne 6,1:1. Cette couleur est à trois unités de
+  `--gx-accent` sur la roue, différence invisible à l'œil : les faire bouger
+  ensemble si l'une change.
+- **Un `<button>` n'est pas un `<a>` par défaut.** Sur `/enseignant`, la
+  pastille est un `<span>` (pas un bouton, elle ne fait rien) ; ailleurs
+  c'est un vrai `Link`. Si une future version en refait un `<button>`
+  cliquable (ex. pour ouvrir un menu plutôt que naviguer), poser
+  explicitement `background`, `font-family` et `cursor` dessus - sinon il
+  porte le gris par défaut du navigateur au milieu d'éléments transparents.
 
 **Le nom affiché vient du portail, pas des tables locales.** `server/api/sso.php`
 stockait `teachers.username` (« Camille ») pour l'enseignante et `students.prenom`
@@ -149,9 +181,11 @@ Le bandeau mesure **72 px** : 46 de logo, 12 en haut, 12 en bas, plus les bordur
 C'est la mesure des deux autres sites, et tout écart est un défaut.
 
 **La place est comptée.** Mesuré à 1150, 1280 et 1440 px : la ligne tient tout
-juste. Ajouter un bouton fait passer « Espace enseignant » à la ligne suivante et
-le bandeau à 140 px. C'est ce qui a fait retirer le « ← Retour » générique, qui
-faisait doublon avec « Retour au clavier ». Avant d'ajouter quoi que ce soit ici,
+juste. Un bouton de trop fait passer la ligne suivante à 140 px de bandeau. Ça a
+coûté deux éléments jusqu'ici : le « ← Retour » générique qui faisait doublon
+avec « Retour au clavier », puis le bouton « Espace enseignant » qui doublonnait
+avec la pastille de rôle (voir plus haut) - les deux retirés pour cette même
+raison de largeur, pas pour leur contenu. Avant d'ajouter quoi que ce soit ici,
 mesurer à 1150 px.
 
 ## Connexion : le portail est la porte d'entrée
